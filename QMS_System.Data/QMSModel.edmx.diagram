@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="aa50c9049dad40518152c7a4408adafb" Name="Diagram1" ZoomLevel="77">
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Action" Width="1.5" PointX="1.5" PointY="26.75" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_ActionParameter" Width="1.5" PointX="0.75" PointY="1.75" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Alert" Width="1.5" PointX="9" PointY="37" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Business" Width="1.5" PointX="4.5" PointY="23.375" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_BusinessType" Width="1.5" PointX="2.25" PointY="23.75" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Command" Width="1.5" PointX="1.5" PointY="5.625" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_CommandParameter" Width="1.5" PointX="0.75" PointY="9.625" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Config" Width="1.5" PointX="8.75" PointY="5.75" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Counter" Width="1.5" PointX="1.5" PointY="39.125" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_CounterSoftRequire" Width="1.5" PointX="10.75" PointY="5.75" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_CounterSound" Width="1.5" PointX="6.75" PointY="40.5" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_DailyRequire" Width="1.5" PointX="6.75" PointY="25.25" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_DailyRequire_Detail" Width="1.5" PointX="9" PointY="10.625" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Equipment" Width="1.5" PointX="0.75" PointY="31.375" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_EquipmentType" Width="1.5" PointX="1.5" PointY="36.25" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_EquipTypeProcess" Width="1.5" PointX="9.75" PointY="40.875" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Evaluate" Width="1.5" PointX="8.75" PointY="1.5" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_EvaluateDetail" Width="1.5" PointX="11" PointY="1" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_HisDailyRequire" Width="1.5" PointX="3.75" PointY="1.75" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_HisDailyRequire_De" Width="1.5" PointX="6" PointY="18.625" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_HisUserEvaluate" Width="1.5" PointX="8.25" PointY="18.625" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Language" Width="1.5" PointX="4.5" PointY="33.125" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Login" Width="1.5" PointX="3" PointY="15" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_LoginHistory" Width="1.5" PointX="6" PointY="15" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_MaindisplayDirection" Width="1.5" PointX="3.75" PointY="39.625" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Major" Width="1.5" PointX="6.75" PointY="2" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Policy" Width="1.5" PointX="11.75" PointY="8.75" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Process" Width="1.5" PointX="7.5" PointY="44.25" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_ReadTemp_Detail" Width="1.5" PointX="9" PointY="33.25" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_ReadTemplate" Width="1.5" PointX="6.75" PointY="33" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_RecieverSMS" Width="1.5" PointX="12.75" PointY="5.75" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_RegisterRecieveTicket" Width="1.5" PointX="3" PointY="19.125" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Service" Width="1.5" PointX="4.5" PointY="27" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_ServiceShift" Width="1.5" PointX="6.75" PointY="29.375" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_ServiceStep" Width="1.5" PointX="12" PointY="17" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Shift" Width="1.5" PointX="4.5" PointY="36.5" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Sound" Width="1.5" PointX="6.75" PointY="36.875" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Status" Width="1.5" PointX="6.75" PointY="5.375" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_StatusType" Width="1.5" PointX="4.5" PointY="5.875" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_User" Width="1.5" PointX="0.75" PointY="13.625" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_UserCmdRegister" Width="1.5" PointX="3" PointY="10.75" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_UserCommandReadSound" Width="1.5" PointX="9" PointY="14.875" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_UserEvaluate" Width="1.5" PointX="11.25" PointY="13.5" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_UserMajor" Width="1.5" PointX="6" PointY="11.125" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_ActionParameter_Q_Action" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_UserCommand_Q_ActionParameter" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_Alert_Q_Sound" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_Business_Q_BusinessType" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_DailyRequire_Q_Business" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_HisDailyRequire_Q_Business" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_CommandParameter_Q_Command" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_UserCommandReadSound_Q_Command" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_UserCommand_Q_CommandParameter" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_CounterSound_Q_Counter" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_Equipment_Q_Counter" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_MaindisplayDirection_Q_Counter" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_CounterSound_Q_Sound" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_DailyRequire" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_DailyRequire_Q_Service" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_Major" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_Status" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_User" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_UserEvaluate_Q_DailyRequire_Detail" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_Equipment_Q_EquipmentType" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_Equipment_Q_Status" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_MaindisplayDirection_Q_Equipment" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_RegisterRecieveTicket_Q_Equipment" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_EquipTypeProcess_Q_EquipmentType" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_EquipTypeProcess_Q_Process" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_EvaluateDetail_Q_Evaluate" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_HisDailyRequire" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_HisDailyRequire_Q_Service" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_Major" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_Status" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_User" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_HisUserEvaluate_Q_HisDailyRequire_De" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_HisUserEvaluate_Q_User" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_ReadTemplate_Q_Language" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_Sound_Q_Language" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_Login_Q_Status" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_Login_Q_User" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_LoginHistory_Q_Status" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_LoginHistory_Q_User" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_ServiceStep_Q_Major" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_UserMajor_Q_Major" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_ReadTemp_Detail_Q_ReadTemplate" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_UserCommandReadSound_Q_ReadTemplate" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_RegisterRecieveTicket_Q_User" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_ServiceShift_Q_Service" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_ServiceStep_Q_Service" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_ServiceShift_Q_Shift" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_Status_Q_StatusType" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_UserCommand_Q_User" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_UserCommandReadSound_Q_User" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_UserEvaluate_NHANVIEN" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_UserMajor_Q_User" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

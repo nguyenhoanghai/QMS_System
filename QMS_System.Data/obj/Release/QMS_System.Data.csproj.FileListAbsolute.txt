@@ -1,0 +1,10 @@
+E:\GPRO_2018\App\QMS\QMS_System\trunk\QMS_System\QMS_System.Data\bin\Release\QMS_System.Data.dll.config
+E:\GPRO_2018\App\QMS\QMS_System\trunk\QMS_System\QMS_System.Data\bin\Release\QMS_System.Data.dll
+E:\GPRO_2018\App\QMS\QMS_System\trunk\QMS_System\QMS_System.Data\bin\Release\QMS_System.Data.pdb
+E:\GPRO_2018\App\QMS\QMS_System\trunk\QMS_System\QMS_System.Data\bin\Release\EntityFramework.dll
+E:\GPRO_2018\App\QMS\QMS_System\trunk\QMS_System\QMS_System.Data\bin\Release\EntityFramework.SqlServer.dll
+E:\GPRO_2018\App\QMS\QMS_System\trunk\QMS_System\QMS_System.Data\bin\Release\GPRO.Ultilities.dll
+E:\GPRO_2018\App\QMS\QMS_System\trunk\QMS_System\QMS_System.Data\bin\Release\PagedList.dll
+E:\GPRO_2018\App\QMS\QMS_System\trunk\QMS_System\QMS_System.Data\obj\Release\QMS_System.Data.dll
+E:\GPRO_2018\App\QMS\QMS_System\trunk\QMS_System\QMS_System.Data\obj\Release\QMS_System.Data.pdb
+E:\GPRO_2018\App\QMS\QMS_System\trunk\QMS_System\QMS_System.Data\obj\Release\QMS_System.Data.csprojResolveAssemblyReference.cache

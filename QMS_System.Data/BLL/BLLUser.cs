@@ -1,0 +1,300 @@
+﻿using GPRO.Ultilities;
+using PagedList;
+using QMS_System.Data.Model;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace QMS_System.Data.BLL
+{
+    public class BLLUser
+    {
+        #region constructor
+        QMSSystemEntities db;
+        static object key = new object();
+        private static volatile BLLUser _Instance;  //volatile =>  tranh dung thread
+        public static BLLUser Instance
+        {
+            get
+            {
+                if (_Instance == null)
+                    lock (key)
+                        _Instance = new BLLUser();
+
+                return _Instance;
+            }
+        }
+        private BLLUser() { }
+        #endregion
+
+        private bool CheckExists(int Id, string keyword)
+        {
+            try
+            {
+                var nv = db.Q_User.FirstOrDefault(x => x.Id != Id && x.Name.Trim().ToUpper().Equals(keyword));
+                if (nv == null)
+                    return false;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public ResponseBase CreateOrUpdate(Q_User model)
+        {
+            using (db = new QMSSystemEntities())
+            {
+                try
+                {
+                    var rs = new ResponseBase();
+                    if (CheckExists(model.Id, model.Name.Trim().ToUpper()))
+                    {
+                        rs.IsSuccess = false;
+                        rs.Errors.Add(new Error() { MemberName = "Insert", Message = "Tên Nhân Viên này đã được sử dụng. Vui lòng nhập Tên khác !." });
+                    }
+                    else
+                    {
+                        Q_User obj;
+                        if (model.Id == 0)
+                        {
+                            obj = new Q_User();
+                            Parse.CopyObject(model, ref obj);
+                            db.Q_User.Add(model);
+                            rs.IsSuccess = true;
+                        }
+                        else
+                        {
+                            obj = db.Q_User.FirstOrDefault(m => m.Id == model.Id);
+                            if (obj == null)
+                            {
+                                rs.IsSuccess = false;
+                                rs.Errors.Add(new Error() { MemberName = "Update", Message = "Dữ liệu bạn đang thao tác đã bị xóa hoặc không tồn tại. Vui lòng kiểm tra lại !." });
+                            }
+                            else
+                            {
+                                obj.Name = model.Name;
+                                obj.Address = model.Address;
+                                obj.Sex = model.Sex;
+                                obj.Help = model.Help;
+                                obj.UserName = model.UserName;
+                                if (model.Password != obj.Password)
+                                    obj.Password = model.Password;
+                                if (!string.IsNullOrEmpty(model.Avatar))
+                                    obj.Avatar = model.Avatar;
+                                obj.Position = model.Position;
+                                obj.WorkingHistory = model.WorkingHistory;
+                                obj.Professional = model.Professional;
+                                obj.Counters = model.Counters;
+                                rs.IsSuccess = true;
+                            }
+                        }
+                        if (rs.IsSuccess)
+                        {
+                            db.SaveChanges();
+                            rs.IsSuccess = true;
+                        }
+                    }
+                    return rs;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+        }
+
+        public List<UserModel> Gets()
+        {
+            using (db = new QMSSystemEntities())
+            {
+                return db.Q_User.Where(x => !x.IsDeleted).Select(x => new UserModel()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Sex = x.Sex,
+                    Address = x.Address,
+                    UserName = x.UserName,
+                    Password = x.Password,
+                    Help = x.Help,
+                    Avatar = x.Avatar,
+                    Professional = x.Professional,
+                    Position = x.Position,
+                    WorkingHistory = x.WorkingHistory,
+                    Counters = x.Counters
+                }).ToList();
+            }
+        }
+
+        public List<ModelSelectItem> GetLookUp()
+        {
+            using (db = new QMSSystemEntities())
+            {
+                return db.Q_User.Where(x => !x.IsDeleted).Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Name }).ToList();
+            }
+        }
+
+        public int Insert(Q_User obj)
+        {
+            using (db = new QMSSystemEntities())
+            {
+                db.Q_User.Add(obj);
+                db.SaveChanges();
+                return obj.Id;
+            }
+        }
+
+        public bool Update(Q_User model)
+        {
+            using (db = new QMSSystemEntities())
+            {
+                var obj = db.Q_User.FirstOrDefault(x => !x.IsDeleted && x.Id == model.Id);
+                if (obj != null)
+                {
+                    obj.Name = model.Name;
+                    obj.Sex = model.Sex;
+                    obj.Address = model.Address;
+                    obj.UserName = model.UserName;
+                    obj.Password = model.Password;
+                    obj.Help = model.Help;
+                    obj.Avatar = model.Avatar;
+                    obj.Professional = model.Professional;
+                    obj.Position = model.Position;
+                    obj.WorkingHistory = model.WorkingHistory;
+                    obj.Counters = model.Counters;
+                    db.SaveChanges();
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        public bool Delete(int Id)
+        {
+            using (db = new QMSSystemEntities())
+            {
+                var obj = db.Q_User.FirstOrDefault(x => !x.IsDeleted && x.Id == Id);
+                if (obj != null)
+                {
+                    obj.IsDeleted = true;
+                    db.SaveChanges();
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        public Login FindUser(string sUsername, string sPassword)
+        {
+            using (db = new QMSSystemEntities())
+            {
+                Login login = null;
+                var obj = db.Q_User.FirstOrDefault(x => x.UserName.Equals(sUsername) && x.Password.Equals(sPassword));
+                if (obj != null)
+                {
+                    login = new Login();
+                    //login.UserName = sUsername;
+                    //  login.strPassword = sPassword;
+                    login.UserId = obj.Id;
+                    login.UserName = obj.Name.ToString();
+                }
+                return login;
+            }
+        }
+
+        public UserModel Get(int userId)
+        {
+            using (db = new QMSSystemEntities())
+            {
+                UserModel obj = null;
+                var user = db.Q_User.FirstOrDefault(x => x.Id == userId);
+                if (user != null)
+                {
+                    obj = new UserModel();
+                    obj.Id = user.Id;
+                    obj.Name = user.Name;
+                    obj.Sex = user.Sex;
+                    obj.Address = user.Address;
+                    obj.Avatar = user.Avatar;
+                    obj.Professional = user.Professional;
+                    obj.Position = user.Position;
+                    obj.WorkingHistory = user.WorkingHistory;
+                    obj.UserName = user.UserName;
+                    obj.Password = user.Password;
+                    obj.Counters = user.Counters;
+                }
+                return obj;
+            }
+        }
+
+        public Q_User Get(string userName, string password)
+        {
+            using (db = new QMSSystemEntities())
+            {
+                return db.Q_User.Where(x => x.UserName.Trim().ToUpper().Equals(userName) && x.Password.Trim().ToUpper().Equals(password)).FirstOrDefault();
+            }
+        }
+
+        public Q_User Get(string username)
+        {
+            using (db = new QMSSystemEntities()) { return db.Q_User.FirstOrDefault(x => x.UserName.Trim().Equals(username)); }
+        }
+
+        public PagedList<UserModel> GetList(string keyWord, int searchBy, int startIndexRecord, int pageSize, string sorting)
+        {
+            using (db = new QMSSystemEntities())
+            {
+                try
+                {
+                    if (string.IsNullOrEmpty(sorting))
+                        sorting = "Id DESC";
+
+                    IQueryable<Q_User> objs = null;
+                    var pageNumber = (startIndexRecord / pageSize) + 1;
+                    if (!string.IsNullOrEmpty(keyWord))
+                        objs = db.Q_User.Where(x => x.Name.Trim().ToUpper().Contains(keyWord.Trim().ToUpper())).OrderByDescending(x => x.Id);
+                    else
+                        objs = db.Q_User.OrderByDescending(x => x.Id);
+
+                    if (objs != null && objs.Count() > 0)
+                    {
+                        var NhanVien = objs.Select(x => new UserModel()
+                        {
+                            Id = x.Id,
+                            Name = x.Name,
+                            Address = x.Address,
+                            Sex = x.Sex,
+                            Help = x.Help,
+                            UserName = x.UserName,
+                            Password = x.Password,
+                            Avatar = x.Avatar,
+                            Professional = x.Professional,
+                            Position = x.Position,
+                            WorkingHistory = x.WorkingHistory,
+                            Counters = x.Counters
+                        });
+                        return new PagedList<UserModel>(NhanVien.ToList(), pageNumber, pageSize);
+                    }
+                    else
+                        return new PagedList<UserModel>(new List<UserModel>(), pageNumber, pageSize);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+        }
+
+        public string GetUserAvatar(string userName)
+        {
+            using (var _db = new QMSSystemEntities())
+            {
+                var user = _db.Q_User.FirstOrDefault(x => x.UserName.Trim().ToUpper().Equals(userName.ToUpper().Trim()));
+                if (user != null && !string.IsNullOrEmpty(user.Avatar))
+                    return user.Avatar;
+                return string.Empty;
+            }            
+        }
+    }
+}

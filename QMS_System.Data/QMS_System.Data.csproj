@@ -1,0 +1,358 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DA64D714-1D68-4A11-B6A5-DA2803AA5CCC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>QMS_System.Data</RootNamespace>
+    <AssemblyName>QMS_System.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libs\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libs\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="GPRO.Ultilities">
+      <HintPath>..\Libs\GPRO.Ultilities.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList">
+      <HintPath>..\Libs\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BLL\BLLAlert.cs" />
+    <Compile Include="BLL\BLLCounterSound.cs" />
+    <Compile Include="BLL\BLLMaindisplayDirection.cs" />
+    <Compile Include="BLL\BLLReadTemp_Detail.cs" />
+    <Compile Include="BLL\BLLReport.cs" />
+    <Compile Include="BLL\BLLR_ReportByBusiness.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="BLL\BLLServiceShift.cs" />
+    <Compile Include="BLL\BLLShift.cs" />
+    <Compile Include="BLL\BLLCounterSoftRequire.cs" />
+    <Compile Include="BLL\BLLEvaluate.cs" />
+    <Compile Include="BLL\BLLRecieverSMS.cs" />
+    <Compile Include="BLL\BLLSQLBuilder.cs" />
+    <Compile Include="BLL\BLLUserCmdReadSound.cs" />
+    <Compile Include="BLL\BLLUserEvaluate.cs" />
+    <Compile Include="BLL\BLLUserMajor.cs" />
+    <Compile Include="BLL\BLLRegisterUserCmd.cs" />
+    <Compile Include="BLL\BLLDailyRequire.cs" />
+    <Compile Include="BLL\BLLBusiness.cs" />
+    <Compile Include="BLL\BLLConfig.cs" />
+    <Compile Include="BLL\BLLAction.cs" />
+    <Compile Include="BLL\BLLMajor.cs" />
+    <Compile Include="BLL\BLLProcess.cs" />
+    <Compile Include="BLL\BLLLoginHistory.cs" />
+    <Compile Include="BLL\BLLActionParameter.cs" />
+    <Compile Include="BLL\BLLCommand.cs" />
+    <Compile Include="BLL\BLLCommandParameter.cs" />
+    <Compile Include="BLL\BLLEquipTypeProcess.cs" />
+    <Compile Include="BLL\BLLReadTempDetail.cs" />
+    <Compile Include="BLL\BLLReadTemplate.cs" />
+    <Compile Include="BLL\BLLServiceStep.cs" />
+    <Compile Include="BLL\BLLSound.cs" />
+    <Compile Include="BLL\BLLLanguage.cs" />
+    <Compile Include="BLL\BLLUser.cs" />
+    <Compile Include="BLL\BLLEquipment.cs" />
+    <Compile Include="BLL\BLLCounter.cs" />
+    <Compile Include="BLL\BLLPolicy.cs" />
+    <Compile Include="BLL\BLLBusinessType.cs" />
+    <Compile Include="BLL\BLLStatus.cs" />
+    <Compile Include="BLL\BLLEquipType.cs" />
+    <Compile Include="BLL\BLLStatusType.cs" />
+    <Compile Include="BLL\BLLService.cs" />
+    <Compile Include="Enum\eCounterSoftRequireType.cs" />
+    <Compile Include="Model\A_CurrentInfoModel.cs" />
+    <Compile Include="Model\CounterSoftRequireModel.cs" />
+    <Compile Include="Model\CountServeOverTimeModel.cs" />
+    <Compile Include="Model\RecieverSMSModel.cs" />
+    <Compile Include="Model\ServiceInfoModel.cs" />
+    <Compile Include="Model\ReportModel.cs" />
+    <Compile Include="Model\ViewModel.cs" />
+    <Compile Include="Model\UserEvaluateModel.cs" />
+    <Compile Include="Model\EvaluateModel.cs" />
+    <Compile Include="BLL\IssueTicketScreen\BLLSetupInterface.cs" />
+    <Compile Include="Enum\eCodeHex.cs" />
+    <Compile Include="Enum\eEquipType.cs" />
+    <Compile Include="Model\AlertModel.cs" />
+    <Compile Include="Model\CounterSoundModel.cs" />
+    <Compile Include="Model\IssueTicketScreen\ButtonServiceModel.cs" />
+    <Compile Include="Model\Login.cs" />
+    <Compile Include="Model\MaindisplayDirection.cs" />
+    <Compile Include="Model\ModelStatic.cs" />
+    <Compile Include="Model\ReadTemp_DetailModel.cs" />
+    <Compile Include="Model\ResponseBaseModel.cs" />
+    <Compile Include="Model\R_DetailByTimeRangeMajorModel .cs" />
+    <Compile Include="Model\R_DetailByTimeRangeModel.cs" />
+    <Compile Include="Model\R_DetailByTimeRangeServiceModel.cs" />
+    <Compile Include="Model\R_DetailByTimeRangeUserModel.cs" />
+    <Compile Include="Model\R_DetailInDayByMajorModel.cs" />
+    <Compile Include="Model\R_DetailInDayByServiceModel.cs" />
+    <Compile Include="Model\R_DetailInDayByUserModel.cs" />
+    <Compile Include="Model\R_DetailInDayModel.cs" />
+    <Compile Include="Model\R_GeneralByTimeRangeMajorModel .cs" />
+    <Compile Include="Model\R_GeneralByTimeRangeModel.cs" />
+    <Compile Include="Model\R_GeneralByTimeRangeServiceModel.cs" />
+    <Compile Include="Model\R_GeneralByTimeRangeUserModel.cs" />
+    <Compile Include="Model\R_GeneralInDayByMajorModel.cs" />
+    <Compile Include="Model\R_GeneralInDayByServiceModel.cs" />
+    <Compile Include="Model\R_GeneralInDayByUserModel.cs" />
+    <Compile Include="Model\R_GeneralInDayModel.cs" />
+    <Compile Include="Model\R_ReportByBusinessModel.cs" />
+    <Compile Include="Model\ServiceShiftModel.cs" />
+    <Compile Include="Model\ShiftModel.cs" />
+    <Compile Include="Model\UserCmdReadSoundModel.cs" />
+    <Compile Include="Model\UserMajorModel.cs" />
+    <Compile Include="Enum\eActionParam.cs" />
+    <Compile Include="Enum\eActionCode.cs" />
+    <Compile Include="Model\RegisterUserCmdModel.cs" />
+    <Compile Include="Enum\eConfigCode.cs" />
+    <Compile Include="Enum\ePrintType.cs" />
+    <Compile Include="Enum\eStatus.cs" />
+    <Compile Include="Enum\eSoundConfig.cs" />
+    <Compile Include="Model\HomeModel.cs" />
+    <Compile Include="Model\ActionParamModel.cs" />
+    <Compile Include="Model\BusinessModel.cs" />
+    <Compile Include="Model\ConfigModel.cs" />
+    <Compile Include="Model\MajorModel.cs" />
+    <Compile Include="Model\CommandModelSelectItem.cs" />
+    <Compile Include="Model\ProcessModel.cs" />
+    <Compile Include="Model\LoginHistory.cs" />
+    <Compile Include="Model\ActionModel.cs" />
+    <Compile Include="Model\CommandModel.cs" />
+    <Compile Include="Model\CommandParamModel.cs" />
+    <Compile Include="Model\EquipTypeProcessModel.cs" />
+    <Compile Include="Model\ReadTemplateModel.cs" />
+    <Compile Include="Model\SoundModel.cs" />
+    <Compile Include="Model\LanguageModel.cs" />
+    <Compile Include="Model\UserModel.cs" />
+    <Compile Include="Model\ModelSelectItem.cs" />
+    <Compile Include="Model\EquipmentModel.cs" />
+    <Compile Include="Model\CounterModel.cs" />
+    <Compile Include="Model\PolicyModel .cs" />
+    <Compile Include="Model\BusinessTypeModel.cs" />
+    <Compile Include="Model\StatusModel.cs" />
+    <Compile Include="Model\EquipTypeModel.cs" />
+    <Compile Include="Model\StatusTypeModel.cs" />
+    <Compile Include="Model\ServiceModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QMSModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>QMSModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="QMSModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="QMSModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>QMSModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Q_Action.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_ActionParameter.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_Alert.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_Business.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_BusinessType.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_Command.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_CommandParameter.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_Config.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_Counter.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_CounterSoftRequire.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_CounterSound.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_DailyRequire.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_DailyRequire_Detail.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_Equipment.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_EquipmentType.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_EquipTypeProcess.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_Evaluate.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_EvaluateDetail.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_HisDailyRequire.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_HisDailyRequire_De.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_HisUserEvaluate.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_Language.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_Login.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_LoginHistory.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_MaindisplayDirection.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_Major.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_Policy.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_Process.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_ReadTemplate.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_ReadTemp_Detail.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_RecieverSMS.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_RegisterRecieveTicket.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_Service.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_ServiceShift.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_ServiceStep.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_Shift.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_Sound.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_Status.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_StatusType.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_User.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_UserCmdRegister.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_UserCommandReadSound.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_UserEvaluate.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_UserMajor.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+    <EntityDeploy Include="QMSModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>QMSModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="packages.config" />
+    <None Include="QMSModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>QMSModel.edmx</DependentUpon>
+      <LastGenOutput>QMSModel.Context.cs</LastGenOutput>
+    </None>
+    <None Include="QMSModel.edmx.diagram">
+      <DependentUpon>QMSModel.edmx</DependentUpon>
+    </None>
+    <None Include="QMSModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>QMSModel.edmx</DependentUpon>
+      <LastGenOutput>QMSModel.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

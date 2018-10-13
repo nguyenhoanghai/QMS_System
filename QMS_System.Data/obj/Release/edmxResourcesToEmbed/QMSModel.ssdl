@@ -1,0 +1,1375 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="QMSSystemModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Q_Action">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Code" Type="nvarchar" MaxLength="25" Nullable="false" />
+    <Property Name="Note" Type="nvarchar" MaxLength="1000" />
+    <Property Name="Function" Type="nvarchar" MaxLength="50" />
+    <Property Name="Index" Type="int" Nullable="false" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_ActionParameter">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ActionId" Type="int" Nullable="false" />
+    <Property Name="ParameterCode" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Note" Type="nvarchar" MaxLength="1000" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_Alert">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="SoundId" Type="int" Nullable="false" />
+    <Property Name="Start" Type="datetime" Nullable="false" />
+    <Property Name="End" Type="datetime" Nullable="false" />
+    <Property Name="Note" Type="nvarchar" MaxLength="1000" Nullable="false" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_Business">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="BusinessTypeId" Type="int" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="Address" Type="nvarchar(max)" />
+    <Property Name="Note" Type="nvarchar(max)" />
+    <Property Name="TotalTicket" Type="int" Nullable="false" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_BusinessType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="Note" Type="nvarchar(max)" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_Command">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Code" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="CodeHEX" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Note" Type="nvarchar" MaxLength="500" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_CommandParameter">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CommandId" Type="int" Nullable="false" />
+    <Property Name="Parameter" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Note" Type="nvarchar" MaxLength="1000" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_Config">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Code" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Value" Type="varchar" MaxLength="500" Nullable="false" />
+    <Property Name="Note" Type="nvarchar(max)" />
+    <Property Name="IsActived" Type="bit" Nullable="false" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_Counter">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ShortName" Type="nvarchar" MaxLength="30" Nullable="false" />
+    <Property Name="Index" Type="int" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Position" Type="nvarchar" MaxLength="50" />
+    <Property Name="Acreage" Type="nvarchar" MaxLength="50" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+    <Property Name="LastCall" Type="int" Nullable="false" />
+    <Property Name="IsRunning" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_CounterSoftRequire">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Content" Type="nvarchar" MaxLength="1000" Nullable="false" />
+    <Property Name="TypeOfRequire" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_CounterSound">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CounterId" Type="int" Nullable="false" />
+    <Property Name="LanguageId" Type="int" Nullable="false" />
+    <Property Name="SoundName" Type="nvarchar" MaxLength="250" Nullable="false" />
+    <Property Name="Note" Type="nvarchar" MaxLength="1000" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_DailyRequire">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TicketNumber" Type="int" Nullable="false" />
+    <Property Name="ServiceId" Type="int" Nullable="false" />
+    <Property Name="BusinessId" Type="int" />
+    <Property Name="PrintTime" Type="datetime" Nullable="false" />
+    <Property Name="CarNumber" Type="varchar" MaxLength="250" />
+    <Property Name="PhoneNumber" Type="varchar" MaxLength="250" />
+    <Property Name="ServeTimeAllow" Type="time" Precision="7" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_DailyRequire_Detail">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="DailyRequireId" Type="int" Nullable="false" />
+    <Property Name="MajorId" Type="int" Nullable="false" />
+    <Property Name="UserId" Type="int" />
+    <Property Name="EquipCode" Type="int" />
+    <Property Name="ProcessTime" Type="datetime" />
+    <Property Name="EndProcessTime" Type="datetime" />
+    <Property Name="StatusId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_Equipment">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Code" Type="int" Nullable="false" />
+    <Property Name="EquipTypeId" Type="int" Nullable="false" />
+    <Property Name="CounterId" Type="int" Nullable="false" />
+    <Property Name="StatusId" Type="int" Nullable="false" />
+    <Property Name="Position" Type="nvarchar" MaxLength="50" />
+    <Property Name="Note" Type="nvarchar" MaxLength="100" />
+    <Property Name="EndTime" Type="datetime" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_EquipmentType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Note" Type="nvarchar" MaxLength="500" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_EquipTypeProcess">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="EquipTypeId" Type="int" Nullable="false" />
+    <Property Name="ProcessId" Type="int" Nullable="false" />
+    <Property Name="Step" Type="int" Nullable="false" />
+    <Property Name="Priority" Type="int" Nullable="false" />
+    <Property Name="Count" Type="int" Nullable="false" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_Evaluate">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Index" Type="int" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="Note" Type="nvarchar(max)" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_EvaluateDetail">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="EvaluateId" Type="int" Nullable="false" />
+    <Property Name="Index" Type="int" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="Note" Type="nvarchar(max)" />
+    <Property Name="IsDefault" Type="bit" Nullable="false" />
+    <Property Name="Icon" Type="nvarchar(max)" />
+    <Property Name="IsSendSMS" Type="bit" Nullable="false" />
+    <Property Name="SmsContent" Type="nvarchar" MaxLength="1000" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_HisDailyRequire">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TicketNumber" Type="int" Nullable="false" />
+    <Property Name="ServiceId" Type="int" Nullable="false" />
+    <Property Name="BusinessId" Type="int" />
+    <Property Name="PrintTime" Type="datetime" Nullable="false" />
+    <Property Name="CarNumber" Type="varchar" MaxLength="250" />
+    <Property Name="PhoneNumber" Type="varchar" MaxLength="250" />
+    <Property Name="ServeTimeAllow" Type="time" Precision="7" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_HisDailyRequire_De">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="HisDailyRequireId" Type="int" Nullable="false" />
+    <Property Name="MajorId" Type="int" Nullable="false" />
+    <Property Name="UserId" Type="int" />
+    <Property Name="EquipCode" Type="int" />
+    <Property Name="ProcessTime" Type="datetime" />
+    <Property Name="EndProcessTime" Type="datetime" />
+    <Property Name="StatusId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_HisUserEvaluate">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="HisDailyRequireDeId" Type="int" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="Score" Type="nvarchar" MaxLength="550" Nullable="false" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_Language">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Note" Type="nvarchar(max)" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_Login">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="EquipCode" Type="int" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="Date" Type="datetime" Nullable="false" />
+    <Property Name="StatusId" Type="int" Nullable="false" />
+    <Property Name="LogoutTime" Type="datetime" />
+  </EntityType>
+  <EntityType Name="Q_LoginHistory">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="EquipCode" Type="int" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="Date" Type="datetime" Nullable="false" />
+    <Property Name="StatusId" Type="int" Nullable="false" />
+    <Property Name="LogoutTime" Type="datetime" />
+  </EntityType>
+  <EntityType Name="Q_MaindisplayDirection">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CounterId" Type="int" Nullable="false" />
+    <Property Name="EquipmentId" Type="int" Nullable="false" />
+    <Property Name="Direction" Type="bit" Nullable="false" />
+    <Property Name="Note" Type="nvarchar" MaxLength="500" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_Major">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="Note" Type="nvarchar(max)" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_Policy">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="Note" Type="nvarchar(max)" />
+    <Property Name="IsActived" Type="bit" Nullable="false" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_Process">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="500" Nullable="false" />
+    <Property Name="Index" Type="int" Nullable="false" />
+    <Property Name="Note" Type="nvarchar(max)" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_ReadTemp_Detail">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ReadTemplateId" Type="int" Nullable="false" />
+    <Property Name="Index" Type="int" Nullable="false" />
+    <Property Name="SoundId" Type="int" Nullable="false" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_ReadTemplate">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="LanguageId" Type="int" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="Note" Type="nvarchar" MaxLength="1000" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_RecieverSMS">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PhoneNumber" Type="char" MaxLength="20" Nullable="false" />
+    <Property Name="Note" Type="nvarchar" MaxLength="1000" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_RegisterRecieveTicket">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="EquipmentId" Type="int" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="Date" Type="datetime" Nullable="false" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_Service">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="StartNumber" Type="int" Nullable="false" />
+    <Property Name="EndNumber" Type="int" Nullable="false" />
+    <Property Name="TimeProcess" Type="datetime" Nullable="false" />
+    <Property Name="Note" Type="nvarchar" MaxLength="100" />
+    <Property Name="IsActived" Type="bit" Nullable="false" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_ServiceShift">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ServiceId" Type="int" Nullable="false" />
+    <Property Name="ShiftId" Type="int" Nullable="false" />
+    <Property Name="Index" Type="int" Nullable="false" />
+    <Property Name="Note" Type="nvarchar" MaxLength="500" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_ServiceStep">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ServiceId" Type="int" Nullable="false" />
+    <Property Name="MajorId" Type="int" Nullable="false" />
+    <Property Name="Index" Type="int" Nullable="false" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_Shift">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="Start" Type="datetime" Nullable="false" />
+    <Property Name="End" Type="datetime" Nullable="false" />
+    <Property Name="Note" Type="nvarchar(max)" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_Sound">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="LanguageId" Type="int" Nullable="false" />
+    <Property Name="Code" Type="varchar" MaxLength="50" />
+    <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Note" Type="nvarchar(max)" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_Status">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Code" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="StatusTypeId" Type="int" Nullable="false" />
+    <Property Name="Note" Type="nvarchar" MaxLength="500" />
+  </EntityType>
+  <EntityType Name="Q_StatusType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="Note" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="Q_User">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Sex" Type="bit" Nullable="false" />
+    <Property Name="Address" Type="nvarchar" MaxLength="100" />
+    <Property Name="Avatar" Type="nvarchar" MaxLength="500" />
+    <Property Name="UserName" Type="nvarchar" MaxLength="50" />
+    <Property Name="Password" Type="nvarchar" MaxLength="50" />
+    <Property Name="Help" Type="nvarchar" MaxLength="50" />
+    <Property Name="Professional" Type="nvarchar(max)" />
+    <Property Name="Position" Type="nvarchar(max)" />
+    <Property Name="WorkingHistory" Type="nvarchar(max)" />
+    <Property Name="Counters" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_UserCmdRegister">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="CmdParamId" Type="int" Nullable="false" />
+    <Property Name="ActionParamId" Type="int" Nullable="false" />
+    <Property Name="Param" Type="varchar" MaxLength="50" />
+    <Property Name="Index" Type="int" Nullable="false" />
+    <Property Name="Note" Type="nvarchar(max)" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_UserCommandReadSound">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="CommandId" Type="int" Nullable="false" />
+    <Property Name="ReadTemplateId" Type="int" Nullable="false" />
+    <Property Name="Index" Type="int" Nullable="false" />
+    <Property Name="Note" Type="nvarchar" MaxLength="500" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_UserEvaluate">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="DailyRequireDeId" Type="int" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="Score" Type="nvarchar" MaxLength="550" Nullable="false" />
+    <Property Name="SendSMS" Type="bit" Nullable="false" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+    <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_UserMajor">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="MajorId" Type="int" Nullable="false" />
+    <Property Name="Index" Type="int" Nullable="false" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Q_ActionParameter_Q_Action">
+    <End Role="Q_Action" Type="Self.Q_Action" Multiplicity="1" />
+    <End Role="Q_ActionParameter" Type="Self.Q_ActionParameter" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Action">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_ActionParameter">
+        <PropertyRef Name="ActionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_Alert_Q_Sound">
+    <End Role="Q_Sound" Type="Self.Q_Sound" Multiplicity="1" />
+    <End Role="Q_Alert" Type="Self.Q_Alert" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Sound">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_Alert">
+        <PropertyRef Name="SoundId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_Business_Q_BusinessType">
+    <End Role="Q_BusinessType" Type="Self.Q_BusinessType" Multiplicity="1" />
+    <End Role="Q_Business" Type="Self.Q_Business" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_BusinessType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_Business">
+        <PropertyRef Name="BusinessTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_CommandParameter_Q_Command">
+    <End Role="Q_Command" Type="Self.Q_Command" Multiplicity="1" />
+    <End Role="Q_CommandParameter" Type="Self.Q_CommandParameter" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Command">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_CommandParameter">
+        <PropertyRef Name="CommandId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_CounterSound_Q_Counter">
+    <End Role="Q_Counter" Type="Self.Q_Counter" Multiplicity="1" />
+    <End Role="Q_CounterSound" Type="Self.Q_CounterSound" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Counter">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_CounterSound">
+        <PropertyRef Name="CounterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_CounterSound_Q_Sound">
+    <End Role="Q_Language" Type="Self.Q_Language" Multiplicity="1" />
+    <End Role="Q_CounterSound" Type="Self.Q_CounterSound" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Language">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_CounterSound">
+        <PropertyRef Name="LanguageId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_DailyRequire_Detail_Q_DailyRequire">
+    <End Role="Q_DailyRequire" Type="Self.Q_DailyRequire" Multiplicity="1" />
+    <End Role="Q_DailyRequire_Detail" Type="Self.Q_DailyRequire_Detail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_DailyRequire">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_DailyRequire_Detail">
+        <PropertyRef Name="DailyRequireId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <!--Errors Found During Generation:
+warning 6035: The relationship 'FK_Q_DailyRequire_Detail_Q_Equipment' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+        <Association Name="FK_Q_DailyRequire_Detail_Q_Equipment" />-->
+  <Association Name="FK_Q_DailyRequire_Detail_Q_Major">
+    <End Role="Q_Major" Type="Self.Q_Major" Multiplicity="1" />
+    <End Role="Q_DailyRequire_Detail" Type="Self.Q_DailyRequire_Detail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Major">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_DailyRequire_Detail">
+        <PropertyRef Name="MajorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_DailyRequire_Detail_Q_Status">
+    <End Role="Q_Status" Type="Self.Q_Status" Multiplicity="1" />
+    <End Role="Q_DailyRequire_Detail" Type="Self.Q_DailyRequire_Detail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Status">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_DailyRequire_Detail">
+        <PropertyRef Name="StatusId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_DailyRequire_Detail_Q_User">
+    <End Role="Q_User" Type="Self.Q_User" Multiplicity="0..1" />
+    <End Role="Q_DailyRequire_Detail" Type="Self.Q_DailyRequire_Detail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_DailyRequire_Detail">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_DailyRequire_Q_Business">
+    <End Role="Q_Business" Type="Self.Q_Business" Multiplicity="0..1" />
+    <End Role="Q_DailyRequire" Type="Self.Q_DailyRequire" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Business">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_DailyRequire">
+        <PropertyRef Name="BusinessId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_DailyRequire_Q_Service">
+    <End Role="Q_Service" Type="Self.Q_Service" Multiplicity="1" />
+    <End Role="Q_DailyRequire" Type="Self.Q_DailyRequire" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Service">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_DailyRequire">
+        <PropertyRef Name="ServiceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_Equipment_Q_Counter">
+    <End Role="Q_Counter" Type="Self.Q_Counter" Multiplicity="1" />
+    <End Role="Q_Equipment" Type="Self.Q_Equipment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Counter">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_Equipment">
+        <PropertyRef Name="CounterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_Equipment_Q_EquipmentType">
+    <End Role="Q_EquipmentType" Type="Self.Q_EquipmentType" Multiplicity="1" />
+    <End Role="Q_Equipment" Type="Self.Q_Equipment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_EquipmentType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_Equipment">
+        <PropertyRef Name="EquipTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_Equipment_Q_Status">
+    <End Role="Q_Status" Type="Self.Q_Status" Multiplicity="1" />
+    <End Role="Q_Equipment" Type="Self.Q_Equipment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Status">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_Equipment">
+        <PropertyRef Name="StatusId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_EquipTypeProcess_Q_EquipmentType">
+    <End Role="Q_EquipmentType" Type="Self.Q_EquipmentType" Multiplicity="1" />
+    <End Role="Q_EquipTypeProcess" Type="Self.Q_EquipTypeProcess" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_EquipmentType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_EquipTypeProcess">
+        <PropertyRef Name="EquipTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_EquipTypeProcess_Q_Process">
+    <End Role="Q_Process" Type="Self.Q_Process" Multiplicity="1" />
+    <End Role="Q_EquipTypeProcess" Type="Self.Q_EquipTypeProcess" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Process">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_EquipTypeProcess">
+        <PropertyRef Name="ProcessId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_EvaluateDetail_Q_Evaluate">
+    <End Role="Q_Evaluate" Type="Self.Q_Evaluate" Multiplicity="1" />
+    <End Role="Q_EvaluateDetail" Type="Self.Q_EvaluateDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Evaluate">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_EvaluateDetail">
+        <PropertyRef Name="EvaluateId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_HisDailyRequire_De_Q_HisDailyRequire">
+    <End Role="Q_HisDailyRequire" Type="Self.Q_HisDailyRequire" Multiplicity="1" />
+    <End Role="Q_HisDailyRequire_De" Type="Self.Q_HisDailyRequire_De" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_HisDailyRequire">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_HisDailyRequire_De">
+        <PropertyRef Name="HisDailyRequireId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_HisDailyRequire_De_Q_Major">
+    <End Role="Q_Major" Type="Self.Q_Major" Multiplicity="1" />
+    <End Role="Q_HisDailyRequire_De" Type="Self.Q_HisDailyRequire_De" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Major">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_HisDailyRequire_De">
+        <PropertyRef Name="MajorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_HisDailyRequire_De_Q_Status">
+    <End Role="Q_Status" Type="Self.Q_Status" Multiplicity="1" />
+    <End Role="Q_HisDailyRequire_De" Type="Self.Q_HisDailyRequire_De" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Status">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_HisDailyRequire_De">
+        <PropertyRef Name="StatusId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_HisDailyRequire_De_Q_User">
+    <End Role="Q_User" Type="Self.Q_User" Multiplicity="0..1" />
+    <End Role="Q_HisDailyRequire_De" Type="Self.Q_HisDailyRequire_De" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_HisDailyRequire_De">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_HisDailyRequire_Q_Business">
+    <End Role="Q_Business" Type="Self.Q_Business" Multiplicity="0..1" />
+    <End Role="Q_HisDailyRequire" Type="Self.Q_HisDailyRequire" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Business">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_HisDailyRequire">
+        <PropertyRef Name="BusinessId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_HisDailyRequire_Q_Service">
+    <End Role="Q_Service" Type="Self.Q_Service" Multiplicity="1" />
+    <End Role="Q_HisDailyRequire" Type="Self.Q_HisDailyRequire" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Service">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_HisDailyRequire">
+        <PropertyRef Name="ServiceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_HisUserEvaluate_Q_HisDailyRequire_De">
+    <End Role="Q_HisDailyRequire_De" Type="Self.Q_HisDailyRequire_De" Multiplicity="1" />
+    <End Role="Q_HisUserEvaluate" Type="Self.Q_HisUserEvaluate" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_HisDailyRequire_De">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_HisUserEvaluate">
+        <PropertyRef Name="HisDailyRequireDeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_HisUserEvaluate_Q_User">
+    <End Role="Q_User" Type="Self.Q_User" Multiplicity="1" />
+    <End Role="Q_HisUserEvaluate" Type="Self.Q_HisUserEvaluate" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_HisUserEvaluate">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_Login_Q_Status">
+    <End Role="Q_Status" Type="Self.Q_Status" Multiplicity="1" />
+    <End Role="Q_Login" Type="Self.Q_Login" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Status">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_Login">
+        <PropertyRef Name="StatusId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_Login_Q_User">
+    <End Role="Q_User" Type="Self.Q_User" Multiplicity="1" />
+    <End Role="Q_Login" Type="Self.Q_Login" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_Login">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <!--Errors Found During Generation:
+warning 6035: The relationship 'FK_Q_LoginHistory_Q_Equipment' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+        <Association Name="FK_Q_LoginHistory_Q_Equipment" />-->
+  <Association Name="FK_Q_LoginHistory_Q_Status">
+    <End Role="Q_Status" Type="Self.Q_Status" Multiplicity="1" />
+    <End Role="Q_LoginHistory" Type="Self.Q_LoginHistory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Status">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_LoginHistory">
+        <PropertyRef Name="StatusId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_LoginHistory_Q_User">
+    <End Role="Q_User" Type="Self.Q_User" Multiplicity="1" />
+    <End Role="Q_LoginHistory" Type="Self.Q_LoginHistory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_LoginHistory">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_MaindisplayDirection_Q_Counter">
+    <End Role="Q_Counter" Type="Self.Q_Counter" Multiplicity="1" />
+    <End Role="Q_MaindisplayDirection" Type="Self.Q_MaindisplayDirection" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Counter">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_MaindisplayDirection">
+        <PropertyRef Name="CounterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_MaindisplayDirection_Q_Equipment">
+    <End Role="Q_Equipment" Type="Self.Q_Equipment" Multiplicity="1" />
+    <End Role="Q_MaindisplayDirection" Type="Self.Q_MaindisplayDirection" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Equipment">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_MaindisplayDirection">
+        <PropertyRef Name="EquipmentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_ReadTemp_Detail_Q_ReadTemplate">
+    <End Role="Q_ReadTemplate" Type="Self.Q_ReadTemplate" Multiplicity="1" />
+    <End Role="Q_ReadTemp_Detail" Type="Self.Q_ReadTemp_Detail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_ReadTemplate">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_ReadTemp_Detail">
+        <PropertyRef Name="ReadTemplateId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_ReadTemplate_Q_Language">
+    <End Role="Q_Language" Type="Self.Q_Language" Multiplicity="1" />
+    <End Role="Q_ReadTemplate" Type="Self.Q_ReadTemplate" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Language">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_ReadTemplate">
+        <PropertyRef Name="LanguageId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_RegisterRecieveTicket_Q_Equipment">
+    <End Role="Q_Equipment" Type="Self.Q_Equipment" Multiplicity="1" />
+    <End Role="Q_RegisterRecieveTicket" Type="Self.Q_RegisterRecieveTicket" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Equipment">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_RegisterRecieveTicket">
+        <PropertyRef Name="EquipmentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_RegisterRecieveTicket_Q_User">
+    <End Role="Q_User" Type="Self.Q_User" Multiplicity="1" />
+    <End Role="Q_RegisterRecieveTicket" Type="Self.Q_RegisterRecieveTicket" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_RegisterRecieveTicket">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_ServiceShift_Q_Service">
+    <End Role="Q_Service" Type="Self.Q_Service" Multiplicity="1" />
+    <End Role="Q_ServiceShift" Type="Self.Q_ServiceShift" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Service">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_ServiceShift">
+        <PropertyRef Name="ServiceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_ServiceShift_Q_Shift">
+    <End Role="Q_Shift" Type="Self.Q_Shift" Multiplicity="1" />
+    <End Role="Q_ServiceShift" Type="Self.Q_ServiceShift" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Shift">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_ServiceShift">
+        <PropertyRef Name="ShiftId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_ServiceStep_Q_Major">
+    <End Role="Q_Major" Type="Self.Q_Major" Multiplicity="1" />
+    <End Role="Q_ServiceStep" Type="Self.Q_ServiceStep" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Major">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_ServiceStep">
+        <PropertyRef Name="MajorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_ServiceStep_Q_Service">
+    <End Role="Q_Service" Type="Self.Q_Service" Multiplicity="1" />
+    <End Role="Q_ServiceStep" Type="Self.Q_ServiceStep" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Service">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_ServiceStep">
+        <PropertyRef Name="ServiceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_Sound_Q_Language">
+    <End Role="Q_Language" Type="Self.Q_Language" Multiplicity="1" />
+    <End Role="Q_Sound" Type="Self.Q_Sound" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Language">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_Sound">
+        <PropertyRef Name="LanguageId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_Status_Q_StatusType">
+    <End Role="Q_StatusType" Type="Self.Q_StatusType" Multiplicity="1" />
+    <End Role="Q_Status" Type="Self.Q_Status" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_StatusType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_Status">
+        <PropertyRef Name="StatusTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_UserCommand_Q_ActionParameter">
+    <End Role="Q_ActionParameter" Type="Self.Q_ActionParameter" Multiplicity="1" />
+    <End Role="Q_UserCmdRegister" Type="Self.Q_UserCmdRegister" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_ActionParameter">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_UserCmdRegister">
+        <PropertyRef Name="ActionParamId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_UserCommand_Q_CommandParameter">
+    <End Role="Q_CommandParameter" Type="Self.Q_CommandParameter" Multiplicity="1" />
+    <End Role="Q_UserCmdRegister" Type="Self.Q_UserCmdRegister" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_CommandParameter">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_UserCmdRegister">
+        <PropertyRef Name="CmdParamId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_UserCommand_Q_User">
+    <End Role="Q_User" Type="Self.Q_User" Multiplicity="1" />
+    <End Role="Q_UserCmdRegister" Type="Self.Q_UserCmdRegister" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_UserCmdRegister">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_UserCommandReadSound_Q_Command">
+    <End Role="Q_Command" Type="Self.Q_Command" Multiplicity="1" />
+    <End Role="Q_UserCommandReadSound" Type="Self.Q_UserCommandReadSound" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Command">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_UserCommandReadSound">
+        <PropertyRef Name="CommandId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_UserCommandReadSound_Q_ReadTemplate">
+    <End Role="Q_ReadTemplate" Type="Self.Q_ReadTemplate" Multiplicity="1" />
+    <End Role="Q_UserCommandReadSound" Type="Self.Q_UserCommandReadSound" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_ReadTemplate">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_UserCommandReadSound">
+        <PropertyRef Name="ReadTemplateId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_UserCommandReadSound_Q_User">
+    <End Role="Q_User" Type="Self.Q_User" Multiplicity="1" />
+    <End Role="Q_UserCommandReadSound" Type="Self.Q_UserCommandReadSound" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_UserCommandReadSound">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_UserEvaluate_NHANVIEN">
+    <End Role="Q_User" Type="Self.Q_User" Multiplicity="1" />
+    <End Role="Q_UserEvaluate" Type="Self.Q_UserEvaluate" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_UserEvaluate">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_UserEvaluate_Q_DailyRequire_Detail">
+    <End Role="Q_DailyRequire_Detail" Type="Self.Q_DailyRequire_Detail" Multiplicity="0..1" />
+    <End Role="Q_UserEvaluate" Type="Self.Q_UserEvaluate" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_DailyRequire_Detail">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_UserEvaluate">
+        <PropertyRef Name="DailyRequireDeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_UserMajor_Q_Major">
+    <End Role="Q_Major" Type="Self.Q_Major" Multiplicity="1" />
+    <End Role="Q_UserMajor" Type="Self.Q_UserMajor" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Major">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_UserMajor">
+        <PropertyRef Name="MajorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_UserMajor_Q_User">
+    <End Role="Q_User" Type="Self.Q_User" Multiplicity="1" />
+    <End Role="Q_UserMajor" Type="Self.Q_UserMajor" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_UserMajor">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="QMSSystemModelStoreContainer">
+    <EntitySet Name="Q_Action" EntityType="Self.Q_Action" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_ActionParameter" EntityType="Self.Q_ActionParameter" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_Alert" EntityType="Self.Q_Alert" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_Business" EntityType="Self.Q_Business" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_BusinessType" EntityType="Self.Q_BusinessType" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_Command" EntityType="Self.Q_Command" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_CommandParameter" EntityType="Self.Q_CommandParameter" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_Config" EntityType="Self.Q_Config" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_Counter" EntityType="Self.Q_Counter" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_CounterSoftRequire" EntityType="Self.Q_CounterSoftRequire" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_CounterSound" EntityType="Self.Q_CounterSound" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_DailyRequire" EntityType="Self.Q_DailyRequire" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_DailyRequire_Detail" EntityType="Self.Q_DailyRequire_Detail" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_Equipment" EntityType="Self.Q_Equipment" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_EquipmentType" EntityType="Self.Q_EquipmentType" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_EquipTypeProcess" EntityType="Self.Q_EquipTypeProcess" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_Evaluate" EntityType="Self.Q_Evaluate" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_EvaluateDetail" EntityType="Self.Q_EvaluateDetail" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_HisDailyRequire" EntityType="Self.Q_HisDailyRequire" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_HisDailyRequire_De" EntityType="Self.Q_HisDailyRequire_De" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_HisUserEvaluate" EntityType="Self.Q_HisUserEvaluate" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_Language" EntityType="Self.Q_Language" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_Login" EntityType="Self.Q_Login" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_LoginHistory" EntityType="Self.Q_LoginHistory" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_MaindisplayDirection" EntityType="Self.Q_MaindisplayDirection" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_Major" EntityType="Self.Q_Major" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_Policy" EntityType="Self.Q_Policy" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_Process" EntityType="Self.Q_Process" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_ReadTemp_Detail" EntityType="Self.Q_ReadTemp_Detail" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_ReadTemplate" EntityType="Self.Q_ReadTemplate" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_RecieverSMS" EntityType="Self.Q_RecieverSMS" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_RegisterRecieveTicket" EntityType="Self.Q_RegisterRecieveTicket" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_Service" EntityType="Self.Q_Service" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_ServiceShift" EntityType="Self.Q_ServiceShift" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_ServiceStep" EntityType="Self.Q_ServiceStep" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_Shift" EntityType="Self.Q_Shift" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_Sound" EntityType="Self.Q_Sound" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_Status" EntityType="Self.Q_Status" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_StatusType" EntityType="Self.Q_StatusType" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_User" EntityType="Self.Q_User" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_UserCmdRegister" EntityType="Self.Q_UserCmdRegister" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_UserCommandReadSound" EntityType="Self.Q_UserCommandReadSound" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_UserEvaluate" EntityType="Self.Q_UserEvaluate" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_UserMajor" EntityType="Self.Q_UserMajor" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Q_ActionParameter_Q_Action" Association="Self.FK_Q_ActionParameter_Q_Action">
+      <End Role="Q_Action" EntitySet="Q_Action" />
+      <End Role="Q_ActionParameter" EntitySet="Q_ActionParameter" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_Alert_Q_Sound" Association="Self.FK_Q_Alert_Q_Sound">
+      <End Role="Q_Sound" EntitySet="Q_Sound" />
+      <End Role="Q_Alert" EntitySet="Q_Alert" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_Business_Q_BusinessType" Association="Self.FK_Q_Business_Q_BusinessType">
+      <End Role="Q_BusinessType" EntitySet="Q_BusinessType" />
+      <End Role="Q_Business" EntitySet="Q_Business" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_CommandParameter_Q_Command" Association="Self.FK_Q_CommandParameter_Q_Command">
+      <End Role="Q_Command" EntitySet="Q_Command" />
+      <End Role="Q_CommandParameter" EntitySet="Q_CommandParameter" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_CounterSound_Q_Counter" Association="Self.FK_Q_CounterSound_Q_Counter">
+      <End Role="Q_Counter" EntitySet="Q_Counter" />
+      <End Role="Q_CounterSound" EntitySet="Q_CounterSound" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_CounterSound_Q_Sound" Association="Self.FK_Q_CounterSound_Q_Sound">
+      <End Role="Q_Language" EntitySet="Q_Language" />
+      <End Role="Q_CounterSound" EntitySet="Q_CounterSound" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_DailyRequire_Detail_Q_DailyRequire" Association="Self.FK_Q_DailyRequire_Detail_Q_DailyRequire">
+      <End Role="Q_DailyRequire" EntitySet="Q_DailyRequire" />
+      <End Role="Q_DailyRequire_Detail" EntitySet="Q_DailyRequire_Detail" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_DailyRequire_Detail_Q_Major" Association="Self.FK_Q_DailyRequire_Detail_Q_Major">
+      <End Role="Q_Major" EntitySet="Q_Major" />
+      <End Role="Q_DailyRequire_Detail" EntitySet="Q_DailyRequire_Detail" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_DailyRequire_Detail_Q_Status" Association="Self.FK_Q_DailyRequire_Detail_Q_Status">
+      <End Role="Q_Status" EntitySet="Q_Status" />
+      <End Role="Q_DailyRequire_Detail" EntitySet="Q_DailyRequire_Detail" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_DailyRequire_Detail_Q_User" Association="Self.FK_Q_DailyRequire_Detail_Q_User">
+      <End Role="Q_User" EntitySet="Q_User" />
+      <End Role="Q_DailyRequire_Detail" EntitySet="Q_DailyRequire_Detail" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_DailyRequire_Q_Business" Association="Self.FK_Q_DailyRequire_Q_Business">
+      <End Role="Q_Business" EntitySet="Q_Business" />
+      <End Role="Q_DailyRequire" EntitySet="Q_DailyRequire" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_DailyRequire_Q_Service" Association="Self.FK_Q_DailyRequire_Q_Service">
+      <End Role="Q_Service" EntitySet="Q_Service" />
+      <End Role="Q_DailyRequire" EntitySet="Q_DailyRequire" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_Equipment_Q_Counter" Association="Self.FK_Q_Equipment_Q_Counter">
+      <End Role="Q_Counter" EntitySet="Q_Counter" />
+      <End Role="Q_Equipment" EntitySet="Q_Equipment" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_Equipment_Q_EquipmentType" Association="Self.FK_Q_Equipment_Q_EquipmentType">
+      <End Role="Q_EquipmentType" EntitySet="Q_EquipmentType" />
+      <End Role="Q_Equipment" EntitySet="Q_Equipment" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_Equipment_Q_Status" Association="Self.FK_Q_Equipment_Q_Status">
+      <End Role="Q_Status" EntitySet="Q_Status" />
+      <End Role="Q_Equipment" EntitySet="Q_Equipment" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_EquipTypeProcess_Q_EquipmentType" Association="Self.FK_Q_EquipTypeProcess_Q_EquipmentType">
+      <End Role="Q_EquipmentType" EntitySet="Q_EquipmentType" />
+      <End Role="Q_EquipTypeProcess" EntitySet="Q_EquipTypeProcess" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_EquipTypeProcess_Q_Process" Association="Self.FK_Q_EquipTypeProcess_Q_Process">
+      <End Role="Q_Process" EntitySet="Q_Process" />
+      <End Role="Q_EquipTypeProcess" EntitySet="Q_EquipTypeProcess" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_EvaluateDetail_Q_Evaluate" Association="Self.FK_Q_EvaluateDetail_Q_Evaluate">
+      <End Role="Q_Evaluate" EntitySet="Q_Evaluate" />
+      <End Role="Q_EvaluateDetail" EntitySet="Q_EvaluateDetail" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_HisDailyRequire_De_Q_HisDailyRequire" Association="Self.FK_Q_HisDailyRequire_De_Q_HisDailyRequire">
+      <End Role="Q_HisDailyRequire" EntitySet="Q_HisDailyRequire" />
+      <End Role="Q_HisDailyRequire_De" EntitySet="Q_HisDailyRequire_De" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_HisDailyRequire_De_Q_Major" Association="Self.FK_Q_HisDailyRequire_De_Q_Major">
+      <End Role="Q_Major" EntitySet="Q_Major" />
+      <End Role="Q_HisDailyRequire_De" EntitySet="Q_HisDailyRequire_De" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_HisDailyRequire_De_Q_Status" Association="Self.FK_Q_HisDailyRequire_De_Q_Status">
+      <End Role="Q_Status" EntitySet="Q_Status" />
+      <End Role="Q_HisDailyRequire_De" EntitySet="Q_HisDailyRequire_De" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_HisDailyRequire_De_Q_User" Association="Self.FK_Q_HisDailyRequire_De_Q_User">
+      <End Role="Q_User" EntitySet="Q_User" />
+      <End Role="Q_HisDailyRequire_De" EntitySet="Q_HisDailyRequire_De" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_HisDailyRequire_Q_Business" Association="Self.FK_Q_HisDailyRequire_Q_Business">
+      <End Role="Q_Business" EntitySet="Q_Business" />
+      <End Role="Q_HisDailyRequire" EntitySet="Q_HisDailyRequire" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_HisDailyRequire_Q_Service" Association="Self.FK_Q_HisDailyRequire_Q_Service">
+      <End Role="Q_Service" EntitySet="Q_Service" />
+      <End Role="Q_HisDailyRequire" EntitySet="Q_HisDailyRequire" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_HisUserEvaluate_Q_HisDailyRequire_De" Association="Self.FK_Q_HisUserEvaluate_Q_HisDailyRequire_De">
+      <End Role="Q_HisDailyRequire_De" EntitySet="Q_HisDailyRequire_De" />
+      <End Role="Q_HisUserEvaluate" EntitySet="Q_HisUserEvaluate" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_HisUserEvaluate_Q_User" Association="Self.FK_Q_HisUserEvaluate_Q_User">
+      <End Role="Q_User" EntitySet="Q_User" />
+      <End Role="Q_HisUserEvaluate" EntitySet="Q_HisUserEvaluate" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_Login_Q_Status" Association="Self.FK_Q_Login_Q_Status">
+      <End Role="Q_Status" EntitySet="Q_Status" />
+      <End Role="Q_Login" EntitySet="Q_Login" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_Login_Q_User" Association="Self.FK_Q_Login_Q_User">
+      <End Role="Q_User" EntitySet="Q_User" />
+      <End Role="Q_Login" EntitySet="Q_Login" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_LoginHistory_Q_Status" Association="Self.FK_Q_LoginHistory_Q_Status">
+      <End Role="Q_Status" EntitySet="Q_Status" />
+      <End Role="Q_LoginHistory" EntitySet="Q_LoginHistory" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_LoginHistory_Q_User" Association="Self.FK_Q_LoginHistory_Q_User">
+      <End Role="Q_User" EntitySet="Q_User" />
+      <End Role="Q_LoginHistory" EntitySet="Q_LoginHistory" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_MaindisplayDirection_Q_Counter" Association="Self.FK_Q_MaindisplayDirection_Q_Counter">
+      <End Role="Q_Counter" EntitySet="Q_Counter" />
+      <End Role="Q_MaindisplayDirection" EntitySet="Q_MaindisplayDirection" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_MaindisplayDirection_Q_Equipment" Association="Self.FK_Q_MaindisplayDirection_Q_Equipment">
+      <End Role="Q_Equipment" EntitySet="Q_Equipment" />
+      <End Role="Q_MaindisplayDirection" EntitySet="Q_MaindisplayDirection" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_ReadTemp_Detail_Q_ReadTemplate" Association="Self.FK_Q_ReadTemp_Detail_Q_ReadTemplate">
+      <End Role="Q_ReadTemplate" EntitySet="Q_ReadTemplate" />
+      <End Role="Q_ReadTemp_Detail" EntitySet="Q_ReadTemp_Detail" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_ReadTemplate_Q_Language" Association="Self.FK_Q_ReadTemplate_Q_Language">
+      <End Role="Q_Language" EntitySet="Q_Language" />
+      <End Role="Q_ReadTemplate" EntitySet="Q_ReadTemplate" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_RegisterRecieveTicket_Q_Equipment" Association="Self.FK_Q_RegisterRecieveTicket_Q_Equipment">
+      <End Role="Q_Equipment" EntitySet="Q_Equipment" />
+      <End Role="Q_RegisterRecieveTicket" EntitySet="Q_RegisterRecieveTicket" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_RegisterRecieveTicket_Q_User" Association="Self.FK_Q_RegisterRecieveTicket_Q_User">
+      <End Role="Q_User" EntitySet="Q_User" />
+      <End Role="Q_RegisterRecieveTicket" EntitySet="Q_RegisterRecieveTicket" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_ServiceShift_Q_Service" Association="Self.FK_Q_ServiceShift_Q_Service">
+      <End Role="Q_Service" EntitySet="Q_Service" />
+      <End Role="Q_ServiceShift" EntitySet="Q_ServiceShift" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_ServiceShift_Q_Shift" Association="Self.FK_Q_ServiceShift_Q_Shift">
+      <End Role="Q_Shift" EntitySet="Q_Shift" />
+      <End Role="Q_ServiceShift" EntitySet="Q_ServiceShift" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_ServiceStep_Q_Major" Association="Self.FK_Q_ServiceStep_Q_Major">
+      <End Role="Q_Major" EntitySet="Q_Major" />
+      <End Role="Q_ServiceStep" EntitySet="Q_ServiceStep" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_ServiceStep_Q_Service" Association="Self.FK_Q_ServiceStep_Q_Service">
+      <End Role="Q_Service" EntitySet="Q_Service" />
+      <End Role="Q_ServiceStep" EntitySet="Q_ServiceStep" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_Sound_Q_Language" Association="Self.FK_Q_Sound_Q_Language">
+      <End Role="Q_Language" EntitySet="Q_Language" />
+      <End Role="Q_Sound" EntitySet="Q_Sound" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_Status_Q_StatusType" Association="Self.FK_Q_Status_Q_StatusType">
+      <End Role="Q_StatusType" EntitySet="Q_StatusType" />
+      <End Role="Q_Status" EntitySet="Q_Status" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_UserCommand_Q_ActionParameter" Association="Self.FK_Q_UserCommand_Q_ActionParameter">
+      <End Role="Q_ActionParameter" EntitySet="Q_ActionParameter" />
+      <End Role="Q_UserCmdRegister" EntitySet="Q_UserCmdRegister" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_UserCommand_Q_CommandParameter" Association="Self.FK_Q_UserCommand_Q_CommandParameter">
+      <End Role="Q_CommandParameter" EntitySet="Q_CommandParameter" />
+      <End Role="Q_UserCmdRegister" EntitySet="Q_UserCmdRegister" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_UserCommand_Q_User" Association="Self.FK_Q_UserCommand_Q_User">
+      <End Role="Q_User" EntitySet="Q_User" />
+      <End Role="Q_UserCmdRegister" EntitySet="Q_UserCmdRegister" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_UserCommandReadSound_Q_Command" Association="Self.FK_Q_UserCommandReadSound_Q_Command">
+      <End Role="Q_Command" EntitySet="Q_Command" />
+      <End Role="Q_UserCommandReadSound" EntitySet="Q_UserCommandReadSound" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_UserCommandReadSound_Q_ReadTemplate" Association="Self.FK_Q_UserCommandReadSound_Q_ReadTemplate">
+      <End Role="Q_ReadTemplate" EntitySet="Q_ReadTemplate" />
+      <End Role="Q_UserCommandReadSound" EntitySet="Q_UserCommandReadSound" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_UserCommandReadSound_Q_User" Association="Self.FK_Q_UserCommandReadSound_Q_User">
+      <End Role="Q_User" EntitySet="Q_User" />
+      <End Role="Q_UserCommandReadSound" EntitySet="Q_UserCommandReadSound" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_UserEvaluate_NHANVIEN" Association="Self.FK_Q_UserEvaluate_NHANVIEN">
+      <End Role="Q_User" EntitySet="Q_User" />
+      <End Role="Q_UserEvaluate" EntitySet="Q_UserEvaluate" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_UserEvaluate_Q_DailyRequire_Detail" Association="Self.FK_Q_UserEvaluate_Q_DailyRequire_Detail">
+      <End Role="Q_DailyRequire_Detail" EntitySet="Q_DailyRequire_Detail" />
+      <End Role="Q_UserEvaluate" EntitySet="Q_UserEvaluate" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_UserMajor_Q_Major" Association="Self.FK_Q_UserMajor_Q_Major">
+      <End Role="Q_Major" EntitySet="Q_Major" />
+      <End Role="Q_UserMajor" EntitySet="Q_UserMajor" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_UserMajor_Q_User" Association="Self.FK_Q_UserMajor_Q_User">
+      <End Role="Q_User" EntitySet="Q_User" />
+      <End Role="Q_UserMajor" EntitySet="Q_UserMajor" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
