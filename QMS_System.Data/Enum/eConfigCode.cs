@@ -66,5 +66,7 @@ namespace QMS_System.Data.Enum
         public const string TimesRepeatReadServeOver = "TimesRepeatReadServeOver";
         public const string  CheckServeOverTime= "CheckServeOverTime";
 
+        public const string VideoUrl = "VideoUrl";
+
     }
 }

@@ -7,10 +7,11 @@ using System.Windows.Forms;
 namespace QMS_System
 {
     public partial class frmVideo : Form
-    {
-        public frmVideo()
+    { 
+
+        public frmVideo( )
         {
-            InitializeComponent();
+            InitializeComponent(); 
         }
 
         private void frmVideo_Load(object sender, EventArgs e)

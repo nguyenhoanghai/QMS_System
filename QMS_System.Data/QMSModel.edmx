@@ -518,7 +518,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Index" Type="int" Nullable="false" />
           <Property Name="TemplateId" Type="int" Nullable="false" />
-          <Property Name="VideoId" Type="int" />
+          <Property Name="VideoId" Type="int" Nullable="false" />
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
         </EntityType>
         <Association Name="FK_Q_ActionParameter_Q_Action">
@@ -1146,7 +1146,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Q_VideoTemplate_De_Q_Video">
-          <End Role="Q_Video" Type="Self.Q_Video" Multiplicity="0..1" />
+          <End Role="Q_Video" Type="Self.Q_Video" Multiplicity="1" />
           <End Role="Q_VideoTemplate_De" Type="Self.Q_VideoTemplate_De" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Q_Video">
@@ -2322,7 +2322,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Index" Type="Int32" Nullable="false" />
           <Property Name="TemplateId" Type="Int32" Nullable="false" />
-          <Property Name="VideoId" Type="Int32" />
+          <Property Name="VideoId" Type="Int32" Nullable="false" />
           <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Q_Video" Relationship="QMSSystemModel.FK_Q_VideoTemplate_De_Q_Video" FromRole="Q_VideoTemplate_De" ToRole="Q_Video" />
           <NavigationProperty Name="Q_VideoTemplate" Relationship="QMSSystemModel.FK_Q_VideoTemplate_De_Q_VideoTemplate" FromRole="Q_VideoTemplate_De" ToRole="Q_VideoTemplate" />
@@ -2952,7 +2952,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Q_VideoTemplate_De_Q_Video">
-          <End Type="QMSSystemModel.Q_Video" Role="Q_Video" Multiplicity="0..1" />
+          <End Type="QMSSystemModel.Q_Video" Role="Q_Video" Multiplicity="1" />
           <End Type="QMSSystemModel.Q_VideoTemplate_De" Role="Q_VideoTemplate_De" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Q_Video">

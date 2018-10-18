@@ -65,7 +65,7 @@ namespace QMS_System
         public static DateTime today = DateTime.Now;
         public static bool IsDatabaseChange = false;
         public static SerialPort comPort = new SerialPort();
-        public string lbSendrequest, lbSendData, lbPrinRequire;
+        public string lbSendrequest, lbSendData, lbPrinRequire ;
 
         List<CountServeOverTimeModel> countServeOverTime = new List<CountServeOverTimeModel>();
         int timesRepeatReadServeOver = 1;
@@ -78,9 +78,7 @@ namespace QMS_System
         {
          //   BLLUserEvaluate.Instance.Evaluate("nv16", "1_1", 0, "0");
 
-        }
-
-
+        } 
 
         private Form IsActive(Type ftype)
         {
@@ -623,7 +621,20 @@ namespace QMS_System
             Form frm = IsActive(typeof(frmVideo));
             if (frm == null)
             {
-                var forms = new frmVideo();
+                var forms = new frmVideo( );
+                forms.MdiParent = this;
+                forms.Show();
+            }
+            else
+                frm.Activate();
+        }
+
+        private void btnVideoTemplate_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            Form frm = IsActive(typeof(frmVideoTemplate));
+            if (frm == null)
+            {
+                var forms = new frmVideoTemplate();
                 forms.MdiParent = this;
                 forms.Show();
             }
@@ -1127,7 +1138,7 @@ namespace QMS_System
                 try
                 {
                     errorsms = "sang ngày mới " + DateTime.Now.Day;
-                    BLLLoginHistory.Instance.ResetDailyLoginInfor(new DateTime(today.Year, today.Month, today.Day), GetConfigByCode(eConfigCode.AutoSetLoginFromYesterday));
+                    BLLLoginHistory.Instance.ResetDailyLoginInfor(today, GetConfigByCode(eConfigCode.AutoSetLoginFromYesterday));
                     BLLDailyRequire.Instance.CopyHistory();
                     Settings.Default.Today = DateTime.Now.Day;
                     Settings.Default.CountServeOverTime = "";
@@ -1296,6 +1307,7 @@ namespace QMS_System
                 soundPath = GetConfigByCode(eConfigCode.SoundPath);
                 SoundLockPrintTicket = GetConfigByCode(eConfigCode.SoundLockPrintTicket);
                 CheckTimeBeforePrintTicket = GetConfigByCode(eConfigCode.CheckTimeBeforePrintTicket);
+             
                 int.TryParse(GetConfigByCode(eConfigCode.PrintType), out printType);
                 int.TryParse(GetConfigByCode(eConfigCode.StartNumber), out startNumber);
                 int.TryParse(GetConfigByCode(eConfigCode.TimeWaitForRecieveData), out timeQuetComport);

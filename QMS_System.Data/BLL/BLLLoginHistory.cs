@@ -78,7 +78,10 @@ namespace QMS_System.Data.BLL
         {
             using (db = new QMSSystemEntities())
             {
-                var yes = db.Q_Login.ToList();
+                var yes = db.Q_Login.Where(x=>(x.Date.Year != date.Year ||
+                x.Date.Month != date.Month ||
+                x.Date.Day != date.Day
+                )).ToList();
                 if (yes.Count > 0)
                 {
                     List<int> code = new List<int>();

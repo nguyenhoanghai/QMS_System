@@ -100,6 +100,7 @@
     <Compile Include="BLL\BLLStatusType.cs" />
     <Compile Include="BLL\BLLService.cs" />
     <Compile Include="BLL\BLLVideo.cs" />
+    <Compile Include="BLL\BLLVideoTemplate.cs" />
     <Compile Include="Enum\eCounterSoftRequireType.cs" />
     <Compile Include="Model\A_CurrentInfoModel.cs" />
     <Compile Include="Model\CounterSoftRequireModel.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="Model\ServiceInfoModel.cs" />
     <Compile Include="Model\ReportModel.cs" />
     <Compile Include="Model\VideoModel.cs" />
+    <Compile Include="Model\VideoTemplateModel.cs" />
     <Compile Include="Model\ViewModel.cs" />
     <Compile Include="Model\UserEvaluateModel.cs" />
     <Compile Include="Model\EvaluateModel.cs" />

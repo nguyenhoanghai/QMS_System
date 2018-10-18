@@ -17,7 +17,7 @@ namespace QMS_System.Data
         public int Id { get; set; }
         public int Index { get; set; }
         public int TemplateId { get; set; }
-        public Nullable<int> VideoId { get; set; }
+        public int VideoId { get; set; }
         public bool IsDeleted { get; set; }
     
         public virtual Q_Video Q_Video { get; set; }

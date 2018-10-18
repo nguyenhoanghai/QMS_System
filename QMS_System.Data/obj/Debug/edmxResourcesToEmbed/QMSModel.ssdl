@@ -513,7 +513,7 @@
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Index" Type="int" Nullable="false" />
     <Property Name="TemplateId" Type="int" Nullable="false" />
-    <Property Name="VideoId" Type="int" />
+    <Property Name="VideoId" Type="int" Nullable="false" />
     <Property Name="IsDeleted" Type="bit" Nullable="false" />
   </EntityType>
   <Association Name="FK_Q_ActionParameter_Q_Action">
@@ -1141,7 +1141,7 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_Q_VideoTemplate_De_Q_Video">
-    <End Role="Q_Video" Type="Self.Q_Video" Multiplicity="0..1" />
+    <End Role="Q_Video" Type="Self.Q_Video" Multiplicity="1" />
     <End Role="Q_VideoTemplate_De" Type="Self.Q_VideoTemplate_De" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Q_Video">

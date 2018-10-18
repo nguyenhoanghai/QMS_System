@@ -723,6 +723,7 @@ namespace QMS_System.Data.BLL
                 return obj != null ? obj.TicketNumber : 0;
             }
         }
+       
         /// <summary>
         /// Web
         /// </summary>

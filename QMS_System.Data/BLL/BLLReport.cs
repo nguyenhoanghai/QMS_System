@@ -2,7 +2,6 @@
 using QMS_System.Data.Model;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.Core.Objects;
 using System.Linq;
 
 namespace QMS_System.Data.BLL
@@ -58,12 +57,12 @@ namespace QMS_System.Data.BLL
                         //today
 
                         var todays = db.Q_DailyRequire.Where(x => !x.Q_Service.IsDeleted && x.PrintTime >= from && x.PrintTime <= to).OrderBy(x => x.TicketNumber).Select(x => new ReportModel()
-                             {
-                                 Number = x.TicketNumber,
-                                 ServiceName = x.Q_Service.Name,
-                                 PrintTime = x.PrintTime,
-                                 Id = x.Id
-                             }).ToList();
+                        {
+                            Number = x.TicketNumber,
+                            ServiceName = x.Q_Service.Name,
+                            PrintTime = x.PrintTime,
+                            Id = x.Id
+                        }).ToList();
                         if (todays.Count > 0)
                         {
                             var tddetais = db.Q_DailyRequire_Detail.Where(x => !x.Q_Major.IsDeleted && !x.Q_DailyRequire.Q_Service.IsDeleted && x.Q_DailyRequire.PrintTime >= from && x.Q_DailyRequire.PrintTime <= to).ToList();
@@ -107,19 +106,19 @@ namespace QMS_System.Data.BLL
                         }).ToList();
 
                         list.AddRange(db.Q_DailyRequire_Detail.Where(x => !x.Q_Major.IsDeleted && !x.Q_DailyRequire.Q_Service.IsDeleted && x.Q_DailyRequire.PrintTime >= from && x.Q_DailyRequire.PrintTime <= to).OrderBy(x => x.Q_DailyRequire.TicketNumber).Select(x => new ReportModel()
-                            {
-                                UserName = x.Q_User.Name,
-                                Number = x.Q_DailyRequire.TicketNumber,
-                                MajorName = x.Q_Major.Name,
-                                ServiceName = x.Q_DailyRequire.Q_Service.Name,
-                                PrintTime = x.Q_DailyRequire.PrintTime,
-                                Start = x.ProcessTime,
-                                End = x.EndProcessTime,
-                                StatusName = x.Q_Status.Note,
-                                UserId = x.UserId,
-                                MajorId = x.MajorId,
-                                ServiceId = x.Q_DailyRequire.ServiceId,
-                            }).ToList());
+                        {
+                            UserName = x.Q_User.Name,
+                            Number = x.Q_DailyRequire.TicketNumber,
+                            MajorName = x.Q_Major.Name,
+                            ServiceName = x.Q_DailyRequire.Q_Service.Name,
+                            PrintTime = x.Q_DailyRequire.PrintTime,
+                            Start = x.ProcessTime,
+                            End = x.EndProcessTime,
+                            StatusName = x.Q_Status.Note,
+                            UserId = x.UserId,
+                            MajorId = x.MajorId,
+                            ServiceId = x.Q_DailyRequire.ServiceId,
+                        }).ToList());
 
                         if (objId > 0)
                             switch (typeOfSearch)
@@ -222,12 +221,12 @@ namespace QMS_System.Data.BLL
                         if (objId > 0)
                             objs = objs.Where(x => x.ObjectId == objId).ToList();
                         objs = objs.GroupBy(x => x.ObjectId).Select(t => new R_GeneralInDayModel()
-                                                {
-                                                    ObjectId = t.Key,
-                                                    TotalTransaction = t.Count(),
-                                                    TotalTransTime = t.Sum(p => p.End.Value.Minute + (p.End.Value.Hour - p.Start.Value.Hour) * 60 - p.Start.Value.Minute),
-                                                    Name = t.FirstOrDefault().Name
-                                                }).ToList();
+                        {
+                            ObjectId = t.Key,
+                            TotalTransaction = t.Count(),
+                            TotalTransTime = t.Sum(p => p.End.Value.Minute + (p.End.Value.Hour - p.Start.Value.Hour) * 60 - p.Start.Value.Minute),
+                            Name = t.FirstOrDefault().Name
+                        }).ToList();
 
                         for (int i = 0; i < objs.Count; i++)
                         {
@@ -244,6 +243,15 @@ namespace QMS_System.Data.BLL
             }
         }
 
+
+        /// <summary>
+        /// Thong ke tong hop tien thu
+        /// </summary>
+        /// <param name="objId"></param>
+        /// <param name="thuNganId"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         public List<R_GeneralInDayModel> GeneralReport_DichVuTienThu(int objId, int thuNganId, DateTime from, DateTime to)
         {
             using (db = new QMSSystemEntities())
@@ -312,7 +320,7 @@ namespace QMS_System.Data.BLL
                         objs = objs.GroupBy(x => x.ObjectId).Select(t => new R_GeneralInDayModel()
                         {
                             ObjectId = t.Key,
-                            TotalTransaction = t.Count(),
+                            TotalTransaction = t.GroupBy(x=>x.Id).Count(),
                             // TotalTransTime = t.Sum(p => p.End.Value.Minute + (p.End.Value.Hour - p.Start.Value.Hour) * 60 - p.Start.Value.Minute),
                             TotalTransTime = t.Sum(p => p.End.Value.Minute + (p.End.Value.Hour - p.Start.Value.Hour) * 60 - p.Start.Value.Minute),
                             Name = t.FirstOrDefault().Name
@@ -362,37 +370,41 @@ namespace QMS_System.Data.BLL
                     #endregion
                     temps.Clear();
                     #region today
-                    var todayObjs = (db.Q_DailyRequire_Detail.Where(x => !x.Q_User.IsDeleted && !x.Q_Major.IsDeleted && !x.Q_DailyRequire.Q_Service.IsDeleted && x.Q_DailyRequire.PrintTime >= from && x.Q_DailyRequire.PrintTime <= to && x.Q_Status.Id == (int)eStatus.HOTAT).Select(t => new R_GeneralInDayModel()
-                      {
-                          Id = t.DailyRequireId,
-                          ObjectId = t.Q_DailyRequire.ServiceId,
-                          Start = t.ProcessTime,
-                          End = t.EndProcessTime,
-                          Name = t.Q_DailyRequire.Q_Service.Name,
-                          TotalTransaction = 0,
-                          TotalTransTime = 0,
-                          AverageTimePerTrans = 0,
-                          AverageTimeWaitingAfterPerTrans = 0,
-                          AverageTimeWaitingBeforePerTrans = 0,
-                          UserId = t.UserId,
-                          PrintTime = t.Q_DailyRequire.PrintTime
-                      }).ToList());
+                    var todayObjs = (db.Q_DailyRequire_Detail.Where(x =>
+                                    !x.Q_User.IsDeleted && !x.Q_Major.IsDeleted && !x.Q_DailyRequire.Q_Service.IsDeleted &&
+                                    x.Q_DailyRequire.PrintTime >= from && x.Q_DailyRequire.PrintTime <= to &&
+                                    x.Q_Status.Id == (int)eStatus.HOTAT)
+                        .Select(t => new R_GeneralInDayModel()
+                        {
+                            Id = t.DailyRequireId,
+                            ObjectId = t.Q_DailyRequire.ServiceId,
+                            Start = t.ProcessTime,
+                            End = t.EndProcessTime,
+                            Name = t.Q_DailyRequire.Q_Service.Name,
+                            TotalTransaction = 0,
+                            TotalTransTime = 0,
+                            AverageTimePerTrans = 0,
+                            AverageTimeWaitingAfterPerTrans = 0,
+                            AverageTimeWaitingBeforePerTrans = 0,
+                            UserId = t.UserId,
+                            PrintTime = t.Q_DailyRequire.PrintTime
+                        }).ToList());
 
                     TNObjs = (db.Q_DailyRequire_Detail.Where(x => !x.Q_User.IsDeleted && !x.Q_Major.IsDeleted && !x.Q_DailyRequire.Q_Service.IsDeleted && x.Q_DailyRequire.PrintTime >= from && x.Q_DailyRequire.PrintTime <= to && x.Q_Status.Id == (int)eStatus.HOTAT && x.UserId == thuNganId).Select(t => new R_GeneralInDayModel()
-                  {
-                      Id = t.DailyRequireId,
-                      ObjectId = t.Q_DailyRequire.ServiceId,
-                      Start = t.ProcessTime,
-                      End = t.EndProcessTime,
-                      Name = t.Q_DailyRequire.Q_Service.Name,
-                      TotalTransaction = 0,
-                      TotalTransTime = 0,
-                      AverageTimePerTrans = 0,
-                      AverageTimeWaitingAfterPerTrans = 0,
-                      AverageTimeWaitingBeforePerTrans = 0,
-                      UserId = t.UserId,
-                      PrintTime = t.Q_DailyRequire.PrintTime
-                  }).ToList());
+                    {
+                        Id = t.DailyRequireId,
+                        ObjectId = t.Q_DailyRequire.ServiceId,
+                        Start = t.ProcessTime,
+                        End = t.EndProcessTime,
+                        Name = t.Q_DailyRequire.Q_Service.Name,
+                        TotalTransaction = 0,
+                        TotalTransTime = 0,
+                        AverageTimePerTrans = 0,
+                        AverageTimeWaitingAfterPerTrans = 0,
+                        AverageTimeWaitingBeforePerTrans = 0,
+                        UserId = t.UserId,
+                        PrintTime = t.Q_DailyRequire.PrintTime
+                    }).ToList());
 
                     if (todayObjs.Count > 0)
                     {
@@ -403,7 +415,7 @@ namespace QMS_System.Data.BLL
                         todayObjs = todayObjs.GroupBy(x => x.ObjectId).Select(t => new R_GeneralInDayModel()
                         {
                             ObjectId = t.Key,
-                            TotalTransaction = t.Count(),
+                            TotalTransaction = t.GroupBy(x=>x.Id).Count(),
                             TotalTransTime = t.Sum(p => p.End.Value.Minute + (p.End.Value.Hour - p.Start.Value.Hour) * 60 - p.Start.Value.Minute),
                             Name = t.FirstOrDefault().Name
                         }).ToList();
@@ -413,7 +425,8 @@ namespace QMS_System.Data.BLL
                             todayObjs[i].Index = i + 1;
 
                             //luot giao dich
-                            var phieus = temps.Where(x => x.ObjectId == todayObjs[i].ObjectId && x.UserId != null && x.UserId != thuNganId).ToList();
+                            //  var phieus = temps.Where(x => x.ObjectId == todayObjs[i].ObjectId && x.UserId != null && x.UserId != thuNganId).ToList();
+                            var phieus = temps.Where(x => x.ObjectId == todayObjs[i].ObjectId && x.UserId != thuNganId).ToList();
                             todayObjs[i].TotalTransaction = phieus.GroupBy(x => x.Id).Count();
                             todayObjs[i].TotalTransTime = phieus.Sum(p => p.End.Value.Minute + (p.End.Value.Hour - p.Start.Value.Hour) * 60 - p.Start.Value.Minute);
                             todayObjs[i].AverageTimePerTrans = ((todayObjs[i].TotalTransTime > 0 && todayObjs[i].TotalTransaction > 0) ? Math.Round((double)(todayObjs[i].TotalTransTime / todayObjs[i].TotalTransaction), 2, MidpointRounding.AwayFromZero) : 0);
@@ -449,16 +462,16 @@ namespace QMS_System.Data.BLL
                     #endregion
 
                     objs = objs.GroupBy(x => x.ObjectId).Select(t => new R_GeneralInDayModel()
-                   {
-                       ObjectId = t.Key,
-                       TotalTransaction = t.Sum(p => p.TotalTransaction),
-                       TotalTransTime = t.Sum(p => p.TotalTransTime),
-                       Name = t.FirstOrDefault().Name,
-                       AverageTimePerTrans = (t.Sum(p => p.AverageTimePerTrans) > 0 ? t.Sum(p => p.AverageTimePerTrans) / t.Count() : 0),
-                       AverageTimeWaitingAfterPerTrans = (t.Sum(p => p.AverageTimeWaitingAfterPerTrans) > 0 ? t.Sum(p => p.AverageTimeWaitingAfterPerTrans) / t.Count() : 0),
-                       AverageTimeWaitingBeforePerTrans = (t.Sum(p => p.AverageTimeWaitingBeforePerTrans) > 0 ? t.Sum(p => p.AverageTimeWaitingBeforePerTrans) / t.Count() : 0),
+                    {
+                        ObjectId = t.Key,
+                        TotalTransaction = t.Sum(p => p.TotalTransaction),
+                        TotalTransTime = t.Sum(p => p.TotalTransTime),
+                        Name = t.FirstOrDefault().Name,
+                        AverageTimePerTrans = (t.Sum(p => p.AverageTimePerTrans) > 0 ? t.Sum(p => p.AverageTimePerTrans) / t.Count() : 0),
+                        AverageTimeWaitingAfterPerTrans = (t.Sum(p => p.AverageTimeWaitingAfterPerTrans) > 0 ? t.Sum(p => p.AverageTimeWaitingAfterPerTrans) / t.Count() : 0),
+                        AverageTimeWaitingBeforePerTrans = (t.Sum(p => p.AverageTimeWaitingBeforePerTrans) > 0 ? t.Sum(p => p.AverageTimeWaitingBeforePerTrans) / t.Count() : 0),
 
-                   }).OrderBy(x => x.ObjectId).ToList();
+                    }).OrderBy(x => x.ObjectId).ToList();
                 }
                 catch (Exception)
                 {
@@ -493,6 +506,7 @@ namespace QMS_System.Data.BLL
                         x.Q_HisDailyRequire.PrintTime <= to &&
                         x.ProcessTime.HasValue &&
                         x.UserId.HasValue &&
+                         x.Q_Status.Id == (int)eStatus.HOTAT&&
                         x.UserId != ThuNganId).Select(x => new ReportModel()
                         {
                             Id = x.Q_HisDailyRequire.Id,
@@ -511,16 +525,16 @@ namespace QMS_System.Data.BLL
                      x.Q_HisDailyRequire.PrintTime <= to &&
                      x.UserId.HasValue && x.UserId == ThuNganId &&
                       x.ProcessTime.HasValue).Select(x => new ReportModel()
-                     {
-                         Id = x.Q_HisDailyRequire.Id,
-                         Number = x.Q_HisDailyRequire.TicketNumber,
-                         ServiceName = x.Q_HisDailyRequire.Q_Service.Name,
-                         PrintTime = x.Q_HisDailyRequire.PrintTime,
-                         ServiceId = x.Q_HisDailyRequire.ServiceId,
-                         Start = x.ProcessTime,
-                         End = x.EndProcessTime,
-                         StatusName = (x.StatusId == (int)eStatus.CHOXL ? "Đang xử lý" : "Hoàn tất")
-                     }).ToList();
+                      {
+                          Id = x.Q_HisDailyRequire.Id,
+                          Number = x.Q_HisDailyRequire.TicketNumber,
+                          ServiceName = x.Q_HisDailyRequire.Q_Service.Name,
+                          PrintTime = x.Q_HisDailyRequire.PrintTime,
+                          ServiceId = x.Q_HisDailyRequire.ServiceId,
+                          Start = x.ProcessTime,
+                          End = x.EndProcessTime,
+                          StatusName = (x.StatusId == (int)eStatus.CHOXL ? "Đang xử lý" : "Hoàn tất")
+                      }).ToList();
 
                     if (yesList.Count > 0)
                     {
@@ -574,6 +588,7 @@ namespace QMS_System.Data.BLL
                         x.Q_DailyRequire.PrintTime <= to &&
                         x.ProcessTime.HasValue &&
                         x.UserId.HasValue &&
+                         x.Q_Status.Id == (int)eStatus.HOTAT &&
                         x.UserId != ThuNganId).Select(x => new ReportModel()
                         {
                             Id = x.Q_DailyRequire.Id,

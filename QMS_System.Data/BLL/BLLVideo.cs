@@ -35,6 +35,15 @@ namespace QMS_System.Data.BLL
             }
         }
 
+        public List<ModelSelectItem> GetLookUp()
+        {
+            using (var db = new QMSSystemEntities())
+            {
+                return db.Q_Video.Select(x => new ModelSelectItem() { Id = x.Id, Name = x.FileName }).ToList();
+            }
+        }
+
+
         public int AddFile(Q_Video model)
         {
             using (var db = new QMSSystemEntities())

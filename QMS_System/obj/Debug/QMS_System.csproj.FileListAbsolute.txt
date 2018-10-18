@@ -581,3 +581,4 @@ E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.csproj.CopyComple
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.exe
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.pdb
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmVideo.resources
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmVideoTemplate.resources
