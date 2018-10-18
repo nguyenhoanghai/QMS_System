@@ -35,3 +35,15 @@ E:\Hai_GPRO\QMS\QMS_System\QMS_System.Data\obj\Debug\QMS_System.Data.csproj.Core
 E:\Hai_GPRO\QMS\QMS_System\QMS_System.Data\obj\Debug\QMS_System.Data.csproj.CopyComplete
 E:\Hai_GPRO\QMS\QMS_System\QMS_System.Data\obj\Debug\QMS_System.Data.dll
 E:\Hai_GPRO\QMS\QMS_System\QMS_System.Data\obj\Debug\QMS_System.Data.pdb
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.Data\bin\Debug\QMS_System.Data.dll.config
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.Data\bin\Debug\QMS_System.Data.dll
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.Data\bin\Debug\QMS_System.Data.pdb
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.Data\bin\Debug\EntityFramework.dll
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.Data\bin\Debug\EntityFramework.SqlServer.dll
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.Data\bin\Debug\GPRO.Ultilities.dll
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.Data\bin\Debug\PagedList.dll
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.Data\obj\Debug\QMS_System.Data.csproj.CoreCompileInputs.cache
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.Data\obj\Debug\QMS_System.Data.csproj.CopyComplete
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.Data\obj\Debug\QMS_System.Data.dll
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.Data\obj\Debug\QMS_System.Data.pdb
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.Data\obj\Debug\QMS_System.Data.csprojAssemblyReference.cache

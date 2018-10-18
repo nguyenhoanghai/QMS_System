@@ -31,7 +31,7 @@ namespace QMS_System.Data.BLL
         {
             try
             {
-                var nv = db.Q_User.FirstOrDefault(x => x.Id != Id && x.Name.Trim().ToUpper().Equals(keyword));
+                var nv = db.Q_User.FirstOrDefault(x =>!x.IsDeleted && x.Id != Id && x.Name.Trim().ToUpper().Equals(keyword));
                 if (nv == null)
                     return false;
                 return true;
@@ -190,7 +190,7 @@ namespace QMS_System.Data.BLL
             using (db = new QMSSystemEntities())
             {
                 Login login = null;
-                var obj = db.Q_User.FirstOrDefault(x => x.UserName.Equals(sUsername) && x.Password.Equals(sPassword));
+                var obj = db.Q_User.FirstOrDefault(x => !x.IsDeleted && x.UserName.Equals(sUsername) && x.Password.Equals(sPassword));
                 if (obj != null)
                 {
                     login = new Login();
@@ -208,7 +208,7 @@ namespace QMS_System.Data.BLL
             using (db = new QMSSystemEntities())
             {
                 UserModel obj = null;
-                var user = db.Q_User.FirstOrDefault(x => x.Id == userId);
+                var user = db.Q_User.FirstOrDefault(x => !x.IsDeleted && x.Id == userId);
                 if (user != null)
                 {
                     obj = new UserModel();
@@ -232,13 +232,13 @@ namespace QMS_System.Data.BLL
         {
             using (db = new QMSSystemEntities())
             {
-                return db.Q_User.Where(x => x.UserName.Trim().ToUpper().Equals(userName) && x.Password.Trim().ToUpper().Equals(password)).FirstOrDefault();
+                return db.Q_User.Where(x => !x.IsDeleted && x.UserName.Trim().ToUpper().Equals(userName) && x.Password.Trim().ToUpper().Equals(password)).FirstOrDefault();
             }
         }
 
         public Q_User Get(string username)
         {
-            using (db = new QMSSystemEntities()) { return db.Q_User.FirstOrDefault(x => x.UserName.Trim().Equals(username)); }
+            using (db = new QMSSystemEntities()) { return db.Q_User.FirstOrDefault(x => !x.IsDeleted && x.UserName.Trim().Equals(username)); }
         }
 
         public PagedList<UserModel> GetList(string keyWord, int searchBy, int startIndexRecord, int pageSize, string sorting)
@@ -253,9 +253,9 @@ namespace QMS_System.Data.BLL
                     IQueryable<Q_User> objs = null;
                     var pageNumber = (startIndexRecord / pageSize) + 1;
                     if (!string.IsNullOrEmpty(keyWord))
-                        objs = db.Q_User.Where(x => x.Name.Trim().ToUpper().Contains(keyWord.Trim().ToUpper())).OrderByDescending(x => x.Id);
+                        objs = db.Q_User.Where(x => !x.IsDeleted && x.Name.Trim().ToUpper().Contains(keyWord.Trim().ToUpper())).OrderByDescending(x => x.Id);
                     else
-                        objs = db.Q_User.OrderByDescending(x => x.Id);
+                        objs = db.Q_User.Where(x => !x.IsDeleted).OrderByDescending(x => x.Id);
 
                     if (objs != null && objs.Count() > 0)
                     {
@@ -290,7 +290,7 @@ namespace QMS_System.Data.BLL
         {
             using (var _db = new QMSSystemEntities())
             {
-                var user = _db.Q_User.FirstOrDefault(x => x.UserName.Trim().ToUpper().Equals(userName.ToUpper().Trim()));
+                var user = _db.Q_User.FirstOrDefault(x => !x.IsDeleted && x.UserName.Trim().ToUpper().Equals(userName.ToUpper().Trim()));
                 if (user != null && !string.IsNullOrEmpty(user.Avatar))
                     return user.Avatar;
                 return string.Empty;

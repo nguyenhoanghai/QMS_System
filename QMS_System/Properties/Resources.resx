@@ -169,9 +169,6 @@
   <data name="973_-_Reception-64" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\973_-_Reception-64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="login history" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\login history.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="alarmclock-40" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\alarmclock-40.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -208,6 +205,9 @@
   <data name="history2 (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\history2 (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="if_our_process_2_45123" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_our_process_2_45123.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="screen-12-29" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\screen-12-29.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -231,6 +231,9 @@
   </data>
   <data name="equipment" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\equipment.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="counter (2)" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\counter (2).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="if_trash_100984" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\if_trash_100984.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -331,6 +334,9 @@
   <data name="27263_64735_ball_blue_circle" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\27263_64735_ball_blue_circle.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="if_video_173123" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_video_173123.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="blue_circle" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\blue_circle.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -376,13 +382,13 @@
   <data name="music-circle-blue-48" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\music-circle-blue-48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="counter (2)" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\counter (2).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="login history" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\login history.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="if_juk_1272" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\if_juk_1272.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="if_our_process_2_45123" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\if_our_process_2_45123.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Audio" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Audio.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

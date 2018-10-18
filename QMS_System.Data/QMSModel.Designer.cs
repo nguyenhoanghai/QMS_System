@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'E:\GPRO_2018\App\QMS\QMS_System\trunk\QMS_System\QMS_System.Data\QMSModel.edmx'. 
+﻿// T4 code generation is enabled for model 'E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.Data\QMSModel.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

@@ -76,7 +76,7 @@ namespace QMS_System
         }
         private void frmMain_Load(object sender, EventArgs e)
         {
-            BLLUserEvaluate.Instance.Evaluate("nv16", "1_1", 0, "0");
+         //   BLLUserEvaluate.Instance.Evaluate("nv16", "1_1", 0, "0");
 
         }
 
@@ -616,6 +616,19 @@ namespace QMS_System
             {
                 MessageBox.Show("Lấy thông tin Com Keypad bị lỗi.\n" + ex.Message, "Lỗi Com Keypad");
             }
+        }
+
+        private void btnVideo_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            Form frm = IsActive(typeof(frmVideo));
+            if (frm == null)
+            {
+                var forms = new frmVideo();
+                forms.MdiParent = this;
+                forms.Show();
+            }
+            else
+                frm.Activate();
         }
 
         private void comPort_DataReceived(object sender, SerialDataReceivedEventArgs e)

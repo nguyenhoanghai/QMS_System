@@ -19,7 +19,7 @@ namespace QMS_System.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -116,6 +116,16 @@ namespace QMS_System.Properties {
         internal static System.Drawing.Bitmap Alert {
             get {
                 object obj = ResourceManager.GetObject("Alert", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Audio {
+            get {
+                object obj = ResourceManager.GetObject("Audio", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -586,6 +596,16 @@ namespace QMS_System.Properties {
         internal static System.Drawing.Bitmap if_user_accounts_config_67350 {
             get {
                 object obj = ResourceManager.GetObject("if_user_accounts_config_67350", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap if_video_173123 {
+            get {
+                object obj = ResourceManager.GetObject("if_video_173123", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

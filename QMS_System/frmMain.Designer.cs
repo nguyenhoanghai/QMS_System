@@ -92,6 +92,9 @@
             this.richedit = new DevExpress.XtraBars.BarEditItem();
             this.repositoryItemRichTextEdit4 = new DevExpress.XtraEditors.Repository.RepositoryItemRichTextEdit();
             this.btRunProcess = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem9 = new DevExpress.XtraBars.BarButtonItem();
+            this.btnSound2 = new DevExpress.XtraBars.BarButtonItem();
+            this.btnVideo = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPage3 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
@@ -99,6 +102,8 @@
             this.ribbonPageGroup7 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup3 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup6 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.r = new DevExpress.XtraBars.Ribbon.RibbonPage();
+            this.ribbonPageGroup13 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPage2 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup4 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup5 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -122,6 +127,7 @@
             this.barButtonItem5 = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem3 = new DevExpress.XtraBars.BarButtonItem();
             this.tmerQuetServeOver = new System.Windows.Forms.Timer(this.components);
+            this.barButtonItem11 = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemRichTextEdit2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemRichTextEdit3)).BeginInit();
@@ -195,13 +201,18 @@
             this.barButtonItem10,
             this.btnMainDirection,
             this.richedit,
-            this.btRunProcess});
+            this.btRunProcess,
+            this.barButtonItem9,
+            this.btnSound2,
+            this.btnVideo});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.MaxItemId = 66;
+            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.ribbonControl1.MaxItemId = 70;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage3,
             this.ribbonPage1,
+            this.r,
             this.ribbonPage2,
             this.ribbonPage4,
             this.ribbonPage5});
@@ -220,7 +231,7 @@
             this.repositoryItemTextEdit6,
             this.repositoryItemRichTextEdit4});
             this.ribbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.Office2013;
-            this.ribbonControl1.Size = new System.Drawing.Size(1007, 143);
+            this.ribbonControl1.Size = new System.Drawing.Size(1175, 168);
             this.ribbonControl1.StatusBar = this.ribbonStatusBar1;
             this.ribbonControl1.ToolbarLocation = DevExpress.XtraBars.Ribbon.RibbonQuickAccessToolbarLocation.Above;
             // 
@@ -692,6 +703,28 @@
             this.btRunProcess.Name = "btRunProcess";
             this.btRunProcess.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btRunProcess_ItemClick);
             // 
+            // barButtonItem9
+            // 
+            this.barButtonItem9.Caption = "barButtonItem9";
+            this.barButtonItem9.Id = 66;
+            this.barButtonItem9.Name = "barButtonItem9";
+            // 
+            // btnSound2
+            // 
+            this.btnSound2.Caption = "Âm thanh";
+            this.btnSound2.Id = 68;
+            this.btnSound2.LargeGlyph = global::QMS_System.Properties.Resources.Audio;
+            this.btnSound2.Name = "btnSound2";
+            this.btnSound2.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnSound_ItemClick);
+            // 
+            // btnVideo
+            // 
+            this.btnVideo.Caption = "Video";
+            this.btnVideo.Id = 69;
+            this.btnVideo.LargeGlyph = global::QMS_System.Properties.Resources.if_video_173123;
+            this.btnVideo.Name = "btnVideo";
+            this.btnVideo.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnVideo_ItemClick);
+            // 
             // ribbonPage3
             // 
             this.ribbonPage3.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
@@ -749,7 +782,22 @@
             // 
             this.ribbonPageGroup6.ItemLinks.Add(this.barButtonItem1);
             this.ribbonPageGroup6.ItemLinks.Add(this.btnStatus, true);
+            this.ribbonPageGroup6.ItemLinks.Add(this.barButtonItem9);
             this.ribbonPageGroup6.Name = "ribbonPageGroup6";
+            // 
+            // r
+            // 
+            this.r.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
+            this.ribbonPageGroup13});
+            this.r.Name = "r";
+            this.r.Text = "Đa phương tiện";
+            // 
+            // ribbonPageGroup13
+            // 
+            this.ribbonPageGroup13.ItemLinks.Add(this.btnSound2);
+            this.ribbonPageGroup13.ItemLinks.Add(this.btnVideo);
+            this.ribbonPageGroup13.Name = "ribbonPageGroup13";
+            this.ribbonPageGroup13.Text = "ribbonPageGroup13";
             // 
             // ribbonPage2
             // 
@@ -858,10 +906,11 @@
             this.ribbonStatusBar1.ItemLinks.Add(this.lbQuet);
             this.ribbonStatusBar1.ItemLinks.Add(this.lbRecieve);
             this.ribbonStatusBar1.ItemLinks.Add(this.lbErrorsms);
-            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 416);
+            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 514);
+            this.ribbonStatusBar1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ribbonStatusBar1.Name = "ribbonStatusBar1";
             this.ribbonStatusBar1.Ribbon = this.ribbonControl1;
-            this.ribbonStatusBar1.Size = new System.Drawing.Size(1007, 31);
+            this.ribbonStatusBar1.Size = new System.Drawing.Size(1175, 36);
             // 
             // xtraTabbedMdiManager1
             // 
@@ -907,15 +956,23 @@
             this.tmerQuetServeOver.Interval = 10000;
             this.tmerQuetServeOver.Tick += new System.EventHandler(this.tmerQuetServeOver_Tick);
             // 
+            // barButtonItem11
+            // 
+            this.barButtonItem11.Caption = "Âm thanh";
+            this.barButtonItem11.Id = 2;
+            this.barButtonItem11.LargeGlyph = global::QMS_System.Properties.Resources.Music_icon;
+            this.barButtonItem11.Name = "barButtonItem11";
+            // 
             // frmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1007, 447);
+            this.ClientSize = new System.Drawing.Size(1175, 550);
             this.Controls.Add(this.ribbonStatusBar1);
             this.Controls.Add(this.ribbonControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.IsMdiContainer = true;
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "frmMain";
             this.Ribbon = this.ribbonControl1;
             this.StatusBar = this.ribbonStatusBar1;
@@ -1037,5 +1094,11 @@
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup12;
         private DevExpress.XtraBars.BarButtonItem btRunProcess;
         private System.Windows.Forms.Timer tmerQuetServeOver;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem9;
+        private DevExpress.XtraBars.BarButtonItem btnSound2;
+        private DevExpress.XtraBars.BarButtonItem btnVideo;
+        private DevExpress.XtraBars.Ribbon.RibbonPage r;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup13;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem11;
     }
 }

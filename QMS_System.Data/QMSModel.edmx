@@ -493,6 +493,34 @@
           <Property Name="Index" Type="int" Nullable="false" />
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="Q_Video">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FileName" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="FakeName" Type="nvarchar" MaxLength="500" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Q_VideoTemplate">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TemplateName" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Note" Type="nvarchar(max)" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Q_VideoTemplate_De">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Index" Type="int" Nullable="false" />
+          <Property Name="TemplateId" Type="int" Nullable="false" />
+          <Property Name="VideoId" Type="int" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
         <Association Name="FK_Q_ActionParameter_Q_Action">
           <End Role="Q_Action" Type="Self.Q_Action" Multiplicity="1" />
           <End Role="Q_ActionParameter" Type="Self.Q_ActionParameter" Multiplicity="*" />
@@ -577,9 +605,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <!--Errors Found During Generation:
-warning 6035: The relationship 'FK_Q_DailyRequire_Detail_Q_Equipment' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
-        <Association Name="FK_Q_DailyRequire_Detail_Q_Equipment" />-->
         <Association Name="FK_Q_DailyRequire_Detail_Q_Major">
           <End Role="Q_Major" Type="Self.Q_Major" Multiplicity="1" />
           <End Role="Q_DailyRequire_Detail" Type="Self.Q_DailyRequire_Detail" Multiplicity="*" />
@@ -832,9 +857,6 @@ warning 6035: The relationship 'FK_Q_DailyRequire_Detail_Q_Equipment' has column
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <!--Errors Found During Generation:
-warning 6035: The relationship 'FK_Q_LoginHistory_Q_Equipment' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
-        <Association Name="FK_Q_LoginHistory_Q_Equipment" />-->
         <Association Name="FK_Q_LoginHistory_Q_Status">
           <End Role="Q_Status" Type="Self.Q_Status" Multiplicity="1" />
           <End Role="Q_LoginHistory" Type="Self.Q_LoginHistory" Multiplicity="*" />
@@ -1123,6 +1145,30 @@ warning 6035: The relationship 'FK_Q_LoginHistory_Q_Equipment' has columns that 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Q_VideoTemplate_De_Q_Video">
+          <End Role="Q_Video" Type="Self.Q_Video" Multiplicity="0..1" />
+          <End Role="Q_VideoTemplate_De" Type="Self.Q_VideoTemplate_De" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_Video">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_VideoTemplate_De">
+              <PropertyRef Name="VideoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Q_VideoTemplate_De_Q_VideoTemplate">
+          <End Role="Q_VideoTemplate" Type="Self.Q_VideoTemplate" Multiplicity="1" />
+          <End Role="Q_VideoTemplate_De" Type="Self.Q_VideoTemplate_De" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_VideoTemplate">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_VideoTemplate_De">
+              <PropertyRef Name="TemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="QMSSystemModelStoreContainer">
           <EntitySet Name="Q_Action" EntityType="Self.Q_Action" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_ActionParameter" EntityType="Self.Q_ActionParameter" Schema="dbo" store:Type="Tables" />
@@ -1168,6 +1214,9 @@ warning 6035: The relationship 'FK_Q_LoginHistory_Q_Equipment' has columns that 
           <EntitySet Name="Q_UserCommandReadSound" EntityType="Self.Q_UserCommandReadSound" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_UserEvaluate" EntityType="Self.Q_UserEvaluate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_UserMajor" EntityType="Self.Q_UserMajor" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Q_Video" EntityType="Self.Q_Video" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Q_VideoTemplate" EntityType="Self.Q_VideoTemplate" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Q_VideoTemplate_De" EntityType="Self.Q_VideoTemplate_De" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Q_ActionParameter_Q_Action" Association="Self.FK_Q_ActionParameter_Q_Action">
             <End Role="Q_Action" EntitySet="Q_Action" />
             <End Role="Q_ActionParameter" EntitySet="Q_ActionParameter" />
@@ -1376,6 +1425,14 @@ warning 6035: The relationship 'FK_Q_LoginHistory_Q_Equipment' has columns that 
             <End Role="Q_User" EntitySet="Q_User" />
             <End Role="Q_UserMajor" EntitySet="Q_UserMajor" />
           </AssociationSet>
+          <AssociationSet Name="FK_Q_VideoTemplate_De_Q_Video" Association="Self.FK_Q_VideoTemplate_De_Q_Video">
+            <End Role="Q_Video" EntitySet="Q_Video" />
+            <End Role="Q_VideoTemplate_De" EntitySet="Q_VideoTemplate_De" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Q_VideoTemplate_De_Q_VideoTemplate" Association="Self.FK_Q_VideoTemplate_De_Q_VideoTemplate">
+            <End Role="Q_VideoTemplate" EntitySet="Q_VideoTemplate" />
+            <End Role="Q_VideoTemplate_De" EntitySet="Q_VideoTemplate_De" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -1426,6 +1483,9 @@ warning 6035: The relationship 'FK_Q_LoginHistory_Q_Equipment' has columns that 
           <EntitySet Name="Q_UserCommandReadSound" EntityType="QMSSystemModel.Q_UserCommandReadSound" />
           <EntitySet Name="Q_UserEvaluate" EntityType="QMSSystemModel.Q_UserEvaluate" />
           <EntitySet Name="Q_UserMajor" EntityType="QMSSystemModel.Q_UserMajor" />
+          <EntitySet Name="Q_Video" EntityType="QMSSystemModel.Q_Video" />
+          <EntitySet Name="Q_VideoTemplate" EntityType="QMSSystemModel.Q_VideoTemplate" />
+          <EntitySet Name="Q_VideoTemplate_De" EntityType="QMSSystemModel.Q_VideoTemplate_De" />
           <AssociationSet Name="FK_Q_ActionParameter_Q_Action" Association="QMSSystemModel.FK_Q_ActionParameter_Q_Action">
             <End Role="Q_Action" EntitySet="Q_Action" />
             <End Role="Q_ActionParameter" EntitySet="Q_ActionParameter" />
@@ -1633,6 +1693,14 @@ warning 6035: The relationship 'FK_Q_LoginHistory_Q_Equipment' has columns that 
           <AssociationSet Name="FK_Q_UserMajor_Q_User" Association="QMSSystemModel.FK_Q_UserMajor_Q_User">
             <End Role="Q_User" EntitySet="Q_User" />
             <End Role="Q_UserMajor" EntitySet="Q_UserMajor" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Q_VideoTemplate_De_Q_Video" Association="QMSSystemModel.FK_Q_VideoTemplate_De_Q_Video">
+            <End Role="Q_Video" EntitySet="Q_Video" />
+            <End Role="Q_VideoTemplate_De" EntitySet="Q_VideoTemplate_De" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Q_VideoTemplate_De_Q_VideoTemplate" Association="QMSSystemModel.FK_Q_VideoTemplate_De_Q_VideoTemplate">
+            <End Role="Q_VideoTemplate" EntitySet="Q_VideoTemplate" />
+            <End Role="Q_VideoTemplate_De" EntitySet="Q_VideoTemplate_De" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="Q_Action">
@@ -2226,6 +2294,38 @@ warning 6035: The relationship 'FK_Q_LoginHistory_Q_Equipment' has columns that 
           <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Q_Major" Relationship="QMSSystemModel.FK_Q_UserMajor_Q_Major" FromRole="Q_UserMajor" ToRole="Q_Major" />
           <NavigationProperty Name="Q_User" Relationship="QMSSystemModel.FK_Q_UserMajor_Q_User" FromRole="Q_UserMajor" ToRole="Q_User" />
+        </EntityType>
+        <EntityType Name="Q_Video">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FileName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="FakeName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Q_VideoTemplate_De" Relationship="QMSSystemModel.FK_Q_VideoTemplate_De_Q_Video" FromRole="Q_Video" ToRole="Q_VideoTemplate_De" />
+        </EntityType>
+        <EntityType Name="Q_VideoTemplate">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TemplateName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Q_VideoTemplate_De" Relationship="QMSSystemModel.FK_Q_VideoTemplate_De_Q_VideoTemplate" FromRole="Q_VideoTemplate" ToRole="Q_VideoTemplate_De" />
+        </EntityType>
+        <EntityType Name="Q_VideoTemplate_De">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Index" Type="Int32" Nullable="false" />
+          <Property Name="TemplateId" Type="Int32" Nullable="false" />
+          <Property Name="VideoId" Type="Int32" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Q_Video" Relationship="QMSSystemModel.FK_Q_VideoTemplate_De_Q_Video" FromRole="Q_VideoTemplate_De" ToRole="Q_Video" />
+          <NavigationProperty Name="Q_VideoTemplate" Relationship="QMSSystemModel.FK_Q_VideoTemplate_De_Q_VideoTemplate" FromRole="Q_VideoTemplate_De" ToRole="Q_VideoTemplate" />
         </EntityType>
         <Association Name="FK_Q_ActionParameter_Q_Action">
           <End Type="QMSSystemModel.Q_Action" Role="Q_Action" Multiplicity="1" />
@@ -2851,6 +2951,30 @@ warning 6035: The relationship 'FK_Q_LoginHistory_Q_Equipment' has columns that 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Q_VideoTemplate_De_Q_Video">
+          <End Type="QMSSystemModel.Q_Video" Role="Q_Video" Multiplicity="0..1" />
+          <End Type="QMSSystemModel.Q_VideoTemplate_De" Role="Q_VideoTemplate_De" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_Video">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_VideoTemplate_De">
+              <PropertyRef Name="VideoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Q_VideoTemplate_De_Q_VideoTemplate">
+          <End Type="QMSSystemModel.Q_VideoTemplate" Role="Q_VideoTemplate" Multiplicity="1" />
+          <End Type="QMSSystemModel.Q_VideoTemplate_De" Role="Q_VideoTemplate_De" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_VideoTemplate">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_VideoTemplate_De">
+              <PropertyRef Name="TemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3385,6 +3509,37 @@ warning 6035: The relationship 'FK_Q_LoginHistory_Q_Equipment' has columns that 
                 <ScalarProperty Name="Index" ColumnName="Index" />
                 <ScalarProperty Name="MajorId" ColumnName="MajorId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Q_Video">
+            <EntityTypeMapping TypeName="QMSSystemModel.Q_Video">
+              <MappingFragment StoreEntitySet="Q_Video">
+                <ScalarProperty Name="FakeName" ColumnName="FakeName" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Q_VideoTemplate">
+            <EntityTypeMapping TypeName="QMSSystemModel.Q_VideoTemplate">
+              <MappingFragment StoreEntitySet="Q_VideoTemplate">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="TemplateName" ColumnName="TemplateName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Q_VideoTemplate_De">
+            <EntityTypeMapping TypeName="QMSSystemModel.Q_VideoTemplate_De">
+              <MappingFragment StoreEntitySet="Q_VideoTemplate_De">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="VideoId" ColumnName="VideoId" />
+                <ScalarProperty Name="TemplateId" ColumnName="TemplateId" />
+                <ScalarProperty Name="Index" ColumnName="Index" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

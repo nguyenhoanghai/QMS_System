@@ -99,6 +99,7 @@
     <Compile Include="BLL\BLLEquipType.cs" />
     <Compile Include="BLL\BLLStatusType.cs" />
     <Compile Include="BLL\BLLService.cs" />
+    <Compile Include="BLL\BLLVideo.cs" />
     <Compile Include="Enum\eCounterSoftRequireType.cs" />
     <Compile Include="Model\A_CurrentInfoModel.cs" />
     <Compile Include="Model\CounterSoftRequireModel.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="Model\RecieverSMSModel.cs" />
     <Compile Include="Model\ServiceInfoModel.cs" />
     <Compile Include="Model\ReportModel.cs" />
+    <Compile Include="Model\VideoModel.cs" />
     <Compile Include="Model\ViewModel.cs" />
     <Compile Include="Model\UserEvaluateModel.cs" />
     <Compile Include="Model\EvaluateModel.cs" />
@@ -319,6 +321,15 @@
       <DependentUpon>QMSModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Q_UserMajor.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_Video.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_VideoTemplate.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_VideoTemplate_De.cs">
       <DependentUpon>QMSModel.tt</DependentUpon>
     </Compile>
   </ItemGroup>
