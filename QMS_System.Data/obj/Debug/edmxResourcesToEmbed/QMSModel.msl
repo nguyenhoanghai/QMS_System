@@ -533,15 +533,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Q_Video">
-      <EntityTypeMapping TypeName="QMSSystemModel.Q_Video">
-        <MappingFragment StoreEntitySet="Q_Video">
-          <ScalarProperty Name="FakeName" ColumnName="FakeName" />
-          <ScalarProperty Name="FileName" ColumnName="FileName" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Q_VideoTemplate">
       <EntityTypeMapping TypeName="QMSSystemModel.Q_VideoTemplate">
         <MappingFragment StoreEntitySet="Q_VideoTemplate">
@@ -560,6 +551,16 @@
           <ScalarProperty Name="VideoId" ColumnName="VideoId" />
           <ScalarProperty Name="TemplateId" ColumnName="TemplateId" />
           <ScalarProperty Name="Index" ColumnName="Index" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Q_Video">
+      <EntityTypeMapping TypeName="QMSSystemModel.Q_Video">
+        <MappingFragment StoreEntitySet="Q_Video">
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="FakeName" ColumnName="FakeName" />
+          <ScalarProperty Name="FileName" ColumnName="FileName" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>

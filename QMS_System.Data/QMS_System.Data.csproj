@@ -109,6 +109,7 @@
     <Compile Include="Model\ServiceInfoModel.cs" />
     <Compile Include="Model\ReportModel.cs" />
     <Compile Include="Model\VideoModel.cs" />
+    <Compile Include="Model\VideoPlaylist.cs" />
     <Compile Include="Model\VideoTemplateModel.cs" />
     <Compile Include="Model\ViewModel.cs" />
     <Compile Include="Model\UserEvaluateModel.cs" />

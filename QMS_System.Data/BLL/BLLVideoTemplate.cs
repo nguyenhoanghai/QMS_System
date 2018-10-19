@@ -107,6 +107,22 @@ namespace QMS_System.Data.BLL
             }
         }
 
+        public List<VideoPlaylist> GetPlaylist()
+        {
+            using (var db = new QMSSystemEntities())
+            {
+                return db.Q_VideoTemplate_De.Where(x => !x.IsDeleted &&
+                        !x.Q_VideoTemplate.IsDeleted &&
+                        !x.Q_Video.IsDeleted &&
+                        x.Q_VideoTemplate.IsActive)
+                .Select(x => new VideoPlaylist()
+                {
+                    Index = x.Index,
+                    Path = x.Q_Video.FakeName
+                }).ToList();
+            }
+        }
+
     }
 
     public class BLLVideoTemplate_De
@@ -132,7 +148,7 @@ namespace QMS_System.Data.BLL
         {
             using (var db = new QMSSystemEntities())
             {
-                return db.Q_VideoTemplate_De.Where(x => !x.IsDeleted && x.TemplateId == templateId).Select(x => new VideoTemplate_DeModel()
+                return db.Q_VideoTemplate_De.Where(x => !x.IsDeleted && !x.Q_VideoTemplate.IsDeleted && !x.Q_Video.IsDeleted && x.TemplateId == templateId).Select(x => new VideoTemplate_DeModel()
                 {
                     Id = x.Id,
                     TemplateId = x.TemplateId,
@@ -141,7 +157,7 @@ namespace QMS_System.Data.BLL
                 }).ToList();
             }
         }
-          
+
         public ResponseBase InsertOrUpdate(Q_VideoTemplate_De model)
         {
             var rs = new ResponseBase();
@@ -174,7 +190,7 @@ namespace QMS_System.Data.BLL
                 return rs;
             }
         }
-         
+
         public bool Delete(int Id)
         {
             using (var db = new QMSSystemEntities())

@@ -46,8 +46,8 @@ namespace QMS_System
                     if (!Directory.Exists(savePath))
                         Directory.CreateDirectory(savePath);
 
-                    string fakeName = (DateTime.Now.ToString("ddMMyyyyyHHmmss") + "_" + openFileDialog1.SafeFileName);
-                    File.Copy(path,  fakeName,true );
+                    string fakeName = (DateTime.Now.ToString("ddMMyyyyyHHmmss") + "" + openFileDialog1.FileName.Substring(openFileDialog1.FileName.LastIndexOf('.')));
+                    File.Copy(path, (savePath+ fakeName),true );
                     BLLVideo.Instance.AddFile(new Data.Q_Video() { FileName = openFileDialog1.SafeFileName, FakeName = fakeName });
                     LoadData();
                 }
@@ -58,5 +58,14 @@ namespace QMS_System
 
         }
 
+        private void repbtnDeleteChild_ButtonClick(object sender, DevExpress.XtraEditors.Controls.ButtonPressedEventArgs e)
+        {
+            int Id = int.Parse(gridViewChild.GetRowCellValue(gridViewChild.FocusedRowHandle, "Id").ToString());
+            if (Id != 0)
+            {
+                BLLVideo.Instance.Delete(Id);
+                LoadData();
+            }
+        }
     }
 }

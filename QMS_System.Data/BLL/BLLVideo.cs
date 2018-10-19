@@ -27,7 +27,7 @@ namespace QMS_System.Data.BLL
         {
             using (var db = new QMSSystemEntities())
             {
-                return db.Q_Video.Select(x => new VideoModel()
+                return db.Q_Video.Where(x => !x.IsDeleted).Select(x => new VideoModel()
                 {
                     Id = x.Id,
                     FileName = x.FileName,
@@ -39,10 +39,9 @@ namespace QMS_System.Data.BLL
         {
             using (var db = new QMSSystemEntities())
             {
-                return db.Q_Video.Select(x => new ModelSelectItem() { Id = x.Id, Name = x.FileName }).ToList();
+                return db.Q_Video.Where(x => !x.IsDeleted).Select(x => new ModelSelectItem() { Id = x.Id, Name = x.FileName }).ToList();
             }
         }
-
 
         public int AddFile(Q_Video model)
         {
@@ -58,11 +57,18 @@ namespace QMS_System.Data.BLL
         {
             using (var db = new QMSSystemEntities())
             {
-
-                var file = db.Q_Video.FirstOrDefault(x => x.Id == Id);
-                db.Q_Video.Remove(file);
-                db.SaveChanges();
-                return true;
+                try
+                {
+                    var file = db.Q_Video.Where(x => !x.IsDeleted).FirstOrDefault(x => x.Id == Id);
+                    file.IsDeleted = true;
+                    db.Entry<Q_Video>(file).State = System.Data.Entity.EntityState.Modified;
+                    db.SaveChanges();
+                    return true;
+                }
+                catch (System.Exception e)
+                {
+                }
+                return false;
             }
         }
 

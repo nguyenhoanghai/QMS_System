@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmVideo));
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject2 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject1 = new DevExpress.Utils.SerializableAppearanceObject();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.gridChild = new DevExpress.XtraGrid.GridControl();
             this.gridViewChild = new DevExpress.XtraGrid.Views.Grid.GridView();
@@ -37,15 +37,11 @@
             this.gridColumn11 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn14 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repbtnDeleteChild = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
-            this.gridLookUpLanguage = new DevExpress.XtraEditors.Repository.RepositoryItemGridLookUpEdit();
-            this.repositoryItemGridLookUpEdit1View = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.btnReset = new DevExpress.XtraEditors.SimpleButton();
             this.btnAdd = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.gridChild)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridViewChild)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repbtnDeleteChild)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridLookUpLanguage)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemGridLookUpEdit1View)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -58,13 +54,14 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gridChild.Cursor = System.Windows.Forms.Cursors.Default;
-            this.gridChild.Location = new System.Drawing.Point(4, 49);
+            this.gridChild.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gridChild.Location = new System.Drawing.Point(5, 60);
             this.gridChild.MainView = this.gridViewChild;
+            this.gridChild.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.gridChild.Name = "gridChild";
             this.gridChild.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
-            this.repbtnDeleteChild,
-            this.gridLookUpLanguage});
-            this.gridChild.Size = new System.Drawing.Size(485, 379);
+            this.repbtnDeleteChild});
+            this.gridChild.Size = new System.Drawing.Size(647, 466);
             this.gridChild.TabIndex = 2;
             this.gridChild.UseEmbeddedNavigator = true;
             this.gridChild.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -125,33 +122,20 @@
             // 
             this.repbtnDeleteChild.AutoHeight = false;
             this.repbtnDeleteChild.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, true, true, false, DevExpress.XtraEditors.ImageLocation.MiddleCenter, ((System.Drawing.Image)(resources.GetObject("repbtnDeleteChild.Buttons"))), new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject2, "", null, null, true)});
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, true, true, false, DevExpress.XtraEditors.ImageLocation.MiddleCenter, ((System.Drawing.Image)(resources.GetObject("repbtnDeleteChild.Buttons"))), new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, "", null, null, true)});
             this.repbtnDeleteChild.Name = "repbtnDeleteChild";
             this.repbtnDeleteChild.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.HideTextEditor;
-            // 
-            // gridLookUpLanguage
-            // 
-            this.gridLookUpLanguage.AutoHeight = false;
-            this.gridLookUpLanguage.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.gridLookUpLanguage.Name = "gridLookUpLanguage";
-            this.gridLookUpLanguage.View = this.repositoryItemGridLookUpEdit1View;
-            // 
-            // repositoryItemGridLookUpEdit1View
-            // 
-            this.repositoryItemGridLookUpEdit1View.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.RowFocus;
-            this.repositoryItemGridLookUpEdit1View.Name = "repositoryItemGridLookUpEdit1View";
-            this.repositoryItemGridLookUpEdit1View.OptionsSelection.EnableAppearanceFocusedCell = false;
-            this.repositoryItemGridLookUpEdit1View.OptionsView.ShowGroupPanel = false;
+            this.repbtnDeleteChild.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.repbtnDeleteChild_ButtonClick);
             // 
             // btnReset
             // 
             this.btnReset.Image = global::QMS_System.Properties.Resources.if_refresh22_216527;
             this.btnReset.ImageLocation = DevExpress.XtraEditors.ImageLocation.MiddleLeft;
             this.btnReset.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.LeftCenter;
-            this.btnReset.Location = new System.Drawing.Point(4, 5);
+            this.btnReset.Location = new System.Drawing.Point(5, 6);
+            this.btnReset.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new System.Drawing.Size(132, 38);
+            this.btnReset.Size = new System.Drawing.Size(176, 47);
             this.btnReset.TabIndex = 5;
             this.btnReset.Text = "  Làm mới  lưới";
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
@@ -161,30 +145,29 @@
             this.btnAdd.Image = global::QMS_System.Properties.Resources.if_plus_sign_173078;
             this.btnAdd.ImageLocation = DevExpress.XtraEditors.ImageLocation.MiddleLeft;
             this.btnAdd.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.LeftCenter;
-            this.btnAdd.Location = new System.Drawing.Point(142, 5);
+            this.btnAdd.Location = new System.Drawing.Point(189, 6);
+            this.btnAdd.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(129, 38);
+            this.btnAdd.Size = new System.Drawing.Size(172, 47);
             this.btnAdd.TabIndex = 6;
             this.btnAdd.Text = "Thêm tệp video";
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
             // frmVideo
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(493, 430);
+            this.ClientSize = new System.Drawing.Size(657, 529);
             this.Controls.Add(this.btnAdd);
             this.Controls.Add(this.btnReset);
             this.Controls.Add(this.gridChild);
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "frmVideo";
             this.Text = "Danh sách tệp video";
             this.Load += new System.EventHandler(this.frmVideo_Load);
             ((System.ComponentModel.ISupportInitialize)(this.gridChild)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridViewChild)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repbtnDeleteChild)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridLookUpLanguage)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemGridLookUpEdit1View)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -195,8 +178,6 @@
         private DevExpress.XtraGrid.GridControl gridChild;
         private DevExpress.XtraGrid.Views.Grid.GridView gridViewChild;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn9;
-        private DevExpress.XtraEditors.Repository.RepositoryItemGridLookUpEdit gridLookUpLanguage;
-        private DevExpress.XtraGrid.Views.Grid.GridView repositoryItemGridLookUpEdit1View;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn11;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn14;
         private DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit repbtnDeleteChild;

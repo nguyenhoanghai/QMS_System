@@ -69,8 +69,8 @@ namespace QMS_System.Data
         public DbSet<Q_UserCommandReadSound> Q_UserCommandReadSound { get; set; }
         public DbSet<Q_UserEvaluate> Q_UserEvaluate { get; set; }
         public DbSet<Q_UserMajor> Q_UserMajor { get; set; }
-        public DbSet<Q_Video> Q_Video { get; set; }
         public DbSet<Q_VideoTemplate> Q_VideoTemplate { get; set; }
         public DbSet<Q_VideoTemplate_De> Q_VideoTemplate_De { get; set; }
+        public DbSet<Q_Video> Q_Video { get; set; }
     }
 }
