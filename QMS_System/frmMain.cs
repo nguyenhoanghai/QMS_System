@@ -1274,7 +1274,9 @@ namespace QMS_System
 
         private void btRunProcess_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            if (isRunning)
+            try
+            {
+ if (isRunning)
             {
                 isRunning = false;
                 btRunProcess.Caption = "Chạy tiến trình";
@@ -1332,6 +1334,12 @@ namespace QMS_System
                 btRunProcess.Enabled = true;
             }
             lbRecieve.Caption = "";
+            }
+            catch (Exception ex)
+            { 
+                throw ex;
+            }
+           
         }
 
         private void tmerQuetServeOver_Tick(object sender, EventArgs e)

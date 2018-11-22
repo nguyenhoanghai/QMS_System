@@ -257,20 +257,20 @@ namespace QMS_System.Data.BLL
             using (db = new QMSSystemEntities())
             {
                 List<R_GeneralInDayModel> objs = null;
-                List<R_GeneralInDayModel> TNObjs = null;
+                List<R_GeneralInDayModel> ThuNganObjs = null;
                 List<R_GeneralInDayModel> temps = new List<R_GeneralInDayModel>();
                 try
                 {
-                    var dichvus = db.Q_Service.Where(x => !x.IsDeleted && x.IsActived).Select(x => new R_GeneralInDayModel()
-                    {
-                        ObjectId = x.Id,
-                        Name = x.Name,
-                        TotalTransaction = 0,
-                        TotalTransTime = 0,
-                        AverageTimePerTrans = 0,
-                        AverageTimeWaitingAfterPerTrans = 0,
-                        AverageTimeWaitingBeforePerTrans = 0,
-                    }).ToList();
+                    //var dichvus = db.Q_Service.Where(x => !x.IsDeleted && x.IsActived).Select(x => new R_GeneralInDayModel()
+                    //{
+                    //    ObjectId = x.Id,
+                    //    Name = x.Name,
+                    //    TotalTransaction = 0,
+                    //    TotalTransTime = 0,
+                    //    AverageTimePerTrans = 0,
+                    //    AverageTimeWaitingAfterPerTrans = 0,
+                    //    AverageTimeWaitingBeforePerTrans = 0,
+                    //}).ToList();
 
                     #region history
                     objs = db.Q_HisDailyRequire_De.Where(x => !x.Q_User.IsDeleted &&
@@ -295,7 +295,7 @@ namespace QMS_System.Data.BLL
                             PrintTime = t.Q_HisDailyRequire.PrintTime
                         }).ToList();
 
-                    TNObjs = db.Q_HisDailyRequire_De.Where(x => !x.Q_User.IsDeleted && !x.Q_Major.IsDeleted && !x.Q_HisDailyRequire.Q_Service.IsDeleted && x.Q_HisDailyRequire.PrintTime >= from && x.Q_HisDailyRequire.PrintTime <= to && x.Q_Status.Id == (int)eStatus.HOTAT).Select(t => new R_GeneralInDayModel()
+                    ThuNganObjs = db.Q_HisDailyRequire_De.Where(x => !x.Q_User.IsDeleted && !x.Q_Major.IsDeleted && !x.Q_HisDailyRequire.Q_Service.IsDeleted && x.Q_HisDailyRequire.PrintTime >= from && x.Q_HisDailyRequire.PrintTime <= to && x.Q_Status.Id == (int)eStatus.HOTAT).Select(t => new R_GeneralInDayModel()
                     {
                         Id = t.HisDailyRequireId,
                         ObjectId = t.Q_HisDailyRequire.ServiceId,
@@ -346,11 +346,11 @@ namespace QMS_System.Data.BLL
                                 objs[i].AverageTimeWaitingBeforePerTrans += (newObj.Start.Value.Minute + (newObj.Start.Value.Hour - newObj.PrintTime.Hour) * 60 - newObj.PrintTime.Minute);
 
                                 newObj = phieus.Where(x => x.Id == ids[z]).OrderByDescending(x => x.End).FirstOrDefault();
-                                var thunganObj = TNObjs.Where(x => x.Id == ids[z]).OrderByDescending(x => x.Start).FirstOrDefault();
+                                var thunganObj = ThuNganObjs.Where(x => x.Id == ids[z]).OrderByDescending(x => x.Start).FirstOrDefault();
                                 if (thunganObj != null && thunganObj.End.HasValue)
                                 {
                                     int time = (thunganObj.Start.Value.Minute + (thunganObj.Start.Value.Hour - newObj.End.Value.Hour) * 60 - newObj.End.Value.Minute);
-                                    if (time < 0)
+                                    if (time > 0)
                                         objs[i].AverageTimeWaitingAfterPerTrans += time;
                                 }
 
@@ -390,7 +390,7 @@ namespace QMS_System.Data.BLL
                             PrintTime = t.Q_DailyRequire.PrintTime
                         }).ToList());
 
-                    TNObjs = (db.Q_DailyRequire_Detail.Where(x => !x.Q_User.IsDeleted && !x.Q_Major.IsDeleted && !x.Q_DailyRequire.Q_Service.IsDeleted && x.Q_DailyRequire.PrintTime >= from && x.Q_DailyRequire.PrintTime <= to && x.Q_Status.Id == (int)eStatus.HOTAT && x.UserId == thuNganId).Select(t => new R_GeneralInDayModel()
+                    ThuNganObjs = (db.Q_DailyRequire_Detail.Where(x => !x.Q_User.IsDeleted && !x.Q_Major.IsDeleted && !x.Q_DailyRequire.Q_Service.IsDeleted && x.Q_DailyRequire.PrintTime >= from && x.Q_DailyRequire.PrintTime <= to && x.Q_Status.Id == (int)eStatus.HOTAT && x.UserId == thuNganId).Select(t => new R_GeneralInDayModel()
                     {
                         Id = t.DailyRequireId,
                         ObjectId = t.Q_DailyRequire.ServiceId,
@@ -439,11 +439,11 @@ namespace QMS_System.Data.BLL
                                 todayObjs[i].AverageTimeWaitingBeforePerTrans += (newObj.Start.Value.Minute + (newObj.Start.Value.Hour - newObj.PrintTime.Hour) * 60 - newObj.PrintTime.Minute);
 
                                 newObj = phieus.Where(x => x.Id == ids[z]).OrderByDescending(x => x.End).FirstOrDefault();
-                                var thunganObj = TNObjs.Where(x => x.Id == ids[z]).OrderByDescending(x => x.End).FirstOrDefault();
+                                var thunganObj = ThuNganObjs.Where(x => x.Id == ids[z]).OrderByDescending(x => x.End).FirstOrDefault();
                                 if (thunganObj != null)
                                 {
                                     int time = (thunganObj.Start.Value.Minute + (thunganObj.Start.Value.Hour - newObj.End.Value.Hour) * 60 - newObj.End.Value.Minute);
-                                    if (time < 0)
+                                    if (time > 0)
                                         todayObjs[i].AverageTimeWaitingAfterPerTrans += time;
                                 }
                             }
@@ -554,9 +554,11 @@ namespace QMS_System.Data.BLL
                                     //thoi gian giao dich tai ban nang
                                     if (phieus[ii].Start.HasValue && phieus[ii].End.HasValue)
                                         phieus[ii].ProcessTime = phieus[ii].End.Value.Subtract(phieus[ii].Start.Value).ToString("hh\\:mm\\:ss");
+                                   
                                     //thoi gian cho truoc khi len ban nang sua chua
-                                    if (phieus[ii].Start.HasValue)
-                                        phieus[ii].WaitingTime = phieus[ii].Start.Value.Subtract(fakePrintTime).ToString("hh\\:mm");
+                                    // tinh cho lan dau tien nhung lan sau ko tinh
+                                    if (phieus[ii].Start.HasValue && ii==0)
+                                        phieus[ii].WaitingTime = phieus[ii].Start.Value.Subtract(phieus[ii].PrintTime).ToString("hh\\:mm");
 
                                     if (ii == phieus.Count - 1)
                                     {
