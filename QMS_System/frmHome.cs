@@ -14,8 +14,10 @@ namespace QMS_System
 {
     public partial class frmHome : Form
     {
-        public frmHome()
+        frmMain fMain;
+        public frmHome( frmMain _frmMain)
         {
+            fMain = _frmMain;
             InitializeComponent();
         }
 
@@ -30,7 +32,7 @@ namespace QMS_System
             try
             {
                 gridHome.DataSource = null;
-                gridHome.DataSource = BLLLoginHistory.Instance.GetForHome(frmMain.today);
+                gridHome.DataSource = BLLLoginHistory.Instance.GetForHome(frmMain.today, fMain.UseWithThirdPattern);
                 frmMain.IsDatabaseChange = false;
             }
             catch (Exception)
@@ -41,7 +43,7 @@ namespace QMS_System
         private void frmHome_Load(object sender, EventArgs e)
         {
             gridHome.DataSource = null;
-            gridHome.DataSource = BLLLoginHistory.Instance.GetForHome(frmMain.today);
+            gridHome.DataSource = BLLLoginHistory.Instance.GetForHome(frmMain.today, fMain.UseWithThirdPattern);
         }
 
 

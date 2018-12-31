@@ -105,6 +105,7 @@
     <Compile Include="Model\A_CurrentInfoModel.cs" />
     <Compile Include="Model\CounterSoftRequireModel.cs" />
     <Compile Include="Model\CountServeOverTimeModel.cs" />
+    <Compile Include="Model\PrinterRequireModel.cs" />
     <Compile Include="Model\RecieverSMSModel.cs" />
     <Compile Include="Model\ServiceInfoModel.cs" />
     <Compile Include="Model\ReportModel.cs" />

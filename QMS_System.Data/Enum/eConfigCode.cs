@@ -68,5 +68,10 @@ namespace QMS_System.Data.Enum
 
         public const string VideoUrl = "VideoUrl";
 
+        /// <summary>
+        /// sử dụng chung với phần mềm bên thứ 3
+        /// </summary>
+        public const string UseWithThirdPattern = "UseWithThirdPattern";
+
     }
 }

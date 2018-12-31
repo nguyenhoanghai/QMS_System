@@ -27,11 +27,13 @@ namespace QMS_System.Data
         public Nullable<System.DateTime> ProcessTime { get; set; }
         public Nullable<System.DateTime> EndProcessTime { get; set; }
         public int StatusId { get; set; }
+        public bool IsSendSMS { get; set; }
+        public string SmsContent { get; set; }
     
-        public virtual Q_HisDailyRequire Q_HisDailyRequire { get; set; }
         public virtual Q_Major Q_Major { get; set; }
         public virtual Q_Status Q_Status { get; set; }
         public virtual Q_User Q_User { get; set; }
         public virtual ICollection<Q_HisUserEvaluate> Q_HisUserEvaluate { get; set; }
+        public virtual Q_HisDailyRequire Q_HisDailyRequire { get; set; }
     }
 }

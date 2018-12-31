@@ -155,7 +155,7 @@ namespace QMS_System.IssueTicketScreen
 
         private void ShowMessage(string buttonName)
         {
-            frmain.PrintNewTicket(10, int.Parse(buttonName.Split('_')[1]), 0,true,false,null); 
+            frmain.PrintNewTicket(10, int.Parse(buttonName.Split('_')[1]), 0,true,false,null,null,null,null,null,null,null); 
         }
 
         private void frmIssueTicketScreen_ClientSizeChanged(object sender, EventArgs e)

@@ -260,18 +260,7 @@ namespace QMS_System.Data.BLL
                 List<R_GeneralInDayModel> ThuNganObjs = null;
                 List<R_GeneralInDayModel> temps = new List<R_GeneralInDayModel>();
                 try
-                {
-                    //var dichvus = db.Q_Service.Where(x => !x.IsDeleted && x.IsActived).Select(x => new R_GeneralInDayModel()
-                    //{
-                    //    ObjectId = x.Id,
-                    //    Name = x.Name,
-                    //    TotalTransaction = 0,
-                    //    TotalTransTime = 0,
-                    //    AverageTimePerTrans = 0,
-                    //    AverageTimeWaitingAfterPerTrans = 0,
-                    //    AverageTimeWaitingBeforePerTrans = 0,
-                    //}).ToList();
-
+                {  
                     #region history
                     objs = db.Q_HisDailyRequire_De.Where(x => !x.Q_User.IsDeleted &&
                         !x.Q_Major.IsDeleted &&
@@ -295,7 +284,14 @@ namespace QMS_System.Data.BLL
                             PrintTime = t.Q_HisDailyRequire.PrintTime
                         }).ToList();
 
-                    ThuNganObjs = db.Q_HisDailyRequire_De.Where(x => !x.Q_User.IsDeleted && !x.Q_Major.IsDeleted && !x.Q_HisDailyRequire.Q_Service.IsDeleted && x.Q_HisDailyRequire.PrintTime >= from && x.Q_HisDailyRequire.PrintTime <= to && x.Q_Status.Id == (int)eStatus.HOTAT).Select(t => new R_GeneralInDayModel()
+                    ThuNganObjs = db.Q_HisDailyRequire_De.Where(x => 
+                    !x.Q_User.IsDeleted && 
+                    x.UserId == thuNganId &&
+                    !x.Q_Major.IsDeleted && 
+                    !x.Q_HisDailyRequire.Q_Service.IsDeleted && 
+                    x.Q_HisDailyRequire.PrintTime >= from && 
+                    x.Q_HisDailyRequire.PrintTime <= to && 
+                    x.Q_Status.Id == (int)eStatus.HOTAT).Select(t => new R_GeneralInDayModel()
                     {
                         Id = t.HisDailyRequireId,
                         ObjectId = t.Q_HisDailyRequire.ServiceId,
@@ -339,6 +335,7 @@ namespace QMS_System.Data.BLL
                             objs[i].AverageTimePerTrans = ((objs[i].TotalTransTime > 0 && objs[i].TotalTransaction > 0) ? Math.Round((double)(objs[i].TotalTransTime / objs[i].TotalTransaction), 2, MidpointRounding.AwayFromZero) : 0);
 
                             // thoi gian cho truoc xu ly
+                            int TNGoi = 0;
                             var ids = phieus.Select(x => x.Id).ToArray();
                             for (int z = 0; z < ids.Length; z++)
                             {
@@ -349,6 +346,7 @@ namespace QMS_System.Data.BLL
                                 var thunganObj = ThuNganObjs.Where(x => x.Id == ids[z]).OrderByDescending(x => x.Start).FirstOrDefault();
                                 if (thunganObj != null && thunganObj.End.HasValue)
                                 {
+                                    TNGoi++;
                                     int time = (thunganObj.Start.Value.Minute + (thunganObj.Start.Value.Hour - newObj.End.Value.Hour) * 60 - newObj.End.Value.Minute);
                                     if (time > 0)
                                         objs[i].AverageTimeWaitingAfterPerTrans += time;
@@ -358,7 +356,7 @@ namespace QMS_System.Data.BLL
                             if (objs[i].AverageTimeWaitingBeforePerTrans > 0)
                                 objs[i].AverageTimeWaitingBeforePerTrans = Math.Round((double)(objs[i].AverageTimeWaitingBeforePerTrans / objs[i].TotalTransaction), 2, MidpointRounding.AwayFromZero);
                             if (objs[i].AverageTimeWaitingAfterPerTrans > 0)
-                                objs[i].AverageTimeWaitingAfterPerTrans = Math.Round((double)(objs[i].AverageTimeWaitingAfterPerTrans / objs[i].TotalTransaction), 2, MidpointRounding.AwayFromZero);
+                                objs[i].AverageTimeWaitingAfterPerTrans = Math.Round((double)(objs[i].AverageTimeWaitingAfterPerTrans / TNGoi), 2, MidpointRounding.AwayFromZero);
 
                             if (objs[i].AverageTimeWaitingBeforePerTrans < 0)
                                 objs[i].AverageTimeWaitingBeforePerTrans = 0;
@@ -390,7 +388,14 @@ namespace QMS_System.Data.BLL
                             PrintTime = t.Q_DailyRequire.PrintTime
                         }).ToList());
 
-                    ThuNganObjs = (db.Q_DailyRequire_Detail.Where(x => !x.Q_User.IsDeleted && !x.Q_Major.IsDeleted && !x.Q_DailyRequire.Q_Service.IsDeleted && x.Q_DailyRequire.PrintTime >= from && x.Q_DailyRequire.PrintTime <= to && x.Q_Status.Id == (int)eStatus.HOTAT && x.UserId == thuNganId).Select(t => new R_GeneralInDayModel()
+                    ThuNganObjs = (db.Q_DailyRequire_Detail.Where(x => 
+                    !x.Q_User.IsDeleted && 
+                    !x.Q_Major.IsDeleted && 
+                    !x.Q_DailyRequire.Q_Service.IsDeleted && 
+                    x.Q_DailyRequire.PrintTime >= from && 
+                    x.Q_DailyRequire.PrintTime <= to && 
+                    x.Q_Status.Id == (int)eStatus.HOTAT && 
+                    x.UserId == thuNganId).Select(t => new R_GeneralInDayModel()
                     {
                         Id = t.DailyRequireId,
                         ObjectId = t.Q_DailyRequire.ServiceId,
@@ -432,6 +437,7 @@ namespace QMS_System.Data.BLL
                             todayObjs[i].AverageTimePerTrans = ((todayObjs[i].TotalTransTime > 0 && todayObjs[i].TotalTransaction > 0) ? Math.Round((double)(todayObjs[i].TotalTransTime / todayObjs[i].TotalTransaction), 2, MidpointRounding.AwayFromZero) : 0);
 
                             // thoi gian cho truoc xu ly
+                            int TNGoi = 0;
                             var ids = phieus.Select(x => x.Id).ToArray();
                             for (int z = 0; z < ids.Length; z++)
                             {
@@ -442,6 +448,7 @@ namespace QMS_System.Data.BLL
                                 var thunganObj = ThuNganObjs.Where(x => x.Id == ids[z]).OrderByDescending(x => x.End).FirstOrDefault();
                                 if (thunganObj != null)
                                 {
+                                    TNGoi++;
                                     int time = (thunganObj.Start.Value.Minute + (thunganObj.Start.Value.Hour - newObj.End.Value.Hour) * 60 - newObj.End.Value.Minute);
                                     if (time > 0)
                                         todayObjs[i].AverageTimeWaitingAfterPerTrans += time;
@@ -450,7 +457,7 @@ namespace QMS_System.Data.BLL
                             if (todayObjs[i].AverageTimeWaitingBeforePerTrans > 0)
                                 todayObjs[i].AverageTimeWaitingBeforePerTrans = Math.Round((double)(todayObjs[i].AverageTimeWaitingBeforePerTrans / todayObjs[i].TotalTransaction), 2, MidpointRounding.AwayFromZero);
                             if (todayObjs[i].AverageTimeWaitingAfterPerTrans > 0)
-                                todayObjs[i].AverageTimeWaitingAfterPerTrans = Math.Round((double)(todayObjs[i].AverageTimeWaitingAfterPerTrans / todayObjs[i].TotalTransaction), 2, MidpointRounding.AwayFromZero);
+                                todayObjs[i].AverageTimeWaitingAfterPerTrans = Math.Round((double)(todayObjs[i].AverageTimeWaitingAfterPerTrans / TNGoi), 2, MidpointRounding.AwayFromZero);
 
                             if (todayObjs[i].AverageTimeWaitingBeforePerTrans < 0)
                                 todayObjs[i].AverageTimeWaitingBeforePerTrans = 0;
@@ -468,7 +475,7 @@ namespace QMS_System.Data.BLL
                         TotalTransTime = t.Sum(p => p.TotalTransTime),
                         Name = t.FirstOrDefault().Name,
                         AverageTimePerTrans = (t.Sum(p => p.AverageTimePerTrans) > 0 ? t.Sum(p => p.AverageTimePerTrans) / t.Count() : 0),
-                        AverageTimeWaitingAfterPerTrans = (t.Sum(p => p.AverageTimeWaitingAfterPerTrans) > 0 ? t.Sum(p => p.AverageTimeWaitingAfterPerTrans) / t.Count() : 0),
+                        AverageTimeWaitingAfterPerTrans = t.Sum(p => p.AverageTimeWaitingAfterPerTrans) ,
                         AverageTimeWaitingBeforePerTrans = (t.Sum(p => p.AverageTimeWaitingBeforePerTrans) > 0 ? t.Sum(p => p.AverageTimeWaitingBeforePerTrans) / t.Count() : 0),
 
                     }).OrderBy(x => x.ObjectId).ToList();

@@ -30,6 +30,7 @@ namespace QMS_System.Data
         public string Note { get; set; }
         public bool IsActived { get; set; }
         public bool IsDeleted { get; set; }
+        public string Code { get; set; }
     
         public virtual ICollection<Q_DailyRequire> Q_DailyRequire { get; set; }
         public virtual ICollection<Q_HisDailyRequire> Q_HisDailyRequire { get; set; }

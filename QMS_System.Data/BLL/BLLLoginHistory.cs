@@ -78,7 +78,7 @@ namespace QMS_System.Data.BLL
         {
             using (db = new QMSSystemEntities())
             {
-                var yes = db.Q_Login.Where(x=>(x.Date.Year != date.Year ||
+                var yes = db.Q_Login.Where(x => (x.Date.Year != date.Year ||
                 x.Date.Month != date.Month ||
                 x.Date.Day != date.Day
                 )).ToList();
@@ -116,7 +116,7 @@ namespace QMS_System.Data.BLL
                             Parse.CopyObject(yes[i], ref obj);
                             db.Q_LoginHistory.Add(obj);
                         }
-                    } 
+                    }
                     db.Q_Login.RemoveRange(yes);
                     db.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Q_Login', RESEED, 0); ");
                     db.SaveChanges();
@@ -129,18 +129,18 @@ namespace QMS_System.Data.BLL
         /// </summary>
         /// <param name="date"></param>
         /// <returns></returns>
-        public List<HomeModel> GetForHome(DateTime date)
+        public List<HomeModel> GetForHome(DateTime date, int useWithThridPattern)
         {
             using (db = new QMSSystemEntities())
             {
                 var users = db.Q_Login.Where(x => x.StatusId == (int)eStatus.LOGIN).Select(x => new HomeModel()
-                   {
-                       UserId = x.UserId,
-                       User = x.Q_User.UserName,
-                       //  Counter = x.Q_Equipment.Q_Counter.Name,
-                       LoginTime = x.Date,
-                       EquipCode = x.EquipCode
-                   }).ToList();
+                {
+                    UserId = x.UserId,
+                    User = x.Q_User.UserName,
+                    //  Counter = x.Q_Equipment.Q_Counter.Name,
+                    LoginTime = x.Date,
+                    EquipCode = x.EquipCode
+                }).ToList();
                 if (users.Count > 0)
                 {
                     var codes = users.Select(x => x.EquipCode).Distinct().ToArray();
@@ -157,7 +157,10 @@ namespace QMS_System.Data.BLL
                         var current = daily.Where(x => x.StatusId == (int)eStatus.DAGXL && x.UserId == item.UserId).OrderBy(x => x.ProcessTime).FirstOrDefault();
                         if (current != null)
                         {
-                            item.CurrentTicket = current.Q_DailyRequire.TicketNumber;
+                            if (useWithThridPattern == 0)
+                                item.CurrentTicket = current.Q_DailyRequire.TicketNumber;
+                            else
+                                item.CurrentTicket = int.Parse(current.Q_DailyRequire.STT_PhongKham);
                             item.CommingTime = current.ProcessTime;
                         }
                         find = counters.FirstOrDefault(x => x.Code == item.EquipCode);
@@ -165,78 +168,14 @@ namespace QMS_System.Data.BLL
                     }
                 }
                 return users;
-
-                //var users = db.Q_LoginHistory.Where(x => x.StatusId == (int)eStatus.LOGIN).Select(x => new HomeModel()
-                //   {
-                //       UserId = x.UserId,
-                //       User = x.Q_User.UserName,
-                //       CurrentTicket = x.Ticket,
-                //       CommingTime = x.Start,
-                //       TotalDone = x.Done,
-                //       TotalWating = x.Waitting, 
-                //       LoginTime = x.Date,
-                //       EquipCode = x.EquipCode
-                //   }).ToList();
-
-                //if (users.Count > 0)
-                //{
-                //    var codes = users.Select(x => x.EquipCode).Distinct().ToArray();
-                //    var counters = db.Q_Equipment.Where(x => !x.IsDeleted && codes.Contains(x.Code) && x.EquipTypeId == (int)eEquipType.Counter).Select(x => new EquipmentModel() { Id = x.Id, Name = x.Q_Counter.Name, Code = x.Code }).ToList();
-                //    EquipmentModel find;
-                //    foreach (var item in users)
-                //    { 
-                //        find = counters.FirstOrDefault(x => x.Code == item.EquipCode);
-                //        item.Counter = (find != null ? find.Name : "");
-                //    }
-                //}
-                //return users;
             }
         }
 
-        public HomeModel GetForHome(int userId, int equipCode, DateTime date)
+        public HomeModel GetForHome(int userId, int equipCode, DateTime date, int useWithThridPattern)
         {
             var model = new HomeModel();
             using (db = new QMSSystemEntities())
             {
-                //var user = db.Q_LoginHistory.FirstOrDefault(x => x.Date.Year == date.Year && x.Date.Month == date.Month && x.Date.Day == date.Day && x.StatusId == (int)eStatus.LOGIN && x.UserId == userId && x.EquipCode == equipCode);
-                //if (user != null)
-                //{
-                //    var rq = db.Q_DailyRequire.Where(x => x.PrintTime.Year == date.Year && x.PrintTime.Month == date.Month && x.PrintTime.Day == date.Day).ToList();
-                //    var dailyDetails = db.Q_DailyRequire_Detail.Where(x => x.Q_DailyRequire.PrintTime.Year == date.Year && x.Q_DailyRequire.PrintTime.Month == date.Month && x.Q_DailyRequire.PrintTime.Day == date.Day);
-
-                //    var majorIds = db.Q_UserMajor.Where(x => !x.IsDeleted && !x.Q_Major.IsDeleted && !x.Q_User.IsDeleted && x.UserId == userId).Select(x => x.MajorId).ToList();
-                //    model.TotalDone = dailyDetails.Count(x => x.StatusId == (int)eStatus.HOTAT && x.UserId == userId);
-                //    model.TotalWating = dailyDetails.Count(x => x.Q_DailyRequire.PrintTime.Year == date.Year && x.Q_DailyRequire.PrintTime.Month == date.Month && x.Q_DailyRequire.PrintTime.Day == date.Day && x.StatusId == (int)eStatus.CHOXL && majorIds.Contains(x.MajorId));
-                //    var current = dailyDetails.Where(x => x.StatusId == (int)eStatus.DAGXL && x.UserId == userId).OrderBy(x => x.ProcessTime).FirstOrDefault();
-                //    if (current != null)
-                //    {
-                //        model.CurrentTicket = current.Q_DailyRequire.TicketNumber;
-                //        model.CommingTime = current.ProcessTime;
-                //    }
-
-                //    if (rq.Count() > 0)
-                //    {
-                //        foreach (var item in rq)
-                //        {
-                //            var dt = dailyDetails.Where(x => x.DailyRequireId == item.Id).ToList();
-                //            if (dt != null && dt.Count() == 1)
-                //            {
-                //                var first = dt.FirstOrDefault();
-                //                if (first.StatusId == (int)eStatus.CHOXL && majorIds.Contains(first.MajorId))
-                //                    model.CounterWaitingTickets += item.TicketNumber + " ";
-                //                else if (first.StatusId == (int)eStatus.CHOXL && !majorIds.Contains(first.MajorId))
-                //                    model.AllWaitingTickets += item.TicketNumber + " ";
-                //            }
-                //            else if (dt != null && dt.Count() > 1)
-                //                if (dt.Count(x => x.StatusId == (int)eStatus.CHOXL && majorIds.Contains(x.MajorId)) > 0)
-                //                    model.CounterWaitingTickets += item.TicketNumber + " ";
-                //        }
-                //    }
-                //    model.Counter = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipCode).Q_Counter.Name;
-                //}
-                //return model;
-
-
                 var user = db.Q_Login.FirstOrDefault(x => x.StatusId == (int)eStatus.LOGIN && x.UserId == userId && x.EquipCode == equipCode);
                 if (user != null)
                 {
@@ -249,7 +188,10 @@ namespace QMS_System.Data.BLL
                     var current = dailyDetails.Where(x => x.StatusId == (int)eStatus.DAGXL && x.UserId == userId).OrderBy(x => x.ProcessTime).FirstOrDefault();
                     if (current != null)
                     {
-                        model.CurrentTicket = current.Q_DailyRequire.TicketNumber;
+                        if (useWithThridPattern == 0)
+                            model.CurrentTicket = current.Q_DailyRequire.TicketNumber;
+                        else
+                            model.CurrentTicket = int.Parse(current.Q_DailyRequire.STT_PhongKham);
                         model.CommingTime = current.ProcessTime;
                     }
 
@@ -262,13 +204,13 @@ namespace QMS_System.Data.BLL
                             {
                                 var first = dt.FirstOrDefault();
                                 if (first.StatusId == (int)eStatus.CHOXL && majorIds.Contains(first.MajorId))
-                                    model.CounterWaitingTickets += item.TicketNumber + " ";
+                                    model.CounterWaitingTickets += (useWithThridPattern==0? item.TicketNumber:int.Parse(item.STT_PhongKham)) + " ";
                                 else if (first.StatusId == (int)eStatus.CHOXL && !majorIds.Contains(first.MajorId))
                                     model.AllWaitingTickets += item.TicketNumber + " ";
                             }
                             else if (dt != null && dt.Count() > 1)
                                 if (dt.Count(x => x.StatusId == (int)eStatus.CHOXL && majorIds.Contains(x.MajorId)) > 0)
-                                    model.CounterWaitingTickets += item.TicketNumber + " ";
+                                    model.CounterWaitingTickets += (useWithThridPattern == 0 ? item.TicketNumber : int.Parse(item.STT_PhongKham)) + " ";
                         }
                     }
                     model.Counter = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipCode).Q_Counter.Name;
@@ -438,7 +380,7 @@ namespace QMS_System.Data.BLL
         {
             using (db = new QMSSystemEntities())
             {
-                var obj = db.Q_Login.FirstOrDefault(x =>x.EquipCode == equipCode && x.StatusId == (int)eStatus.LOGIN);
+                var obj = db.Q_Login.FirstOrDefault(x => x.EquipCode == equipCode && x.StatusId == (int)eStatus.LOGIN);
                 return (obj != null ? obj.UserId : 0);
             }
         }
@@ -540,5 +482,5 @@ namespace QMS_System.Data.BLL
             return false;
         }
     }
- 
+
 }

@@ -13,6 +13,7 @@ namespace QMS_System.Data.Model
         public bool IsActived { get; set; }
         public DateTime TimeProcess { get; set; }
         public string Note { get; set; }
+        public string Code { get; set; }
     }
 
     public class ServiceDayModel

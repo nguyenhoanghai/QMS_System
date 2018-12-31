@@ -129,6 +129,12 @@
     <Property Name="CarNumber" Type="varchar" MaxLength="250" />
     <Property Name="PhoneNumber" Type="varchar" MaxLength="250" />
     <Property Name="ServeTimeAllow" Type="time" Precision="7" Nullable="false" />
+    <Property Name="CustomerName" Type="nvarchar" MaxLength="250" />
+    <Property Name="CustomerDOB" Type="int" />
+    <Property Name="CustomerAddress" Type="nvarchar(max)" />
+    <Property Name="STT_PhongKham" Type="nvarchar" MaxLength="250" />
+    <Property Name="MaBenhNhan" Type="nvarchar" MaxLength="250" />
+    <Property Name="MaPhongKham" Type="nvarchar" MaxLength="250" />
   </EntityType>
   <EntityType Name="Q_DailyRequire_Detail">
     <Key>
@@ -142,6 +148,8 @@
     <Property Name="ProcessTime" Type="datetime" />
     <Property Name="EndProcessTime" Type="datetime" />
     <Property Name="StatusId" Type="int" Nullable="false" />
+    <Property Name="IsSendSMS" Type="bit" Nullable="false" />
+    <Property Name="SmsContent" Type="nvarchar" MaxLength="1000" />
   </EntityType>
   <EntityType Name="Q_Equipment">
     <Key>
@@ -216,6 +224,13 @@
     <Property Name="CarNumber" Type="varchar" MaxLength="250" />
     <Property Name="PhoneNumber" Type="varchar" MaxLength="250" />
     <Property Name="ServeTimeAllow" Type="time" Precision="7" Nullable="false" />
+    <Property Name="CustomerName" Type="nvarchar" MaxLength="250" />
+    <Property Name="CustomerDOB" Type="int" />
+    <Property Name="CustomerAddress" Type="nvarchar(max)" />
+    <Property Name="CustomerAddress1" Type="nvarchar(max)" />
+    <Property Name="STT_PhongKham" Type="nvarchar" MaxLength="250" />
+    <Property Name="MaBenhNhan" Type="nvarchar" MaxLength="250" />
+    <Property Name="MaPhongKham" Type="nvarchar" MaxLength="250" />
   </EntityType>
   <EntityType Name="Q_HisDailyRequire_De">
     <Key>
@@ -229,6 +244,8 @@
     <Property Name="ProcessTime" Type="datetime" />
     <Property Name="EndProcessTime" Type="datetime" />
     <Property Name="StatusId" Type="int" Nullable="false" />
+    <Property Name="IsSendSMS" Type="bit" Nullable="false" />
+    <Property Name="SmsContent" Type="nvarchar" MaxLength="1000" />
   </EntityType>
   <EntityType Name="Q_HisUserEvaluate">
     <Key>
@@ -362,6 +379,7 @@
     <Property Name="Note" Type="nvarchar" MaxLength="100" />
     <Property Name="IsActived" Type="bit" Nullable="false" />
     <Property Name="IsDeleted" Type="bit" Nullable="false" />
+    <Property Name="Code" Type="nvarchar" MaxLength="50" />
   </EntityType>
   <EntityType Name="Q_ServiceShift">
     <Key>

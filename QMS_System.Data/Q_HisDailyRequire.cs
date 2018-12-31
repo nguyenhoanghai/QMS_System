@@ -27,6 +27,13 @@ namespace QMS_System.Data
         public string CarNumber { get; set; }
         public string PhoneNumber { get; set; }
         public System.TimeSpan ServeTimeAllow { get; set; }
+        public string CustomerName { get; set; }
+        public Nullable<int> CustomerDOB { get; set; }
+        public string CustomerAddress { get; set; }
+        public string CustomerAddress1 { get; set; }
+        public string STT_PhongKham { get; set; }
+        public string MaBenhNhan { get; set; }
+        public string MaPhongKham { get; set; }
     
         public virtual Q_Business Q_Business { get; set; }
         public virtual ICollection<Q_HisDailyRequire_De> Q_HisDailyRequire_De { get; set; }

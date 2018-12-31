@@ -1,4 +1,5 @@
-﻿using QMS_System.Data.Enum;
+﻿using GPRO.Ultilities;
+using QMS_System.Data.Enum;
 using QMS_System.Data.Model;
 using System;
 using System.Collections.Generic;
@@ -45,30 +46,30 @@ namespace QMS_System.Data.BLL
                     }).ToList();
 
                     objs.AddRange(db.Q_UserEvaluate.Where(x => x.Q_DailyRequire_Detail.ProcessTime >= from && x.Q_DailyRequire_Detail.ProcessTime <= to).Select(x => new UserEvaluateModel()
-                        {
-                            Id = x.Id,
-                            MAPHIEU = x.Q_DailyRequire_Detail.Q_DailyRequire.TicketNumber,
-                            TENNV = x.Q_User.Name,
-                            DANHGIA = x.Score,
-                            GLAYPHIEU = x.Q_DailyRequire_Detail.Q_DailyRequire.PrintTime,
-                            GDENQUAY = x.Q_DailyRequire_Detail.ProcessTime,
-                            GGIAODICH = x.Q_DailyRequire_Detail.ProcessTime,
-                            GKETTHUC = x.Q_DailyRequire_Detail.EndProcessTime,
-                        }).ToList());
+                    {
+                        Id = x.Id,
+                        MAPHIEU = x.Q_DailyRequire_Detail.Q_DailyRequire.TicketNumber,
+                        TENNV = x.Q_User.Name,
+                        DANHGIA = x.Score,
+                        GLAYPHIEU = x.Q_DailyRequire_Detail.Q_DailyRequire.PrintTime,
+                        GDENQUAY = x.Q_DailyRequire_Detail.ProcessTime,
+                        GGIAODICH = x.Q_DailyRequire_Detail.ProcessTime,
+                        GKETTHUC = x.Q_DailyRequire_Detail.EndProcessTime,
+                    }).ToList());
                 }
                 else
                 {
                     objs = db.Q_HisUserEvaluate.Where(x => x.UserId == userId && x.Q_HisDailyRequire_De.ProcessTime >= from && x.Q_HisDailyRequire_De.ProcessTime <= to).Select(x => new UserEvaluateModel()
-                        {
-                            Id = x.Id,
-                            MAPHIEU = x.Q_HisDailyRequire_De.Q_HisDailyRequire.TicketNumber,
-                            TENNV = x.Q_User.Name,
-                            DANHGIA = x.Score,
-                            GLAYPHIEU = x.Q_HisDailyRequire_De.Q_HisDailyRequire.PrintTime,
-                            GDENQUAY = x.Q_HisDailyRequire_De.ProcessTime,
-                            GGIAODICH = x.Q_HisDailyRequire_De.ProcessTime,
-                            GKETTHUC = x.Q_HisDailyRequire_De.EndProcessTime,
-                        }).ToList();
+                    {
+                        Id = x.Id,
+                        MAPHIEU = x.Q_HisDailyRequire_De.Q_HisDailyRequire.TicketNumber,
+                        TENNV = x.Q_User.Name,
+                        DANHGIA = x.Score,
+                        GLAYPHIEU = x.Q_HisDailyRequire_De.Q_HisDailyRequire.PrintTime,
+                        GDENQUAY = x.Q_HisDailyRequire_De.ProcessTime,
+                        GGIAODICH = x.Q_HisDailyRequire_De.ProcessTime,
+                        GKETTHUC = x.Q_HisDailyRequire_De.EndProcessTime,
+                    }).ToList();
 
                     objs.AddRange(db.Q_UserEvaluate.Where(x => x.UserId == userId && x.Q_DailyRequire_Detail.ProcessTime >= from && x.Q_DailyRequire_Detail.ProcessTime <= to).Select(x => new UserEvaluateModel()
                     {
@@ -101,7 +102,7 @@ namespace QMS_System.Data.BLL
                 return objs;
             }
         }
-         
+
         public int Insert(Q_UserEvaluate obj)
         {
             using (var db = new QMSSystemEntities())
@@ -179,42 +180,54 @@ namespace QMS_System.Data.BLL
             {
                 var now = DateTime.Now;
                 List<ReportEvaluateModel> report = new List<ReportEvaluateModel>();
-                report.AddRange(db.Q_Major.Select(x => new ReportEvaluateModel() { ServiceId = x.Id, ServiceName = x.Name, tc1 = 0, tc2 = 0, tc3 = 0 }));
+                report.AddRange(db.Q_Major.Select(x => new ReportEvaluateModel() { ServiceId = x.Id, ServiceName = x.Name }));
                 if (report.Count > 0)
                 {
                     var danhgia = db.Q_UserEvaluate.Where(x => (x.Q_DailyRequire_Detail.EndProcessTime.Value.Day >= now.Day && x.Q_DailyRequire_Detail.EndProcessTime.Value.Month == now.Month && x.Q_DailyRequire_Detail.EndProcessTime.Value.Year == now.Year) && (x.Q_DailyRequire_Detail.EndProcessTime.Value.Day <= now.Day && x.Q_DailyRequire_Detail.EndProcessTime.Value.Month == now.Month && x.Q_DailyRequire_Detail.EndProcessTime.Value.Year == now.Year)).ToList();
                     var nvDG = db.Q_UserMajor.ToList();
                     List<int> userIds;
+                    List<ModelSelectItem> ycDanhGia = db.Q_EvaluateDetail.
+                                                            Where(x => !x.IsDeleted && !x.Q_Evaluate.IsDeleted).
+                                                            OrderBy(x => x.Index).
+                                                            Select(x => new ModelSelectItem() { Code = (x.EvaluateId + "_" + x.Id), Name = x.Name, Id = 0, Data = 0 }).
+                                                           ToList();
                     foreach (var r in report)
                     {
                         userIds = nvDG.Where(x => x.MajorId == r.ServiceId && x.Index == 1).Select(x => x.UserId).Distinct().ToList();
+                        r.Details.AddRange(ycDanhGia);
                         if (userIds.Count > 0)
-                        {
-                            r.tc1 = danhgia.Where(x => x.Score == "1_1" && userIds.Contains(x.UserId)).Count();
-                            r.tc2 = danhgia.Where(x => x.Score == "1_2" && userIds.Contains(x.UserId)).Count();
-                            r.tc3 = danhgia.Where(x => x.Score == "1_3" && userIds.Contains(x.UserId)).Count();
-                        }
+                            foreach (var yc in r.Details)
+                                yc.Id = danhgia.Where(x => x.Score == yc.Code && userIds.Contains(x.UserId)).Count();
                     }
                 }
                 return report;
             }
         }
 
+
         public List<ReportEvaluateModel> GetDailyReport_NotUseQMS()
         {
             using (var db = new QMSSystemEntities())
             {
                 var now = DateTime.Now;
-                List<ReportEvaluateModel> report = new List<ReportEvaluateModel>();
-                report.AddRange(db.Q_User.Select(x => new ReportEvaluateModel() { ServiceId = x.Id, ServiceName = x.Name, tc1 = 0, tc2 = 0, tc3 = 0 }));
+                var report = new List<ReportEvaluateModel>();
+                report.AddRange(db.Q_User.Select(x => new ReportEvaluateModel() { ServiceId = x.Id, ServiceName = x.Name }));
+                var ycDanhGia = db.Q_EvaluateDetail.
+                                    Where(x => !x.IsDeleted && !x.Q_Evaluate.IsDeleted).
+                                    OrderBy(x => x.Index).
+                                    Select(x => new ModelSelectItem() { Code = (x.EvaluateId + "_" + x.Id), Name = x.Name, Id = 0, Data = 0 }).
+                                    ToList();
                 if (report.Count > 0)
                 {
                     var danhgia = db.Q_UserEvaluate.Where(x => x.CreatedDate.Day == now.Day && x.CreatedDate.Month == now.Month && x.CreatedDate.Year == now.Year).ToList();
                     foreach (var r in report)
                     {
-                        r.tc1 = danhgia.Where(x => x.Score == "1_1" && x.UserId == r.ServiceId).Count();
-                        r.tc2 = danhgia.Where(x => x.Score == "1_2" && x.UserId == r.ServiceId).Count();
-                        r.tc3 = danhgia.Where(x => x.Score == "1_3" && x.UserId == r.ServiceId).Count();
+                        //r.tc1 = danhgia.Where(x => x.Score == "1_1" && x.UserId == r.ServiceId).Count();
+                        //r.tc2 = danhgia.Where(x => x.Score == "1_2" && x.UserId == r.ServiceId).Count();
+                        //r.tc3 = danhgia.Where(x => x.Score == "1_3" && x.UserId == r.ServiceId).Count();
+                        r.Details.AddRange(ycDanhGia);
+                        foreach (var yc in r.Details)
+                            yc.Id = danhgia.Where(x => x.Score == yc.Code && x.UserId == r.ServiceId).Count();
                     }
                 }
                 return report;
@@ -227,26 +240,32 @@ namespace QMS_System.Data.BLL
             {
                 List<ReportEvaluateModel> report = new List<ReportEvaluateModel>();
                 ReportEvaluateModel obj;
+                var ycDanhGia = db.Q_EvaluateDetail.
+                                    Where(x => !x.IsDeleted && !x.Q_Evaluate.IsDeleted).
+                                    OrderBy(x => x.Index).
+                                    Select(x => new ModelSelectItem() { Code = x.EvaluateId + "_" + x.Id, Name = x.Name, Id = 0, Data = 0 }).
+                                    ToList();
                 if (userId != 0)
                 {
                     obj = new ReportEvaluateModel();
                     obj.Name = db.Q_User.FirstOrDefault(x => x.Id == userId).Name;
-                    obj.tc1 = 0;
-                    obj.tc2 = 0;
-                    obj.tc3 = 0;
                     var danhgia = db.Q_UserEvaluate.Where(x => (x.Q_DailyRequire_Detail.EndProcessTime.Value.Day >= from.Day && x.Q_DailyRequire_Detail.EndProcessTime.Value.Month == from.Month && x.Q_DailyRequire_Detail.EndProcessTime.Value.Year == from.Year) && (x.Q_DailyRequire_Detail.EndProcessTime.Value.Day <= to.Day && x.Q_DailyRequire_Detail.EndProcessTime.Value.Month == to.Month && x.Q_DailyRequire_Detail.EndProcessTime.Value.Year == to.Year) && x.UserId == userId).ToList();
                     if (danhgia.Count > 0)
                     {
-                        obj.tc1 = danhgia.Where(x => x.Score == "1_1").Count();
-                        obj.tc2 = danhgia.Where(x => x.Score == "1_2").Count();
-                        obj.tc3 = danhgia.Where(x => x.Score == "1_3").Count();
+                        //obj.tc1 = danhgia.Where(x => x.Score == "1_1").Count();
+                        //obj.tc2 = danhgia.Where(x => x.Score == "1_2").Count();
+                        //obj.tc3 = danhgia.Where(x => x.Score == "1_3").Count();
+                        obj.Details.AddRange(ycDanhGia);
+                        foreach (var yc in obj.Details)
+                            yc.Id = danhgia.Where(x => x.Score == yc.Code).Count();
+
                     }
                     report.Add(obj);
                 }
                 else
                 {
                     var danhgia = db.Q_UserEvaluate.Where(x => (x.Q_DailyRequire_Detail.EndProcessTime.Value.Day >= from.Day && x.Q_DailyRequire_Detail.EndProcessTime.Value.Month == from.Month && x.Q_DailyRequire_Detail.EndProcessTime.Value.Year == from.Year) && (x.Q_DailyRequire_Detail.EndProcessTime.Value.Day <= to.Day && x.Q_DailyRequire_Detail.EndProcessTime.Value.Month == to.Month && x.Q_DailyRequire_Detail.EndProcessTime.Value.Year == to.Year)).ToList();
-                    report.AddRange(db.Q_User.Select(x => new ReportEvaluateModel() { UserId = x.Id, Name = x.Name, tc1 = 0, tc2 = 0, tc3 = 0 }));
+                    report.AddRange(db.Q_User.Select(x => new ReportEvaluateModel() { UserId = x.Id, Name = x.Name }));
 
                     if (danhgia.Count > 0)
                     {
@@ -255,9 +274,12 @@ namespace QMS_System.Data.BLL
                             var objs = danhgia.Where(x => x.UserId == item.UserId).ToList();
                             if (objs.Count > 0)
                             {
-                                item.tc1 = objs.Where(x => x.Score == "1_1").Count();
-                                item.tc2 = objs.Where(x => x.Score == "1_2").Count();
-                                item.tc3 = objs.Where(x => x.Score == "1_3").Count();
+                                //item.tc1 = objs.Where(x => x.Score == "1_1").Count();
+                                //item.tc2 = objs.Where(x => x.Score == "1_2").Count();
+                                //item.tc3 = objs.Where(x => x.Score == "1_3").Count();
+                                item.Details.AddRange(ycDanhGia);
+                                foreach (var yc in item.Details)
+                                    yc.Id = danhgia.Where(x => x.Score == yc.Code).Count();
                             }
                         }
                     }
@@ -271,39 +293,55 @@ namespace QMS_System.Data.BLL
             using (var db = new QMSSystemEntities())
             {
                 List<ReportEvaluateModel> report = new List<ReportEvaluateModel>();
+                var ycDanhGia = db.Q_EvaluateDetail.
+                                 Where(x => !x.IsDeleted && !x.Q_Evaluate.IsDeleted).
+                                 OrderBy(x => x.Index).
+                                 Select(x => new ModelSelectItem() { Code = x.EvaluateId + "_" + x.Id, Name = x.Name, Id = 0, Data = 0 }).
+                                 ToList();
                 ReportEvaluateModel obj;
                 if (userId != 0)
                 {
                     obj = new ReportEvaluateModel();
                     obj.Name = db.Q_User.FirstOrDefault(x => x.Id == userId).Name;
-                    obj.tc1 = 0;
-                    obj.tc2 = 0;
-                    obj.tc3 = 0;
-                    var danhgia = db.Q_UserEvaluate.Where(x => (x.CreatedDate.Day >= from.Day && x.CreatedDate.Month == from.Month && x.CreatedDate.Year == from.Year) && (x.CreatedDate.Day <= to.Day && x.CreatedDate.Month == to.Month && x.CreatedDate.Year == to.Year) && x.UserId == userId).ToList();
-                    if (danhgia.Count > 0)
-                    {
-                        obj.tc1 = danhgia.Where(x => x.Score == "1_1").Count();
-                        obj.tc2 = danhgia.Where(x => x.Score == "1_2").Count();
-                        obj.tc3 = danhgia.Where(x => x.Score == "1_3").Count();
-                    }
+                    obj.Details.AddRange(ycDanhGia);
+                    var danhgia_HN = db.Q_UserEvaluate.Where(x => x.CreatedDate >= from && x.CreatedDate <= to && x.UserId == userId).ToList();
+                    //  var danhgia_LS = db.Q_HisUserEvaluate.Where(x => (x.Q_HisDailyRequire_De.ProcessTime.Value.Day >= from.Day && x.Q_HisDailyRequire_De.ProcessTime.Value.Month == from.Month && x.Q_HisDailyRequire_De.ProcessTime.Value.Year == from.Year) && (x.Q_HisDailyRequire_De.ProcessTime.Value.Day <= to.Day && x.Q_HisDailyRequire_De.ProcessTime.Value.Month == to.Month && x.Q_HisDailyRequire_De.ProcessTime.Value.Year == to.Year) && x.UserId == userId).ToList();
+                    var danhgia_LS = db.Q_HisUserEvaluate.Where(x =>
+                                                x.Q_HisDailyRequire_De.ProcessTime.HasValue &&
+                                                x.Q_HisDailyRequire_De.ProcessTime.Value >= from &&
+                                                x.Q_HisDailyRequire_De.ProcessTime.Value <= to && x.UserId == userId)
+                                                .ToList(); 
+                        foreach (var yc in ycDanhGia)
+                        {
+                            var child = new ModelSelectItem();
+                            Parse.CopyObject(yc, ref child);
+                            child.Id += danhgia_HN.Where(x => x.Score == yc.Code).Count();
+                            child.Id += danhgia_LS.Where(x => x.Score == yc.Code).Count();
+                            obj.Details.Add(child);
+                        }
                     report.Add(obj);
                 }
                 else
                 {
-                    var danhgia = db.Q_UserEvaluate.Where(x => (x.CreatedDate.Day >= from.Day && x.CreatedDate.Month == from.Month && x.CreatedDate.Year == from.Year) && (x.CreatedDate.Day <= to.Day && x.CreatedDate.Month == to.Month && x.CreatedDate.Year == to.Year)).ToList();
-                    report.AddRange(db.Q_User.Select(x => new ReportEvaluateModel() { UserId = x.Id, Name = x.Name, tc1 = 0, tc2 = 0, tc3 = 0 }));
+                    var danhgiaHomnay = db.Q_UserEvaluate.Where(x => x.CreatedDate >= from && x.CreatedDate <= to).ToList();
+                    var danhgia_LS = db.Q_HisUserEvaluate.Where(x => x.Q_HisDailyRequire_De.ProcessTime.HasValue &&
+                    x.Q_HisDailyRequire_De.ProcessTime.Value >= from &&
+                    x.Q_HisDailyRequire_De.ProcessTime <= to).ToList();
 
-                    if (danhgia.Count > 0)
+                    report.AddRange(db.Q_User.Select(x => new ReportEvaluateModel() { UserId = x.Id, Name = x.Name }));
+                    foreach (var item in report)
                     {
-                        foreach (var item in report)
+                        //  item.Details.AddRange(ycDanhGia);
+                        var objs_HN = danhgiaHomnay.Where(x => x.UserId == item.UserId).ToList();
+                        var objs_LS = danhgia_LS.Where(x => x.UserId == item.UserId).ToList();
+                        
+                        foreach (var yc in ycDanhGia)
                         {
-                            var objs = danhgia.Where(x => x.UserId == item.UserId).ToList();
-                            if (objs.Count > 0)
-                            {
-                                item.tc1 = objs.Where(x => x.Score == "1_1").Count();
-                                item.tc2 = objs.Where(x => x.Score == "1_2").Count();
-                                item.tc3 = objs.Where(x => x.Score == "1_3").Count();
-                            }
+                            var child = new ModelSelectItem();
+                            Parse.CopyObject(yc, ref child);
+                            child.Id += objs_HN.Where(x => x.Score == yc.Code).Count();
+                            child.Id += objs_LS.Where(x => x.Score == yc.Code).Count();
+                            item.Details.Add(child);
                         }
                     }
                 }
@@ -341,34 +379,37 @@ namespace QMS_System.Data.BLL
             }
         }
     }
+}
 
-    public class ReportEvaluateModel
+public class ReportEvaluateModel
+{
+    public int UserId { get; set; }
+    public string Name { get; set; }
+    public string ServiceName { get; set; }
+    public int ServiceId { get; set; }
+    public List<ModelSelectItem> Details { get; set; }
+    public ReportEvaluateModel()
     {
-        public int UserId { get; set; }
-        public string Name { get; set; }
-        public string ServiceName { get; set; }
-        public int ServiceId { get; set; }
-        public int tc1 { get; set; }
-        public int tc2 { get; set; }
-        public int tc3 { get; set; }
-    }
-
-    public class SMSModel
-    {
-        public string UserName { get; set; }
-        public string ServiceName { get; set; }
-        public string MajorName { get; set; }
-        public string sms { get; set; }
-    }
-
-    public class SendSMSModel
-    {
-        public List<SMSModel> SMS { get; set; }
-        public List<string> Phones { get; set; }
-        public SendSMSModel()
-        {
-            SMS = new List<SMSModel>();
-            Phones = new List<string>();
-        }
+        Details = new List<ModelSelectItem>();
     }
 }
+
+public class SMSModel
+{
+    public string UserName { get; set; }
+    public string ServiceName { get; set; }
+    public string MajorName { get; set; }
+    public string sms { get; set; }
+}
+
+public class SendSMSModel
+{
+    public List<SMSModel> SMS { get; set; }
+    public List<string> Phones { get; set; }
+    public SendSMSModel()
+    {
+        SMS = new List<SMSModel>();
+        Phones = new List<string>();
+    }
+}
+

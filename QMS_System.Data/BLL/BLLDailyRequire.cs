@@ -4,7 +4,6 @@ using QMS_System.Data.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data.Entity.Core.Objects;
 using System.Linq;
 
 namespace QMS_System.Data.BLL
@@ -28,6 +27,33 @@ namespace QMS_System.Data.BLL
         }
         private BLLDailyRequire() { }
         #endregion
+
+        public Q_DailyRequire GetTicket(int ticket)
+        {
+            using (db = new QMSSystemEntities())
+            {
+                return db.Q_DailyRequire.FirstOrDefault(x => x.TicketNumber == ticket);
+            }
+        }
+
+        public int UpdateTicketInfo(int ticket, TimeSpan serveTimeAllow, string customerName, int customerDOB, string Address)
+        {
+            using (db = new QMSSystemEntities())
+            {
+                var obj = db.Q_DailyRequire.FirstOrDefault(x => x.TicketNumber == ticket);
+                if (obj != null)
+                {
+                    obj.ServeTimeAllow = serveTimeAllow;
+                    obj.CustomerName = customerName;
+                    obj.CustomerDOB = customerDOB;
+                    obj.CustomerAddress = Address;
+                    db.Entry(obj).State = System.Data.Entity.EntityState.Modified;
+                    db.SaveChanges();
+                    return obj.Id;
+                }
+            }
+            return 0;
+        }
 
         public int CurentTicket(int equipcode)
         {
@@ -98,7 +124,7 @@ namespace QMS_System.Data.BLL
         /// <param name="equipCode"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        public int Next(int userId, int equipCode, DateTime date)
+        public int Next(int userId, int equipCode, DateTime date, int useWithThirdPattern)
         {
             int ticket = 0;
             try
@@ -130,7 +156,10 @@ namespace QMS_System.Data.BLL
                             newTicket.ProcessTime = DateTime.Now;
                             newTicket.StatusId = (int)eStatus.DAGXL;
                             db.SaveChanges();
-                            ticket = newTicket.Q_DailyRequire.TicketNumber;
+                            if (useWithThirdPattern == 0)
+                                ticket = newTicket.Q_DailyRequire.TicketNumber;
+                            else
+                                ticket = int.Parse(newTicket.Q_DailyRequire.STT_PhongKham);
                         }
                     }
                     return ticket;
@@ -141,7 +170,7 @@ namespace QMS_System.Data.BLL
             return ticket;
         }
 
-        public int CurrentTicket(int userId, int equipCode, DateTime date)
+        public int CurrentTicket(int userId, int equipCode, DateTime date, int useWithThirdPattern)
         {
             int ticket = 0;
             try
@@ -150,7 +179,10 @@ namespace QMS_System.Data.BLL
                 {
                     var last = db.Q_DailyRequire_Detail.Where(x => x.Q_DailyRequire.PrintTime.Year == date.Year && x.Q_DailyRequire.PrintTime.Month == date.Month && x.Q_DailyRequire.PrintTime.Day == date.Day && x.UserId == userId && x.EquipCode == equipCode && x.StatusId == (int)eStatus.DAGXL).ToList();
                     if (last.Count > 0)
-                        ticket = last.FirstOrDefault().Q_DailyRequire.TicketNumber;
+                        if (useWithThirdPattern == 0)
+                            ticket = last.FirstOrDefault().Q_DailyRequire.TicketNumber;
+                        else
+                            ticket = int.Parse(last.FirstOrDefault().Q_DailyRequire.STT_PhongKham);
                 }
             }
             catch (Exception)
@@ -265,7 +297,7 @@ namespace QMS_System.Data.BLL
         /// <param name="ticket"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        public ResponseBaseModel CallAny(int majorId, int userId, int equipCode, int ticket, DateTime date)
+        public ResponseBaseModel CallAny(int majorId, int userId, int equipCode, int ticket, DateTime date, int UseWithThirdPattern)
         {
             ResponseBaseModel res = new ResponseBaseModel();
             try
@@ -282,7 +314,11 @@ namespace QMS_System.Data.BLL
                             check.EquipCode = equipCode;
                             check.StatusId = (int)eStatus.DAGXL;
                             check.ProcessTime = date;
-                            var num = check.Q_DailyRequire.TicketNumber;
+                            int num = 0;
+                            if (UseWithThirdPattern == 0)
+                                num = check.Q_DailyRequire.TicketNumber;
+                            else
+                                num = int.Parse(check.Q_DailyRequire.STT_PhongKham);
                             var equip = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipCode);
                             if (equip != null)
                                 db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + num + " where Id=" + equip.CounterId);
@@ -340,7 +376,7 @@ namespace QMS_System.Data.BLL
         /// <param name="equipCode"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        public ResponseBaseModel CallByMajor(int majorId, int userId, int equipCode, DateTime date)
+        public ResponseBaseModel CallByMajor(int majorId, int userId, int equipCode, DateTime date, int UseWithThirdPattern)
         {
             ResponseBaseModel res = new ResponseBaseModel();
             try
@@ -357,7 +393,11 @@ namespace QMS_System.Data.BLL
                             check.EquipCode = equipCode;
                             check.StatusId = (int)eStatus.DAGXL;
                             check.ProcessTime = date;
-                            var num = check.Q_DailyRequire.TicketNumber;
+                            int num = 0;
+                            if (UseWithThirdPattern == 0)
+                                num = check.Q_DailyRequire.TicketNumber;
+                            else
+                                num = int.Parse(check.Q_DailyRequire.STT_PhongKham);
                             var equip = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipCode);
                             if (equip != null)
                                 db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + num + ", isrunning=0 where Id=" + equip.CounterId);
@@ -473,7 +513,7 @@ namespace QMS_System.Data.BLL
         /// <param name="IsDoneCurrentTicket"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        public int CallNewTicket(int[] majorIds, int userId, int equipCode, bool IsDoneCurrentTicket, DateTime date)
+        public int CallNewTicket(int[] majorIds, int userId, int equipCode, bool IsDoneCurrentTicket, DateTime date, int UseWithThirdPattern)
         {
             using (db = new QMSSystemEntities())
             {
@@ -487,7 +527,11 @@ namespace QMS_System.Data.BLL
                         obj.EquipCode = equipCode;
                         obj.StatusId = (int)eStatus.DAGXL;
                         obj.ProcessTime = date;
-                        var num = obj.Q_DailyRequire.TicketNumber;
+                        int num = 0;
+                        if (UseWithThirdPattern == 0)
+                            num = obj.Q_DailyRequire.TicketNumber;
+                        else
+                            num = int.Parse(obj.Q_DailyRequire.STT_PhongKham);
                         var equip = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipCode);
                         if (equip != null)
                             db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + num + " , isrunning=0 where Id=" + equip.CounterId);
@@ -543,7 +587,7 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public int CallNewTicket_GLP_NghiepVu(int[] majorIds, int userId, int equipId, DateTime date)
+        public int CallNewTicket_GLP_NghiepVu(int[] majorIds, int userId, int equipId, DateTime date, int UseWithThirdPattern)
         {
             using (db = new QMSSystemEntities())
             {
@@ -557,7 +601,11 @@ namespace QMS_System.Data.BLL
                         obj.EquipCode = equipId;
                         obj.StatusId = (int)eStatus.DAGXL;
                         obj.ProcessTime = date;
-                        var num = obj.Q_DailyRequire.TicketNumber;
+                        int num = 0;
+                        if (UseWithThirdPattern == 0)
+                            num = obj.Q_DailyRequire.TicketNumber;
+                        else
+                            num = int.Parse(obj.Q_DailyRequire.STT_PhongKham);
                         var equip = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipId);
                         if (equip != null)
                             db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + num + ", isrunning=0 where Id=" + equip.CounterId);
@@ -571,7 +619,6 @@ namespace QMS_System.Data.BLL
                     return last.Q_DailyRequire.TicketNumber;
             }
         }
-
 
         public bool TranferTicket(int equipCode, int majorId, int ticket, DateTime date, bool isCountersoftCall)
         {
@@ -723,7 +770,7 @@ namespace QMS_System.Data.BLL
                 return obj != null ? obj.TicketNumber : 0;
             }
         }
-       
+
         /// <summary>
         /// Web
         /// </summary>
@@ -875,17 +922,17 @@ namespace QMS_System.Data.BLL
                     }
 
                     returnModel.Details.AddRange(db_.Q_Counter.Where(x => !x.IsDeleted && counterIds.Contains(x.Id)).OrderBy(x => x.Index).Select(x => new ViewDetailModel()
-                     {
-                         STT = (!x.IsRunning ? 1 : 0),
-                         CarNumber = "0",
-                         TableId = x.Id,
-                         TableName = x.Name,
-                         TableCode = x.ShortName,
-                         Start = null,
-                         TicketNumber = x.LastCall,
-                         TimeProcess = "0",
-                         StartStr = (!x.IsRunning ? ("Mời bệnh nhân " + x.LastCall + " đến phòng : " + x.Name) : "")
-                     }));
+                    {
+                        STT = (!x.IsRunning ? 1 : 0),
+                        CarNumber = "0",
+                        TableId = x.Id,
+                        TableName = x.Name,
+                        TableCode = x.ShortName,
+                        Start = null,
+                        TicketNumber = x.LastCall,
+                        TimeProcess = "0",
+                        StartStr = (!x.IsRunning ? ("Mời bệnh nhân " + x.LastCall + " đến phòng : " + x.Name) : "")
+                    }));
                     if (returnModel.Details.Count > 0)
                     {
                         returnModel.Details[0].RuningText = returnModel.Details.Where(x => x.STT == 1).Select(x => x.StartStr).ToArray();
@@ -977,7 +1024,20 @@ namespace QMS_System.Data.BLL
         /// <param name="serviceId"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        public ResponseBase PrintNewTicket(int serviceId, int serviceNumber, int businessId, DateTime printTime, int printType, TimeSpan serveTimeAllow)
+        public ResponseBase PrintNewTicket(
+            int serviceId,
+            int serviceNumber,
+            int businessId,
+            DateTime printTime,
+            int printType,
+            TimeSpan serveTimeAllow,
+            string Name,
+            string Address,
+            int? DOB,
+            string MaBenhNhan,
+            string MaPhongKham,
+            string SttPhongKham
+            )
         {
             ResponseBase rs = new ResponseBase();
             try
@@ -1009,6 +1069,12 @@ namespace QMS_System.Data.BLL
                             obj.BusinessId = businessId;
                         obj.PrintTime = printTime;
                         obj.ServeTimeAllow = nv.Q_Service.TimeProcess.TimeOfDay;
+                        obj.CustomerName = Name;
+                        obj.CustomerDOB = DOB;
+                        obj.CustomerAddress = Address;
+                        obj.MaBenhNhan = MaBenhNhan;
+                        obj.MaPhongKham = MaPhongKham;
+                        obj.STT_PhongKham = SttPhongKham;
                         obj.Q_DailyRequire_Detail = new Collection<Q_DailyRequire_Detail>();
 
                         var detail = new Q_DailyRequire_Detail();
@@ -1202,14 +1268,14 @@ namespace QMS_System.Data.BLL
                                 {
                                     case (int)ePrintType.BatDauChung:
                                         currentInfor = db.Q_DailyRequire_Detail.Where(x => x.StatusId == (int)eStatus.DAGXL).OrderByDescending(x => x.ProcessTime).Select(x => new A_CurrentInfoModel()
-                                                            {
-                                                                Id = x.Id,
-                                                                Ticket = x.Q_DailyRequire.TicketNumber,
-                                                                UserName = x.Q_User.Name,
-                                                                img = x.Q_User.Avatar,
-                                                                Position = x.Q_User.Position,
-                                                                Start = x.ProcessTime ?? DateTime.Now
-                                                            }).FirstOrDefault();
+                                        {
+                                            Id = x.Id,
+                                            Ticket = x.Q_DailyRequire.TicketNumber,
+                                            UserName = x.Q_User.Name,
+                                            img = x.Q_User.Avatar,
+                                            Position = x.Q_User.Position,
+                                            Start = x.ProcessTime ?? DateTime.Now
+                                        }).FirstOrDefault();
                                         if (currentInfor != null)
                                             startTicket = currentInfor.Ticket;
                                         dscho = db.Q_DailyRequire.Where(x => x.TicketNumber > startTicket && x.TicketNumber < ticket).ToList();
@@ -1251,10 +1317,136 @@ namespace QMS_System.Data.BLL
                         rs.Records = "Không tìm thấy thông tin phiếu <span class='text-red bold'>" + ticket + "</span> trong hệ thống.";
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             { }
             return rs;
         }
 
+
+        public ResponseBase API_PrintNewTicket(
+            string Name,
+            string Address,
+            int? DOB,
+            string MaBenhNhan,
+            string MaPhongKham,
+            string SttPhongKham
+            )
+        {
+            ResponseBase rs = new ResponseBase();
+            try
+            {
+                using (db = new QMSSystemEntities())
+                {
+                    var DV = db.Q_Service.FirstOrDefault(x => !x.IsDeleted && x.IsActived && x.Code.Trim().ToUpper().Equals(MaPhongKham.Trim().ToUpper()));
+                    if (DV != null)
+                    {
+                        var CF = db.Q_Config.FirstOrDefault(x => x.Code.Equals(eConfigCode.PrintType));
+                        if (CF != null)
+                        {
+                            Q_DailyRequire rq = null;
+                            int socu = 0;
+                            if (Convert.ToInt32(CF.Value) == (int)ePrintType.TheoTungDichVu)
+                            {
+                                rq = db.Q_DailyRequire.Where(x => x.ServiceId == DV.Id).OrderByDescending(x => x.TicketNumber).FirstOrDefault();
+                                socu = ((rq == null) ? (DV.StartNumber - 1) : rq.TicketNumber);
+                            }
+                            else if (Convert.ToInt32(CF.Value) == (int)ePrintType.BatDauChung)
+                            {
+                                rq = db.Q_DailyRequire.OrderByDescending(x => x.TicketNumber).FirstOrDefault();
+                                socu = ((rq == null) ? (int.Parse(db.Q_Config.FirstOrDefault(x => x.Code == eConfigCode.StartNumber).Value) - 1) : rq.TicketNumber);
+                            }
+
+                            var nv = db.Q_ServiceStep.Where(x => !x.IsDeleted && !x.Q_Service.IsDeleted && x.ServiceId == DV.Id).OrderBy(x => x.Index).FirstOrDefault();
+                            if (nv == null)
+                            {
+                                rs.IsSuccess = false;
+                                rs.Errors.Add(new Error() { MemberName = "Lỗi Nghiệp vụ", Message = "Lỗi: Dịch vụ này chưa được phân nghiệp vụ. Vui lòng liên hệ người quản lý hệ thống. Xin cám ơn!.." });
+                            }
+                            else
+                            {
+                                var obj = new Q_DailyRequire();
+                                obj.TicketNumber = (socu + 1);
+                                obj.ServiceId = DV.Id;
+                                obj.BusinessId = null;
+                                obj.PrintTime = DateTime.Now;
+                                obj.ServeTimeAllow = DV.TimeProcess.TimeOfDay;
+                                obj.CustomerName = Name;
+                                obj.CustomerDOB = DOB;
+                                obj.CustomerAddress = Address;
+                                obj.MaBenhNhan = MaBenhNhan;
+                                obj.MaPhongKham = MaPhongKham;
+                                obj.STT_PhongKham = SttPhongKham;
+                                obj.Q_DailyRequire_Detail = new Collection<Q_DailyRequire_Detail>();
+
+                                var detail = new Q_DailyRequire_Detail();
+                                detail.Q_DailyRequire = obj;
+                                detail.MajorId = (nv != null ? nv.MajorId : 1);
+                                detail.StatusId = (int)eStatus.CHOXL;
+                                obj.Q_DailyRequire_Detail.Add(detail);
+                                db.Q_DailyRequire.Add(obj);
+
+                                var sodanggoi = db.Q_DailyRequire_Detail.Where(x => x.Q_DailyRequire.ServiceId == DV.Id && x.StatusId == (int)eStatus.DAGXL).OrderByDescending(x => x.ProcessTime).FirstOrDefault();
+
+                                db.SaveChanges();
+                                rs.IsSuccess = true;
+                                rs.Data = socu;
+                                rs.Records = (sodanggoi != null ? sodanggoi.Q_DailyRequire.TicketNumber : 0);
+                            }
+                        }
+                        else
+                        {
+                            rs.IsSuccess = false;
+                            rs.Errors.Add(new Error() { MemberName = "Lỗi", Message = "Không tìm thấy cấu hình kiểu in phiếu trong hệ thống. Vui lòng kiểm tra lại." });
+                        }
+                    }
+                    else
+                    {
+                        rs.IsSuccess = false;
+                        rs.Errors.Add(new Error() { MemberName = "Lỗi", Message = "Không tìm thấy mã phòng khám (" + MaPhongKham + ") trong hệ thống. Vui lòng kiểm tra lại." });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                rs.IsSuccess = false;
+                rs.Errors.Add(new Error() { MemberName = "Lỗi Exception", Message = "Lỗi thực thi. " + ex.Message });
+            }
+            return rs;
+        }
+
+        public ResponseBase API_UpdateTicketInfo(
+            string Name,
+            string MaBenhNhan,
+            string SttPhongKham
+            )
+        {
+            ResponseBase rs = new ResponseBase();
+            try
+            {
+                using (db = new QMSSystemEntities())
+                {
+                    var tket = db.Q_DailyRequire.FirstOrDefault(x => x.STT_PhongKham == SttPhongKham);
+                    if (tket == null)
+                    {
+                        rs.IsSuccess = false;
+                        rs.Errors.Add(new Error() { MemberName = "Lỗi", Message = "Lỗi: Không tìm thấy phiếu (" + SttPhongKham + ") trong hệ thống. Vui lòng kiểm tra lại." });
+                    }
+                    else
+                    {
+                        tket.CustomerName = Name;
+                        tket.MaBenhNhan = MaBenhNhan;
+                        db.Entry<Q_DailyRequire>(tket).State = System.Data.Entity.EntityState.Modified;
+                        db.SaveChanges();
+                        rs.IsSuccess = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                rs.IsSuccess = false;
+                rs.Errors.Add(new Error() { MemberName = "Lỗi Exception", Message = "Lỗi thực thi. " + ex.Message });
+            }
+            return rs;
+        }
     }
 }

@@ -79,6 +79,7 @@ namespace QMS_System
                     obj.TimeProcess = DateTime.Parse(gridViewService.GetRowCellValue(gridViewService.FocusedRowHandle, "TimeProcess").ToString());
                     obj.IsActived = bool.Parse(gridViewService.GetRowCellValue(gridViewService.FocusedRowHandle, "IsActived").ToString());
                     obj.Note = gridViewService.GetRowCellValue(gridViewService.FocusedRowHandle, "Note") != null ? gridViewService.GetRowCellValue(gridViewService.FocusedRowHandle, "Note").ToString() : "";
+                    obj.Code = gridViewService.GetRowCellValue(gridViewService.FocusedRowHandle, "Code") != null ? gridViewService.GetRowCellValue(gridViewService.FocusedRowHandle, "Code").ToString() : "";
 
                     if (obj.Id == 0)
                     {
