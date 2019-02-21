@@ -30,10 +30,10 @@ namespace QMS_System.Data
         public bool IsSendSMS { get; set; }
         public string SmsContent { get; set; }
     
+        public virtual Q_HisDailyRequire Q_HisDailyRequire { get; set; }
         public virtual Q_Major Q_Major { get; set; }
         public virtual Q_Status Q_Status { get; set; }
         public virtual Q_User Q_User { get; set; }
         public virtual ICollection<Q_HisUserEvaluate> Q_HisUserEvaluate { get; set; }
-        public virtual Q_HisDailyRequire Q_HisDailyRequire { get; set; }
     }
 }

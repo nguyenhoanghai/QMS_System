@@ -130,6 +130,8 @@
             this.barButtonItem3 = new DevExpress.XtraBars.BarButtonItem();
             this.tmerQuetServeOver = new System.Windows.Forms.Timer(this.components);
             this.barButtonItem11 = new DevExpress.XtraBars.BarButtonItem();
+            this.ribbonPageGroup15 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.btnReportDG = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemRichTextEdit2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemRichTextEdit3)).BeginInit();
@@ -207,9 +209,11 @@
             this.barButtonItem9,
             this.btnSound2,
             this.btnVideo,
-            this.btnVideoTemplate});
+            this.btnVideoTemplate,
+            this.btnReportDG});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.MaxItemId = 71;
+            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.ribbonControl1.MaxItemId = 72;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage3,
@@ -233,7 +237,7 @@
             this.repositoryItemTextEdit6,
             this.repositoryItemRichTextEdit4});
             this.ribbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.Office2013;
-            this.ribbonControl1.Size = new System.Drawing.Size(1007, 143);
+            this.ribbonControl1.Size = new System.Drawing.Size(1175, 168);
             this.ribbonControl1.StatusBar = this.ribbonStatusBar1;
             this.ribbonControl1.ToolbarLocation = DevExpress.XtraBars.Ribbon.RibbonQuickAccessToolbarLocation.Above;
             // 
@@ -842,7 +846,8 @@
             // 
             this.ribbonPage4.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
             this.ribbonPageGroup10,
-            this.ribbonPageGroup11});
+            this.ribbonPageGroup11,
+            this.ribbonPageGroup15});
             this.ribbonPage4.Name = "ribbonPage4";
             this.ribbonPage4.Text = "Báo cáo";
             // 
@@ -921,10 +926,11 @@
             this.ribbonStatusBar1.ItemLinks.Add(this.lbQuet);
             this.ribbonStatusBar1.ItemLinks.Add(this.lbRecieve);
             this.ribbonStatusBar1.ItemLinks.Add(this.lbErrorsms);
-            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 416);
+            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 514);
+            this.ribbonStatusBar1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ribbonStatusBar1.Name = "ribbonStatusBar1";
             this.ribbonStatusBar1.Ribbon = this.ribbonControl1;
-            this.ribbonStatusBar1.Size = new System.Drawing.Size(1007, 31);
+            this.ribbonStatusBar1.Size = new System.Drawing.Size(1175, 36);
             // 
             // xtraTabbedMdiManager1
             // 
@@ -977,15 +983,30 @@
             this.barButtonItem11.LargeGlyph = global::QMS_System.Properties.Resources.Music_icon;
             this.barButtonItem11.Name = "barButtonItem11";
             // 
+            // ribbonPageGroup15
+            // 
+            this.ribbonPageGroup15.ItemLinks.Add(this.btnReportDG);
+            this.ribbonPageGroup15.Name = "ribbonPageGroup15";
+            this.ribbonPageGroup15.Text = "Đánh giá";
+            // 
+            // btnReportDG
+            // 
+            this.btnReportDG.Caption = "Thống kê đánh giá";
+            this.btnReportDG.Id = 71;
+            this.btnReportDG.LargeGlyph = global::QMS_System.Properties.Resources.Report_1_32;
+            this.btnReportDG.Name = "btnReportDG";
+            this.btnReportDG.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnReportDG_ItemClick);
+            // 
             // frmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1007, 447);
+            this.ClientSize = new System.Drawing.Size(1175, 550);
             this.Controls.Add(this.ribbonStatusBar1);
             this.Controls.Add(this.ribbonControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.IsMdiContainer = true;
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "frmMain";
             this.Ribbon = this.ribbonControl1;
             this.StatusBar = this.ribbonStatusBar1;
@@ -1115,5 +1136,7 @@
         private DevExpress.XtraBars.BarButtonItem barButtonItem11;
         private DevExpress.XtraBars.BarButtonItem btnVideoTemplate;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup14;
+        private DevExpress.XtraBars.BarButtonItem btnReportDG;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup15;
     }
 }

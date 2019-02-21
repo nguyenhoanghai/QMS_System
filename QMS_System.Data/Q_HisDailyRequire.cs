@@ -30,7 +30,6 @@ namespace QMS_System.Data
         public string CustomerName { get; set; }
         public Nullable<int> CustomerDOB { get; set; }
         public string CustomerAddress { get; set; }
-        public string CustomerAddress1 { get; set; }
         public string STT_PhongKham { get; set; }
         public string MaBenhNhan { get; set; }
         public string MaPhongKham { get; set; }

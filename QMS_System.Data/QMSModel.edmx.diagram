@@ -5,56 +5,68 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="aa50c9049dad40518152c7a4408adafb" Name="Diagram1" ZoomLevel="77">
-        <EntityTypeShape EntityType="QMSSystemModel.Q_Action" Width="1.5" PointX="1.5" PointY="4.125" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_ActionParameter" Width="1.5" PointX="3.75" PointY="4.125" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_Alert" Width="1.5" PointX="9" PointY="24.625" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_Business" Width="1.5" PointX="1.5" PointY="34" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_BusinessType" Width="1.5" PointX="1.5" PointY="38.5" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_Command" Width="1.5" PointX="1.5" PointY="24.25" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_CommandParameter" Width="1.5" PointX="3.75" PointY="24.25" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_Config" Width="1.5" PointX="11.75" PointY="7.375" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_CounterSoftRequire" Width="1.5" PointX="8.75" PointY="6.375" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_CounterSound" Width="1.5" PointX="6.75" PointY="28.125" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_DailyRequire_Detail" Width="1.5" PointX="3" PointY="16.125" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_Equipment" Width="1.5" PointX="3.75" PointY="48" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_EquipmentType" Width="1.5" PointX="1.5" PointY="50.875" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_EquipTypeProcess" Width="1.5" PointX="3.75" PointY="53.625" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_Evaluate" Width="1.5" PointX="10.75" PointY="3" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_EvaluateDetail" Width="1.5" PointX="13" PointY="2.5" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_HisDailyRequire_De" Width="1.5" PointX="6" PointY="20.125" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_HisUserEvaluate" Width="1.5" PointX="11.25" PointY="18.25" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_Language" Width="1.5" PointX="4.5" PointY="8.75" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_Login" Width="1.5" PointX="3" PointY="12.625" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_LoginHistory" Width="1.5" PointX="9" PointY="12.625" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_MaindisplayDirection" Width="1.5" PointX="6" PointY="48" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_Major" Width="1.5" PointX="0.75" PointY="0.75" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_Policy" Width="1.5" PointX="11.75" PointY="10.375" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_Process" Width="1.5" PointX="1.5" PointY="57.875" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_ReadTemp_Detail" Width="1.5" PointX="9" PointY="8.875" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_ReadTemplate" Width="1.5" PointX="6.75" PointY="8.625" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_RecieverSMS" Width="1.5" PointX="11.75" PointY="13.375" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_RegisterRecieveTicket" Width="1.5" PointX="6" PointY="16.75" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_ServiceShift" Width="1.5" PointX="3.75" PointY="42.125" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_ServiceStep" Width="1.5" PointX="9.75" PointY="27.75" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_Shift" Width="1.5" PointX="1.5" PointY="54.25" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_Sound" Width="1.5" PointX="6.75" PointY="24.5" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_Status" Width="1.5" PointX="0.75" PointY="11.5" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_StatusType" Width="1.5" PointX="1.5" PointY="8" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_User" Width="1.5" PointX="0.75" PointY="15.25" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_UserCmdRegister" Width="1.5" PointX="6" PointY="12.375" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_UserCommandReadSound" Width="1.5" PointX="9" PointY="16.5" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_UserEvaluate" Width="1.5" PointX="8.25" PointY="20.5" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_UserMajor" Width="1.5" PointX="3" PointY="20.75" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_VideoTemplate" Width="1.5" PointX="5.75" PointY="2.625" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_VideoTemplate_De" Width="1.5" PointX="8" PointY="2.5" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Action" Width="1.5" PointX="1.5" PointY="48.125" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_ActionParameter" Width="1.5" PointX="3.75" PointY="48.125" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Alert" Width="1.5" PointX="9" PointY="27.875" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Business" Width="1.5" PointX="1.5" PointY="28.125" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_BusinessType" Width="1.5" PointX="1.5" PointY="32.625" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Command" Width="1.5" PointX="6.75" PointY="24.25" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_CommandParameter" Width="1.5" PointX="3.75" PointY="29" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Config" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Counter" Width="1.5" PointX="1.5" PointY="43.375" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_CounterSoftRequire" Width="1.5" PointX="7.75" PointY="0.75" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_CounterSound" Width="1.5" PointX="9.75" PointY="24.125" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_DailyRequire" Width="1.5" PointX="0.75" PointY="22.625" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_DailyRequire_Detail" Width="1.5" PointX="3" PointY="14.75" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Equipment" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_EquipmentType" Width="1.5" PointX="1.5" PointY="40.5" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_EquipTypeProcess" Width="1.5" PointX="3.75" PointY="40.125" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Evaluate" Width="1.5" PointX="11.75" PointY="1.5" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_EvaluateDetail" Width="1.5" PointX="14" PointY="1" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_HisDailyRequire" Width="1.5" PointX="3.75" PointY="23.625" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_HisDailyRequire_De" Width="1.5" PointX="6" PointY="14.75" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_HisUserEvaluate" Width="1.5" PointX="11.25" PointY="15.625" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Language" Width="1.5" PointX="4.5" PointY="4" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Login" Width="1.5" PointX="3" PointY="11.5" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_LoginHistory" Width="1.5" PointX="9" PointY="11.5" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_MaindisplayDirection" Width="1.5" PointX="11.75" PointY="27.5" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Major" Width="1.5" PointX="3.75" PointY="7.5" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Policy" Width="1.5" PointX="10.75" PointY="7.75" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Process" Width="1.5" PointX="1.5" PointY="55.5" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_ReadTemp_Detail" Width="1.5" PointX="9" PointY="4.125" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_ReadTemplate" Width="1.5" PointX="6.75" PointY="3.875" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_RecieverSMS" Width="1.5" PointX="11.75" PointY="10.75" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_RegisterRecieveTicket" Width="1.5" PointX="3" PointY="19.625" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Service" Width="1.5" PointX="1.5" PointY="35.875" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_ServiceShift" Width="1.5" PointX="3.75" PointY="36.375" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_ServiceStep" Width="1.5" PointX="11" PointY="20.25" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Shift" Width="1.5" PointX="1.5" PointY="51.375" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Sound" Width="1.5" PointX="6.75" PointY="27.75" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Status" Width="1.5" PointX="0.75" PointY="10.25" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_StatusType" Width="1.5" PointX="1.5" PointY="6.875" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_User" Width="1.5" PointX="0.75" PointY="14" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_UserCmdRegister" Width="1.5" PointX="6" PointY="20.25" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_UserCommandReadSound" Width="1.5" PointX="9" PointY="15.25" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_UserEvaluate" Width="1.5" PointX="8.25" PointY="19.375" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_UserMajor" Width="1.5" PointX="6" PointY="11.625" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Video" Width="1.5" PointX="5.75" PointY="1.125" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_VideoTemplate" Width="1.5" PointX="5.75" PointY="8" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_VideoTemplate_De" Width="1.5" PointX="8" PointY="8" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_ActionParameter_Q_Action" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_UserCommand_Q_ActionParameter" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_Alert_Q_Sound" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_Business_Q_BusinessType" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_DailyRequire_Q_Business" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_HisDailyRequire_Q_Business" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_CommandParameter_Q_Command" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_UserCommandReadSound_Q_Command" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_UserCommand_Q_CommandParameter" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_CounterSound_Q_Counter" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_Equipment_Q_Counter" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_MaindisplayDirection_Q_Counter" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_CounterSound_Q_Sound" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_DailyRequire" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_DailyRequire_Q_Service" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_Major" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_Status" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_User" />
@@ -66,6 +78,8 @@
         <AssociationConnector Association="QMSSystemModel.FK_Q_EquipTypeProcess_Q_EquipmentType" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_EquipTypeProcess_Q_Process" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_EvaluateDetail_Q_Evaluate" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_HisDailyRequire" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_HisDailyRequire_Q_Service" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_Major" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_Status" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_User" />
@@ -82,31 +96,17 @@
         <AssociationConnector Association="QMSSystemModel.FK_Q_ReadTemp_Detail_Q_ReadTemplate" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_UserCommandReadSound_Q_ReadTemplate" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_RegisterRecieveTicket_Q_User" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_ServiceShift_Q_Service" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_ServiceStep_Q_Service" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_ServiceShift_Q_Shift" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_Status_Q_StatusType" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_UserCommand_Q_User" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_UserCommandReadSound_Q_User" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_UserEvaluate_NHANVIEN" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_UserMajor_Q_User" />
-        <AssociationConnector Association="QMSSystemModel.FK_Q_VideoTemplate_De_Q_VideoTemplate" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_Video" Width="1.5" PointX="14.375" PointY="6.875" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_VideoTemplate_De_Q_Video" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_DailyRequire" Width="1.5" PointX="9" PointY="37.375" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_HisDailyRequire" Width="1.5" PointX="6" PointY="36.25" />
-        <AssociationConnector Association="QMSSystemModel.FK_Q_DailyRequire_Q_Business" />
-        <AssociationConnector Association="QMSSystemModel.FK_Q_HisDailyRequire_Q_Business" />
-        <AssociationConnector Association="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_DailyRequire" />
-        <AssociationConnector Association="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_HisDailyRequire" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_Counter" Width="1.5" PointX="3.75" PointY="41.375" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_Service" Width="1.5" PointX="0.75" PointY="35.5" />
-        <AssociationConnector Association="QMSSystemModel.FK_Q_CounterSound_Q_Counter" />
-        <AssociationConnector Association="QMSSystemModel.FK_Q_Equipment_Q_Counter" />
-        <AssociationConnector Association="QMSSystemModel.FK_Q_MaindisplayDirection_Q_Counter" />
-        <AssociationConnector Association="QMSSystemModel.FK_Q_DailyRequire_Q_Service" />
-        <AssociationConnector Association="QMSSystemModel.FK_Q_HisDailyRequire_Q_Service" />
-        <AssociationConnector Association="QMSSystemModel.FK_Q_ServiceShift_Q_Service" />
-        <AssociationConnector Association="QMSSystemModel.FK_Q_ServiceStep_Q_Service" />
-        </Diagram>
+        <AssociationConnector Association="QMSSystemModel.FK_Q_VideoTemplate_De_Q_VideoTemplate" />
+      </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

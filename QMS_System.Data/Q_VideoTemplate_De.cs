@@ -20,7 +20,7 @@ namespace QMS_System.Data
         public int VideoId { get; set; }
         public bool IsDeleted { get; set; }
     
-        public virtual Q_VideoTemplate Q_VideoTemplate { get; set; }
         public virtual Q_Video Q_Video { get; set; }
+        public virtual Q_VideoTemplate Q_VideoTemplate { get; set; }
     }
 }

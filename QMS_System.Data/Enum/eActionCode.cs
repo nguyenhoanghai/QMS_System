@@ -15,8 +15,9 @@ namespace QMS_System.Data.Enum
         public const string AmThanh = "AMTHA";
         public const string Counter = "COUNT";
         public const string HienThiChinh = "MAIND";
-        public const string LoginLogOut = "LOGIO";
+        public const string LoginLogOut = "LOGIO"; 
         public const string TroGiup = "THSOS";
         public const string KetThuc = "KETTH"; 
+        public const string DanhGia = "DANHGIA";
     }
 }

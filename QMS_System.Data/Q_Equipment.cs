@@ -31,10 +31,10 @@ namespace QMS_System.Data
         public Nullable<System.DateTime> EndTime { get; set; }
         public bool IsDeleted { get; set; }
     
+        public virtual Q_Counter Q_Counter { get; set; }
         public virtual Q_EquipmentType Q_EquipmentType { get; set; }
         public virtual Q_Status Q_Status { get; set; }
         public virtual ICollection<Q_MaindisplayDirection> Q_MaindisplayDirection { get; set; }
         public virtual ICollection<Q_RegisterRecieveTicket> Q_RegisterRecieveTicket { get; set; }
-        public virtual Q_Counter Q_Counter { get; set; }
     }
 }

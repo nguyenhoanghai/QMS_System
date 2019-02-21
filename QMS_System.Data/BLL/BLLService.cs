@@ -57,7 +57,7 @@ namespace QMS_System.Data.BLL
         {
             using (db = new QMSSystemEntities())
             {
-                return db.Q_Service.Where(x => !x.IsDeleted&&x.IsActived).Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Name }).ToList();
+                return db.Q_Service.Where(x => !x.IsDeleted&&x.IsActived).AsEnumerable().Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Name, Code = x.TimeProcess.TimeOfDay.ToString() }).ToList();
             }
         }
 

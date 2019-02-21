@@ -227,7 +227,6 @@
     <Property Name="CustomerName" Type="nvarchar" MaxLength="250" />
     <Property Name="CustomerDOB" Type="int" />
     <Property Name="CustomerAddress" Type="nvarchar(max)" />
-    <Property Name="CustomerAddress1" Type="nvarchar(max)" />
     <Property Name="STT_PhongKham" Type="nvarchar" MaxLength="250" />
     <Property Name="MaBenhNhan" Type="nvarchar" MaxLength="250" />
     <Property Name="MaPhongKham" Type="nvarchar" MaxLength="250" />

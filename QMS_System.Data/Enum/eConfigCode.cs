@@ -73,5 +73,17 @@ namespace QMS_System.Data.Enum
         /// </summary>
         public const string UseWithThirdPattern = "UseWithThirdPattern";
 
+        /// <summary>
+        /// hệ thống
+        /// 1=> xe máy
+        /// 2=> khác
+        /// </summary>
+        public const string System = "System";
+
+        /// <summary>
+        /// khi cấp phiếu tự gọi số nếu User đang rảnh theo user rảnh lâu nhất
+        /// </summary>
+        public const string AutoCallIfUserFree = "AutoCallIfUserFree";
+
     }
 }

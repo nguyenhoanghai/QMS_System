@@ -52,9 +52,9 @@ namespace QMS_System.Data.Enum
         /// </summary>
         public const string THKCG = "THKCG";
         /// <summary>
-        /// User login or logout out of system
+        /// User login or logout of system
         /// </summary>
-        public const string LOGIN = "LOGIN";
+        public const string LOGIO = "LOGIO"; 
 
         /// <summary>
         /// Call number recieve from counter
@@ -70,5 +70,6 @@ namespace QMS_System.Data.Enum
         public const string GNVYC = "GNVYC";
 
         public const string SOUNDONLY = "SOUNDONLY";
+        public const string DANHGIA = "DANHGIA";
     }
 }

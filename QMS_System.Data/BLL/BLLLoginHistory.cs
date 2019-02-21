@@ -133,7 +133,7 @@ namespace QMS_System.Data.BLL
         {
             using (db = new QMSSystemEntities())
             {
-                var users = db.Q_Login.Where(x => x.StatusId == (int)eStatus.LOGIN).Select(x => new HomeModel()
+                var users = db.Q_Login.Where(x => !x.Q_User.IsDeleted && x.StatusId == (int)eStatus.LOGIN).Select(x => new HomeModel()
                 {
                     UserId = x.UserId,
                     User = x.Q_User.UserName,
@@ -160,7 +160,11 @@ namespace QMS_System.Data.BLL
                             if (useWithThridPattern == 0)
                                 item.CurrentTicket = current.Q_DailyRequire.TicketNumber;
                             else
-                                item.CurrentTicket = int.Parse(current.Q_DailyRequire.STT_PhongKham);
+                            { 
+                                if (current.Q_DailyRequire.STT_PhongKham != null)
+                                    item.CurrentTicket = int.Parse(current.Q_DailyRequire.STT_PhongKham);  
+                            }
+
                             item.CommingTime = current.ProcessTime;
                         }
                         find = counters.FirstOrDefault(x => x.Code == item.EquipCode);
@@ -204,7 +208,7 @@ namespace QMS_System.Data.BLL
                             {
                                 var first = dt.FirstOrDefault();
                                 if (first.StatusId == (int)eStatus.CHOXL && majorIds.Contains(first.MajorId))
-                                    model.CounterWaitingTickets += (useWithThridPattern==0? item.TicketNumber:int.Parse(item.STT_PhongKham)) + " ";
+                                    model.CounterWaitingTickets += (useWithThridPattern == 0 ? item.TicketNumber : int.Parse(item.STT_PhongKham)) + " ";
                                 else if (first.StatusId == (int)eStatus.CHOXL && !majorIds.Contains(first.MajorId))
                                     model.AllWaitingTickets += item.TicketNumber + " ";
                             }

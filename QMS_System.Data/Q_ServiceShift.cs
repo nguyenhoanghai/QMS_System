@@ -21,7 +21,7 @@ namespace QMS_System.Data
         public string Note { get; set; }
         public bool IsDeleted { get; set; }
     
-        public virtual Q_Shift Q_Shift { get; set; }
         public virtual Q_Service Q_Service { get; set; }
+        public virtual Q_Shift Q_Shift { get; set; }
     }
 }

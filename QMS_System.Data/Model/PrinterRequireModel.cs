@@ -13,5 +13,6 @@ namespace QMS_System.Data.Model
         public string MaBenhNhan { get; set; }
         public string MaPhongKham { get; set; }
         public string SttPhongKham { get; set; }
+        public string SoXe { get; set; }
     }
 }

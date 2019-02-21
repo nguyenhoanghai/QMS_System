@@ -20,7 +20,10 @@ namespace QMS_System.Data.Model
        public List<Error> Errors { get; set; }
        public dynamic Data { get; set; }
        public dynamic Records { get; set; }
-       public ResponseBase()
+       public dynamic Data_1 { get; set; }
+       public dynamic Data_2 { get; set; }
+       public dynamic Data_3 { get; set; }
+        public ResponseBase()
        {
            Errors = new List<Error>();
        }

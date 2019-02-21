@@ -93,6 +93,21 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="Q_Counter">
+      <EntityTypeMapping TypeName="QMSSystemModel.Q_Counter">
+        <MappingFragment StoreEntitySet="Q_Counter">
+          <ScalarProperty Name="IsRunning" ColumnName="IsRunning" />
+          <ScalarProperty Name="LastCall" ColumnName="LastCall" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="Acreage" ColumnName="Acreage" />
+          <ScalarProperty Name="Position" ColumnName="Position" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Index" ColumnName="Index" />
+          <ScalarProperty Name="ShortName" ColumnName="ShortName" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="Q_CounterSoftRequire">
       <EntityTypeMapping TypeName="QMSSystemModel.Q_CounterSoftRequire">
         <MappingFragment StoreEntitySet="Q_CounterSoftRequire">
@@ -110,6 +125,26 @@
           <ScalarProperty Name="SoundName" ColumnName="SoundName" />
           <ScalarProperty Name="LanguageId" ColumnName="LanguageId" />
           <ScalarProperty Name="CounterId" ColumnName="CounterId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Q_DailyRequire">
+      <EntityTypeMapping TypeName="QMSSystemModel.Q_DailyRequire">
+        <MappingFragment StoreEntitySet="Q_DailyRequire">
+          <ScalarProperty Name="MaPhongKham" ColumnName="MaPhongKham" />
+          <ScalarProperty Name="MaBenhNhan" ColumnName="MaBenhNhan" />
+          <ScalarProperty Name="STT_PhongKham" ColumnName="STT_PhongKham" />
+          <ScalarProperty Name="CustomerAddress" ColumnName="CustomerAddress" />
+          <ScalarProperty Name="CustomerDOB" ColumnName="CustomerDOB" />
+          <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+          <ScalarProperty Name="ServeTimeAllow" ColumnName="ServeTimeAllow" />
+          <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+          <ScalarProperty Name="CarNumber" ColumnName="CarNumber" />
+          <ScalarProperty Name="PrintTime" ColumnName="PrintTime" />
+          <ScalarProperty Name="BusinessId" ColumnName="BusinessId" />
+          <ScalarProperty Name="ServiceId" ColumnName="ServiceId" />
+          <ScalarProperty Name="TicketNumber" ColumnName="TicketNumber" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>
@@ -192,6 +227,26 @@
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="Index" ColumnName="Index" />
           <ScalarProperty Name="EvaluateId" ColumnName="EvaluateId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Q_HisDailyRequire">
+      <EntityTypeMapping TypeName="QMSSystemModel.Q_HisDailyRequire">
+        <MappingFragment StoreEntitySet="Q_HisDailyRequire">
+          <ScalarProperty Name="MaPhongKham" ColumnName="MaPhongKham" />
+          <ScalarProperty Name="MaBenhNhan" ColumnName="MaBenhNhan" />
+          <ScalarProperty Name="STT_PhongKham" ColumnName="STT_PhongKham" />
+          <ScalarProperty Name="CustomerAddress" ColumnName="CustomerAddress" />
+          <ScalarProperty Name="CustomerDOB" ColumnName="CustomerDOB" />
+          <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+          <ScalarProperty Name="ServeTimeAllow" ColumnName="ServeTimeAllow" />
+          <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+          <ScalarProperty Name="CarNumber" ColumnName="CarNumber" />
+          <ScalarProperty Name="PrintTime" ColumnName="PrintTime" />
+          <ScalarProperty Name="BusinessId" ColumnName="BusinessId" />
+          <ScalarProperty Name="ServiceId" ColumnName="ServiceId" />
+          <ScalarProperty Name="TicketNumber" ColumnName="TicketNumber" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>
@@ -344,6 +399,21 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="Q_Service">
+      <EntityTypeMapping TypeName="QMSSystemModel.Q_Service">
+        <MappingFragment StoreEntitySet="Q_Service">
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="IsActived" ColumnName="IsActived" />
+          <ScalarProperty Name="Note" ColumnName="Note" />
+          <ScalarProperty Name="TimeProcess" ColumnName="TimeProcess" />
+          <ScalarProperty Name="EndNumber" ColumnName="EndNumber" />
+          <ScalarProperty Name="StartNumber" ColumnName="StartNumber" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="Q_ServiceShift">
       <EntityTypeMapping TypeName="QMSSystemModel.Q_ServiceShift">
         <MappingFragment StoreEntitySet="Q_ServiceShift">
@@ -480,6 +550,16 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="Q_Video">
+      <EntityTypeMapping TypeName="QMSSystemModel.Q_Video">
+        <MappingFragment StoreEntitySet="Q_Video">
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="FakeName" ColumnName="FakeName" />
+          <ScalarProperty Name="FileName" ColumnName="FileName" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="Q_VideoTemplate">
       <EntityTypeMapping TypeName="QMSSystemModel.Q_VideoTemplate">
         <MappingFragment StoreEntitySet="Q_VideoTemplate">
@@ -498,87 +578,6 @@
           <ScalarProperty Name="VideoId" ColumnName="VideoId" />
           <ScalarProperty Name="TemplateId" ColumnName="TemplateId" />
           <ScalarProperty Name="Index" ColumnName="Index" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Q_Video">
-      <EntityTypeMapping TypeName="QMSSystemModel.Q_Video">
-        <MappingFragment StoreEntitySet="Q_Video">
-          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-          <ScalarProperty Name="FakeName" ColumnName="FakeName" />
-          <ScalarProperty Name="FileName" ColumnName="FileName" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Q_DailyRequire">
-      <EntityTypeMapping TypeName="QMSSystemModel.Q_DailyRequire">
-        <MappingFragment StoreEntitySet="Q_DailyRequire">
-          <ScalarProperty Name="MaPhongKham" ColumnName="MaPhongKham" />
-          <ScalarProperty Name="MaBenhNhan" ColumnName="MaBenhNhan" />
-          <ScalarProperty Name="STT_PhongKham" ColumnName="STT_PhongKham" />
-          <ScalarProperty Name="CustomerAddress" ColumnName="CustomerAddress" />
-          <ScalarProperty Name="CustomerDOB" ColumnName="CustomerDOB" />
-          <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
-          <ScalarProperty Name="ServeTimeAllow" ColumnName="ServeTimeAllow" />
-          <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
-          <ScalarProperty Name="CarNumber" ColumnName="CarNumber" />
-          <ScalarProperty Name="PrintTime" ColumnName="PrintTime" />
-          <ScalarProperty Name="BusinessId" ColumnName="BusinessId" />
-          <ScalarProperty Name="ServiceId" ColumnName="ServiceId" />
-          <ScalarProperty Name="TicketNumber" ColumnName="TicketNumber" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Q_HisDailyRequire">
-      <EntityTypeMapping TypeName="QMSSystemModel.Q_HisDailyRequire">
-        <MappingFragment StoreEntitySet="Q_HisDailyRequire">
-          <ScalarProperty Name="MaPhongKham" ColumnName="MaPhongKham" />
-          <ScalarProperty Name="MaBenhNhan" ColumnName="MaBenhNhan" />
-          <ScalarProperty Name="STT_PhongKham" ColumnName="STT_PhongKham" />
-          <ScalarProperty Name="CustomerAddress1" ColumnName="CustomerAddress1" />
-          <ScalarProperty Name="CustomerAddress" ColumnName="CustomerAddress" />
-          <ScalarProperty Name="CustomerDOB" ColumnName="CustomerDOB" />
-          <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
-          <ScalarProperty Name="ServeTimeAllow" ColumnName="ServeTimeAllow" />
-          <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
-          <ScalarProperty Name="CarNumber" ColumnName="CarNumber" />
-          <ScalarProperty Name="PrintTime" ColumnName="PrintTime" />
-          <ScalarProperty Name="BusinessId" ColumnName="BusinessId" />
-          <ScalarProperty Name="ServiceId" ColumnName="ServiceId" />
-          <ScalarProperty Name="TicketNumber" ColumnName="TicketNumber" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Q_Counter">
-      <EntityTypeMapping TypeName="QMSSystemModel.Q_Counter">
-        <MappingFragment StoreEntitySet="Q_Counter">
-          <ScalarProperty Name="IsRunning" ColumnName="IsRunning" />
-          <ScalarProperty Name="LastCall" ColumnName="LastCall" />
-          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-          <ScalarProperty Name="Acreage" ColumnName="Acreage" />
-          <ScalarProperty Name="Position" ColumnName="Position" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="Index" ColumnName="Index" />
-          <ScalarProperty Name="ShortName" ColumnName="ShortName" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Q_Service">
-      <EntityTypeMapping TypeName="QMSSystemModel.Q_Service">
-        <MappingFragment StoreEntitySet="Q_Service">
-          <ScalarProperty Name="Code" ColumnName="Code" />
-          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-          <ScalarProperty Name="IsActived" ColumnName="IsActived" />
-          <ScalarProperty Name="Note" ColumnName="Note" />
-          <ScalarProperty Name="TimeProcess" ColumnName="TimeProcess" />
-          <ScalarProperty Name="EndNumber" ColumnName="EndNumber" />
-          <ScalarProperty Name="StartNumber" ColumnName="StartNumber" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>

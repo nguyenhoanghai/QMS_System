@@ -720,8 +720,10 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public int Insert(int ticketNumber, int serviceId, int businessId, DateTime printTime)
+        public ResponseBase Insert(int ticketNumber, int serviceId, int businessId, DateTime printTime)
         {
+            var rs = new ResponseBase();
+            rs.IsSuccess = false;
             using (db = new QMSSystemEntities())
             {
                 var obj = new Q_DailyRequire();
@@ -741,7 +743,10 @@ namespace QMS_System.Data.BLL
                 detail.StatusId = (int)eStatus.CHOXL;
                 db.Q_DailyRequire_Detail.Add(detail);
                 db.SaveChanges();
-                return obj.Id;
+                rs.IsSuccess = true;
+                rs.Data = obj.Id;
+                rs.Data_1 = detail.MajorId;
+                return rs;
             }
         }
 
@@ -1036,7 +1041,8 @@ namespace QMS_System.Data.BLL
             int? DOB,
             string MaBenhNhan,
             string MaPhongKham,
-            string SttPhongKham
+            string SttPhongKham,
+            string SoXe
             )
         {
             ResponseBase rs = new ResponseBase();
@@ -1075,6 +1081,7 @@ namespace QMS_System.Data.BLL
                         obj.MaBenhNhan = MaBenhNhan;
                         obj.MaPhongKham = MaPhongKham;
                         obj.STT_PhongKham = SttPhongKham;
+                        obj.CarNumber = SoXe;
                         obj.Q_DailyRequire_Detail = new Collection<Q_DailyRequire_Detail>();
 
                         var detail = new Q_DailyRequire_Detail();
@@ -1089,6 +1096,7 @@ namespace QMS_System.Data.BLL
                         db.SaveChanges();
                         rs.IsSuccess = true;
                         rs.Data = socu;
+                        rs.Data_1 = detail.MajorId;
                         rs.Records = (sodanggoi != null ? sodanggoi.Q_DailyRequire.TicketNumber : 0);
                     }
                 }
@@ -1448,5 +1456,49 @@ namespace QMS_System.Data.BLL
             }
             return rs;
         }
+
+        public ResponseBase CheckUserFree(int majorId, int serviceId, int withoutTicketNumber)
+        {
+            var rs = new ResponseBase();
+            rs.Data = 0;
+            using (var db = new QMSSystemEntities())
+            {
+                var waitingTickets = (from x in db.Q_DailyRequire_Detail
+                                      where x.Q_DailyRequire.TicketNumber != withoutTicketNumber &&
+                                              x.Q_DailyRequire.ServiceId == serviceId &&
+                                              x.StatusId == (int)eStatus.CHOXL &&
+                                              !x.UserId.HasValue
+                                      select x).ToList();
+                if (waitingTickets.Count == 0)
+                {
+                    //lay user co nghiep vu 
+                    var userIds = (from x in db.Q_UserMajor
+                                   where !x.IsDeleted && !x.Q_Major.IsDeleted && !x.Q_User.IsDeleted && x.MajorId == majorId
+                                   select x.UserId).ToList();
+                    if (userIds.Count > 0)
+                    {
+                        // lấy user nào đã gọi dc 1 phieu tro len
+                        var loginUsers = (from x in db.Q_DailyRequire_Detail
+                                          where x.UserId.HasValue  && userIds.Contains(x.UserId.Value)
+                                          select x.UserId).Distinct().ToList();
+                        if (loginUsers.Count > 0)
+                        {
+                            var processingUsers = (from x in db.Q_DailyRequire_Detail where x.StatusId == (int)eStatus.DAGXL select x.UserId).ToList();
+                            if (processingUsers.Count != loginUsers.Count)
+                            {
+                                loginUsers = loginUsers.Where(x => !processingUsers.Contains(x)).ToList();
+                                var freeUser = (from x in db.Q_DailyRequire_Detail
+                                                where x.StatusId == (int)eStatus.HOTAT && loginUsers.Contains(x.UserId.Value)
+                                                orderby x.EndProcessTime.Value
+                                                select x.UserId).FirstOrDefault();
+                                if (freeUser != null)
+                                    rs.Data = freeUser;
+                            }
+                        }
+                    }
+                }
+                return rs;
+            }
+        } 
     }
 }

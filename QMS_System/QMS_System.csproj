@@ -253,6 +253,12 @@
     <Compile Include="frmRecieverSMS.Designer.cs">
       <DependentUpon>frmRecieverSMS.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmR_DanhGia.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmR_DanhGia.Designer.cs">
+      <DependentUpon>frmR_DanhGia.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmR_DetailByTimeRange.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -445,6 +451,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmRecieverSMS.resx">
       <DependentUpon>frmRecieverSMS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmR_DanhGia.resx">
+      <DependentUpon>frmR_DanhGia.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmR_DetailByTimeRange.resx">
       <DependentUpon>frmR_DetailByTimeRange.cs</DependentUpon>

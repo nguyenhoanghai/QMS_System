@@ -121,52 +121,145 @@ namespace QMS_System.Data.BLL
                 using (var db = new QMSSystemEntities())
                 {
                     var user = db.Q_User.FirstOrDefault(x => x.UserName.Trim().ToUpper().Equals(username.Trim().ToUpper()));
-                    int tieuchi = 0;
-                    int.TryParse(value.Substring((value.IndexOf('_') + 1)), out tieuchi);
-                    bool sendSMS = db.Q_EvaluateDetail.FirstOrDefault(x => x.Id == tieuchi).IsSendSMS;
-
-                    var now = DateTime.Now;
-                    if (isUseQMS == "1")
+                    if (user != null)
                     {
+                        int tieuchi = 0;
+                        int.TryParse(value.Substring((value.IndexOf('_') + 1)), out tieuchi);
+                        bool sendSMS = db.Q_EvaluateDetail.FirstOrDefault(x => x.Id == tieuchi).IsSendSMS;
+                        var now = DateTime.Now;
+                        var system = db.Q_Config.FirstOrDefault(x => x.IsActived && x.Code == eConfigCode.System).Value;
+
+                        if (isUseQMS == "1")
+                        {
+                            #region
+                            var ticketInfos = db.Q_DailyRequire_Detail.Where(x => x.Q_DailyRequire.TicketNumber == num && x.Q_User.UserName.Trim().ToUpper().Equals(username.Trim().ToUpper()) && (x.StatusId == (int)eStatus.DANHGIA || x.StatusId == (int)eStatus.DAGXL)).ToList();
+                            if (ticketInfos.Count > 0 )
+                            {
+                                var firstObj = ticketInfos.FirstOrDefault(); 
+                                IQueryable<Q_DailyRequire_Detail> details;
+                                details = (from x in db.Q_DailyRequire_Detail
+                                           where x.DailyRequireId == firstObj.DailyRequireId &&
+                                           (x.StatusId == (int)eStatus.DANHGIA || x.StatusId == (int)eStatus.DAGXL) &&
+                                           (system == "1" ? true : x.UserId == user.Id)
+                                           select x);
+
+                                foreach (var item in details)
+                                {
+                                    var obj = (from
+                                              ue in db.Q_UserEvaluate
+                                               where
+                                               item.UserId == ue.UserId &&
+                                               item.DailyRequireId == ue.Q_DailyRequire_Detail.DailyRequireId
+                                               select ue).FirstOrDefault();
+                                    if (obj == null)
+                                    {
+                                        db.Q_UserEvaluate.Add(new Q_UserEvaluate()
+                                        {
+                                            UserId = item.UserId ?? 0,
+                                            DailyRequireDeId = item.Id,
+                                            Score = value,
+                                            SendSMS = sendSMS,
+                                            CreatedDate = now
+                                        });
+                                    }
+
+                                    if (item.StatusId != (int)eStatus.HOTAT)
+                                    {
+                                        item.StatusId = (int)eStatus.HOTAT;
+                                        item.EndProcessTime = now;
+                                        db.Entry<Q_DailyRequire_Detail>(item).State = System.Data.Entity.EntityState.Modified;
+                                    }
+                                }
+                                db.SaveChanges();
+                                rs.IsSuccess = true; 
+                            }
+                            #endregion
+                        }
+                        else
+                        {
+                            db.Q_UserEvaluate.Add(new Q_UserEvaluate()
+                            {
+                                UserId = user.Id,
+                                DailyRequireDeId = null,
+                                Score = value,
+                                SendSMS = sendSMS,
+                                CreatedDate = DateTime.Now
+                            });
+                            db.SaveChanges();
+                            rs.IsSuccess = true;
+                        }
+                    }
+                }
+            }
+            catch { }
+            return rs;
+        }
+
+        /// <summary>
+        /// Đánh giá chất lượng phục vụ bằng counter
+        /// </summary>
+        /// <param name="equipCode">ma thiet bi</param>
+        /// <param name="value">value đánh giá</param>
+        /// <param name="system">hệ thống 1=> xe máy , 0 => khác </param> 
+        /// <returns></returns>
+        public ResponseBaseModel DanhGia_BP(int equipCode, string value, int system)
+        {
+            var rs = new ResponseBaseModel();
+            try
+            {
+                using (var db = new QMSSystemEntities())
+                {
+                    var login = db.Q_Login.FirstOrDefault(x => x.EquipCode == equipCode && x.StatusId == (int)eStatus.LOGIN);
+                    if (login != null)
+                    {
+                        int tieuchi = 0;
+                        int.TryParse(value.Substring((value.IndexOf('_') + 1)), out tieuchi);
+                        bool sendSMS = db.Q_EvaluateDetail.FirstOrDefault(x => x.Id == tieuchi).IsSendSMS;
+
+                        var now = DateTime.Now;
                         #region
-                        var ticketInfos = db.Q_DailyRequire_Detail.Where(x => x.Q_DailyRequire.TicketNumber == num && x.Q_User.UserName.Trim().ToUpper().Equals(username.Trim().ToUpper()) && (x.StatusId == (int)eStatus.DANHGIA || x.StatusId == (int)eStatus.DAGXL)).ToList();
-                        if (ticketInfos.Count > 0 && user != null)
+                        var ticketInfos = db.Q_DailyRequire_Detail.Where(x => x.UserId == login.UserId && (x.StatusId == (int)eStatus.DANHGIA || x.StatusId == (int)eStatus.DAGXL)).ToList();
+                        if (ticketInfos.Count > 0)
                         {
                             var firstObj = ticketInfos.FirstOrDefault();
-                            var obj = db.Q_UserEvaluate.FirstOrDefault(x => x.UserId == user.Id && x.Q_DailyRequire_Detail.Q_DailyRequire.TicketNumber == num && x.Q_DailyRequire_Detail.Q_DailyRequire.PrintTime == firstObj.Q_DailyRequire.PrintTime);
-                            if (obj == null)
+                            IQueryable<Q_DailyRequire_Detail> details;
+                            details = (from x in db.Q_DailyRequire_Detail
+                                       where x.DailyRequireId == firstObj.DailyRequireId &&
+                                       (x.StatusId == (int)eStatus.DANHGIA || x.StatusId == (int)eStatus.DAGXL) &&
+                                       (system == 1 ? true : x.UserId == login.UserId)
+                                       select x);
+
+                            foreach (var item in details)
                             {
-                                db.Q_UserEvaluate.Add(new Q_UserEvaluate()
+                                var obj = (from
+                                          ue in db.Q_UserEvaluate
+                                           where
+                                           item.UserId == ue.UserId &&
+                                           item.DailyRequireId == ue.Q_DailyRequire_Detail.DailyRequireId
+                                           select ue).FirstOrDefault();
+                                if (obj == null)
                                 {
-                                    UserId = user.Id,
-                                    DailyRequireDeId = firstObj.Id,
-                                    Score = value,
-                                    SendSMS = sendSMS,
-                                    CreatedDate = DateTime.Now
-                                });
-                            }
-                            foreach (var item in ticketInfos)
-                            {
-                                item.StatusId = (int)eStatus.HOTAT;
-                                item.EndProcessTime = now;
+                                    db.Q_UserEvaluate.Add(new Q_UserEvaluate()
+                                    {
+                                        UserId = item.UserId ?? 0,
+                                        DailyRequireDeId = item.Id,
+                                        Score = value,
+                                        SendSMS = sendSMS,
+                                        CreatedDate = now
+                                    });
+                                }
+
+                                if (item.StatusId != (int)eStatus.HOTAT)
+                                {
+                                    item.StatusId = (int)eStatus.HOTAT;
+                                    item.EndProcessTime = now;
+                                    db.Entry<Q_DailyRequire_Detail>(item).State = System.Data.Entity.EntityState.Modified;
+                                }
                             }
                             db.SaveChanges();
                             rs.IsSuccess = true;
                         }
                         #endregion
-                    }
-                    else
-                    {
-                        db.Q_UserEvaluate.Add(new Q_UserEvaluate()
-                        {
-                            UserId = user.Id,
-                            DailyRequireDeId = null,
-                            Score = value,
-                            SendSMS = sendSMS,
-                            CreatedDate = DateTime.Now
-                        });
-                        db.SaveChanges();
-                        rs.IsSuccess = true;
                     }
                 }
             }
@@ -203,7 +296,6 @@ namespace QMS_System.Data.BLL
                 return report;
             }
         }
-
 
         public List<ReportEvaluateModel> GetDailyReport_NotUseQMS()
         {
@@ -310,15 +402,15 @@ namespace QMS_System.Data.BLL
                                                 x.Q_HisDailyRequire_De.ProcessTime.HasValue &&
                                                 x.Q_HisDailyRequire_De.ProcessTime.Value >= from &&
                                                 x.Q_HisDailyRequire_De.ProcessTime.Value <= to && x.UserId == userId)
-                                                .ToList(); 
-                        foreach (var yc in ycDanhGia)
-                        {
-                            var child = new ModelSelectItem();
-                            Parse.CopyObject(yc, ref child);
-                            child.Id += danhgia_HN.Where(x => x.Score == yc.Code).Count();
-                            child.Id += danhgia_LS.Where(x => x.Score == yc.Code).Count();
-                            obj.Details.Add(child);
-                        }
+                                                .ToList();
+                    foreach (var yc in ycDanhGia)
+                    {
+                        var child = new ModelSelectItem();
+                        Parse.CopyObject(yc, ref child);
+                        child.Id += danhgia_HN.Where(x => x.Score == yc.Code).Count();
+                        child.Id += danhgia_LS.Where(x => x.Score == yc.Code).Count();
+                        obj.Details.Add(child);
+                    }
                     report.Add(obj);
                 }
                 else
@@ -334,7 +426,7 @@ namespace QMS_System.Data.BLL
                         //  item.Details.AddRange(ycDanhGia);
                         var objs_HN = danhgiaHomnay.Where(x => x.UserId == item.UserId).ToList();
                         var objs_LS = danhgia_LS.Where(x => x.UserId == item.UserId).ToList();
-                        
+
                         foreach (var yc in ycDanhGia)
                         {
                             var child = new ModelSelectItem();

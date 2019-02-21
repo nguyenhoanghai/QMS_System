@@ -583,3 +583,4 @@ E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.pdb
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmVideo.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmVideoTemplate.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\System.Net.Http.Formatting.dll
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmR_DanhGia.resources
