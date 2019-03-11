@@ -42,6 +42,9 @@ namespace QMS_System.Data.Model
         public string strServeTimeAllow { get; set; }
         public string strTimeCL { get; set; }
         public bool IsEndTime { get; set; }
+        public int TienDoTH { get; set; }
+        public int PhutConLai { get; set; }
+        public string GioGiaoDK { get; set; }
     }
 
     public class SubModel

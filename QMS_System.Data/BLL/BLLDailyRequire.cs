@@ -421,6 +421,52 @@ namespace QMS_System.Data.BLL
         }
 
         /// <summary>
+        /// goi mới phan điều theo nghiệp vụ
+        /// </summary>
+        /// <param name="majorId"></param>
+        /// <param name="userId"></param>
+        /// <param name="equipCode"></param>
+        /// <param name="date"></param>
+        /// <param name="UseWithThirdPattern"></param>
+        /// <returns></returns>
+        public bool ChekCanCallNext(int majorId, int userId)
+        {
+            using (db = new QMSSystemEntities())
+            {
+                var continnue = false;
+                var currentUsersLogin = (from x in db.Q_Login where x.StatusId == (int)eStatus.LOGIN select x.UserId).Distinct().ToList();
+
+                var callInfos = (from x in db.Q_DailyRequire_Detail where x.MajorId == majorId && x.StatusId != (int)eStatus.CHOXL select x).GroupBy(x => x.UserId).Select(x => new { userid = x.Key, count = x.Count() }).OrderByDescending(x => x.count).ToList();
+                int userCount = 0, min = 0, max = 0;
+
+                for (int i = 0; i < currentUsersLogin.Count; i++)
+                {
+                    var user = callInfos.FirstOrDefault(x => x.userid == userId);
+                    if (user != null)
+                    {
+                        if (user.count > max)
+                            max = user.count;
+                        if (user.count < min)
+                            min = user.count;
+                        if (currentUsersLogin[i] == userId)
+                            userCount = user.count;
+                    }
+                    else
+                    {
+                        min = 0;
+                        if (currentUsersLogin[i] == userId)
+                            userCount = 0;
+                    }
+                }
+
+                if (max > userCount || min == max)
+                    continnue = true;
+
+                return continnue;
+            }
+        }
+
+        /// <summary>
         ///  Counter Soft
         /// </summary>
         /// <param name="userId"></param>
@@ -828,7 +874,9 @@ namespace QMS_System.Data.BLL
                         TimeProcess = "0",
                         StartStr = "0",
                         strTimeCL = "0",
-                        strServeTimeAllow = "0"
+                        strServeTimeAllow = "0",
+                        GioGiaoDK = "0",
+                        TienDoTH = 0
                     }).ToList());
 
                     var objs = db_.Q_DailyRequire_Detail.Where(x => x.StatusId == (int)eStatus.DAGXL).Select(x => new ViewDetailModel()
@@ -846,8 +894,9 @@ namespace QMS_System.Data.BLL
                         strTimeCL = "0",
                         strServeTimeAllow = "0",
                         TimeProcess = "0",
-                        StartStr = "0"
-
+                        StartStr = "0",
+                        GioGiaoDK = "0",
+                        TienDoTH = 0
                     }).ToList();
 
                     if (dayInfo.Details.Count > 0 && objs.Count > 0)
@@ -878,7 +927,7 @@ namespace QMS_System.Data.BLL
                                 {
                                     TimeSpan time = DateTime.Now.Subtract(item.Start.Value);
                                     item.TimeProcess = time.ToString(@"hh\:mm").Replace(":", "<label class='blue'>:</label>");
-                                    item.StartStr = item.Start.Value.ToString(@"HH\:mm").Replace(":", "<label class='blue'>:</label>");
+                                    item.StartStr = item.Start.Value.ToString(@"hh\:mm tt").Replace(":", "<label class='blue'>:</label>");
 
                                     DateTime tgtc = item.Start.Value.Add(find.ServeTimeAllow);
                                     TimeSpan tgcl = tgtc.TimeOfDay.Subtract(DateTime.Now.TimeOfDay);
@@ -891,6 +940,13 @@ namespace QMS_System.Data.BLL
                                     }
                                     else
                                         item.strTimeCL = tgcl.ToString(@"hh\:mm").Replace(":", "<label class='blue'>:</label>");
+
+                                    item.GioGiaoDK = item.Start.Value.AddSeconds(find.ServeTimeAllow.TotalSeconds).ToString(@"hh\:mm tt").Replace(":", "<label class='blue'>:</label>");
+
+                                    decimal tiendo = 100;
+                                    if (find.ServeTimeAllow.TotalSeconds > 0)
+                                        tiendo = Math.Ceiling((decimal)(time.TotalSeconds / find.ServeTimeAllow.TotalSeconds) * 100);
+                                    item.TienDoTH = (int)(tiendo > 100 ? 100 : tiendo);
                                 }
                             }
                         }
@@ -1307,7 +1363,7 @@ namespace QMS_System.Data.BLL
                                 if (dscho != null && dscho.Count > 0)
                                     sum = (from r in dscho select r.ServeTimeAllow.Ticks).Sum();
                                 rs.Data = "Wait";
-                                rs.Records = "Số phiếu <span class='text-red bold'>" + ticket + "</span> của quý khách dự kiến sẽ được phục vụ lúc <span class='text-red bold'>" + (DateTime.Now.TimeOfDay.Add(new TimeSpan(sum)).ToString(@"hh\:mm")) + "</span>";
+                                rs.Records = "Số phiếu <span class='text-red bold'>" + ticket + "</span> của quý khách dự kiến sẽ được phục vụ lúc <span class='text-red bold'>" + (DateTime.Now.TimeOfDay.Add(new TimeSpan(sum)).ToString(@"HH\:mm")) + "</span>";
                             }
                             else //da xu ly hoan tat
                             {
@@ -1479,7 +1535,7 @@ namespace QMS_System.Data.BLL
                     {
                         // lấy user nào đã gọi dc 1 phieu tro len
                         var loginUsers = (from x in db.Q_DailyRequire_Detail
-                                          where x.UserId.HasValue  && userIds.Contains(x.UserId.Value)
+                                          where x.UserId.HasValue && userIds.Contains(x.UserId.Value)
                                           select x.UserId).Distinct().ToList();
                         if (loginUsers.Count > 0)
                         {
@@ -1499,6 +1555,6 @@ namespace QMS_System.Data.BLL
                 }
                 return rs;
             }
-        } 
+        }
     }
 }

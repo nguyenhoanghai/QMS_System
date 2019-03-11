@@ -615,44 +615,6 @@ namespace QMS_System
             }
         }
 
-        private void btnVideo_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            Form frm = IsActive(typeof(frmVideo));
-            if (frm == null)
-            {
-                var forms = new frmVideo();
-                forms.MdiParent = this;
-                forms.Show();
-            }
-            else
-                frm.Activate();
-        }
-
-        private void btnReportDG_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            Form frm = IsActive(typeof(frmR_DanhGia));
-            if (frm == null)
-            {
-                var forms = new frmR_DanhGia();
-                forms.MdiParent = this;
-                forms.Show();
-            }
-            else
-                frm.Activate();
-        }
-
-        private void btnVideoTemplate_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            Form frm = IsActive(typeof(frmVideoTemplate));
-            if (frm == null)
-            {
-                var forms = new frmVideoTemplate();
-                forms.MdiParent = this;
-                forms.Show();
-            }
-            else
-                frm.Activate();
-        }
 
         private void comPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
@@ -924,6 +886,7 @@ namespace QMS_System
             {
             }
         }
+
         private void SendRequest(string value)
         {
             try
@@ -1022,6 +985,22 @@ namespace QMS_System
                                             else
                                                 newTicket = 0;
                                             break;
+                                        case eActionParam.PHANDIEUNHANVIEN: // goi phan dieu Nghiep vu cho nhan vien
+                                            var allowCall = false;
+                                            for (int ii = 0; ii < userMajors.Count; ii++)
+                                            {
+                                                allowCall = BLLDailyRequire.Instance.ChekCanCallNext(userMajors[ii].MajorId, userId);
+                                                if (allowCall)
+                                                {
+                                                    var callInfo = BLLDailyRequire.Instance.CallByMajor(userMajors[ii].MajorId, userId, equipCode, DateTime.Now, (!string.IsNullOrEmpty(userRight[i].Param) ? int.Parse(userRight[i].Param) : 0));
+                                                    if (callInfo.IsSuccess)
+                                                        newTicket = callInfo.Data;
+                                                    else
+                                                        newTicket = 0;
+                                                    break;
+                                                }
+                                            }
+                                            break;
                                     }
                                     #endregion
                                     break;
@@ -1031,18 +1010,22 @@ namespace QMS_System
                                     {
                                         case eActionParam.MOIKH: // gui so len counter
                                             arrStr = GPRO_Helper.Instance.ChangeNumber(newTicket);
+                                            // SendRequest(("AA " + hexStr[1]));
                                             dataSendToComport.Add(("AA " + hexStr[1] + " " + arrStr[0] + " " + arrStr[1]));
                                             break;
                                         case eActionParam.TKHDG:
                                             arrStr = GPRO_Helper.Instance.ChangeNumber(BLLDailyRequire.Instance.CountTicketDoneProcessed(equipCode));
+                                            // SendRequest(("AA " + hexStr[1]));
                                             dataSendToComport.Add(("AA " + hexStr[1] + " " + arrStr[0] + " " + arrStr[1]));
                                             break;
                                         case eActionParam.THKCG:
                                             arrStr = GPRO_Helper.Instance.ChangeNumber(BLLDailyRequire.Instance.CountTicketWatingProcessed(equipCode));
+                                            // SendRequest(("AA " + hexStr[1]));
                                             dataSendToComport.Add(("AA " + hexStr[1] + " " + arrStr[0] + " " + arrStr[1]));
                                             break;
                                         case eActionParam.HITHI: // gui so len counter
                                             arrStr = GPRO_Helper.Instance.ChangeNumber(currentTicket);
+                                            // SendRequest(("AA " + hexStr[1]));
                                             dataSendToComport.Add(("AA " + hexStr[1] + " " + arrStr[0] + " " + arrStr[1]));
                                             break;
                                     }
@@ -1178,6 +1161,45 @@ namespace QMS_System
 
 
         #endregion
+
+        private void btnVideo_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            Form frm = IsActive(typeof(frmVideo));
+            if (frm == null)
+            {
+                var forms = new frmVideo();
+                forms.MdiParent = this;
+                forms.Show();
+            }
+            else
+                frm.Activate();
+        }
+
+        private void btnReportDG_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            Form frm = IsActive(typeof(frmR_DanhGia));
+            if (frm == null)
+            {
+                var forms = new frmR_DanhGia();
+                forms.MdiParent = this;
+                forms.Show();
+            }
+            else
+                frm.Activate();
+        }
+
+        private void btnVideoTemplate_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            Form frm = IsActive(typeof(frmVideoTemplate));
+            if (frm == null)
+            {
+                var forms = new frmVideoTemplate();
+                forms.MdiParent = this;
+                forms.Show();
+            }
+            else
+                frm.Activate();
+        }
 
         private void btnHome_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {

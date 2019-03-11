@@ -71,5 +71,11 @@ namespace QMS_System.Data.Enum
 
         public const string SOUNDONLY = "SOUNDONLY";
         public const string DANHGIA = "DANHGIA";
+
+        /// <summary>
+        /// goi mới phân điều nghiệp vụ theo nhân viên
+        /// </summary>
+        public const string PHANDIEUNHANVIEN = "PHANDIEUNHANVIEN";
+
     }
 }
