@@ -565,7 +565,7 @@ namespace QMS_System.Data.BLL
                                     //thoi gian cho truoc khi len ban nang sua chua
                                     // tinh cho lan dau tien nhung lan sau ko tinh
                                     if (phieus[ii].Start.HasValue && ii==0)
-                                        phieus[ii].WaitingTime = phieus[ii].Start.Value.Subtract(phieus[ii].PrintTime).ToString("hh\\:mm");
+                                        phieus[ii].WaitingTime = phieus[ii].Start.Value.Subtract(phieus[ii].PrintTime).ToString("hh\\:mm\\:ss");
 
                                     if (ii == phieus.Count - 1)
                                     {
@@ -578,7 +578,7 @@ namespace QMS_System.Data.BLL
 
                                             //khoang thoi gian chờ tu luc ket thuc sua chua cho toi khi thu ngan goi
                                             if (phieus[ii].End.HasValue && phieus[ii].StartTN.HasValue)
-                                                phieus[ii].WaitingTimeTN = phieus[ii].StartTN.Value.Subtract(phieus[ii].End.Value).ToString("hh\\:mm");
+                                                phieus[ii].WaitingTimeTN = phieus[ii].StartTN.Value.Subtract(phieus[ii].End.Value).ToString("hh\\:mm\\:ss");
                                         }
                                     }
                                     returnList.Add(phieus[ii]);
@@ -648,7 +648,7 @@ namespace QMS_System.Data.BLL
                                         phieus[ii].ProcessTime = phieus[ii].End.Value.Subtract(phieus[ii].Start.Value).ToString("hh\\:mm\\:ss");
                                     //thoi gian cho truoc khi len ban nang sua chua
                                     if (phieus[ii].Start.HasValue && fakePrintTime != null)
-                                        phieus[ii].WaitingTime = phieus[ii].Start.Value.Subtract(fakePrintTime).ToString("hh\\:mm");
+                                        phieus[ii].WaitingTime = phieus[ii].Start.Value.Subtract(fakePrintTime).ToString("hh\\:mm\\:ss");
 
                                     if (ii == phieus.Count - 1)
                                     {
@@ -661,7 +661,7 @@ namespace QMS_System.Data.BLL
 
                                             //khoang thoi gian chờ tu luc ket thuc sua chua cho toi khi thu ngan goi
                                             if (phieus[ii].End.HasValue && phieus[ii].StartTN.HasValue)
-                                                phieus[ii].WaitingTimeTN = phieus[ii].StartTN.Value.Subtract(phieus[ii].End.Value).ToString("hh\\:mm");
+                                                phieus[ii].WaitingTimeTN = phieus[ii].StartTN.Value.Subtract(phieus[ii].End.Value).ToString("hh\\:mm\\:ss");
                                         }
                                     }
                                     returnList.Add(phieus[ii]);

@@ -116,82 +116,79 @@ namespace QMS_System.Data.BLL
         public ResponseBaseModel Evaluate(string username, string value, int num, string isUseQMS)
         {
             var rs = new ResponseBaseModel();
-            try
+
+            using (var db = new QMSSystemEntities())
             {
-                using (var db = new QMSSystemEntities())
+                var user = db.Q_User.FirstOrDefault(x => x.UserName.Trim().ToUpper().Equals(username.Trim().ToUpper()));
+                if (user != null)
                 {
-                    var user = db.Q_User.FirstOrDefault(x => x.UserName.Trim().ToUpper().Equals(username.Trim().ToUpper()));
-                    if (user != null)
+                    int tieuchi = 0;
+                    int.TryParse(value.Substring((value.IndexOf('_') + 1)), out tieuchi);
+                    bool sendSMS = db.Q_EvaluateDetail.FirstOrDefault(x => x.Id == tieuchi).IsSendSMS;
+                    var now = DateTime.Now;
+                    var system = db.Q_Config.FirstOrDefault(x => x.IsActived && x.Code == eConfigCode.System).Value;
+
+                    if (isUseQMS == "1")
                     {
-                        int tieuchi = 0;
-                        int.TryParse(value.Substring((value.IndexOf('_') + 1)), out tieuchi);
-                        bool sendSMS = db.Q_EvaluateDetail.FirstOrDefault(x => x.Id == tieuchi).IsSendSMS;
-                        var now = DateTime.Now;
-                        var system = db.Q_Config.FirstOrDefault(x => x.IsActived && x.Code == eConfigCode.System).Value;
-
-                        if (isUseQMS == "1")
+                        #region
+                        var ticketInfos = db.Q_DailyRequire_Detail.Where(x => x.Q_DailyRequire.TicketNumber == num && x.Q_User.UserName.Trim().ToUpper().Equals(username.Trim().ToUpper()) && (x.StatusId == (int)eStatus.DANHGIA || x.StatusId == (int)eStatus.DAGXL)).ToList();
+                        if (ticketInfos.Count > 0)
                         {
-                            #region
-                            var ticketInfos = db.Q_DailyRequire_Detail.Where(x => x.Q_DailyRequire.TicketNumber == num && x.Q_User.UserName.Trim().ToUpper().Equals(username.Trim().ToUpper()) && (x.StatusId == (int)eStatus.DANHGIA || x.StatusId == (int)eStatus.DAGXL)).ToList();
-                            if (ticketInfos.Count > 0 )
-                            {
-                                var firstObj = ticketInfos.FirstOrDefault(); 
-                                IQueryable<Q_DailyRequire_Detail> details;
-                                details = (from x in db.Q_DailyRequire_Detail
-                                           where x.DailyRequireId == firstObj.DailyRequireId &&
-                                           (x.StatusId == (int)eStatus.DANHGIA || x.StatusId == (int)eStatus.DAGXL) &&
-                                           (system == "1" ? true : x.UserId == user.Id)
-                                           select x);
+                            var firstObj = ticketInfos.FirstOrDefault();
+                            IQueryable<Q_DailyRequire_Detail> details;
+                            details = (from x in db.Q_DailyRequire_Detail
+                                       where x.DailyRequireId == firstObj.DailyRequireId &&
+                                       (x.StatusId == (int)eStatus.DANHGIA || x.StatusId == (int)eStatus.DAGXL) &&
+                                       (system == "1" ? true : x.UserId == user.Id)
+                                       select x);
 
-                                foreach (var item in details)
+                            foreach (var item in details)
+                            {
+                                var obj = (from
+                                          ue in db.Q_UserEvaluate
+                                           where
+                                           item.UserId == ue.UserId &&
+                                           item.DailyRequireId == ue.Q_DailyRequire_Detail.DailyRequireId
+                                           select ue).FirstOrDefault();
+                                if (obj == null)
                                 {
-                                    var obj = (from
-                                              ue in db.Q_UserEvaluate
-                                               where
-                                               item.UserId == ue.UserId &&
-                                               item.DailyRequireId == ue.Q_DailyRequire_Detail.DailyRequireId
-                                               select ue).FirstOrDefault();
-                                    if (obj == null)
+                                    db.Q_UserEvaluate.Add(new Q_UserEvaluate()
                                     {
-                                        db.Q_UserEvaluate.Add(new Q_UserEvaluate()
-                                        {
-                                            UserId = item.UserId ?? 0,
-                                            DailyRequireDeId = item.Id,
-                                            Score = value,
-                                            SendSMS = sendSMS,
-                                            CreatedDate = now
-                                        });
-                                    }
-
-                                    if (item.StatusId != (int)eStatus.HOTAT)
-                                    {
-                                        item.StatusId = (int)eStatus.HOTAT;
-                                        item.EndProcessTime = now;
-                                        db.Entry<Q_DailyRequire_Detail>(item).State = System.Data.Entity.EntityState.Modified;
-                                    }
+                                        UserId = item.UserId ?? 0,
+                                        DailyRequireDeId = item.Id,
+                                        Score = value,
+                                        SendSMS = sendSMS,
+                                        CreatedDate = now
+                                    });
                                 }
-                                db.SaveChanges();
-                                rs.IsSuccess = true; 
+
+                                if (item.StatusId != (int)eStatus.HOTAT)
+                                {
+                                    item.StatusId = (int)eStatus.HOTAT;
+                                    item.EndProcessTime = now;
+                                    db.Entry<Q_DailyRequire_Detail>(item).State = System.Data.Entity.EntityState.Modified;
+                                }
                             }
-                            #endregion
-                        }
-                        else
-                        {
-                            db.Q_UserEvaluate.Add(new Q_UserEvaluate()
-                            {
-                                UserId = user.Id,
-                                DailyRequireDeId = null,
-                                Score = value,
-                                SendSMS = sendSMS,
-                                CreatedDate = DateTime.Now
-                            });
                             db.SaveChanges();
                             rs.IsSuccess = true;
                         }
+                        #endregion
+                    }
+                    else
+                    {
+                        db.Q_UserEvaluate.Add(new Q_UserEvaluate()
+                        {
+                            UserId = user.Id,
+                            DailyRequireDeId = null,
+                            Score = value,
+                            SendSMS = sendSMS,
+                            CreatedDate = DateTime.Now
+                        });
+                        db.SaveChanges();
+                        rs.IsSuccess = true;
                     }
                 }
             }
-            catch { }
             return rs;
         }
 

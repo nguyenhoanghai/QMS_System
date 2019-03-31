@@ -891,6 +891,7 @@
     <Content Include="Image\ghepxanh.jpg" />
     <Content Include="Q.ico" />
     <Content Include="Script DB\goc qms.sql" />
+    <Content Include="Script DB\update qms 18_3_2019.sql" />
     <Content Include="Script DB\update qms 12_12_2018.sql" />
     <Content Include="Script DB\update qms 17_12_2018.sql" />
     <None Include="Resources\list.png" />

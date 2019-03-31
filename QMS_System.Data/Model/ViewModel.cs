@@ -45,6 +45,7 @@ namespace QMS_System.Data.Model
         public int TienDoTH { get; set; }
         public int PhutConLai { get; set; }
         public string GioGiaoDK { get; set; }
+        public int ReadServeOverCounter { get; set; }
     }
 
     public class SubModel

@@ -85,5 +85,16 @@ namespace QMS_System.Data.Enum
         /// </summary>
         public const string AutoCallIfUserFree = "AutoCallIfUserFree";
 
+        /// <summary>
+        /// Số lần đọc lại cảnh báo thời gian phục vụ sắp hết
+        /// </summary>
+        public const string RepeatTimesOfServeOverTime = "RepeatTimesOfServeOverTime";
+        /// <summary>
+        /// lệnh 8c sử dụng cho
+        /// 1. login logout
+        /// 2. đổi TG phục vụ DK
+        /// </summary>
+        public const string _8cUseFor = "8cUseFor";
+
     }
 }

@@ -29,6 +29,7 @@ namespace QMS_System.Data
         public int StatusId { get; set; }
         public bool IsSendSMS { get; set; }
         public string SmsContent { get; set; }
+        public int ServeOverCounter { get; set; }
     
         public virtual Q_HisDailyRequire Q_HisDailyRequire { get; set; }
         public virtual Q_Major Q_Major { get; set; }

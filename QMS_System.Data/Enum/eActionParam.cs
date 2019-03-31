@@ -76,6 +76,10 @@ namespace QMS_System.Data.Enum
         /// goi mới phân điều nghiệp vụ theo nhân viên
         /// </summary>
         public const string PHANDIEUNHANVIEN = "PHANDIEUNHANVIEN";
+        /// <summary>
+        /// Đổi thời gian phục vụ DK
+        /// </summary>
+        public const string DOITHOIGIANPV = "DOITHOIGIANPV";
 
     }
 }

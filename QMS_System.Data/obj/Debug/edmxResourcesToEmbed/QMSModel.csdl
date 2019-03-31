@@ -435,6 +435,7 @@
     <Property Name="StatusId" Type="Int32" Nullable="false" />
     <Property Name="IsSendSMS" Type="Boolean" Nullable="false" />
     <Property Name="SmsContent" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+    <Property Name="ServeOverCounter" Type="Int32" Nullable="false" />
     <NavigationProperty Name="Q_DailyRequire" Relationship="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_DailyRequire" FromRole="Q_DailyRequire_Detail" ToRole="Q_DailyRequire" />
     <NavigationProperty Name="Q_Major" Relationship="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_Major" FromRole="Q_DailyRequire_Detail" ToRole="Q_Major" />
     <NavigationProperty Name="Q_Status" Relationship="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_Status" FromRole="Q_DailyRequire_Detail" ToRole="Q_Status" />
@@ -549,6 +550,7 @@
     <Property Name="StatusId" Type="Int32" Nullable="false" />
     <Property Name="IsSendSMS" Type="Boolean" Nullable="false" />
     <Property Name="SmsContent" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+    <Property Name="ServeOverCounter" Type="Int32" Nullable="false" />
     <NavigationProperty Name="Q_HisDailyRequire" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_HisDailyRequire" FromRole="Q_HisDailyRequire_De" ToRole="Q_HisDailyRequire" />
     <NavigationProperty Name="Q_Major" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_Major" FromRole="Q_HisDailyRequire_De" ToRole="Q_Major" />
     <NavigationProperty Name="Q_Status" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_Status" FromRole="Q_HisDailyRequire_De" ToRole="Q_Status" />

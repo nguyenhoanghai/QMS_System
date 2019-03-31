@@ -150,6 +150,7 @@
     <Property Name="StatusId" Type="int" Nullable="false" />
     <Property Name="IsSendSMS" Type="bit" Nullable="false" />
     <Property Name="SmsContent" Type="nvarchar" MaxLength="1000" />
+    <Property Name="ServeOverCounter" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Q_Equipment">
     <Key>
@@ -245,6 +246,7 @@
     <Property Name="StatusId" Type="int" Nullable="false" />
     <Property Name="IsSendSMS" Type="bit" Nullable="false" />
     <Property Name="SmsContent" Type="nvarchar" MaxLength="1000" />
+    <Property Name="ServeOverCounter" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Q_HisUserEvaluate">
     <Key>

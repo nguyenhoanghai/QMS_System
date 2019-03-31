@@ -171,7 +171,7 @@ namespace QMS_System.Data.BLL
                         item.Counter = (find != null ? find.Name : "");
                     }
                 }
-                return users;
+                return users.OrderBy(x=>x.UserId).ToList();
             }
         }
 
@@ -208,13 +208,13 @@ namespace QMS_System.Data.BLL
                             {
                                 var first = dt.FirstOrDefault();
                                 if (first.StatusId == (int)eStatus.CHOXL && majorIds.Contains(first.MajorId))
-                                    model.CounterWaitingTickets += (useWithThridPattern == 0 ? item.TicketNumber : int.Parse(item.STT_PhongKham)) + " ";
+                                    model.CounterWaitingTickets += (useWithThridPattern == 0 ? item.TicketNumber.ToString() : (item.STT_PhongKham == null?"": item.STT_PhongKham));
                                 else if (first.StatusId == (int)eStatus.CHOXL && !majorIds.Contains(first.MajorId))
                                     model.AllWaitingTickets += item.TicketNumber + " ";
                             }
                             else if (dt != null && dt.Count() > 1)
                                 if (dt.Count(x => x.StatusId == (int)eStatus.CHOXL && majorIds.Contains(x.MajorId)) > 0)
-                                    model.CounterWaitingTickets += (useWithThridPattern == 0 ? item.TicketNumber : int.Parse(item.STT_PhongKham)) + " ";
+                                    model.CounterWaitingTickets += (useWithThridPattern == 0 ? item.TicketNumber.ToString() : (item.STT_PhongKham == null ? "" : item.STT_PhongKham)) ;
                         }
                     }
                     model.Counter = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipCode).Q_Counter.Name;
@@ -396,70 +396,24 @@ namespace QMS_System.Data.BLL
         /// <param name="equipCode"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        public bool CounterLoginLogOut(int userId, int equipCode, DateTime date)
+        public int CounterLoginLogOut(int userId, int equipCode, DateTime date)
         {
+            int num = 8888;
             try
-            {
+            {              
                 using (db = new QMSSystemEntities())
-                {
-                    //var obj = db.Q_LoginHistory.FirstOrDefault(x => x.Date.Year == date.Year && x.Date.Month == date.Month && x.Date.Day == date.Day && x.StatusId == (int)eStatus.LOGIN && (x.UserId == userId || x.EquipCode == equipCode));
-                    //if (obj == null)
-                    //{
-                    //    // chua log
-                    //    obj = new Q_LoginHistory() { UserId = userId, EquipCode = equipCode, StatusId = (int)eStatus.LOGIN, Date = date };
-                    //    db.Q_LoginHistory.Add(obj);
-                    //}
-                    //else
-                    //{
-                    //    if ((obj.EquipCode != equipCode && obj.UserId == userId) || (obj.EquipCode == equipCode && obj.UserId != userId))
-                    //    {
-                    //        // login on other counter
-                    //        obj.LogoutTime = date;
-                    //        obj.StatusId = (int)eStatus.LOGOUT;
-
-                    //        var newobj = new Q_LoginHistory() { UserId = userId, EquipCode = equipCode, StatusId = (int)eStatus.LOGIN, Date = date };
-                    //        db.Q_LoginHistory.Add(newobj);
-                    //    }
-                    //    else if (obj.EquipCode == equipCode && obj.UserId == userId)
-                    //    {
-                    //        // allready login => logout
-                    //        obj.LogoutTime = date;
-                    //        obj.StatusId = (int)eStatus.LOGOUT;
-
-                    //        var last = db.Q_DailyRequire_Detail.Where(x => x.Q_DailyRequire.PrintTime.Year == date.Year && x.Q_DailyRequire.PrintTime.Month == date.Month && x.Q_DailyRequire.PrintTime.Day == date.Day && x.UserId == userId && x.EquipCode == equipCode && x.StatusId == (int)eStatus.DAGXL);
-                    //        if (last != null && last.Count() > 0)
-                    //        {
-                    //            foreach (var item in last)
-                    //            {
-                    //                item.StatusId = (int)eStatus.HOTAT;
-                    //                item.EndProcessTime = DateTime.Now;
-                    //            }
-                    //        }
-                    //    }
-                    //}
-                    //db.SaveChanges();
-                    //return true;
-
-
+                { 
                     var obj = db.Q_Login.FirstOrDefault(x => x.StatusId == (int)eStatus.LOGIN && (x.UserId == userId || x.EquipCode == equipCode));
                     if (obj == null)
                     {
                         // chua log
                         obj = new Q_Login() { UserId = userId, EquipCode = equipCode, StatusId = (int)eStatus.LOGIN, Date = date };
                         db.Q_Login.Add(obj);
+                        num = 9999;
                     }
                     else
                     {
-                        if ((obj.EquipCode != equipCode && obj.UserId == userId) || (obj.EquipCode == equipCode && obj.UserId != userId))
-                        {
-                            // login on other counter
-                            obj.LogoutTime = date;
-                            obj.StatusId = (int)eStatus.LOGOUT;
-
-                            var newobj = new Q_Login() { UserId = userId, EquipCode = equipCode, StatusId = (int)eStatus.LOGIN, Date = date };
-                            db.Q_Login.Add(newobj);
-                        }
-                        else if (obj.EquipCode == equipCode && obj.UserId == userId)
+                       if (obj.EquipCode == equipCode && obj.UserId == userId)
                         {
                             // allready login => logout
                             obj.LogoutTime = date;
@@ -474,16 +428,26 @@ namespace QMS_System.Data.BLL
                                     item.EndProcessTime = DateTime.Now;
                                 }
                             }
+                            num = 8888;
+                        } else  
+                        {
+                            // login on other counter
+                            obj.LogoutTime = date;
+                            obj.StatusId = (int)eStatus.LOGOUT;
+
+                            var newobj = new Q_Login() { UserId = userId, EquipCode = equipCode, StatusId = (int)eStatus.LOGIN, Date = date };
+                            db.Q_Login.Add(newobj);
+                            num = 9999;
                         }
+                         
                     }
-                    db.SaveChanges();
-                    return true;
+                    db.SaveChanges(); 
                 }
             }
             catch (Exception)
             {
             }
-            return false;
+            return num;
         }
     }
 

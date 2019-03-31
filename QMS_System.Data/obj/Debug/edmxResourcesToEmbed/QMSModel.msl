@@ -152,6 +152,7 @@
     <EntitySetMapping Name="Q_DailyRequire_Detail">
       <EntityTypeMapping TypeName="QMSSystemModel.Q_DailyRequire_Detail">
         <MappingFragment StoreEntitySet="Q_DailyRequire_Detail">
+          <ScalarProperty Name="ServeOverCounter" ColumnName="ServeOverCounter" />
           <ScalarProperty Name="SmsContent" ColumnName="SmsContent" />
           <ScalarProperty Name="IsSendSMS" ColumnName="IsSendSMS" />
           <ScalarProperty Name="StatusId" ColumnName="StatusId" />
@@ -254,6 +255,7 @@
     <EntitySetMapping Name="Q_HisDailyRequire_De">
       <EntityTypeMapping TypeName="QMSSystemModel.Q_HisDailyRequire_De">
         <MappingFragment StoreEntitySet="Q_HisDailyRequire_De">
+          <ScalarProperty Name="ServeOverCounter" ColumnName="ServeOverCounter" />
           <ScalarProperty Name="SmsContent" ColumnName="SmsContent" />
           <ScalarProperty Name="IsSendSMS" ColumnName="IsSendSMS" />
           <ScalarProperty Name="StatusId" ColumnName="StatusId" />

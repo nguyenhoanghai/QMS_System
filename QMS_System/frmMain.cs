@@ -30,7 +30,9 @@ namespace QMS_System
             startNumber = 0,
             timeQuetComport = 50,
          PrintTicketCode = 50,
-            system = 0;
+            system = 0,
+            timesRepeatReadServeOver = 1,
+            _8cUseFor=1;
 
         public int UseWithThirdPattern = 0,
             AutoCallIfUserFree = 0;
@@ -44,8 +46,8 @@ namespace QMS_System
             isFinishRead = true,
             isFirstLoad = false,
             isErorr = false,
-            CheckServeOverTime = false,
-            isRunning = false;
+            isRunning = false,
+            autoCall = false;
         public static List<ServiceDayModel> lib_Services;
         public static List<RegisterUserCmdModel> lib_RegisterUserCmds;
         public static List<LoginHistoryModel> lib_Users;
@@ -60,9 +62,6 @@ namespace QMS_System
         public static bool IsDatabaseChange = false;
         public static SerialPort comPort = new SerialPort();
         public string lbSendrequest, lbSendData, lbPrinRequire;
-
-        List<CountServeOverTimeModel> countServeOverTime = new List<CountServeOverTimeModel>();
-        int timesRepeatReadServeOver = 1;
 
         public frmMain()
         {
@@ -638,15 +637,20 @@ namespace QMS_System
                     switch (BLLEquipment.Instance.GetEquipTypeId(int.Parse(hexStr[1])))
                     {
                         case (int)eEquipType.Counter:
-                            if (hexStr.Contains("8C"))   ///Login - Logout
+                            if (hexStr.Contains("8C") && _8cUseFor == 1)   ///Login - Logout
                             {
-                                if (BLLLoginHistory.Instance.CounterLoginLogOut(int.Parse((hexStr[3] == "FF" ? "00" : hexStr[3]) + "" + hexStr[4]), int.Parse(hexStr[1]), DateTime.Now))
-                                    dataSendToComport.Add(("AA " + hexStr[1] + " 00 00"));
-                                lib_Users = BLLLoginHistory.Instance.Gets_();
+                                //  MessageBox.Show("VO 8C");
+                                var num = BLLLoginHistory.Instance.CounterLoginLogOut(int.Parse((hexStr[3] == "FF" ? "00" : hexStr[3]) + "" + hexStr[4]), int.Parse(hexStr[1]), DateTime.Now);
+                              var  arrStr = GPRO_Helper.Instance.ChangeNumber(num);
+                                dataSendToComport.Add(("AA " + hexStr[1] + " " + arrStr[0] + " " + arrStr[1]));
+                                lib_Users = BLLLoginHistory.Instance.GetsForMain();
                                 IsDatabaseChange = true;
                             }
-                            else if (hexStr.Length >= 4)
+                            else if (hexStr.Length >= 4 || hexStr.Contains("8C"))
+                            {
+                              //  MessageBox.Show("VO COUNTER");
                                 CounterProcess(hexStr);
+                            }
                             break;
                         case (int)eEquipType.Printer:
                             if (hexStr[2] == "0A")
@@ -726,7 +730,8 @@ namespace QMS_System
                                 newNumber = ((int)rs.Data + 1);
                             }
                             else
-                                MessageBox.Show(rs.Errors[0].Message, rs.Errors[0].MemberName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                errorsms = rs.Errors[0].Message;
+                            //   MessageBox.Show(rs.Errors[0].Message, rs.Errors[0].MemberName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                     #endregion
@@ -742,7 +747,7 @@ namespace QMS_System
                             temp.Add(SoundLockPrintTicket);
                         else
                         {
-                            var rs = BLLDailyRequire.Instance.PrintNewTicket(serviceId, startNumber, businessId, now, printType, serObj.TimeProcess.TimeOfDay, Name, Address, DOB, MaBenhNhan, MaPhongKham, SttPhongKham, SoXe);
+                            var rs = BLLDailyRequire.Instance.PrintNewTicket(serviceId, startNumber, businessId, now, printType, (timeServeAllow != null ? timeServeAllow.Value : serObj.TimeProcess.TimeOfDay), Name, Address, DOB, MaBenhNhan, MaPhongKham, SttPhongKham, SoXe);
                             if (rs.IsSuccess)
                             {
                                 if (!isProgrammer)
@@ -758,7 +763,8 @@ namespace QMS_System
                                 newNumber = ((int)rs.Data + 1);
                             }
                             else
-                                MessageBox.Show(rs.Errors[0].Message, rs.Errors[0].MemberName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                errorsms = rs.Errors[0].Message;
+                            //  MessageBox.Show(rs.Errors[0].Message, rs.Errors[0].MemberName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                     #endregion
@@ -768,7 +774,8 @@ namespace QMS_System
                     int slCP = BLLBusiness.Instance.GetTicketAllow(businessId);
                     int slDacap = BLLDailyRequire.Instance.CountTicket(businessId);
                     if (slDacap != null && slDacap == slCP)
-                        MessageBox.Show("Doanh nghiệp của bạn đã được cấp đủ số lượng phiếu giới hạn trong ngày. Xin quý khách vui lòng quay lại sau.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        errorsms = ("Doanh nghiệp của bạn đã được cấp đủ số lượng phiếu giới hạn trong ngày. Xin quý khách vui lòng quay lại sau.");
+                    //  MessageBox.Show("Doanh nghiệp của bạn đã được cấp đủ số lượng phiếu giới hạn trong ngày. Xin quý khách vui lòng quay lại sau.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     else
                     {
                         lastTicket = BLLDailyRequire.Instance.GetLastTicketNumber(serviceId, today);
@@ -778,7 +785,8 @@ namespace QMS_System
                             if (serObj != null)
                             {
                                 err = true;
-                                MessageBox.Show("Dịch vụ không tồn tại. Xin quý khách vui lòng chọn dịch vụ khác.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                errorsms = ("Dịch vụ không tồn tại. Xin quý khách vui lòng chọn dịch vụ khác.");
+                                //  MessageBox.Show("Dịch vụ không tồn tại. Xin quý khách vui lòng chọn dịch vụ khác.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }
                             else
                                 lastTicket = serObj.StartNumber;
@@ -789,7 +797,8 @@ namespace QMS_System
                             if (serObj.EndNumber < lastTicket)
                             {
                                 err = true;
-                                MessageBox.Show("Dịch vụ này đã cấp hết phiếu trong ngày. Xin quý khách vui lòng chọn dịch vụ khác.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                errorsms = ("Dịch vụ này đã cấp hết phiếu trong ngày. Xin quý khách vui lòng chọn dịch vụ khác.");
+                                //  MessageBox.Show("Dịch vụ này đã cấp hết phiếu trong ngày. Xin quý khách vui lòng chọn dịch vụ khác.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }
                         }
                         if (!err)
@@ -814,18 +823,22 @@ namespace QMS_System
                     #endregion
                     break;
             }
+
             if (!string.IsNullOrEmpty(printStr))
             {
+                errorsms = printStr.ToString();
                 if (isTouchScreen)
                     dataSendToComport.Add("AA " + printerId);
                 dataSendToComport.Add(printStr);
             }
             if (AutoCallIfUserFree == 1 && nghiepVu > 0)
             {
-                var freeUser = BLLDailyRequire.Instance.CheckUserFree(nghiepVu, serviceId, newNumber).Data;
+                var freeUser = (int)BLLDailyRequire.Instance.CheckUserFree(nghiepVu, serviceId, newNumber).Data;
                 if (freeUser > 0)
                 {
-                    var str = ("AA," + ((int)freeUser).ToString() + ",8B,00,00");
+                    var counter = freeUser < 10 ? ("0" + freeUser) : freeUser.ToString();
+                    var str = ("AA," + counter + ",8B,00,00");
+                    autoCall = true;
                     CounterProcess(str.Split(',').ToArray());
                 }
             }
@@ -903,6 +916,8 @@ namespace QMS_System
         {
             try
             {
+               // lib_Users.Clear();
+              //  lib_Users = BLLLoginHistory.Instance.GetsForMain();
                 int equipCode = int.Parse(hexStr[1]);
                 var userobj = lib_Users.FirstOrDefault(x => x.EquipCode == equipCode);
                 if (userobj != null && userobj.UserId != 0)
@@ -922,6 +937,11 @@ namespace QMS_System
                             userRight = lib_RegisterUserCmds.Where(x => x.UserId == userId && x.CMDName == hexStr[2] && x.CMDParamName == "100").OrderBy(x => x.Index).ToList();
                         else
                             userRight = lib_RegisterUserCmds.Where(x => x.UserId == userId && x.CMDName == hexStr[2] && x.CMDParamName == code.ToString()).OrderBy(x => x.Index).ToList();
+                    }
+                   else if (hexStr[2] == eCodeHex.Sao && _8cUseFor == 2) //2=> đổi tg phuc vu
+                    { 
+                        // nếu là * lấy cái tham số lệnh = 0 xử lý cho trường hợp đổi thời gian phục vụ DK
+                        userRight = lib_RegisterUserCmds.Where(x => x.UserId == userId && x.CMDName == hexStr[2] && x.CMDParamName == "0").OrderBy(x => x.Index).ToList();
                     }
                     else if (hexStr[3] == "00")
                     {
@@ -1010,22 +1030,31 @@ namespace QMS_System
                                     {
                                         case eActionParam.MOIKH: // gui so len counter
                                             arrStr = GPRO_Helper.Instance.ChangeNumber(newTicket);
-                                            // SendRequest(("AA " + hexStr[1]));
+                                            if (autoCall)
+                                            {
+                                                dataSendToComport.Add(("AA " + hexStr[1] + " " + arrStr[0] + " " + arrStr[1]));
+                                                autoCall = false;
+                                            }
                                             dataSendToComport.Add(("AA " + hexStr[1] + " " + arrStr[0] + " " + arrStr[1]));
                                             break;
                                         case eActionParam.TKHDG:
                                             arrStr = GPRO_Helper.Instance.ChangeNumber(BLLDailyRequire.Instance.CountTicketDoneProcessed(equipCode));
-                                            // SendRequest(("AA " + hexStr[1]));
+
                                             dataSendToComport.Add(("AA " + hexStr[1] + " " + arrStr[0] + " " + arrStr[1]));
                                             break;
                                         case eActionParam.THKCG:
                                             arrStr = GPRO_Helper.Instance.ChangeNumber(BLLDailyRequire.Instance.CountTicketWatingProcessed(equipCode));
-                                            // SendRequest(("AA " + hexStr[1]));
+
                                             dataSendToComport.Add(("AA " + hexStr[1] + " " + arrStr[0] + " " + arrStr[1]));
                                             break;
                                         case eActionParam.HITHI: // gui so len counter
                                             arrStr = GPRO_Helper.Instance.ChangeNumber(currentTicket);
-                                            // SendRequest(("AA " + hexStr[1]));
+                                            dataSendToComport.Add(("AA " + hexStr[1] + " " + arrStr[0] + " " + arrStr[1]));
+                                            break;
+                                        case eActionParam.DOITHOIGIANPV:
+                                            int minutes = 0;
+                                            int.TryParse((hexStr[3] + "" + hexStr[4]), out minutes);
+                                            arrStr = GPRO_Helper.Instance.ChangeNumber(BLLDailyRequire.Instance.UpdateServeTime(userId,minutes));
                                             dataSendToComport.Add(("AA " + hexStr[1] + " " + arrStr[0] + " " + arrStr[1]));
                                             break;
                                     }
@@ -1150,7 +1179,8 @@ namespace QMS_System
                     }
                 }
                 else
-                    MessageBox.Show("Không tìm thấy thông tin đăng nhập của thiết bị " + equipCode, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    errorsms = ("Không tìm thấy thông tin đăng nhập của thiết bị " + equipCode);
+                //  MessageBox.Show("Không tìm thấy thông tin đăng nhập của thiết bị " + equipCode, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             }
             catch (Exception ex)
@@ -1232,7 +1262,6 @@ namespace QMS_System
                     BLLLoginHistory.Instance.ResetDailyLoginInfor(today, GetConfigByCode(eConfigCode.AutoSetLoginFromYesterday));
                     BLLDailyRequire.Instance.CopyHistory();
                     Settings.Default.Today = DateTime.Now.Day;
-                    Settings.Default.CountServeOverTime = "";
                     Settings.Default.Save();
                     query += "update q_counter set lastcall = 0 ,isrunning =1";
                     BLLSQLBuilder.Instance.Excecute(query);
@@ -1245,22 +1274,6 @@ namespace QMS_System
             }
             else
                 errorsms = "";
-
-            if (isFirstLoad)
-            {
-                if (!string.IsNullOrEmpty(Settings.Default.CountServeOverTime))
-                {
-                    try
-                    {
-                        countServeOverTime = JsonConvert.DeserializeObject<List<CountServeOverTimeModel>>(Settings.Default.CountServeOverTime);
-                    }
-                    catch (Exception ex)
-                    {
-                        countServeOverTime = new List<CountServeOverTimeModel>();
-                    }
-                }
-                isFirstLoad = false;
-            }
 
             try
             {
@@ -1313,11 +1326,12 @@ namespace QMS_System
 
         private void barButtonItem6_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            if (radioLenh.EditValue.ToString().Contains("8C"))   ///Login - Logout
+            if (radioLenh.EditValue.ToString().Contains("8C") && _8cUseFor==1)   ///Login - Logout
             {
-                if (BLLLoginHistory.Instance.CounterLoginLogOut(int.Parse((txtparam1.EditValue.ToString() + txtparam2.EditValue.ToString())), int.Parse(txtmatb.EditValue.ToString()), DateTime.Now))
-                    dataSendToComport.Add(("AA " + txtmatb.EditValue.ToString() + " 00 00"));
-                lib_Users = BLLLoginHistory.Instance.Gets_();
+                var num = (BLLLoginHistory.Instance.CounterLoginLogOut(int.Parse((txtparam1.EditValue.ToString() + txtparam2.EditValue.ToString())), int.Parse(txtmatb.EditValue.ToString()), DateTime.Now));
+                var arrStr = GPRO_Helper.Instance.ChangeNumber(num);
+                dataSendToComport.Add(("AA " + txtmatb.EditValue.ToString() + " "+arrStr[0]+" "+arrStr[1]));
+                lib_Users = BLLLoginHistory.Instance.GetsForMain();
                 IsDatabaseChange = true;
             }
             else
@@ -1418,6 +1432,7 @@ namespace QMS_System
                     int.TryParse(GetConfigByCode(eConfigCode.UseWithThirdPattern), out UseWithThirdPattern);
                     int.TryParse(GetConfigByCode(eConfigCode.AutoCallIfUserFree), out AutoCallIfUserFree);
                     int.TryParse(GetConfigByCode(eConfigCode.System), out system);
+                    int.TryParse(GetConfigByCode(eConfigCode._8cUseFor), out _8cUseFor);
 
                     int time = 1000;
                     int.TryParse(GetConfigByCode(eConfigCode.TimerQuetServeOverTime), out time);
@@ -1452,7 +1467,7 @@ namespace QMS_System
             try
             {
                 var dayInfos = BLLDailyRequire.Instance.GetDayInfo(true, 16, new int[] { }, null);
-                var overs = dayInfos.Details.Where(x => x.IsEndTime).ToList();
+                var overs = dayInfos.Details.Where(x => x.IsEndTime && x.ReadServeOverCounter < timesRepeatReadServeOver).ToList();
                 if (overs != null && overs.Count > 0)
                 {
                     var cfName = BLLConfig.Instance.GetConfigByCode(eConfigCode.TemplateSoundServeOverTime);
@@ -1460,22 +1475,9 @@ namespace QMS_System
                     if (readSoundCf != null)
                     {
                         for (int i = 0; i < overs.Count; i++)
-                        {
-                            var found = countServeOverTime.FirstOrDefault(x => x.CounterId == overs[i].TableId && x.Ticket == overs[i].TicketNumber);
-                            if (found != null)
-                            {
-                                if (found.ReadTimes < timesRepeatReadServeOver)
-                                {
-                                    found.ReadTimes++;
-                                    GetSound(new List<int>() { readSoundCf.Id }, "0", overs[i].TableId);
-                                }
-                            }
-                            else
-                            {
-                                countServeOverTime.Add(new CountServeOverTimeModel() { ReadTimes = 1, CounterId = overs[i].TableId, Ticket = overs[i].TicketNumber });
-                                GetSound(new List<int>() { readSoundCf.Id }, "0", overs[i].TableId);
-                            }
-                        }
+                            GetSound(new List<int>() { readSoundCf.Id }, "0", overs[i].TableId);
+
+                        BLLDailyRequire.Instance.UpdateCounterRepeatServeOver(overs.Select(x => x.STT).ToList());
                     }
                 }
             }
@@ -1488,8 +1490,7 @@ namespace QMS_System
 
         private void frmMain_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Settings.Default.CountServeOverTime = JsonConvert.SerializeObject(countServeOverTime);
-            Settings.Default.Save();
+
         }
     }
 }

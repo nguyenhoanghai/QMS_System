@@ -398,6 +398,7 @@ E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\EPPlus.dll
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\Newtonsoft.Json.Net20.dll
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\PagedList.dll
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\QMS_System.Data.dll
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\System.Net.Http.Formatting.dll
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\SystemGPRO.Serial.dll
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\GPRO.Ultilities.dll
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\Microsoft.SqlServer.Types.dll
@@ -555,6 +556,7 @@ E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmPolicy.resourc
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmProcess.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmMain.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmRecieverSMS.resources
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmR_DanhGia.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmR_DetailByTimeRange.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmR_DetailInDay.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmR_GeneralByTimeRange.resources
@@ -568,6 +570,8 @@ E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmUser.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmUserCmdRegister.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmUserCommandReadSound.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmUserMajor.resources
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmVideo.resources
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmVideoTemplate.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.Properties.Resources.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.Report.R_DetailInDayByUser.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.IssueTicketScreen.frmButtonStyle.resources
@@ -580,7 +584,3 @@ E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.csproj.CoreCompil
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.csproj.CopyComplete
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.exe
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.pdb
-E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmVideo.resources
-E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmVideoTemplate.resources
-E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\System.Net.Http.Formatting.dll
-E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmR_DanhGia.resources

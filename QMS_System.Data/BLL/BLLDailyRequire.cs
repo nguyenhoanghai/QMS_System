@@ -876,7 +876,7 @@ namespace QMS_System.Data.BLL
                         strTimeCL = "0",
                         strServeTimeAllow = "0",
                         GioGiaoDK = "0",
-                        TienDoTH = 0
+                        TienDoTH = 0,
                     }).ToList());
 
                     var objs = db_.Q_DailyRequire_Detail.Where(x => x.StatusId == (int)eStatus.DAGXL).Select(x => new ViewDetailModel()
@@ -896,7 +896,8 @@ namespace QMS_System.Data.BLL
                         TimeProcess = "0",
                         StartStr = "0",
                         GioGiaoDK = "0",
-                        TienDoTH = 0
+                        TienDoTH = 0,
+                        ReadServeOverCounter = x.ServeOverCounter
                     }).ToList();
 
                     if (dayInfo.Details.Count > 0 && objs.Count > 0)
@@ -918,7 +919,8 @@ namespace QMS_System.Data.BLL
                                     //fObj.Temp = find.Start;
                                     //find.Temp = find.Start;
                                 }
-
+                                item.STT = find.STT;
+                                item.ReadServeOverCounter = find.ReadServeOverCounter;
                                 item.CarNumber = !string.IsNullOrEmpty(find.CarNumber) ? find.CarNumber : "0";
                                 item.TicketNumber = find.TicketNumber;
                                 item.Start = find.Start;
@@ -927,7 +929,7 @@ namespace QMS_System.Data.BLL
                                 {
                                     TimeSpan time = DateTime.Now.Subtract(item.Start.Value);
                                     item.TimeProcess = time.ToString(@"hh\:mm").Replace(":", "<label class='blue'>:</label>");
-                                    item.StartStr = item.Start.Value.ToString(@"hh\:mm tt").Replace(":", "<label class='blue'>:</label>");
+                                    item.StartStr = item.Start.Value.ToString(@"hh\:mm").Replace(":", "<label class='blue'>:</label>");
 
                                     DateTime tgtc = item.Start.Value.Add(find.ServeTimeAllow);
                                     TimeSpan tgcl = tgtc.TimeOfDay.Subtract(DateTime.Now.TimeOfDay);
@@ -941,7 +943,7 @@ namespace QMS_System.Data.BLL
                                     else
                                         item.strTimeCL = tgcl.ToString(@"hh\:mm").Replace(":", "<label class='blue'>:</label>");
 
-                                    item.GioGiaoDK = item.Start.Value.AddSeconds(find.ServeTimeAllow.TotalSeconds).ToString(@"hh\:mm tt").Replace(":", "<label class='blue'>:</label>");
+                                    item.GioGiaoDK = item.Start.Value.AddSeconds(find.ServeTimeAllow.TotalSeconds).ToString(@"hh\:mm").Replace(":", "<label class='blue'>:</label>");
 
                                     decimal tiendo = 100;
                                     if (find.ServeTimeAllow.TotalSeconds > 0)
@@ -1130,7 +1132,7 @@ namespace QMS_System.Data.BLL
                         if (businessId != 0)
                             obj.BusinessId = businessId;
                         obj.PrintTime = printTime;
-                        obj.ServeTimeAllow = nv.Q_Service.TimeProcess.TimeOfDay;
+                        obj.ServeTimeAllow = serveTimeAllow;
                         obj.CustomerName = Name;
                         obj.CustomerDOB = DOB;
                         obj.CustomerAddress = Address;
@@ -1520,13 +1522,15 @@ namespace QMS_System.Data.BLL
             using (var db = new QMSSystemEntities())
             {
                 var waitingTickets = (from x in db.Q_DailyRequire_Detail
-                                      where x.Q_DailyRequire.TicketNumber != withoutTicketNumber &&
+                                      where //x.Q_DailyRequire.TicketNumber != withoutTicketNumber &&
                                               x.Q_DailyRequire.ServiceId == serviceId &&
                                               x.StatusId == (int)eStatus.CHOXL &&
                                               !x.UserId.HasValue
                                       select x).ToList();
-                if (waitingTickets.Count == 0)
+                if (waitingTickets.Count > 0)
                 {
+                    var currentLogins = (from x in db.Q_Login where x.StatusId == (int)eStatus.LOGIN select x.UserId).ToArray();
+
                     //lay user co nghiep vu 
                     var userIds = (from x in db.Q_UserMajor
                                    where !x.IsDeleted && !x.Q_Major.IsDeleted && !x.Q_User.IsDeleted && x.MajorId == majorId
@@ -1535,25 +1539,60 @@ namespace QMS_System.Data.BLL
                     {
                         // lấy user nào đã gọi dc 1 phieu tro len
                         var loginUsers = (from x in db.Q_DailyRequire_Detail
-                                          where x.UserId.HasValue && userIds.Contains(x.UserId.Value)
+                                          where x.UserId.HasValue && userIds.Contains(x.UserId.Value) && currentLogins.Contains(x.UserId.Value)
                                           select x.UserId).Distinct().ToList();
                         if (loginUsers.Count > 0)
                         {
                             var processingUsers = (from x in db.Q_DailyRequire_Detail where x.StatusId == (int)eStatus.DAGXL select x.UserId).ToList();
-                            if (processingUsers.Count != loginUsers.Count)
-                            {
+                            if (processingUsers.Count > 0)
                                 loginUsers = loginUsers.Where(x => !processingUsers.Contains(x)).ToList();
-                                var freeUser = (from x in db.Q_DailyRequire_Detail
-                                                where x.StatusId == (int)eStatus.HOTAT && loginUsers.Contains(x.UserId.Value)
-                                                orderby x.EndProcessTime.Value
-                                                select x.UserId).FirstOrDefault();
-                                if (freeUser != null)
-                                    rs.Data = freeUser;
-                            }
+                            var freeUser = (from x in db.Q_DailyRequire_Detail
+                                            where x.StatusId == (int)eStatus.HOTAT && loginUsers.Contains(x.UserId.Value)
+                                            orderby x.EndProcessTime.Value descending
+                                            select x.UserId).Distinct().FirstOrDefault();
+                            if (freeUser != null)
+                                rs.Data = freeUser; 
                         }
                     }
                 }
                 return rs;
+            }
+        }
+
+        public void UpdateCounterRepeatServeOver(List<int> dailyDetailIds)
+        {
+            using (var db = new QMSSystemEntities())
+            {
+                var details = from x in db.Q_DailyRequire_Detail where dailyDetailIds.Contains(x.Id) select x;
+                if (details != null && details.Count() > 0)
+                {
+                    foreach (var item in details)
+                    {
+                        item.ServeOverCounter = item.ServeOverCounter + 1;
+                        db.Entry<Q_DailyRequire_Detail>(item).State = System.Data.Entity.EntityState.Modified;
+                    }
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        public int UpdateServeTime(int userId, int minutes)
+        {
+            using (var db = new QMSSystemEntities())
+            {
+                var ticketDetail = (from x in db.Q_DailyRequire_Detail where x.UserId.HasValue && x.UserId == userId && x.StatusId == (int)eStatus.DAGXL select x).FirstOrDefault();
+                if (ticketDetail != null)
+                {
+                    var ticket = (from x in db.Q_DailyRequire where x.Id == ticketDetail.DailyRequireId select x).FirstOrDefault();
+                    if (ticket != null)
+                    {
+                        ticket.ServeTimeAllow = new TimeSpan(0, minutes, 0);
+                        db.Entry(ticket).State = System.Data.Entity.EntityState.Modified;
+                        db.SaveChanges();
+                        return ticket.TicketNumber;
+                    }
+                }
+                return 0;
             }
         }
     }
