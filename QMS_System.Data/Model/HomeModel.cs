@@ -18,5 +18,7 @@ namespace QMS_System.Data.Model
         public string CounterWaitingTickets { get; set; }
         public string AllWaitingTickets { get; set; }
         public int EquipCode { get; set; }
+        public int CountWaitAtCounter { get; set; }
+        public bool IsLogout { get; set; }
     }
 }

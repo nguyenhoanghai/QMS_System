@@ -31,7 +31,7 @@ namespace QMS_System.Data.BLL
         {
             try
             {
-                var nv = db.Q_User.FirstOrDefault(x =>!x.IsDeleted && x.Id != Id && x.Name.Trim().ToUpper().Equals(keyword));
+                var nv = db.Q_User.FirstOrDefault(x => !x.IsDeleted && x.Id != Id && x.Name.Trim().ToUpper().Equals(keyword));
                 if (nv == null)
                     return false;
                 return true;
@@ -227,6 +227,29 @@ namespace QMS_System.Data.BLL
                 return obj;
             }
         }
+        public UserModel GetByUserName(string userName)
+        {
+            using (db = new QMSSystemEntities())
+            {
+                return (from x in db.Q_User
+                        where !x.IsDeleted && x.UserName.Trim().Equals(userName)
+                        select
+                            new UserModel()
+                            {
+                            Id = x.Id,
+                            Name = x.Name,
+                            Sex = x.Sex,
+                            Address = x.Address,
+                            Avatar = x.Avatar,
+                            Professional = x.Professional,
+                            Position = x.Position,
+                            WorkingHistory = x.WorkingHistory,
+                            UserName = x.UserName,
+                            Password = x.Password,
+                            Counters = x.Counters
+                            }).FirstOrDefault();
+            }
+        }
 
         public Q_User Get(string userName, string password)
         {
@@ -294,7 +317,7 @@ namespace QMS_System.Data.BLL
                 if (user != null && !string.IsNullOrEmpty(user.Avatar))
                     return user.Avatar;
                 return string.Empty;
-            }            
+            }
         }
     }
 }

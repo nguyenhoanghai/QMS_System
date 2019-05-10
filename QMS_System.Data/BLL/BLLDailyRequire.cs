@@ -750,6 +750,7 @@ namespace QMS_System.Data.BLL
                 return db.Q_DailyRequire_Detail.Where(x => x.StatusId == (int)eStatus.HOTAT && x.EquipCode == equipCode).Count();
             }
         }
+
         public int CountTicketWatingProcessed(int equipCode)
         {
             using (db = new QMSSystemEntities())
@@ -809,6 +810,7 @@ namespace QMS_System.Data.BLL
                 return (num != null ? num : 0);
             }
         }
+
         public int GetLastTicketNumber(int serviceId, DateTime date)
         {
             using (db = new QMSSystemEntities())
@@ -1079,8 +1081,7 @@ namespace QMS_System.Data.BLL
                 }
             }
         }
-
-
+        
         /// <summary>
         /// Print ticket
         /// </summary>

@@ -69,8 +69,44 @@ namespace QMS_System
         }
         private void frmMain_Load(object sender, EventArgs e)
         {
-            //   BLLUserEvaluate.Instance.Evaluate("nv16", "1_1", 0, "0");
+            configs = BLLConfig.Instance.Gets();
+            soundPath = GetConfigByCode(eConfigCode.SoundPath);
+            SoundLockPrintTicket = GetConfigByCode(eConfigCode.SoundLockPrintTicket);
+            CheckTimeBeforePrintTicket = GetConfigByCode(eConfigCode.CheckTimeBeforePrintTicket);
 
+            int.TryParse(GetConfigByCode(eConfigCode.PrintType), out printType);
+            int.TryParse(GetConfigByCode(eConfigCode.StartNumber), out startNumber);
+            int.TryParse(GetConfigByCode(eConfigCode.TimeWaitForRecieveData), out timeQuetComport);
+            int.TryParse(GetConfigByCode(eConfigCode.PrintTicketCode), out PrintTicketCode);
+            int.TryParse(GetConfigByCode(eConfigCode.TimesRepeatReadServeOver), out timesRepeatReadServeOver);
+            int.TryParse(GetConfigByCode(eConfigCode.UseWithThirdPattern), out UseWithThirdPattern);
+            int.TryParse(GetConfigByCode(eConfigCode.AutoCallIfUserFree), out AutoCallIfUserFree);
+            int.TryParse(GetConfigByCode(eConfigCode.System), out system);
+            int.TryParse(GetConfigByCode(eConfigCode._8cUseFor), out _8cUseFor);
+
+            var query = @"delete from Q_CounterSoftSound ";
+            if (Settings.Default.Today != DateTime.Now.Day)
+            {
+                try
+                {
+                    errorsms = "sang ngày mới " + DateTime.Now.Day;
+                    BLLLoginHistory.Instance.ResetDailyLoginInfor(today, GetConfigByCode(eConfigCode.AutoSetLoginFromYesterday));
+                    BLLDailyRequire.Instance.CopyHistory();
+                    Settings.Default.Today = DateTime.Now.Day;
+                    Settings.Default.Save();
+                    query += "update q_counter set lastcall = 0 ,isrunning =1";
+                    BLLSQLBuilder.Instance.Excecute(query);
+                    lib_Users = BLLLoginHistory.Instance.GetsForMain();
+                }
+                catch (Exception ex)
+                {
+                    //   MessageBox.Show(ex.ToString(), "New day");
+                }
+            }
+            else
+                errorsms = "";
+             
+            btRunProcess.PerformClick();
         }
 
         private Form IsActive(Type ftype)
@@ -1419,21 +1455,7 @@ namespace QMS_System
                     lib_ReadTemplates = BLLReadTemplate.Instance.GetsForMain();
                     lib_CounterSound = BLLCounterSound.Instance.Gets();
                     lib_Services = BLLService.Instance.GetsForMain();
-                    configs = BLLConfig.Instance.Gets();
-                    soundPath = GetConfigByCode(eConfigCode.SoundPath);
-                    SoundLockPrintTicket = GetConfigByCode(eConfigCode.SoundLockPrintTicket);
-                    CheckTimeBeforePrintTicket = GetConfigByCode(eConfigCode.CheckTimeBeforePrintTicket);
-
-                    int.TryParse(GetConfigByCode(eConfigCode.PrintType), out printType);
-                    int.TryParse(GetConfigByCode(eConfigCode.StartNumber), out startNumber);
-                    int.TryParse(GetConfigByCode(eConfigCode.TimeWaitForRecieveData), out timeQuetComport);
-                    int.TryParse(GetConfigByCode(eConfigCode.PrintTicketCode), out PrintTicketCode);
-                    int.TryParse(GetConfigByCode(eConfigCode.TimesRepeatReadServeOver), out timesRepeatReadServeOver);
-                    int.TryParse(GetConfigByCode(eConfigCode.UseWithThirdPattern), out UseWithThirdPattern);
-                    int.TryParse(GetConfigByCode(eConfigCode.AutoCallIfUserFree), out AutoCallIfUserFree);
-                    int.TryParse(GetConfigByCode(eConfigCode.System), out system);
-                    int.TryParse(GetConfigByCode(eConfigCode._8cUseFor), out _8cUseFor);
-
+                    
                     int time = 1000;
                     int.TryParse(GetConfigByCode(eConfigCode.TimerQuetServeOverTime), out time);
                     InitComPort();

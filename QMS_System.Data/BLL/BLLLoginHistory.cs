@@ -26,6 +26,7 @@ namespace QMS_System.Data.BLL
         }
         private BLLLoginHistory() { }
         #endregion
+
         public List<LoginHistoryModel> GetsForMain()
         {
             using (db = new QMSSystemEntities())
@@ -92,9 +93,9 @@ namespace QMS_System.Data.BLL
                     {
                         for (int i = 0; i < yes.Count; i++)
                         {
-                            obj = new Q_LoginHistory();
-                            Parse.CopyObject(yes[i], ref obj);
-                            db.Q_LoginHistory.Add(obj);
+                            //obj = new Q_LoginHistory();
+                            //Parse.CopyObject(yes[i], ref obj);
+                            //db.Q_LoginHistory.Add(obj);
 
                             if (!code.Contains(yes[i].EquipCode))
                             {
@@ -110,12 +111,12 @@ namespace QMS_System.Data.BLL
                     }
                     else
                     {
-                        for (int i = 0; i < yes.Count; i++)
-                        {
-                            obj = new Q_LoginHistory();
-                            Parse.CopyObject(yes[i], ref obj);
-                            db.Q_LoginHistory.Add(obj);
-                        }
+                        //for (int i = 0; i < yes.Count; i++)
+                        //{
+                        //    obj = new Q_LoginHistory();
+                        //    Parse.CopyObject(yes[i], ref obj);
+                        //    db.Q_LoginHistory.Add(obj);
+                        //}
                     }
                     db.Q_Login.RemoveRange(yes);
                     db.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Q_Login', RESEED, 0); ");
@@ -160,9 +161,9 @@ namespace QMS_System.Data.BLL
                             if (useWithThridPattern == 0)
                                 item.CurrentTicket = current.Q_DailyRequire.TicketNumber;
                             else
-                            { 
+                            {
                                 if (current.Q_DailyRequire.STT_PhongKham != null)
-                                    item.CurrentTicket = int.Parse(current.Q_DailyRequire.STT_PhongKham);  
+                                    item.CurrentTicket = int.Parse(current.Q_DailyRequire.STT_PhongKham);
                             }
 
                             item.CommingTime = current.ProcessTime;
@@ -171,10 +172,18 @@ namespace QMS_System.Data.BLL
                         item.Counter = (find != null ? find.Name : "");
                     }
                 }
-                return users.OrderBy(x=>x.UserId).ToList();
+                return users.OrderBy(x => x.UserId).ToList();
             }
         }
 
+        /// <summary>
+        /// counter soft
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="equipCode"></param>
+        /// <param name="date"></param>
+        /// <param name="useWithThridPattern"></param>
+        /// <returns></returns>
         public HomeModel GetForHome(int userId, int equipCode, DateTime date, int useWithThridPattern)
         {
             var model = new HomeModel();
@@ -198,9 +207,10 @@ namespace QMS_System.Data.BLL
                             model.CurrentTicket = int.Parse(current.Q_DailyRequire.STT_PhongKham);
                         model.CommingTime = current.ProcessTime;
                     }
-
+                    model.CountWaitAtCounter = 0;
                     if (rq.Count() > 0)
                     {
+                        int diemDoiTaiQuay = 0;
                         foreach (var item in rq)
                         {
                             var dt = dailyDetails.Where(x => x.DailyRequireId == item.Id).ToList();
@@ -208,89 +218,29 @@ namespace QMS_System.Data.BLL
                             {
                                 var first = dt.FirstOrDefault();
                                 if (first.StatusId == (int)eStatus.CHOXL && majorIds.Contains(first.MajorId))
-                                    model.CounterWaitingTickets += (useWithThridPattern == 0 ? item.TicketNumber.ToString() : (item.STT_PhongKham == null?"": item.STT_PhongKham));
+                                {
+                                    model.CounterWaitingTickets += ((useWithThridPattern == 0 ? item.TicketNumber.ToString() : (item.STT_PhongKham == null ? " " : item.STT_PhongKham)) + " ");
+                                    diemDoiTaiQuay++;
+                                }
                                 else if (first.StatusId == (int)eStatus.CHOXL && !majorIds.Contains(first.MajorId))
                                     model.AllWaitingTickets += item.TicketNumber + " ";
                             }
                             else if (dt != null && dt.Count() > 1)
                                 if (dt.Count(x => x.StatusId == (int)eStatus.CHOXL && majorIds.Contains(x.MajorId)) > 0)
-                                    model.CounterWaitingTickets += (useWithThridPattern == 0 ? item.TicketNumber.ToString() : (item.STT_PhongKham == null ? "" : item.STT_PhongKham)) ;
+                                {
+                                    model.CounterWaitingTickets += ((useWithThridPattern == 0 ? item.TicketNumber.ToString() : (item.STT_PhongKham == null ? " " : item.STT_PhongKham)) + " ");
+                                    diemDoiTaiQuay++;
+                                }
                         }
+                        model.CountWaitAtCounter = diemDoiTaiQuay;
                     }
                     model.Counter = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipCode).Q_Counter.Name;
                 }
+                else
+                    model.IsLogout = true;
                 return model;
             }
         }
-
-        //public void LogOutAllUser()
-        //{
-        //    try
-        //    {
-        //        using (db = new QMSSystemEntities())
-        //        {
-        //            var lg = db.Q_LoginHistory.Where(x => x.StatusId == (int)eStatus.LOGIN).ToList();
-        //            if (lg.Count > 0)
-        //            {
-        //                var now = DateTime.Now;
-        //                for (int i = 0; i < lg.Count; i++)
-        //                {
-        //                    lg[i].StatusId = (int)eStatus.LOGOUT;
-        //                    lg[i].LogoutTime = now;
-        //                }
-        //                db.SaveChanges();
-        //            }
-        //        }
-        //    }
-        //    catch (Exception)
-        //    { }
-        //}
-
-        /// <summary>
-        /// Reset user infor for new day
-        /// </summary>
-        //public void ResetUsers()
-        //{
-        //    try
-        //    {
-        //        using (db = new QMSSystemEntities())
-        //        {
-        //            var lg = db.Q_LoginHistory.ToList();
-        //            if (lg.Count > 0)
-        //            {
-        //                var now = DateTime.Now;
-        //                int[] userIds = lg.Select(x => x.UserId).Distinct().ToArray();
-        //                Q_LoginHistory found;
-        //                for (int i = 0; i < userIds.Length; i++)
-        //                {
-        //                    found = lg.Where(x => x.UserId == userIds[i]).OrderByDescending(x => x.Date).FirstOrDefault();
-        //                    found.StatusId = (int)eStatus.LOGIN;
-        //                    found.Date = now;
-        //                    found.Ticket = 0;
-        //                    found.Done = 0;
-        //                    found.Waitting = 0;
-        //                    found.Start = null;
-        //                    found.LogoutTime = null;
-        //                }
-
-        //                //for (int i = 0; i < lg.Count; i++)
-        //                //{
-        //                //    lg[i].StatusId = (int)eStatus.LOGIN;
-        //                //    lg[i].Date = now;
-        //                //    lg[i].Ticket = 0;
-        //                //    lg[i].Done = 0;
-        //                //    lg[i].Waitting = 0;
-        //                //    lg[i].Start = null;
-        //                //    lg[i].LogoutTime = null;
-        //                //}
-        //                db.SaveChanges();
-        //            }
-        //        }
-        //    }
-        //    catch (Exception)
-        //    { }
-        //}
-
 
         public bool Login(Q_LoginHistory obj)
         {
@@ -322,53 +272,64 @@ namespace QMS_System.Data.BLL
                     {
                         Login login = null;
                         var now = DateTime.Now;
-                        //var obj = db.Q_LoginHistory.FirstOrDefault(x => x.StatusId == (int)eStatus.LOGIN && (x.UserId == user.Id || x.EquipCode == equipCode));
-                        //if (obj == null)
-                        //{
-                        //    // chua log
-                        //    obj = new Q_LoginHistory() { UserId = user.Id, EquipCode = equipCode, StatusId = (int)eStatus.LOGIN, Date = now };
-                        //    db.Q_LoginHistory.Add(obj);
-                        //    login = new Login() { UserName = user.Name, EquipCode = equipCode, LoginTime = now.ToString("dd/MM/yyyy HH:mm"), UserId = user.Id, CounterId = equipObj.CounterId, CounterName = equipObj.Q_Counter.Name };
-                        //}
-                        //else
-                        //{
-                        //    if ((obj.EquipCode != equipCode && obj.UserId == user.Id) || (obj.EquipCode == equipCode && obj.UserId != user.Id))
-                        //    {
-                        //        // login on other counter
-                        //        obj.LogoutTime = now;
-                        //        obj.StatusId = (int)eStatus.LOGOUT;
-
-                        //        var newobj = new Q_LoginHistory() { UserId = user.Id, EquipCode = equipCode, StatusId = (int)eStatus.LOGIN, Date = now };
-                        //        db.Q_LoginHistory.Add(newobj);
-                        //        login = new Login() { UserName = user.Name, EquipCode = equipCode, LoginTime = now.ToString("dd/MM/yyyy HH:mm"), UserId = user.Id, CounterId = equipObj.CounterId, CounterName = equipObj.Q_Counter.Name };
-                        //    }
-                        //    else if (obj.EquipCode == equipCode && obj.UserId == user.Id)
-                        //        login = new Login() { UserName = user.Name, EquipCode = equipCode, LoginTime = obj.Date.ToString("dd/MM/yyyy HH:mm"), UserId = user.Id, CounterId = equipObj.CounterId, CounterName = equipObj.Q_Counter.Name };
-                        //}
-
-
-
-                        var obj = db.Q_Login.FirstOrDefault(x => x.UserId == user.Id && x.EquipCode == equipCode);
-                        if (obj == null)
+                        var objs = db.Q_Login.Where(x => x.UserId == user.Id && x.EquipCode != equipCode && x.StatusId == (int)eStatus.LOGIN).ToList();
+                        if (objs.Count > 0)
                         {
-                            obj = new Q_Login() { UserId = user.Id, EquipCode = equipCode, StatusId = (int)eStatus.LOGIN, Date = now };
-                            db.Q_Login.Add(obj);
-                            login = new Login() { UserName = user.Name, EquipCode = equipCode, LoginTime = now.ToString("dd/MM/yyyy HH:mm"), UserId = user.Id, CounterId = equipObj.CounterId, CounterName = equipObj.Q_Counter.Name };
+                            rs.IsSuccess = false;
+                            rs.sms = "Tài khoản " + userName + " đã được đăng nhập ở quầy '" + objs[0].EquipCode + "' .Bạn cần phải đăng xuất khỏi quầy '" + objs[0].EquipCode + "' trước sau đó mới có thể đăng nhập vào quầy này được.";
                         }
                         else
                         {
-                            obj.LogoutTime = null;
-                            obj.StatusId = (int)eStatus.LOGIN;
-                            login = new Login() { UserName = user.Name, EquipCode = equipCode, LoginTime = now.ToString("dd/MM/yyyy HH:mm"), UserId = user.Id, CounterId = equipObj.CounterId, CounterName = equipObj.Q_Counter.Name };
-                        }
-                        db.SaveChanges();
-                        rs.IsSuccess = true;
-                        rs.Data = login;
+                            objs = db.Q_Login.Where(x => x.UserId != user.Id && x.EquipCode == equipCode && x.StatusId == (int)eStatus.LOGIN).ToList();
+                            if (objs.Count > 0)
+                            {
+                                rs.IsSuccess = false;
+                                rs.sms = "Quầy '" + objs[0].EquipCode + "' đã được đăng nhập bằng tài khoản " + objs[0].Q_User.UserName + " .Bạn cần phải đăng xuất tài khoản " + objs[0].Q_User.UserName + "  khỏi quầy '" + objs[0].EquipCode + "' trước sau đó mới có thể đăng nhập vào quầy này được.";
+                            }
+                            else
+                            {
+                               var obj  = db.Q_Login.FirstOrDefault(x => x.UserId == user.Id && x.EquipCode == equipCode && x.StatusId == (int)eStatus.LOGIN) ;
+                                if(obj!= null)
+                                {
+                                    login = new Login()
+                                    {
+                                        UserName = userName,
+                                        EquipCode = equipCode,
+                                        LoginTime = obj.Date.ToString("dd/MM/yyyy HH:mm"),
+                                        UserId = obj.Q_User.Id,
+                                        CounterId = equipObj.CounterId,
+                                        CounterName = equipObj.Q_Counter.Name
+                                    };
+                                }
+                                else
+                                {
+                                    login = new Login()
+                                    {
+                                        UserName = user.Name,
+                                        EquipCode = equipCode,
+                                        LoginTime = now.ToString("dd/MM/yyyy HH:mm"),
+                                        UserId = user.Id,
+                                        CounterId = equipObj.CounterId,
+                                        CounterName = equipObj.Q_Counter.Name
+                                    };
+                                    db.Q_Login.Add(new Q_Login()
+                                    {
+                                        UserId = user.Id,
+                                        EquipCode = equipCode,
+                                        StatusId = (int)eStatus.LOGIN,
+                                        Date = now
+                                    });
+                                    db.SaveChanges(); 
+                                }
+                                rs.IsSuccess = true;
+                                rs.Data = login;
+                            }
+                        }  
                     }
                     else
                     {
                         rs.IsSuccess = false;
-                        rs.sms = "Không tìm thấy thông tin thiết bị. Vui lòng kiểm tra cấu hình";
+                        rs.sms = "Không tìm thấy thông tin quầy. Vui lòng kiểm tra cấu hình";
                     }
                 }
                 else
@@ -379,6 +340,31 @@ namespace QMS_System.Data.BLL
                 return rs;
             }
         }
+
+        /// <summary>
+        /// counter soft
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="equipCode"></param>
+        /// <param name="date"></param>
+        public void Logout(int userId, int equipCode, DateTime date)
+        {
+            using (db = new QMSSystemEntities())
+            {
+                var objs = db.Q_Login.Where(x => x.UserId == userId && x.EquipCode == equipCode && x.StatusId == (int)eStatus.LOGIN).ToList();
+                if (objs.Count > 0)
+                {
+                    foreach (var item in objs)
+                    {
+                        item.LogoutTime = date;
+                        item.StatusId = (int)eStatus.LOGOUT;
+                        db.Entry<Q_Login>(item).State = System.Data.Entity.EntityState.Modified;
+                    }
+                }
+                db.SaveChanges();
+            }
+        }
+
 
         public int GetUserId(int equipCode, DateTime date)
         {
@@ -400,9 +386,9 @@ namespace QMS_System.Data.BLL
         {
             int num = 8888;
             try
-            {              
+            {
                 using (db = new QMSSystemEntities())
-                { 
+                {
                     var obj = db.Q_Login.FirstOrDefault(x => x.StatusId == (int)eStatus.LOGIN && (x.UserId == userId || x.EquipCode == equipCode));
                     if (obj == null)
                     {
@@ -413,7 +399,7 @@ namespace QMS_System.Data.BLL
                     }
                     else
                     {
-                       if (obj.EquipCode == equipCode && obj.UserId == userId)
+                        if (obj.EquipCode == equipCode && obj.UserId == userId)
                         {
                             // allready login => logout
                             obj.LogoutTime = date;
@@ -429,7 +415,8 @@ namespace QMS_System.Data.BLL
                                 }
                             }
                             num = 8888;
-                        } else  
+                        }
+                        else
                         {
                             // login on other counter
                             obj.LogoutTime = date;
@@ -439,9 +426,9 @@ namespace QMS_System.Data.BLL
                             db.Q_Login.Add(newobj);
                             num = 9999;
                         }
-                         
+
                     }
-                    db.SaveChanges(); 
+                    db.SaveChanges();
                 }
             }
             catch (Exception)
