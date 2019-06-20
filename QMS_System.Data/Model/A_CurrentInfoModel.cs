@@ -18,7 +18,8 @@ namespace QMS_System.Data.Model
        public int StatusId { get; set; }
        public int ServiceId { get; set; }
        public DateTime? EndProcessTime { get; set; }
-       public A_CurrentInfoModel() {
+       public TimeSpan BaseServeTime { get; set; }
+        public A_CurrentInfoModel() {
            Evaluate = new List<ModelSelectItem>();
        }
     }

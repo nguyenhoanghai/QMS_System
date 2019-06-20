@@ -9,6 +9,8 @@ namespace QMS_System.Data.Enum
     public enum eCounterSoftRequireType
     {
         ReadSound=1,
-        PrintTicket=2 
+        PrintTicket=2 ,
+        SendSMS = 3,
+        CounterEvent = 4
     }
 }

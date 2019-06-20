@@ -16,10 +16,10 @@ namespace QMS_System.Data
     {
         public Q_Major()
         {
-            this.Q_DailyRequire_Detail = new HashSet<Q_DailyRequire_Detail>();
-            this.Q_HisDailyRequire_De = new HashSet<Q_HisDailyRequire_De>();
             this.Q_ServiceStep = new HashSet<Q_ServiceStep>();
             this.Q_UserMajor = new HashSet<Q_UserMajor>();
+            this.Q_DailyRequire_Detail = new HashSet<Q_DailyRequire_Detail>();
+            this.Q_HisDailyRequire_De = new HashSet<Q_HisDailyRequire_De>();
         }
     
         public int Id { get; set; }
@@ -27,9 +27,9 @@ namespace QMS_System.Data
         public string Note { get; set; }
         public bool IsDeleted { get; set; }
     
-        public virtual ICollection<Q_DailyRequire_Detail> Q_DailyRequire_Detail { get; set; }
-        public virtual ICollection<Q_HisDailyRequire_De> Q_HisDailyRequire_De { get; set; }
         public virtual ICollection<Q_ServiceStep> Q_ServiceStep { get; set; }
         public virtual ICollection<Q_UserMajor> Q_UserMajor { get; set; }
+        public virtual ICollection<Q_DailyRequire_Detail> Q_DailyRequire_Detail { get; set; }
+        public virtual ICollection<Q_HisDailyRequire_De> Q_HisDailyRequire_De { get; set; }
     }
 }

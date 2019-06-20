@@ -16,8 +16,6 @@ namespace QMS_System.Data
     {
         public Q_User()
         {
-            this.Q_DailyRequire_Detail = new HashSet<Q_DailyRequire_Detail>();
-            this.Q_HisDailyRequire_De = new HashSet<Q_HisDailyRequire_De>();
             this.Q_HisUserEvaluate = new HashSet<Q_HisUserEvaluate>();
             this.Q_Login = new HashSet<Q_Login>();
             this.Q_LoginHistory = new HashSet<Q_LoginHistory>();
@@ -26,6 +24,8 @@ namespace QMS_System.Data
             this.Q_UserCommandReadSound = new HashSet<Q_UserCommandReadSound>();
             this.Q_UserEvaluate = new HashSet<Q_UserEvaluate>();
             this.Q_UserMajor = new HashSet<Q_UserMajor>();
+            this.Q_DailyRequire_Detail = new HashSet<Q_DailyRequire_Detail>();
+            this.Q_HisDailyRequire_De = new HashSet<Q_HisDailyRequire_De>();
         }
     
         public int Id { get; set; }
@@ -42,8 +42,6 @@ namespace QMS_System.Data
         public string Counters { get; set; }
         public bool IsDeleted { get; set; }
     
-        public virtual ICollection<Q_DailyRequire_Detail> Q_DailyRequire_Detail { get; set; }
-        public virtual ICollection<Q_HisDailyRequire_De> Q_HisDailyRequire_De { get; set; }
         public virtual ICollection<Q_HisUserEvaluate> Q_HisUserEvaluate { get; set; }
         public virtual ICollection<Q_Login> Q_Login { get; set; }
         public virtual ICollection<Q_LoginHistory> Q_LoginHistory { get; set; }
@@ -52,5 +50,7 @@ namespace QMS_System.Data
         public virtual ICollection<Q_UserCommandReadSound> Q_UserCommandReadSound { get; set; }
         public virtual ICollection<Q_UserEvaluate> Q_UserEvaluate { get; set; }
         public virtual ICollection<Q_UserMajor> Q_UserMajor { get; set; }
+        public virtual ICollection<Q_DailyRequire_Detail> Q_DailyRequire_Detail { get; set; }
+        public virtual ICollection<Q_HisDailyRequire_De> Q_HisDailyRequire_De { get; set; }
     }
 }

@@ -32,7 +32,7 @@ namespace QMS_System
          PrintTicketCode = 50,
             system = 0,
             timesRepeatReadServeOver = 1,
-            _8cUseFor=1;
+            _8cUseFor = 1;
 
         public int UseWithThirdPattern = 0,
             AutoCallIfUserFree = 0;
@@ -94,9 +94,10 @@ namespace QMS_System
                     BLLDailyRequire.Instance.CopyHistory();
                     Settings.Default.Today = DateTime.Now.Day;
                     Settings.Default.Save();
-                    query += "update q_counter set lastcall = 0 ,isrunning =1";
+                    query += "update q_counter set lastcall = 0 ,isrunning =1 GO";
+                    query += "DELETE FROM [dbo].[Q_RequestTicket]  ";
                     BLLSQLBuilder.Instance.Excecute(query);
-                    lib_Users = BLLLoginHistory.Instance.GetsForMain();
+
                 }
                 catch (Exception ex)
                 {
@@ -105,7 +106,7 @@ namespace QMS_System
             }
             else
                 errorsms = "";
-             
+
             btRunProcess.PerformClick();
         }
 
@@ -667,6 +668,7 @@ namespace QMS_System
 
                 var hexStr = BitConverter.ToString(buf).Split('-').ToArray();
                 lbRecieve.Caption = hexStr[1] + "," + hexStr[2];
+                lib_Users = BLLLoginHistory.Instance.GetsForMain();
                 //  
                 if (hexStr.Length > 1)
                 {
@@ -677,14 +679,14 @@ namespace QMS_System
                             {
                                 //  MessageBox.Show("VO 8C");
                                 var num = BLLLoginHistory.Instance.CounterLoginLogOut(int.Parse((hexStr[3] == "FF" ? "00" : hexStr[3]) + "" + hexStr[4]), int.Parse(hexStr[1]), DateTime.Now);
-                              var  arrStr = GPRO_Helper.Instance.ChangeNumber(num);
+                                var arrStr = GPRO_Helper.Instance.ChangeNumber(num);
                                 dataSendToComport.Add(("AA " + hexStr[1] + " " + arrStr[0] + " " + arrStr[1]));
-                                lib_Users = BLLLoginHistory.Instance.GetsForMain();
+
                                 IsDatabaseChange = true;
                             }
                             else if (hexStr.Length >= 4 || hexStr.Contains("8C"))
                             {
-                              //  MessageBox.Show("VO COUNTER");
+                                //  MessageBox.Show("VO COUNTER");
                                 CounterProcess(hexStr);
                             }
                             break;
@@ -952,8 +954,8 @@ namespace QMS_System
         {
             try
             {
-               // lib_Users.Clear();
-              //  lib_Users = BLLLoginHistory.Instance.GetsForMain();
+                // lib_Users.Clear();
+                //  lib_Users = BLLLoginHistory.Instance.GetsForMain();
                 int equipCode = int.Parse(hexStr[1]);
                 var userobj = lib_Users.FirstOrDefault(x => x.EquipCode == equipCode);
                 if (userobj != null && userobj.UserId != 0)
@@ -974,8 +976,8 @@ namespace QMS_System
                         else
                             userRight = lib_RegisterUserCmds.Where(x => x.UserId == userId && x.CMDName == hexStr[2] && x.CMDParamName == code.ToString()).OrderBy(x => x.Index).ToList();
                     }
-                   else if (hexStr[2] == eCodeHex.Sao && _8cUseFor == 2) //2=> đổi tg phuc vu
-                    { 
+                    else if (hexStr[2] == eCodeHex.Sao && _8cUseFor == 2) //2=> đổi tg phuc vu
+                    {
                         // nếu là * lấy cái tham số lệnh = 0 xử lý cho trường hợp đổi thời gian phục vụ DK
                         userRight = lib_RegisterUserCmds.Where(x => x.UserId == userId && x.CMDName == hexStr[2] && x.CMDParamName == "0").OrderBy(x => x.Index).ToList();
                     }
@@ -989,7 +991,10 @@ namespace QMS_System
                     var userMajors = lib_UserMajors.Where(x => x.UserId == userId).ToList();
                     if (userRight.Count > 0)
                     {
-                        int newTicket = 0, currentTicket = 0;
+                        int currentTicket = 0, minutes = 0;
+                        TicketInfo ticketInfo = null,
+                            currentTicketInfo = null;
+                        string num1 = "00", num2 = "00";
 
                         for (int i = 0; i < userRight.Count; i++)
                         {
@@ -1017,29 +1022,26 @@ namespace QMS_System
                                             int[] indexs = userMajors.Select(x => x.Index).Distinct().ToArray();
                                             for (int z = 0; z < indexs.Length; z++)
                                             {
-                                                newTicket = BLLDailyRequire.Instance.CallNewTicket(userMajors.Where(x => x.Index == indexs[z]).Select(x => x.MajorId).ToArray(), userId, equipCode, true, DateTime.Now, (!string.IsNullOrEmpty(userRight[i].Param) ? int.Parse(userRight[i].Param) : 0));
-                                                //  MessageBox.Show("so moi :" + newTicket);
-                                                if (newTicket != 0)
+                                                ticketInfo = BLLDailyRequire.Instance.CallNewTicket(userMajors.Where(x => x.Index == indexs[z]).Select(x => x.MajorId).ToArray(), userId, equipCode, true, DateTime.Now, (!string.IsNullOrEmpty(userRight[i].Param) ? int.Parse(userRight[i].Param) : 0));
+                                                if (ticketInfo != null && ticketInfo.TicketNumber != 0)
                                                     break;
                                             }
                                             break;
                                         case eActionParam.GDENQ:
                                         case eActionParam.GLAYP:
-                                            newTicket = BLLDailyRequire.Instance.CallNewTicket_GLP_NghiepVu(userMajors.Select(x => x.MajorId).ToArray(), userId, equipCode, DateTime.Now, (!string.IsNullOrEmpty(userRight[i].Param) ? int.Parse(userRight[i].Param) : 0));
+                                            ticketInfo = BLLDailyRequire.Instance.CallNewTicket_GLP_NghiepVu(userMajors.Select(x => x.MajorId).ToArray(), userId, equipCode, DateTime.Now, (!string.IsNullOrEmpty(userRight[i].Param) ? int.Parse(userRight[i].Param) : 0));
                                             break;
                                         case eActionParam.COUNT: // goi bat ky 
-                                            int majorId = int.Parse((hexStr[3] + "" + hexStr[4]));
-                                            if (BLLDailyRequire.Instance.CallAny(userMajors[0].MajorId, userId, equipCode, majorId, DateTime.Now, (!string.IsNullOrEmpty(userRight[i].Param) ? int.Parse(userRight[i].Param) : 0)).IsSuccess)
-                                                newTicket = majorId;
-                                            else
-                                                newTicket = 0;
+                                            int num = int.Parse((hexStr[3] + "" + hexStr[4]));
+                                            var rs = BLLDailyRequire.Instance.CallAny(userMajors[0].MajorId, userId, equipCode, num, DateTime.Now, (!string.IsNullOrEmpty(userRight[i].Param) ? int.Parse(userRight[i].Param) : 0));
+                                            if (rs.IsSuccess)
+                                                ticketInfo = new TicketInfo() { TicketNumber = num, StartTime = rs.Data_1, TimeServeAllow = rs.Data };
+
                                             break;
                                         case eActionParam.GNVYC: // goi theo Nghiep vu  
                                             var found = BLLDailyRequire.Instance.CallByMajor(int.Parse(userRight[i].Param), userId, equipCode, DateTime.Now, (!string.IsNullOrEmpty(userRight[i].Param) ? int.Parse(userRight[i].Param) : 0));
                                             if (found.IsSuccess)
-                                                newTicket = found.Data;
-                                            else
-                                                newTicket = 0;
+                                                ticketInfo = new TicketInfo() { TicketNumber = found.Data, StartTime = found.Data_2, TimeServeAllow = found.Data_1 };
                                             break;
                                         case eActionParam.PHANDIEUNHANVIEN: // goi phan dieu Nghiep vu cho nhan vien
                                             var allowCall = false;
@@ -1050,9 +1052,8 @@ namespace QMS_System
                                                 {
                                                     var callInfo = BLLDailyRequire.Instance.CallByMajor(userMajors[ii].MajorId, userId, equipCode, DateTime.Now, (!string.IsNullOrEmpty(userRight[i].Param) ? int.Parse(userRight[i].Param) : 0));
                                                     if (callInfo.IsSuccess)
-                                                        newTicket = callInfo.Data;
-                                                    else
-                                                        newTicket = 0;
+                                                        ticketInfo = new TicketInfo() { TicketNumber = callInfo.Data, StartTime = callInfo.Data_2, TimeServeAllow = callInfo.Data_1 };
+
                                                     break;
                                                 }
                                             }
@@ -1065,7 +1066,7 @@ namespace QMS_System
                                     switch (userRight[i].ActionParamName)
                                     {
                                         case eActionParam.MOIKH: // gui so len counter
-                                            arrStr = GPRO_Helper.Instance.ChangeNumber(newTicket);
+                                            arrStr = GPRO_Helper.Instance.ChangeNumber((ticketInfo != null ? ticketInfo.TicketNumber : 0));
                                             if (autoCall)
                                             {
                                                 dataSendToComport.Add(("AA " + hexStr[1] + " " + arrStr[0] + " " + arrStr[1]));
@@ -1087,11 +1088,53 @@ namespace QMS_System
                                             arrStr = GPRO_Helper.Instance.ChangeNumber(currentTicket);
                                             dataSendToComport.Add(("AA " + hexStr[1] + " " + arrStr[0] + " " + arrStr[1]));
                                             break;
-                                        case eActionParam.DOITHOIGIANPV:
-                                            int minutes = 0;
+                                        case eActionParam.THAYTHE_TGIAN_PVU:
+                                            minutes = 0;
                                             int.TryParse((hexStr[3] + "" + hexStr[4]), out minutes);
-                                            arrStr = GPRO_Helper.Instance.ChangeNumber(BLLDailyRequire.Instance.UpdateServeTime(userId,minutes));
-                                            dataSendToComport.Add(("AA " + hexStr[1] + " " + arrStr[0] + " " + arrStr[1]));
+                                            num1 = "00";
+                                            num2 = "00";
+                                            currentTicketInfo = BLLDailyRequire.Instance.UpdateServeTime(userId, minutes, true);
+                                            if (currentTicketInfo != null)
+                                            {
+                                                num1 = currentTicketInfo.TimeServeAllow.ToString("hh");
+                                                num2 = currentTicketInfo.TimeServeAllow.ToString("mm");
+                                            }
+                                            dataSendToComport.Add(("AB " + hexStr[1] + " " + num1 + " " + num2));
+                                            break;
+                                        case eActionParam.CONGTHEM_TGIAN_PVU:
+                                            minutes = 0;
+                                            int.TryParse((hexStr[3] + "" + hexStr[4]), out minutes);
+                                            num1 = "00";
+                                            num2 = "00";
+                                            currentTicketInfo = BLLDailyRequire.Instance.UpdateServeTime(userId, minutes, false);
+                                            if (currentTicketInfo != null)
+                                            {
+                                                num1 = currentTicketInfo.TimeServeAllow.ToString("hh");
+                                                num2 = currentTicketInfo.TimeServeAllow.ToString("mm");
+                                            }
+                                            dataSendToComport.Add(("AB " + hexStr[1] + " " + num1 + " " + num2));
+                                            break;
+                                        case eActionParam.GUI_TGIAN_PVU_DKIEN:
+                                            num1 = "00";
+                                            num2 = "00";
+                                            currentTicketInfo = BLLDailyRequire.Instance.GetCurrentTicketInfo(userId, equipCode, today, (!string.IsNullOrEmpty(userRight[i].Param) ? int.Parse(userRight[i].Param) : 0));
+                                            if (currentTicketInfo != null)
+                                            {
+                                                num1 = currentTicketInfo.TimeServeAllow.ToString("hh");
+                                                num2 = currentTicketInfo.TimeServeAllow.ToString("mm");
+                                            }
+                                            dataSendToComport.Add(("AB " + hexStr[1] + " " + num1 + " " + num2));
+                                            break;
+                                        case eActionParam.GUI_TGIAN_KTHUC_DKIEN:
+                                            num1 = "00";
+                                            num2 = "00";
+                                            currentTicketInfo = BLLDailyRequire.Instance.GetCurrentTicketInfo(userId, equipCode, today, (!string.IsNullOrEmpty(userRight[i].Param) ? int.Parse(userRight[i].Param) : 0));
+                                            if (currentTicketInfo != null)
+                                            {
+                                                num1 = currentTicketInfo.StartTime.Add(currentTicketInfo.TimeServeAllow).ToString("hh");
+                                                num2 = currentTicketInfo.StartTime.Add(currentTicketInfo.TimeServeAllow).ToString("mm");
+                                            }
+                                            dataSendToComport.Add(("AB " + hexStr[1] + " " + num1 + " " + num2));
                                             break;
                                     }
                                     #endregion
@@ -1105,7 +1148,7 @@ namespace QMS_System
                                             mains = BLLMaindisplayDirection.Instance.Gets(equipCode);
                                             if (mains.Count > 0)
                                             {
-                                                arrStr = GPRO_Helper.Instance.ChangeNumber(newTicket);
+                                                arrStr = GPRO_Helper.Instance.ChangeNumber((ticketInfo != null ? ticketInfo.TicketNumber : 0));
                                                 string id = "";
                                                 for (int z = 0; z < mains.Count; z++)
                                                 {
@@ -1145,11 +1188,11 @@ namespace QMS_System
                                     switch (userRight[i].ActionParamName)
                                     {
                                         case eActionParam.MOIKH:
-                                            if (newTicket != 0)
+                                            if (ticketInfo != null && ticketInfo.TicketNumber > 0)
                                             {
                                                 var readTemplateIds = lib_UserCMDReadSound.Where(x => x.UserId == userId && x.Note.Equals(userRight[i].CMDName.ToUpper())).Select(x => x.ReadTemplateId).ToList();// BLLUserCmdReadSound.Instance.GetReadTemplateIds(userId, userRight[i].CMDName);
                                                 if (readTemplateIds.Count > 0)
-                                                    GetSound(readTemplateIds, newTicket.ToString(), lib_Equipments.FirstOrDefault(x => x.Code == equipCode).CounterId);
+                                                    GetSound(readTemplateIds, ticketInfo.TicketNumber.ToString(), lib_Equipments.FirstOrDefault(x => x.Code == equipCode).CounterId);
                                             }
                                             break;
                                         case eActionParam.NHAKH:
@@ -1210,7 +1253,7 @@ namespace QMS_System
                                     //    break;
                             }
                         }
-                    End:
+                        End:
                         { }
                     }
                 }
@@ -1330,6 +1373,14 @@ namespace QMS_System
                                 var requireObj = JsonConvert.DeserializeObject<PrinterRequireModel>(requires[i].Content);
                                 PrintNewTicket(requireObj.PrinterId, requireObj.ServiceId, 0, true, false, requireObj.ServeTime.TimeOfDay, requireObj.Name, requireObj.Address, requireObj.DOB, requireObj.MaBenhNhan, requireObj.MaPhongKham, requireObj.SttPhongKham, requireObj.SoXe);
                                 break;
+                            case (int)eCounterSoftRequireType.CounterEvent:
+                                if (!string.IsNullOrEmpty(requires[i].Content))
+                                {
+                                    var arr = requires[i].Content.Split(',').ToArray();
+                                    if (arr != null && arr.Length ==5)
+                                        CounterProcess(arr);
+                                }
+                                break;
                         }
                     }
 
@@ -1362,11 +1413,11 @@ namespace QMS_System
 
         private void barButtonItem6_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            if (radioLenh.EditValue.ToString().Contains("8C") && _8cUseFor==1)   ///Login - Logout
+            if (radioLenh.EditValue.ToString().Contains("8C") && _8cUseFor == 1)   ///Login - Logout
             {
                 var num = (BLLLoginHistory.Instance.CounterLoginLogOut(int.Parse((txtparam1.EditValue.ToString() + txtparam2.EditValue.ToString())), int.Parse(txtmatb.EditValue.ToString()), DateTime.Now));
                 var arrStr = GPRO_Helper.Instance.ChangeNumber(num);
-                dataSendToComport.Add(("AA " + txtmatb.EditValue.ToString() + " "+arrStr[0]+" "+arrStr[1]));
+                dataSendToComport.Add(("AA " + txtmatb.EditValue.ToString() + " " + arrStr[0] + " " + arrStr[1]));
                 lib_Users = BLLLoginHistory.Instance.GetsForMain();
                 IsDatabaseChange = true;
             }
@@ -1455,7 +1506,7 @@ namespace QMS_System
                     lib_ReadTemplates = BLLReadTemplate.Instance.GetsForMain();
                     lib_CounterSound = BLLCounterSound.Instance.Gets();
                     lib_Services = BLLService.Instance.GetsForMain();
-                    
+
                     int time = 1000;
                     int.TryParse(GetConfigByCode(eConfigCode.TimerQuetServeOverTime), out time);
                     InitComPort();

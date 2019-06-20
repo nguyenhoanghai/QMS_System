@@ -96,5 +96,10 @@ namespace QMS_System.Data.Enum
         /// </summary>
         public const string _8cUseFor = "8cUseFor";
 
+        /// <summary>
+        /// kết thúc giao dịch sau khi đánh giá
+        /// </summary>
+        public const string DoneTicketAfterEvaluate = "DoneTicketAfterEvaluate";
+
     }
 }

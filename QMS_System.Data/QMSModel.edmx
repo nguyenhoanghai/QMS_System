@@ -373,6 +373,15 @@
           <Property Name="Date" Type="datetime" Nullable="false" />
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="Q_RequestTicket">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="Q_Service">
           <Key>
             <PropertyRef Name="Id" />
@@ -1222,6 +1231,7 @@
           <EntitySet Name="Q_ReadTemplate" EntityType="Self.Q_ReadTemplate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_RecieverSMS" EntityType="Self.Q_RecieverSMS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_RegisterRecieveTicket" EntityType="Self.Q_RegisterRecieveTicket" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Q_RequestTicket" EntityType="Self.Q_RequestTicket" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_Service" EntityType="Self.Q_Service" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_ServiceShift" EntityType="Self.Q_ServiceShift" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_ServiceStep" EntityType="Self.Q_ServiceStep" Schema="dbo" store:Type="Tables" />
@@ -1471,14 +1481,12 @@
           <EntitySet Name="Q_CounterSoftRequire" EntityType="QMSSystemModel.Q_CounterSoftRequire" />
           <EntitySet Name="Q_CounterSound" EntityType="QMSSystemModel.Q_CounterSound" />
           <EntitySet Name="Q_DailyRequire" EntityType="QMSSystemModel.Q_DailyRequire" />
-          <EntitySet Name="Q_DailyRequire_Detail" EntityType="QMSSystemModel.Q_DailyRequire_Detail" />
           <EntitySet Name="Q_Equipment" EntityType="QMSSystemModel.Q_Equipment" />
           <EntitySet Name="Q_EquipmentType" EntityType="QMSSystemModel.Q_EquipmentType" />
           <EntitySet Name="Q_EquipTypeProcess" EntityType="QMSSystemModel.Q_EquipTypeProcess" />
           <EntitySet Name="Q_Evaluate" EntityType="QMSSystemModel.Q_Evaluate" />
           <EntitySet Name="Q_EvaluateDetail" EntityType="QMSSystemModel.Q_EvaluateDetail" />
           <EntitySet Name="Q_HisDailyRequire" EntityType="QMSSystemModel.Q_HisDailyRequire" />
-          <EntitySet Name="Q_HisDailyRequire_De" EntityType="QMSSystemModel.Q_HisDailyRequire_De" />
           <EntitySet Name="Q_HisUserEvaluate" EntityType="QMSSystemModel.Q_HisUserEvaluate" />
           <EntitySet Name="Q_Language" EntityType="QMSSystemModel.Q_Language" />
           <EntitySet Name="Q_Login" EntityType="QMSSystemModel.Q_Login" />
@@ -1489,7 +1497,6 @@
           <EntitySet Name="Q_Process" EntityType="QMSSystemModel.Q_Process" />
           <EntitySet Name="Q_ReadTemp_Detail" EntityType="QMSSystemModel.Q_ReadTemp_Detail" />
           <EntitySet Name="Q_ReadTemplate" EntityType="QMSSystemModel.Q_ReadTemplate" />
-          <EntitySet Name="Q_RecieverSMS" EntityType="QMSSystemModel.Q_RecieverSMS" />
           <EntitySet Name="Q_RegisterRecieveTicket" EntityType="QMSSystemModel.Q_RegisterRecieveTicket" />
           <EntitySet Name="Q_Service" EntityType="QMSSystemModel.Q_Service" />
           <EntitySet Name="Q_ServiceShift" EntityType="QMSSystemModel.Q_ServiceShift" />
@@ -1558,29 +1565,9 @@
             <End Role="Q_Language" EntitySet="Q_Language" />
             <End Role="Q_CounterSound" EntitySet="Q_CounterSound" />
           </AssociationSet>
-          <AssociationSet Name="FK_Q_DailyRequire_Detail_Q_DailyRequire" Association="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_DailyRequire">
-            <End Role="Q_DailyRequire" EntitySet="Q_DailyRequire" />
-            <End Role="Q_DailyRequire_Detail" EntitySet="Q_DailyRequire_Detail" />
-          </AssociationSet>
           <AssociationSet Name="FK_Q_DailyRequire_Q_Service" Association="QMSSystemModel.FK_Q_DailyRequire_Q_Service">
             <End Role="Q_Service" EntitySet="Q_Service" />
             <End Role="Q_DailyRequire" EntitySet="Q_DailyRequire" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Q_DailyRequire_Detail_Q_Major" Association="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_Major">
-            <End Role="Q_Major" EntitySet="Q_Major" />
-            <End Role="Q_DailyRequire_Detail" EntitySet="Q_DailyRequire_Detail" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Q_DailyRequire_Detail_Q_Status" Association="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_Status">
-            <End Role="Q_Status" EntitySet="Q_Status" />
-            <End Role="Q_DailyRequire_Detail" EntitySet="Q_DailyRequire_Detail" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Q_DailyRequire_Detail_Q_User" Association="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_User">
-            <End Role="Q_User" EntitySet="Q_User" />
-            <End Role="Q_DailyRequire_Detail" EntitySet="Q_DailyRequire_Detail" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Q_UserEvaluate_Q_DailyRequire_Detail" Association="QMSSystemModel.FK_Q_UserEvaluate_Q_DailyRequire_Detail">
-            <End Role="Q_DailyRequire_Detail" EntitySet="Q_DailyRequire_Detail" />
-            <End Role="Q_UserEvaluate" EntitySet="Q_UserEvaluate" />
           </AssociationSet>
           <AssociationSet Name="FK_Q_Equipment_Q_EquipmentType" Association="QMSSystemModel.FK_Q_Equipment_Q_EquipmentType">
             <End Role="Q_EquipmentType" EntitySet="Q_EquipmentType" />
@@ -1610,29 +1597,9 @@
             <End Role="Q_Evaluate" EntitySet="Q_Evaluate" />
             <End Role="Q_EvaluateDetail" EntitySet="Q_EvaluateDetail" />
           </AssociationSet>
-          <AssociationSet Name="FK_Q_HisDailyRequire_De_Q_HisDailyRequire" Association="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_HisDailyRequire">
-            <End Role="Q_HisDailyRequire" EntitySet="Q_HisDailyRequire" />
-            <End Role="Q_HisDailyRequire_De" EntitySet="Q_HisDailyRequire_De" />
-          </AssociationSet>
           <AssociationSet Name="FK_Q_HisDailyRequire_Q_Service" Association="QMSSystemModel.FK_Q_HisDailyRequire_Q_Service">
             <End Role="Q_Service" EntitySet="Q_Service" />
             <End Role="Q_HisDailyRequire" EntitySet="Q_HisDailyRequire" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Q_HisDailyRequire_De_Q_Major" Association="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_Major">
-            <End Role="Q_Major" EntitySet="Q_Major" />
-            <End Role="Q_HisDailyRequire_De" EntitySet="Q_HisDailyRequire_De" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Q_HisDailyRequire_De_Q_Status" Association="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_Status">
-            <End Role="Q_Status" EntitySet="Q_Status" />
-            <End Role="Q_HisDailyRequire_De" EntitySet="Q_HisDailyRequire_De" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Q_HisDailyRequire_De_Q_User" Association="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_User">
-            <End Role="Q_User" EntitySet="Q_User" />
-            <End Role="Q_HisDailyRequire_De" EntitySet="Q_HisDailyRequire_De" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Q_HisUserEvaluate_Q_HisDailyRequire_De" Association="QMSSystemModel.FK_Q_HisUserEvaluate_Q_HisDailyRequire_De">
-            <End Role="Q_HisDailyRequire_De" EntitySet="Q_HisDailyRequire_De" />
-            <End Role="Q_HisUserEvaluate" EntitySet="Q_HisUserEvaluate" />
           </AssociationSet>
           <AssociationSet Name="FK_Q_HisUserEvaluate_Q_User" Association="QMSSystemModel.FK_Q_HisUserEvaluate_Q_User">
             <End Role="Q_User" EntitySet="Q_User" />
@@ -1722,7 +1689,51 @@
             <End Role="Q_VideoTemplate" EntitySet="Q_VideoTemplate" />
             <End Role="Q_VideoTemplate_De" EntitySet="Q_VideoTemplate_De" />
           </AssociationSet>
-        </EntityContainer>
+          <EntitySet Name="Q_RecieverSMS" EntityType="QMSSystemModel.Q_RecieverSMS" />
+          <EntitySet Name="Q_DailyRequire_Detail" EntityType="QMSSystemModel.Q_DailyRequire_Detail" />
+          <EntitySet Name="Q_HisDailyRequire_De" EntityType="QMSSystemModel.Q_HisDailyRequire_De" />
+          <AssociationSet Name="FK_Q_DailyRequire_Detail_Q_DailyRequire" Association="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_DailyRequire">
+            <End Role="Q_DailyRequire" EntitySet="Q_DailyRequire" />
+            <End Role="Q_DailyRequire_Detail" EntitySet="Q_DailyRequire_Detail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Q_DailyRequire_Detail_Q_Major" Association="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_Major">
+            <End Role="Q_Major" EntitySet="Q_Major" />
+            <End Role="Q_DailyRequire_Detail" EntitySet="Q_DailyRequire_Detail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Q_DailyRequire_Detail_Q_Status" Association="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_Status">
+            <End Role="Q_Status" EntitySet="Q_Status" />
+            <End Role="Q_DailyRequire_Detail" EntitySet="Q_DailyRequire_Detail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Q_DailyRequire_Detail_Q_User" Association="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_User">
+            <End Role="Q_User" EntitySet="Q_User" />
+            <End Role="Q_DailyRequire_Detail" EntitySet="Q_DailyRequire_Detail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Q_UserEvaluate_Q_DailyRequire_Detail" Association="QMSSystemModel.FK_Q_UserEvaluate_Q_DailyRequire_Detail">
+            <End Role="Q_DailyRequire_Detail" EntitySet="Q_DailyRequire_Detail" />
+            <End Role="Q_UserEvaluate" EntitySet="Q_UserEvaluate" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Q_HisDailyRequire_De_Q_HisDailyRequire" Association="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_HisDailyRequire">
+            <End Role="Q_HisDailyRequire" EntitySet="Q_HisDailyRequire" />
+            <End Role="Q_HisDailyRequire_De" EntitySet="Q_HisDailyRequire_De" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Q_HisDailyRequire_De_Q_Major" Association="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_Major">
+            <End Role="Q_Major" EntitySet="Q_Major" />
+            <End Role="Q_HisDailyRequire_De" EntitySet="Q_HisDailyRequire_De" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Q_HisDailyRequire_De_Q_Status" Association="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_Status">
+            <End Role="Q_Status" EntitySet="Q_Status" />
+            <End Role="Q_HisDailyRequire_De" EntitySet="Q_HisDailyRequire_De" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Q_HisDailyRequire_De_Q_User" Association="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_User">
+            <End Role="Q_User" EntitySet="Q_User" />
+            <End Role="Q_HisDailyRequire_De" EntitySet="Q_HisDailyRequire_De" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Q_HisUserEvaluate_Q_HisDailyRequire_De" Association="QMSSystemModel.FK_Q_HisUserEvaluate_Q_HisDailyRequire_De">
+            <End Role="Q_HisDailyRequire_De" EntitySet="Q_HisDailyRequire_De" />
+            <End Role="Q_HisUserEvaluate" EntitySet="Q_HisUserEvaluate" />
+          </AssociationSet>
+          <EntitySet Name="Q_RequestTicket" EntityType="QMSSystemModel.Q_RequestTicket" />
+          </EntityContainer>
         <EntityType Name="Q_Action">
           <Key>
             <PropertyRef Name="Id" />
@@ -1876,29 +1887,8 @@
           <Property Name="MaBenhNhan" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="MaPhongKham" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Q_Business" Relationship="QMSSystemModel.FK_Q_DailyRequire_Q_Business" FromRole="Q_DailyRequire" ToRole="Q_Business" />
-          <NavigationProperty Name="Q_DailyRequire_Detail" Relationship="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_DailyRequire" FromRole="Q_DailyRequire" ToRole="Q_DailyRequire_Detail" />
           <NavigationProperty Name="Q_Service" Relationship="QMSSystemModel.FK_Q_DailyRequire_Q_Service" FromRole="Q_DailyRequire" ToRole="Q_Service" />
-        </EntityType>
-        <EntityType Name="Q_DailyRequire_Detail">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DailyRequireId" Type="Int32" Nullable="false" />
-          <Property Name="MajorId" Type="Int32" Nullable="false" />
-          <Property Name="UserId" Type="Int32" />
-          <Property Name="EquipCode" Type="Int32" />
-          <Property Name="ProcessTime" Type="DateTime" Precision="3" />
-          <Property Name="EndProcessTime" Type="DateTime" Precision="3" />
-          <Property Name="StatusId" Type="Int32" Nullable="false" />
-          <Property Name="IsSendSMS" Type="Boolean" Nullable="false" />
-          <Property Name="SmsContent" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
-          <Property Name="ServeOverCounter" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Q_DailyRequire" Relationship="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_DailyRequire" FromRole="Q_DailyRequire_Detail" ToRole="Q_DailyRequire" />
-          <NavigationProperty Name="Q_Major" Relationship="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_Major" FromRole="Q_DailyRequire_Detail" ToRole="Q_Major" />
-          <NavigationProperty Name="Q_Status" Relationship="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_Status" FromRole="Q_DailyRequire_Detail" ToRole="Q_Status" />
-          <NavigationProperty Name="Q_User" Relationship="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_User" FromRole="Q_DailyRequire_Detail" ToRole="Q_User" />
-          <NavigationProperty Name="Q_UserEvaluate" Relationship="QMSSystemModel.FK_Q_UserEvaluate_Q_DailyRequire_Detail" FromRole="Q_DailyRequire_Detail" ToRole="Q_UserEvaluate" />
+          <NavigationProperty Name="Q_DailyRequire_Detail" Relationship="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_DailyRequire" FromRole="Q_DailyRequire" ToRole="Q_DailyRequire_Detail" />
         </EntityType>
         <EntityType Name="Q_Equipment">
           <Key>
@@ -1991,29 +1981,8 @@
           <Property Name="MaBenhNhan" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="MaPhongKham" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Q_Business" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_Q_Business" FromRole="Q_HisDailyRequire" ToRole="Q_Business" />
-          <NavigationProperty Name="Q_HisDailyRequire_De" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_HisDailyRequire" FromRole="Q_HisDailyRequire" ToRole="Q_HisDailyRequire_De" />
           <NavigationProperty Name="Q_Service" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_Q_Service" FromRole="Q_HisDailyRequire" ToRole="Q_Service" />
-        </EntityType>
-        <EntityType Name="Q_HisDailyRequire_De">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="HisDailyRequireId" Type="Int32" Nullable="false" />
-          <Property Name="MajorId" Type="Int32" Nullable="false" />
-          <Property Name="UserId" Type="Int32" />
-          <Property Name="EquipCode" Type="Int32" />
-          <Property Name="ProcessTime" Type="DateTime" Precision="3" />
-          <Property Name="EndProcessTime" Type="DateTime" Precision="3" />
-          <Property Name="StatusId" Type="Int32" Nullable="false" />
-          <Property Name="IsSendSMS" Type="Boolean" Nullable="false" />
-          <Property Name="SmsContent" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
-          <Property Name="ServeOverCounter" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Q_HisDailyRequire" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_HisDailyRequire" FromRole="Q_HisDailyRequire_De" ToRole="Q_HisDailyRequire" />
-          <NavigationProperty Name="Q_Major" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_Major" FromRole="Q_HisDailyRequire_De" ToRole="Q_Major" />
-          <NavigationProperty Name="Q_Status" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_Status" FromRole="Q_HisDailyRequire_De" ToRole="Q_Status" />
-          <NavigationProperty Name="Q_User" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_User" FromRole="Q_HisDailyRequire_De" ToRole="Q_User" />
-          <NavigationProperty Name="Q_HisUserEvaluate" Relationship="QMSSystemModel.FK_Q_HisUserEvaluate_Q_HisDailyRequire_De" FromRole="Q_HisDailyRequire_De" ToRole="Q_HisUserEvaluate" />
+          <NavigationProperty Name="Q_HisDailyRequire_De" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_HisDailyRequire" FromRole="Q_HisDailyRequire" ToRole="Q_HisDailyRequire_De" />
         </EntityType>
         <EntityType Name="Q_HisUserEvaluate">
           <Key>
@@ -2024,8 +1993,8 @@
           <Property Name="UserId" Type="Int32" Nullable="false" />
           <Property Name="Score" Type="String" Nullable="false" MaxLength="550" FixedLength="false" Unicode="true" />
           <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Q_HisDailyRequire_De" Relationship="QMSSystemModel.FK_Q_HisUserEvaluate_Q_HisDailyRequire_De" FromRole="Q_HisUserEvaluate" ToRole="Q_HisDailyRequire_De" />
           <NavigationProperty Name="Q_User" Relationship="QMSSystemModel.FK_Q_HisUserEvaluate_Q_User" FromRole="Q_HisUserEvaluate" ToRole="Q_User" />
+          <NavigationProperty Name="Q_HisDailyRequire_De" Relationship="QMSSystemModel.FK_Q_HisUserEvaluate_Q_HisDailyRequire_De" FromRole="Q_HisUserEvaluate" ToRole="Q_HisDailyRequire_De" />
         </EntityType>
         <EntityType Name="Q_Language">
           <Key>
@@ -2086,10 +2055,10 @@
           <Property Name="Name" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Q_DailyRequire_Detail" Relationship="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_Major" FromRole="Q_Major" ToRole="Q_DailyRequire_Detail" />
-          <NavigationProperty Name="Q_HisDailyRequire_De" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_Major" FromRole="Q_Major" ToRole="Q_HisDailyRequire_De" />
           <NavigationProperty Name="Q_ServiceStep" Relationship="QMSSystemModel.FK_Q_ServiceStep_Q_Major" FromRole="Q_Major" ToRole="Q_ServiceStep" />
           <NavigationProperty Name="Q_UserMajor" Relationship="QMSSystemModel.FK_Q_UserMajor_Q_Major" FromRole="Q_Major" ToRole="Q_UserMajor" />
+          <NavigationProperty Name="Q_DailyRequire_Detail" Relationship="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_Major" FromRole="Q_Major" ToRole="Q_DailyRequire_Detail" />
+          <NavigationProperty Name="Q_HisDailyRequire_De" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_Major" FromRole="Q_Major" ToRole="Q_HisDailyRequire_De" />
         </EntityType>
         <EntityType Name="Q_Policy">
           <Key>
@@ -2135,15 +2104,6 @@
           <NavigationProperty Name="Q_Language" Relationship="QMSSystemModel.FK_Q_ReadTemplate_Q_Language" FromRole="Q_ReadTemplate" ToRole="Q_Language" />
           <NavigationProperty Name="Q_ReadTemp_Detail" Relationship="QMSSystemModel.FK_Q_ReadTemp_Detail_Q_ReadTemplate" FromRole="Q_ReadTemplate" ToRole="Q_ReadTemp_Detail" />
           <NavigationProperty Name="Q_UserCommandReadSound" Relationship="QMSSystemModel.FK_Q_UserCommandReadSound_Q_ReadTemplate" FromRole="Q_ReadTemplate" ToRole="Q_UserCommandReadSound" />
-        </EntityType>
-        <EntityType Name="Q_RecieverSMS">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="PhoneNumber" Type="String" Nullable="false" MaxLength="20" FixedLength="true" Unicode="false" />
-          <Property Name="Note" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Q_RegisterRecieveTicket">
           <Key>
@@ -2233,12 +2193,12 @@
           <Property Name="Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="StatusTypeId" Type="Int32" Nullable="false" />
           <Property Name="Note" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Q_DailyRequire_Detail" Relationship="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_Status" FromRole="Q_Status" ToRole="Q_DailyRequire_Detail" />
           <NavigationProperty Name="Q_Equipment" Relationship="QMSSystemModel.FK_Q_Equipment_Q_Status" FromRole="Q_Status" ToRole="Q_Equipment" />
-          <NavigationProperty Name="Q_HisDailyRequire_De" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_Status" FromRole="Q_Status" ToRole="Q_HisDailyRequire_De" />
           <NavigationProperty Name="Q_Login" Relationship="QMSSystemModel.FK_Q_Login_Q_Status" FromRole="Q_Status" ToRole="Q_Login" />
           <NavigationProperty Name="Q_LoginHistory" Relationship="QMSSystemModel.FK_Q_LoginHistory_Q_Status" FromRole="Q_Status" ToRole="Q_LoginHistory" />
           <NavigationProperty Name="Q_StatusType" Relationship="QMSSystemModel.FK_Q_Status_Q_StatusType" FromRole="Q_Status" ToRole="Q_StatusType" />
+          <NavigationProperty Name="Q_DailyRequire_Detail" Relationship="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_Status" FromRole="Q_Status" ToRole="Q_DailyRequire_Detail" />
+          <NavigationProperty Name="Q_HisDailyRequire_De" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_Status" FromRole="Q_Status" ToRole="Q_HisDailyRequire_De" />
         </EntityType>
         <EntityType Name="Q_StatusType">
           <Key>
@@ -2266,8 +2226,6 @@
           <Property Name="WorkingHistory" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Counters" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Q_DailyRequire_Detail" Relationship="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_User" FromRole="Q_User" ToRole="Q_DailyRequire_Detail" />
-          <NavigationProperty Name="Q_HisDailyRequire_De" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_User" FromRole="Q_User" ToRole="Q_HisDailyRequire_De" />
           <NavigationProperty Name="Q_HisUserEvaluate" Relationship="QMSSystemModel.FK_Q_HisUserEvaluate_Q_User" FromRole="Q_User" ToRole="Q_HisUserEvaluate" />
           <NavigationProperty Name="Q_Login" Relationship="QMSSystemModel.FK_Q_Login_Q_User" FromRole="Q_User" ToRole="Q_Login" />
           <NavigationProperty Name="Q_LoginHistory" Relationship="QMSSystemModel.FK_Q_LoginHistory_Q_User" FromRole="Q_User" ToRole="Q_LoginHistory" />
@@ -2276,6 +2234,8 @@
           <NavigationProperty Name="Q_UserCommandReadSound" Relationship="QMSSystemModel.FK_Q_UserCommandReadSound_Q_User" FromRole="Q_User" ToRole="Q_UserCommandReadSound" />
           <NavigationProperty Name="Q_UserEvaluate" Relationship="QMSSystemModel.FK_Q_UserEvaluate_NHANVIEN" FromRole="Q_User" ToRole="Q_UserEvaluate" />
           <NavigationProperty Name="Q_UserMajor" Relationship="QMSSystemModel.FK_Q_UserMajor_Q_User" FromRole="Q_User" ToRole="Q_UserMajor" />
+          <NavigationProperty Name="Q_DailyRequire_Detail" Relationship="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_User" FromRole="Q_User" ToRole="Q_DailyRequire_Detail" />
+          <NavigationProperty Name="Q_HisDailyRequire_De" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_User" FromRole="Q_User" ToRole="Q_HisDailyRequire_De" />
         </EntityType>
         <EntityType Name="Q_UserCmdRegister">
           <Key>
@@ -2319,8 +2279,8 @@
           <Property Name="SendSMS" Type="Boolean" Nullable="false" />
           <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Q_DailyRequire_Detail" Relationship="QMSSystemModel.FK_Q_UserEvaluate_Q_DailyRequire_Detail" FromRole="Q_UserEvaluate" ToRole="Q_DailyRequire_Detail" />
           <NavigationProperty Name="Q_User" Relationship="QMSSystemModel.FK_Q_UserEvaluate_NHANVIEN" FromRole="Q_UserEvaluate" ToRole="Q_User" />
+          <NavigationProperty Name="Q_DailyRequire_Detail" Relationship="QMSSystemModel.FK_Q_UserEvaluate_Q_DailyRequire_Detail" FromRole="Q_UserEvaluate" ToRole="Q_DailyRequire_Detail" />
         </EntityType>
         <EntityType Name="Q_UserMajor">
           <Key>
@@ -2523,18 +2483,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Q_DailyRequire_Detail_Q_DailyRequire">
-          <End Type="QMSSystemModel.Q_DailyRequire" Role="Q_DailyRequire" Multiplicity="1" />
-          <End Type="QMSSystemModel.Q_DailyRequire_Detail" Role="Q_DailyRequire_Detail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Q_DailyRequire">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Q_DailyRequire_Detail">
-              <PropertyRef Name="DailyRequireId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Q_DailyRequire_Q_Service">
           <End Type="QMSSystemModel.Q_Service" Role="Q_Service" Multiplicity="1" />
           <End Type="QMSSystemModel.Q_DailyRequire" Role="Q_DailyRequire" Multiplicity="*" />
@@ -2544,54 +2492,6 @@
             </Principal>
             <Dependent Role="Q_DailyRequire">
               <PropertyRef Name="ServiceId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Q_DailyRequire_Detail_Q_Major">
-          <End Type="QMSSystemModel.Q_Major" Role="Q_Major" Multiplicity="1" />
-          <End Type="QMSSystemModel.Q_DailyRequire_Detail" Role="Q_DailyRequire_Detail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Q_Major">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Q_DailyRequire_Detail">
-              <PropertyRef Name="MajorId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Q_DailyRequire_Detail_Q_Status">
-          <End Type="QMSSystemModel.Q_Status" Role="Q_Status" Multiplicity="1" />
-          <End Type="QMSSystemModel.Q_DailyRequire_Detail" Role="Q_DailyRequire_Detail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Q_Status">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Q_DailyRequire_Detail">
-              <PropertyRef Name="StatusId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Q_DailyRequire_Detail_Q_User">
-          <End Type="QMSSystemModel.Q_User" Role="Q_User" Multiplicity="0..1" />
-          <End Type="QMSSystemModel.Q_DailyRequire_Detail" Role="Q_DailyRequire_Detail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Q_User">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Q_DailyRequire_Detail">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Q_UserEvaluate_Q_DailyRequire_Detail">
-          <End Type="QMSSystemModel.Q_DailyRequire_Detail" Role="Q_DailyRequire_Detail" Multiplicity="0..1" />
-          <End Type="QMSSystemModel.Q_UserEvaluate" Role="Q_UserEvaluate" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Q_DailyRequire_Detail">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Q_UserEvaluate">
-              <PropertyRef Name="DailyRequireDeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2679,18 +2579,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Q_HisDailyRequire_De_Q_HisDailyRequire">
-          <End Type="QMSSystemModel.Q_HisDailyRequire" Role="Q_HisDailyRequire" Multiplicity="1" />
-          <End Type="QMSSystemModel.Q_HisDailyRequire_De" Role="Q_HisDailyRequire_De" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Q_HisDailyRequire">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Q_HisDailyRequire_De">
-              <PropertyRef Name="HisDailyRequireId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Q_HisDailyRequire_Q_Service">
           <End Type="QMSSystemModel.Q_Service" Role="Q_Service" Multiplicity="1" />
           <End Type="QMSSystemModel.Q_HisDailyRequire" Role="Q_HisDailyRequire" Multiplicity="*" />
@@ -2700,54 +2588,6 @@
             </Principal>
             <Dependent Role="Q_HisDailyRequire">
               <PropertyRef Name="ServiceId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Q_HisDailyRequire_De_Q_Major">
-          <End Type="QMSSystemModel.Q_Major" Role="Q_Major" Multiplicity="1" />
-          <End Type="QMSSystemModel.Q_HisDailyRequire_De" Role="Q_HisDailyRequire_De" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Q_Major">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Q_HisDailyRequire_De">
-              <PropertyRef Name="MajorId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Q_HisDailyRequire_De_Q_Status">
-          <End Type="QMSSystemModel.Q_Status" Role="Q_Status" Multiplicity="1" />
-          <End Type="QMSSystemModel.Q_HisDailyRequire_De" Role="Q_HisDailyRequire_De" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Q_Status">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Q_HisDailyRequire_De">
-              <PropertyRef Name="StatusId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Q_HisDailyRequire_De_Q_User">
-          <End Type="QMSSystemModel.Q_User" Role="Q_User" Multiplicity="0..1" />
-          <End Type="QMSSystemModel.Q_HisDailyRequire_De" Role="Q_HisDailyRequire_De" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Q_User">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Q_HisDailyRequire_De">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Q_HisUserEvaluate_Q_HisDailyRequire_De">
-          <End Type="QMSSystemModel.Q_HisDailyRequire_De" Role="Q_HisDailyRequire_De" Multiplicity="1" />
-          <End Type="QMSSystemModel.Q_HisUserEvaluate" Role="Q_HisUserEvaluate" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Q_HisDailyRequire_De">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Q_HisUserEvaluate">
-              <PropertyRef Name="HisDailyRequireDeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3015,6 +2855,186 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Q_RecieverSMS">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PhoneNumber" Type="String" Nullable="false" MaxLength="20" FixedLength="true" Unicode="false" />
+          <Property Name="Note" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Q_DailyRequire_Detail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DailyRequireId" Type="Int32" Nullable="false" />
+          <Property Name="MajorId" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="Int32" />
+          <Property Name="EquipCode" Type="Int32" />
+          <Property Name="ProcessTime" Type="DateTime" Precision="3" />
+          <Property Name="EndProcessTime" Type="DateTime" Precision="3" />
+          <Property Name="StatusId" Type="Int32" Nullable="false" />
+          <Property Name="IsSendSMS" Type="Boolean" Nullable="false" />
+          <Property Name="SmsContent" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="ServeOverCounter" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Q_DailyRequire" Relationship="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_DailyRequire" FromRole="Q_DailyRequire_Detail" ToRole="Q_DailyRequire" />
+          <NavigationProperty Name="Q_Major" Relationship="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_Major" FromRole="Q_DailyRequire_Detail" ToRole="Q_Major" />
+          <NavigationProperty Name="Q_Status" Relationship="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_Status" FromRole="Q_DailyRequire_Detail" ToRole="Q_Status" />
+          <NavigationProperty Name="Q_User" Relationship="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_User" FromRole="Q_DailyRequire_Detail" ToRole="Q_User" />
+          <NavigationProperty Name="Q_UserEvaluate" Relationship="QMSSystemModel.FK_Q_UserEvaluate_Q_DailyRequire_Detail" FromRole="Q_DailyRequire_Detail" ToRole="Q_UserEvaluate" />
+        </EntityType>
+        <EntityType Name="Q_HisDailyRequire_De">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="HisDailyRequireId" Type="Int32" Nullable="false" />
+          <Property Name="MajorId" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="Int32" />
+          <Property Name="EquipCode" Type="Int32" />
+          <Property Name="ProcessTime" Type="DateTime" Precision="3" />
+          <Property Name="EndProcessTime" Type="DateTime" Precision="3" />
+          <Property Name="StatusId" Type="Int32" Nullable="false" />
+          <Property Name="IsSendSMS" Type="Boolean" Nullable="false" />
+          <Property Name="SmsContent" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="ServeOverCounter" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Q_HisDailyRequire" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_HisDailyRequire" FromRole="Q_HisDailyRequire_De" ToRole="Q_HisDailyRequire" />
+          <NavigationProperty Name="Q_Major" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_Major" FromRole="Q_HisDailyRequire_De" ToRole="Q_Major" />
+          <NavigationProperty Name="Q_Status" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_Status" FromRole="Q_HisDailyRequire_De" ToRole="Q_Status" />
+          <NavigationProperty Name="Q_User" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_User" FromRole="Q_HisDailyRequire_De" ToRole="Q_User" />
+          <NavigationProperty Name="Q_HisUserEvaluate" Relationship="QMSSystemModel.FK_Q_HisUserEvaluate_Q_HisDailyRequire_De" FromRole="Q_HisDailyRequire_De" ToRole="Q_HisUserEvaluate" />
+        </EntityType>
+        <Association Name="FK_Q_DailyRequire_Detail_Q_DailyRequire">
+          <End Type="QMSSystemModel.Q_DailyRequire" Role="Q_DailyRequire" Multiplicity="1" />
+          <End Type="QMSSystemModel.Q_DailyRequire_Detail" Role="Q_DailyRequire_Detail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_DailyRequire">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_DailyRequire_Detail">
+              <PropertyRef Name="DailyRequireId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Q_DailyRequire_Detail_Q_Major">
+          <End Type="QMSSystemModel.Q_Major" Role="Q_Major" Multiplicity="1" />
+          <End Type="QMSSystemModel.Q_DailyRequire_Detail" Role="Q_DailyRequire_Detail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_Major">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_DailyRequire_Detail">
+              <PropertyRef Name="MajorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Q_DailyRequire_Detail_Q_Status">
+          <End Type="QMSSystemModel.Q_Status" Role="Q_Status" Multiplicity="1" />
+          <End Type="QMSSystemModel.Q_DailyRequire_Detail" Role="Q_DailyRequire_Detail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_Status">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_DailyRequire_Detail">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Q_DailyRequire_Detail_Q_User">
+          <End Type="QMSSystemModel.Q_User" Role="Q_User" Multiplicity="0..1" />
+          <End Type="QMSSystemModel.Q_DailyRequire_Detail" Role="Q_DailyRequire_Detail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_DailyRequire_Detail">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Q_UserEvaluate_Q_DailyRequire_Detail">
+          <End Type="QMSSystemModel.Q_DailyRequire_Detail" Role="Q_DailyRequire_Detail" Multiplicity="0..1" />
+          <End Type="QMSSystemModel.Q_UserEvaluate" Role="Q_UserEvaluate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_DailyRequire_Detail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_UserEvaluate">
+              <PropertyRef Name="DailyRequireDeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Q_HisDailyRequire_De_Q_HisDailyRequire">
+          <End Type="QMSSystemModel.Q_HisDailyRequire" Role="Q_HisDailyRequire" Multiplicity="1" />
+          <End Type="QMSSystemModel.Q_HisDailyRequire_De" Role="Q_HisDailyRequire_De" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_HisDailyRequire">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_HisDailyRequire_De">
+              <PropertyRef Name="HisDailyRequireId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Q_HisDailyRequire_De_Q_Major">
+          <End Type="QMSSystemModel.Q_Major" Role="Q_Major" Multiplicity="1" />
+          <End Type="QMSSystemModel.Q_HisDailyRequire_De" Role="Q_HisDailyRequire_De" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_Major">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_HisDailyRequire_De">
+              <PropertyRef Name="MajorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Q_HisDailyRequire_De_Q_Status">
+          <End Type="QMSSystemModel.Q_Status" Role="Q_Status" Multiplicity="1" />
+          <End Type="QMSSystemModel.Q_HisDailyRequire_De" Role="Q_HisDailyRequire_De" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_Status">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_HisDailyRequire_De">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Q_HisDailyRequire_De_Q_User">
+          <End Type="QMSSystemModel.Q_User" Role="Q_User" Multiplicity="0..1" />
+          <End Type="QMSSystemModel.Q_HisDailyRequire_De" Role="Q_HisDailyRequire_De" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_HisDailyRequire_De">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Q_HisUserEvaluate_Q_HisDailyRequire_De">
+          <End Type="QMSSystemModel.Q_HisDailyRequire_De" Role="Q_HisDailyRequire_De" Multiplicity="1" />
+          <End Type="QMSSystemModel.Q_HisUserEvaluate" Role="Q_HisUserEvaluate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_HisDailyRequire_De">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_HisUserEvaluate">
+              <PropertyRef Name="HisDailyRequireDeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Q_RequestTicket">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3169,23 +3189,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Q_DailyRequire_Detail">
-            <EntityTypeMapping TypeName="QMSSystemModel.Q_DailyRequire_Detail">
-              <MappingFragment StoreEntitySet="Q_DailyRequire_Detail">
-                <ScalarProperty Name="ServeOverCounter" ColumnName="ServeOverCounter" />
-                <ScalarProperty Name="SmsContent" ColumnName="SmsContent" />
-                <ScalarProperty Name="IsSendSMS" ColumnName="IsSendSMS" />
-                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
-                <ScalarProperty Name="EndProcessTime" ColumnName="EndProcessTime" />
-                <ScalarProperty Name="ProcessTime" ColumnName="ProcessTime" />
-                <ScalarProperty Name="EquipCode" ColumnName="EquipCode" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="MajorId" ColumnName="MajorId" />
-                <ScalarProperty Name="DailyRequireId" ColumnName="DailyRequireId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Q_Equipment">
             <EntityTypeMapping TypeName="QMSSystemModel.Q_Equipment">
               <MappingFragment StoreEntitySet="Q_Equipment">
@@ -3268,23 +3271,6 @@
                 <ScalarProperty Name="BusinessId" ColumnName="BusinessId" />
                 <ScalarProperty Name="ServiceId" ColumnName="ServiceId" />
                 <ScalarProperty Name="TicketNumber" ColumnName="TicketNumber" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Q_HisDailyRequire_De">
-            <EntityTypeMapping TypeName="QMSSystemModel.Q_HisDailyRequire_De">
-              <MappingFragment StoreEntitySet="Q_HisDailyRequire_De">
-                <ScalarProperty Name="ServeOverCounter" ColumnName="ServeOverCounter" />
-                <ScalarProperty Name="SmsContent" ColumnName="SmsContent" />
-                <ScalarProperty Name="IsSendSMS" ColumnName="IsSendSMS" />
-                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
-                <ScalarProperty Name="EndProcessTime" ColumnName="EndProcessTime" />
-                <ScalarProperty Name="ProcessTime" ColumnName="ProcessTime" />
-                <ScalarProperty Name="EquipCode" ColumnName="EquipCode" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="MajorId" ColumnName="MajorId" />
-                <ScalarProperty Name="HisDailyRequireId" ColumnName="HisDailyRequireId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -3396,16 +3382,6 @@
                 <ScalarProperty Name="Note" ColumnName="Note" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="LanguageId" ColumnName="LanguageId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Q_RecieverSMS">
-            <EntityTypeMapping TypeName="QMSSystemModel.Q_RecieverSMS">
-              <MappingFragment StoreEntitySet="Q_RecieverSMS">
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="Note" ColumnName="Note" />
-                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -3600,6 +3576,60 @@
                 <ScalarProperty Name="VideoId" ColumnName="VideoId" />
                 <ScalarProperty Name="TemplateId" ColumnName="TemplateId" />
                 <ScalarProperty Name="Index" ColumnName="Index" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Q_RecieverSMS">
+            <EntityTypeMapping TypeName="QMSSystemModel.Q_RecieverSMS">
+              <MappingFragment StoreEntitySet="Q_RecieverSMS">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Q_DailyRequire_Detail">
+            <EntityTypeMapping TypeName="QMSSystemModel.Q_DailyRequire_Detail">
+              <MappingFragment StoreEntitySet="Q_DailyRequire_Detail">
+                <ScalarProperty Name="ServeOverCounter" ColumnName="ServeOverCounter" />
+                <ScalarProperty Name="SmsContent" ColumnName="SmsContent" />
+                <ScalarProperty Name="IsSendSMS" ColumnName="IsSendSMS" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="EndProcessTime" ColumnName="EndProcessTime" />
+                <ScalarProperty Name="ProcessTime" ColumnName="ProcessTime" />
+                <ScalarProperty Name="EquipCode" ColumnName="EquipCode" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="MajorId" ColumnName="MajorId" />
+                <ScalarProperty Name="DailyRequireId" ColumnName="DailyRequireId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Q_HisDailyRequire_De">
+            <EntityTypeMapping TypeName="QMSSystemModel.Q_HisDailyRequire_De">
+              <MappingFragment StoreEntitySet="Q_HisDailyRequire_De">
+                <ScalarProperty Name="ServeOverCounter" ColumnName="ServeOverCounter" />
+                <ScalarProperty Name="SmsContent" ColumnName="SmsContent" />
+                <ScalarProperty Name="IsSendSMS" ColumnName="IsSendSMS" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="EndProcessTime" ColumnName="EndProcessTime" />
+                <ScalarProperty Name="ProcessTime" ColumnName="ProcessTime" />
+                <ScalarProperty Name="EquipCode" ColumnName="EquipCode" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="MajorId" ColumnName="MajorId" />
+                <ScalarProperty Name="HisDailyRequireId" ColumnName="HisDailyRequireId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Q_RequestTicket">
+            <EntityTypeMapping TypeName="QMSSystemModel.Q_RequestTicket">
+              <MappingFragment StoreEntitySet="Q_RequestTicket">
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

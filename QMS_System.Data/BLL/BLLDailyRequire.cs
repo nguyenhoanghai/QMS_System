@@ -107,6 +107,7 @@ namespace QMS_System.Data.BLL
                             item.EndProcessTime = DateTime.Now;
                             ticket = item.Q_DailyRequire.TicketNumber;
                         }
+
                         db.SaveChanges();
                         return ticket;
                     }
@@ -188,6 +189,32 @@ namespace QMS_System.Data.BLL
             catch (Exception)
             { }
             return ticket;
+        }
+
+        public TicketInfo GetCurrentTicketInfo(int userId, int equipCode, DateTime date, int useWithThirdPattern)
+        {
+            try
+            {
+                using (db = new QMSSystemEntities())
+                {
+                    var last = db.Q_DailyRequire_Detail.Where(x => x.Q_DailyRequire.PrintTime.Year == date.Year && x.Q_DailyRequire.PrintTime.Month == date.Month && x.Q_DailyRequire.PrintTime.Day == date.Day && x.UserId == userId && x.EquipCode == equipCode && x.StatusId == (int)eStatus.DAGXL).ToList();
+                    if (last.Count > 0)
+                    {
+                        var first = last.FirstOrDefault();
+                        return new TicketInfo()
+                        {
+                            RequireDetailId = first.Id,
+                            RequireId = first.DailyRequireId,
+                            StartTime = first.ProcessTime.Value.TimeOfDay,
+                            TimeServeAllow = first.Q_DailyRequire.ServeTimeAllow,
+                            TicketNumber = (useWithThirdPattern == 0 ? first.Q_DailyRequire.TicketNumber : int.Parse(first.Q_DailyRequire.STT_PhongKham))
+                        };
+                    }
+                }
+            }
+            catch (Exception)
+            { }
+            return null;
         }
 
         public bool StoreTicket(int ticket, int userId, int equipCode, DateTime date)
@@ -276,6 +303,7 @@ namespace QMS_System.Data.BLL
                     string query = "DELETE FROM [dbo].[q_userevaluate]   ";
                     query += "DELETE FROM [dbo].[Q_DailyRequire_Detail]   ";
                     query += "DELETE FROM [dbo].[Q_DailyRequire]   ";
+                    query += "DELETE FROM [dbo].[Q_RequestTicket]   ";
                     query += "update [dbo].[q_counter] set [LastCall]='0', [IsRunning]=1 ";
                     db.Database.ExecuteSqlCommand(query);
                     db.SaveChanges();
@@ -323,7 +351,10 @@ namespace QMS_System.Data.BLL
                             if (equip != null)
                                 db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + num + " where Id=" + equip.CounterId);
 
+                            db.Database.ExecuteSqlCommand(@"update  Q_RequestTicket  set isdeleted= 1 where userId=" + userId);
                             db.SaveChanges();
+                            res.Data = check.Q_DailyRequire.ServeTimeAllow;
+                            res.Data_1 = check.ProcessTime.Value.TimeOfDay;
                             res.IsSuccess = true;
                         }
                         else
@@ -343,8 +374,11 @@ namespace QMS_System.Data.BLL
                                 if (equip != null)
                                     db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + ticket + " where Id=" + equip.CounterId);
 
+                                db.Database.ExecuteSqlCommand(@"update  Q_RequestTicket  set isdeleted= 1 where userId=" + userId);
                                 db.Q_DailyRequire_Detail.Add(newobj);
                                 db.SaveChanges();
+                                res.Data = newobj.Q_DailyRequire.ServeTimeAllow;
+                                res.Data_1 = newobj.ProcessTime.Value.TimeOfDay;
                                 res.IsSuccess = true;
                             }
                             else
@@ -402,13 +436,22 @@ namespace QMS_System.Data.BLL
                             if (equip != null)
                                 db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + num + ", isrunning=0 where Id=" + equip.CounterId);
 
+                            db.Database.ExecuteSqlCommand(@"update  Q_RequestTicket  set isdeleted= 1 where userId=" + userId);
                             db.SaveChanges();
                             res.IsSuccess = true;
                             res.Data = num;
+                            res.Data_1 = check.Q_DailyRequire.ServeTimeAllow;
+                            res.Data_2 = check.ProcessTime.Value.TimeOfDay;
                         }
                     }
                     else
+                    {
                         res.IsSuccess = false;
+
+                        db.Database.ExecuteSqlCommand(@"update  Q_RequestTicket  set isdeleted= 1 where userId=" + userId);
+                        db.Q_RequestTicket.Add(new Q_RequestTicket() { UserId = userId, CreatedAt = DateTime.Now });
+                        db.SaveChanges();
+                    }
                 }
             }
             catch (Exception)
@@ -559,10 +602,11 @@ namespace QMS_System.Data.BLL
         /// <param name="IsDoneCurrentTicket"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        public int CallNewTicket(int[] majorIds, int userId, int equipCode, bool IsDoneCurrentTicket, DateTime date, int UseWithThirdPattern)
+        public TicketInfo CallNewTicket(int[] majorIds, int userId, int equipCode, bool IsDoneCurrentTicket, DateTime date, int UseWithThirdPattern)
         {
             using (db = new QMSSystemEntities())
             {
+                TicketInfo ticketInfo = null;
                 var last = db.Q_DailyRequire_Detail.FirstOrDefault(x => x.UserId == userId && x.EquipCode == equipCode && x.StatusId == (int)eStatus.DAGXL);
                 if (last == null)
                 {
@@ -582,14 +626,36 @@ namespace QMS_System.Data.BLL
                         if (equip != null)
                             db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + num + " , isrunning=0 where Id=" + equip.CounterId);
 
+                        db.Database.ExecuteSqlCommand(@"update  Q_RequestTicket  set isdeleted= 1 where userId=" + userId);
                         db.SaveChanges();
-                        return num;
+                        ticketInfo = new TicketInfo()
+                        {
+                            RequireDetailId = obj.Id,
+                            RequireId = obj.DailyRequireId,
+                            StartTime = obj.ProcessTime.Value.TimeOfDay,
+                            TimeServeAllow = obj.Q_DailyRequire.ServeTimeAllow,
+                            TicketNumber = obj.Q_DailyRequire.TicketNumber
+                        };
+                        return ticketInfo;
                     }
                     else
-                        return 0;
+                    {
+                        db.Database.ExecuteSqlCommand(@"update  Q_RequestTicket  set isdeleted= 1 where userId=" + userId);
+                        db.Q_RequestTicket.Add(new Q_RequestTicket() { UserId = userId, CreatedAt = DateTime.Now });
+                        db.SaveChanges();
+                        return ticketInfo;
+                    }
                 }
                 else
-                    return last.Q_DailyRequire.TicketNumber;
+                    return new TicketInfo()
+                    {
+                        RequireDetailId = last.Id,
+                        RequireId = last.DailyRequireId,
+                        StartTime = last.ProcessTime.Value.TimeOfDay,
+                        TimeServeAllow = last.Q_DailyRequire.ServeTimeAllow,
+                        TicketNumber = last.Q_DailyRequire.TicketNumber
+                    };
+
             }
         }
         /// <summary>
@@ -622,18 +688,24 @@ namespace QMS_System.Data.BLL
                         var equip = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipId);
                         if (equip != null)
                             db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + num + ", isrunning=0 where Id=" + equip.CounterId);
+                        db.Database.ExecuteSqlCommand(@"update  Q_RequestTicket  set isdeleted= 1 where userId=" + userId);
                         db.SaveChanges();
-                        return num;
+                        return obj.Q_DailyRequire.TicketNumber;
                     }
                     else
+                    {
+                        db.Database.ExecuteSqlCommand(@"update  Q_RequestTicket  set isdeleted= 1 where userId=" + userId);
+                        db.Q_RequestTicket.Add(new Q_RequestTicket() { UserId = userId, CreatedAt = DateTime.Now });
+                        db.SaveChanges();
                         return 0;
+                    }
                 }
                 else
                     return last.Q_DailyRequire.TicketNumber;
             }
         }
 
-        public int CallNewTicket_GLP_NghiepVu(int[] majorIds, int userId, int equipId, DateTime date, int UseWithThirdPattern)
+        public TicketInfo CallNewTicket_GLP_NghiepVu(int[] majorIds, int userId, int equipId, DateTime date, int UseWithThirdPattern)
         {
             using (db = new QMSSystemEntities())
             {
@@ -655,14 +727,34 @@ namespace QMS_System.Data.BLL
                         var equip = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipId);
                         if (equip != null)
                             db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + num + ", isrunning=0 where Id=" + equip.CounterId);
+                        db.Database.ExecuteSqlCommand(@"update  Q_RequestTicket  set isdeleted= 1 where userId=" + userId);
                         db.SaveChanges();
-                        return num;
+                        return new TicketInfo()
+                        {
+                            RequireDetailId = obj.Id,
+                            RequireId = obj.DailyRequireId,
+                            StartTime = obj.ProcessTime.Value.TimeOfDay,
+                            TimeServeAllow = obj.Q_DailyRequire.ServeTimeAllow,
+                            TicketNumber = obj.Q_DailyRequire.TicketNumber
+                        };
                     }
                     else
-                        return 0;
+                    {
+                        db.Database.ExecuteSqlCommand(@"update  Q_RequestTicket  set isdeleted= 1 where userId=" + userId);
+                        db.Q_RequestTicket.Add(new Q_RequestTicket() { UserId = userId, CreatedAt = DateTime.Now });
+                        db.SaveChanges();
+                        return null;
+                    }
                 }
                 else
-                    return last.Q_DailyRequire.TicketNumber;
+                    return new TicketInfo()
+                    {
+                        RequireDetailId = last.Id,
+                        RequireId = last.DailyRequireId,
+                        StartTime = last.ProcessTime.Value.TimeOfDay,
+                        TimeServeAllow = last.Q_DailyRequire.ServeTimeAllow,
+                        TicketNumber = last.Q_DailyRequire.TicketNumber
+                    };
             }
         }
 
@@ -1081,7 +1173,7 @@ namespace QMS_System.Data.BLL
                 }
             }
         }
-        
+
         /// <summary>
         /// Print ticket
         /// </summary>
@@ -1316,7 +1408,8 @@ namespace QMS_System.Data.BLL
                         Start = x.ProcessTime ?? DateTime.Now,
                         StatusId = x.StatusId,
                         EndProcessTime = x.EndProcessTime,
-                        ServiceId = x.Q_DailyRequire.ServiceId
+                        ServiceId = x.Q_DailyRequire.ServiceId,
+                        BaseServeTime = x.Q_DailyRequire.ServeTimeAllow
                     }).ToList();
                     if (details.Count > 0)
                     {
@@ -1366,22 +1459,28 @@ namespace QMS_System.Data.BLL
                                 if (dscho != null && dscho.Count > 0)
                                     sum = (from r in dscho select r.ServeTimeAllow.Ticks).Sum();
                                 rs.Data = "Wait";
-                                rs.Records = "Số phiếu <span class='text-red bold'>" + ticket + "</span> của quý khách dự kiến sẽ được phục vụ lúc <span class='text-red bold'>" + (DateTime.Now.TimeOfDay.Add(new TimeSpan(sum)).ToString(@"HH\:mm")) + "</span>";
+                                rs.Records = "Số phiếu <span class='text-red bold'>" + ticket + "</span> của quý khách dự kiến sẽ được phục vụ lúc <span class='text-red bold'>" + ((sum > 0 ? DateTime.Now.TimeOfDay.Add(new TimeSpan(sum)) : DateTime.Now.TimeOfDay).ToString(@"hh\:mm")) + "</span>";
+                                rs.Data_1 = "Số phiếu " + ticket + " của quý khách dự kiến sẽ được phục vụ lúc " + (DateTime.Now.TimeOfDay.Add(new TimeSpan(sum)).ToString(@"hh\:mm")) + " ";
                             }
                             else //da xu ly hoan tat
                             {
                                 rs.Data = "End";
                                 rs.Records = "Số phiếu  <span class='text-red bold'>" + ticket + "</span> của quý khách đã phục vụ xong lúc <span class='text-red bold'>" + checkObj.EndProcessTime.Value.ToShortTimeString() + "</span>";
+                                rs.Data_1 = "Số phiếu " + ticket + " của quý khách đã phục vụ xong lúc " + checkObj.EndProcessTime.Value.ToShortTimeString() + " ";
                             }
                         }
                         else //dang xu ly
                         {
                             rs.Data = "Process";
-                            rs.Records = "Số phiếu <span class='text-red bold'>" + ticket + "</span> của quý khách đang được phục vụ.";
+                            rs.Records = "Số phiếu <span class='text-red bold'>" + ticket + "</span> của quý khách đang được phục vụ từ lúc " + checkObj.Start.ToString(@"hh\:mm") + " dự kiến hoàn thành lúc " + checkObj.Start.AddSeconds(checkObj.BaseServeTime.TotalSeconds).ToString(@"hh\:mm") + ".";
+                            rs.Data_1 = "Số phiếu  " + ticket + " của quý khách đang được phục vụ từ lúc " + checkObj.Start.ToString(@"hh\:mm") + " dự kiến hoàn thành lúc " + checkObj.Start.AddSeconds(checkObj.BaseServeTime.TotalSeconds).ToString(@"hh\:mm") + ".";
                         }
                     }
                     else
+                    {
                         rs.Records = "Không tìm thấy thông tin phiếu <span class='text-red bold'>" + ticket + "</span> trong hệ thống.";
+                        rs.Data_1 = "Không tìm thấy thông tin phiếu " + ticket + " trong hệ thống.";
+                    }
                 }
             }
             catch (Exception ex)
@@ -1522,8 +1621,28 @@ namespace QMS_System.Data.BLL
             rs.Data = 0;
             using (var db = new QMSSystemEntities())
             {
+                var currentLogins = (from x in db.Q_Login where x.StatusId == (int)eStatus.LOGIN select x.UserId).ToArray();
+                //lay user co nghiep vu và dang login
+                var userIds = (from x in db.Q_UserMajor
+                               where
+                               !x.IsDeleted && !x.Q_Major.IsDeleted &&
+                               !x.Q_User.IsDeleted && x.MajorId == majorId &&
+                               currentLogins.Contains(x.UserId)
+                               select x.UserId).ToList();
+
+                var requests = db.Q_RequestTicket.Where(x => !x.IsDeleted && userIds.Contains(x.UserId)).OrderBy(x => x.CreatedAt).ToList();
+                if (requests.Count > 0)
+                {
+                    rs.Data = requests[0].UserId;
+                    requests[0].IsDeleted = true;
+                    db.Entry<Q_RequestTicket>(requests[0]).State = System.Data.Entity.EntityState.Modified;
+                    db.SaveChanges();
+                }
+
+
+                /*
                 var waitingTickets = (from x in db.Q_DailyRequire_Detail
-                                      where //x.Q_DailyRequire.TicketNumber != withoutTicketNumber &&
+                                      where
                                               x.Q_DailyRequire.ServiceId == serviceId &&
                                               x.StatusId == (int)eStatus.CHOXL &&
                                               !x.UserId.HasValue
@@ -1532,30 +1651,46 @@ namespace QMS_System.Data.BLL
                 {
                     var currentLogins = (from x in db.Q_Login where x.StatusId == (int)eStatus.LOGIN select x.UserId).ToArray();
 
-                    //lay user co nghiep vu 
+                    //lay user co nghiep vu và dang login
                     var userIds = (from x in db.Q_UserMajor
-                                   where !x.IsDeleted && !x.Q_Major.IsDeleted && !x.Q_User.IsDeleted && x.MajorId == majorId
+                                   where
+                                   !x.IsDeleted && !x.Q_Major.IsDeleted &&
+                                   !x.Q_User.IsDeleted && x.MajorId == majorId &&
+                                   currentLogins.Contains(x.UserId)
                                    select x.UserId).ToList();
+
                     if (userIds.Count > 0)
                     {
                         // lấy user nào đã gọi dc 1 phieu tro len
-                        var loginUsers = (from x in db.Q_DailyRequire_Detail
-                                          where x.UserId.HasValue && userIds.Contains(x.UserId.Value) && currentLogins.Contains(x.UserId.Value)
-                                          select x.UserId).Distinct().ToList();
-                        if (loginUsers.Count > 0)
-                        {
-                            var processingUsers = (from x in db.Q_DailyRequire_Detail where x.StatusId == (int)eStatus.DAGXL select x.UserId).ToList();
-                            if (processingUsers.Count > 0)
-                                loginUsers = loginUsers.Where(x => !processingUsers.Contains(x)).ToList();
-                            var freeUser = (from x in db.Q_DailyRequire_Detail
-                                            where x.StatusId == (int)eStatus.HOTAT && loginUsers.Contains(x.UserId.Value)
-                                            orderby x.EndProcessTime.Value descending
-                                            select x.UserId).Distinct().FirstOrDefault();
-                            if (freeUser != null)
-                                rs.Data = freeUser; 
-                        }
+                        var usersDaGiaoDich = (from x in db.Q_DailyRequire_Detail
+                                               where
+                                               x.UserId.HasValue &&
+                                               userIds.Contains(x.UserId.Value)
+                                               select x.UserId).Distinct().ToList();
+
+                         
+                            //ktra xem co thang nao chua GD ko 
+                            var userChuaGiaoDich = userIds.Where(x => !usersDaGiaoDich.Contains(x)).Select(x => x).OrderBy(x=>x).ToArray();
+                            if (userChuaGiaoDich != null && userChuaGiaoDich.Length > 0)
+                                rs.Data = userChuaGiaoDich[0];
+                            else
+                            {
+                                var processingUsers = (from x in db.Q_DailyRequire_Detail where x.StatusId == (int)eStatus.DAGXL select x.UserId).ToList();
+                                if (processingUsers.Count > 0)
+                                    usersDaGiaoDich = usersDaGiaoDich.Where(x => !processingUsers.Contains(x)).ToList();
+                                var freeUser = (from x in db.Q_DailyRequire_Detail
+                                                where
+                                                x.StatusId == (int)eStatus.HOTAT &&
+                                                x.IsNew &&
+                                                usersDaGiaoDich.Contains(x.UserId.Value)
+                                                orderby x.EndProcessTime.Value
+                                                select x).OrderBy(x => x.EndProcessTime.Value).ToList();
+                                if (freeUser != null && freeUser.Count > 0)
+                                    rs.Data = freeUser.FirstOrDefault().UserId;
+                            }
+                        
                     }
-                }
+                }*/
                 return rs;
             }
         }
@@ -1577,7 +1712,7 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public int UpdateServeTime(int userId, int minutes)
+        public TicketInfo UpdateServeTime(int userId, int minutes, bool replaceByNew)
         {
             using (var db = new QMSSystemEntities())
             {
@@ -1587,13 +1722,21 @@ namespace QMS_System.Data.BLL
                     var ticket = (from x in db.Q_DailyRequire where x.Id == ticketDetail.DailyRequireId select x).FirstOrDefault();
                     if (ticket != null)
                     {
-                        ticket.ServeTimeAllow = new TimeSpan(0, minutes, 0);
+                        if (replaceByNew)
+                            ticket.ServeTimeAllow = new TimeSpan(0, minutes, 0);
+                        else
+                            ticket.ServeTimeAllow = ticket.ServeTimeAllow.Add(new TimeSpan(0, minutes, 0));
                         db.Entry(ticket).State = System.Data.Entity.EntityState.Modified;
                         db.SaveChanges();
-                        return ticket.TicketNumber;
+                        return new TicketInfo()
+                        {
+                            RequireDetailId = ticket.Id,
+                            TimeServeAllow = ticket.ServeTimeAllow,
+                            TicketNumber = ticket.TicketNumber
+                        };
                     }
                 }
-                return 0;
+                return null;
             }
         }
     }

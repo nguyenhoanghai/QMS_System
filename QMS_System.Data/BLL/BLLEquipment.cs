@@ -1,6 +1,5 @@
 ﻿using QMS_System.Data.Enum;
 using QMS_System.Data.Model;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -144,11 +143,42 @@ namespace QMS_System.Data.BLL
             using (db = new QMSSystemEntities())
             {
                 List<string> codeArr = new List<string>();
-                var codes = db.Q_Equipment.Where(x => !x.IsDeleted && (x.EquipTypeId == (int)eEquipType.Counter || x.EquipTypeId == (int)eEquipType.Printer)&&x.StatusId ==(int)eStatus.HOTAT).Select(x => x.Code).ToList();
+                var codes = db.Q_Equipment.Where(x => !x.IsDeleted && (x.EquipTypeId == (int)eEquipType.Counter || x.EquipTypeId == (int)eEquipType.Printer) && x.StatusId == (int)eStatus.HOTAT).Select(x => x.Code).ToList();
                 if (codes.Count > 0)
                     for (int i = 0; i < codes.Count; i++)
                         codeArr.Add(codes[i] < 10 ? ("0" + codes[i]) : codes[i].ToString());
                 return codeArr;
+            }
+        }
+        public List<ModelSelectItem> GetsEquipments()
+        {
+            using (db = new QMSSystemEntities())
+            {
+                var equips = db.Q_Equipment.Where(x => !x.IsDeleted && x.EquipTypeId == (int)eEquipType.Counter && x.StatusId == (int)eStatus.HOTAT).Select(x =>
+                new ModelSelectItem()
+                {
+                    Id = x.Code,
+                    Name = x.Q_Counter.ShortName,
+                    Data = 0
+                }).OrderBy(x => x.Id).ToList();
+                if (equips.Count > 0)
+                {
+                    var equipIds = equips.Select(x => x.Id).ToList();
+                    var tickets = db.Q_DailyRequire_Detail.Where(x => equipIds.Contains(x.EquipCode.Value) && x.StatusId == (int)eStatus.DAGXL).ToList();
+
+                    foreach (var item in equips)
+                    {
+                        var found = tickets.Where(x => x.EquipCode == item.Id).OrderByDescending(x => x.ProcessTime.Value).FirstOrDefault();
+                        if (item.Id < 10)
+                            item.Code = ("0" + item.Id);
+                        else
+                           item.Code = item.Id.ToString();
+
+                        if (found != null)
+                            item.Data = found.Q_DailyRequire.TicketNumber;
+                    } 
+                }
+                return equips;
             }
         }
     }

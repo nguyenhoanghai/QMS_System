@@ -124,7 +124,8 @@ namespace QMS_System.Data.BLL
                 {
                     int tieuchi = 0;
                     int.TryParse(value.Substring((value.IndexOf('_') + 1)), out tieuchi);
-                    bool sendSMS = db.Q_EvaluateDetail.FirstOrDefault(x => x.Id == tieuchi).IsSendSMS;
+                    var detail = db.Q_EvaluateDetail.FirstOrDefault(x => x.Id == tieuchi);
+                    bool sendSMS = detail.IsSendSMS;
                     var now = DateTime.Now;
                     var system = db.Q_Config.FirstOrDefault(x => x.IsActived && x.Code == eConfigCode.System).Value;
 
@@ -141,6 +142,11 @@ namespace QMS_System.Data.BLL
                                        (x.StatusId == (int)eStatus.DANHGIA || x.StatusId == (int)eStatus.DAGXL) &&
                                        (system == "1" ? true : x.UserId == user.Id)
                                        select x);
+
+                            var config = db.Q_Config.FirstOrDefault(x => x.Code == eConfigCode.DoneTicketAfterEvaluate);
+                            string doneTicketAfterEvaluate = "0";
+                            if (config != null)
+                                doneTicketAfterEvaluate = config.Value;
 
                             foreach (var item in details)
                             {
@@ -162,7 +168,7 @@ namespace QMS_System.Data.BLL
                                     });
                                 }
 
-                                if (item.StatusId != (int)eStatus.HOTAT)
+                                if (item.StatusId != (int)eStatus.HOTAT && doneTicketAfterEvaluate == "1")
                                 {
                                     item.StatusId = (int)eStatus.HOTAT;
                                     item.EndProcessTime = now;
@@ -187,6 +193,19 @@ namespace QMS_System.Data.BLL
                         db.SaveChanges();
                         rs.IsSuccess = true;
                     }
+
+                    if (sendSMS)
+                    {
+                        var require = new Q_CounterSoftRequire();
+                        string phones = string.Join(";", (from x in db.Q_RecieverSMS where x.IsActive select x.PhoneNumber.Trim()).ToArray());
+                        if (phones.Length > 0)
+                        {
+                            require.Content = phones + ":" + user.Name + "(" + user.UserName + ")" + " " + detail.SmsContent;
+                            require.TypeOfRequire = (int)eCounterSoftRequireType.SendSMS;
+                            db.Q_CounterSoftRequire.Add(require);
+                            db.SaveChanges();
+                        }
+                    }
                 }
             }
             return rs;
@@ -199,6 +218,7 @@ namespace QMS_System.Data.BLL
         /// <param name="value">value đánh giá</param>
         /// <param name="system">hệ thống 1=> xe máy , 0 => khác </param> 
         /// <returns></returns>
+
         public ResponseBaseModel DanhGia_BP(int equipCode, string value, int system)
         {
             var rs = new ResponseBaseModel();
@@ -245,8 +265,11 @@ namespace QMS_System.Data.BLL
                                         CreatedDate = now
                                     });
                                 }
-
-                                if (item.StatusId != (int)eStatus.HOTAT)
+                                var config = db.Q_Config.FirstOrDefault(x => x.Code == eConfigCode.DoneTicketAfterEvaluate);
+                                string doneTicketAfterEvaluate = "0";
+                                if (config != null)
+                                    doneTicketAfterEvaluate = config.Value;
+                                if (item.StatusId != (int)eStatus.HOTAT && doneTicketAfterEvaluate == "1")
                                 {
                                     item.StatusId = (int)eStatus.HOTAT;
                                     item.EndProcessTime = now;
@@ -287,7 +310,12 @@ namespace QMS_System.Data.BLL
                         r.Details.AddRange(ycDanhGia);
                         if (userIds.Count > 0)
                             foreach (var yc in r.Details)
-                                yc.Id = danhgia.Where(x => x.Score == yc.Code && userIds.Contains(x.UserId)).Count();
+                            {
+                                var a = new ModelSelectItem();
+                                Parse.CopyObject(yc, ref a);
+                                a.Id = danhgia.Where(x => x.Score == yc.Code && userIds.Contains(x.UserId)).Count();
+                                r.Details.Add(a);
+                            }
                     }
                 }
                 return report;
@@ -300,7 +328,7 @@ namespace QMS_System.Data.BLL
             {
                 var now = DateTime.Now;
                 var report = new List<ReportEvaluateModel>();
-                report.AddRange(db.Q_User.Select(x => new ReportEvaluateModel() { ServiceId = x.Id, ServiceName = x.Name }));
+                report.AddRange(db.Q_User.Select(x => new ReportEvaluateModel() { ServiceId = x.Id, ServiceName = x.Name }).ToList());
                 var ycDanhGia = db.Q_EvaluateDetail.
                                     Where(x => !x.IsDeleted && !x.Q_Evaluate.IsDeleted).
                                     OrderBy(x => x.Index).
@@ -311,12 +339,13 @@ namespace QMS_System.Data.BLL
                     var danhgia = db.Q_UserEvaluate.Where(x => x.CreatedDate.Day == now.Day && x.CreatedDate.Month == now.Month && x.CreatedDate.Year == now.Year).ToList();
                     foreach (var r in report)
                     {
-                        //r.tc1 = danhgia.Where(x => x.Score == "1_1" && x.UserId == r.ServiceId).Count();
-                        //r.tc2 = danhgia.Where(x => x.Score == "1_2" && x.UserId == r.ServiceId).Count();
-                        //r.tc3 = danhgia.Where(x => x.Score == "1_3" && x.UserId == r.ServiceId).Count();
-                        r.Details.AddRange(ycDanhGia);
-                        foreach (var yc in r.Details)
-                            yc.Id = danhgia.Where(x => x.Score == yc.Code && x.UserId == r.ServiceId).Count();
+                        foreach (var yc in ycDanhGia)
+                        {
+                            var a = new ModelSelectItem();
+                            Parse.CopyObject(yc, ref a);
+                            a.Id = danhgia.Where(x => x.Score == yc.Code && x.UserId == r.ServiceId).Count();
+                            r.Details.Add(a);
+                        }
                     }
                 }
                 return report;
@@ -341,9 +370,6 @@ namespace QMS_System.Data.BLL
                     var danhgia = db.Q_UserEvaluate.Where(x => (x.Q_DailyRequire_Detail.EndProcessTime.Value.Day >= from.Day && x.Q_DailyRequire_Detail.EndProcessTime.Value.Month == from.Month && x.Q_DailyRequire_Detail.EndProcessTime.Value.Year == from.Year) && (x.Q_DailyRequire_Detail.EndProcessTime.Value.Day <= to.Day && x.Q_DailyRequire_Detail.EndProcessTime.Value.Month == to.Month && x.Q_DailyRequire_Detail.EndProcessTime.Value.Year == to.Year) && x.UserId == userId).ToList();
                     if (danhgia.Count > 0)
                     {
-                        //obj.tc1 = danhgia.Where(x => x.Score == "1_1").Count();
-                        //obj.tc2 = danhgia.Where(x => x.Score == "1_2").Count();
-                        //obj.tc3 = danhgia.Where(x => x.Score == "1_3").Count();
                         obj.Details.AddRange(ycDanhGia);
                         foreach (var yc in obj.Details)
                             yc.Id = danhgia.Where(x => x.Score == yc.Code).Count();
@@ -363,12 +389,13 @@ namespace QMS_System.Data.BLL
                             var objs = danhgia.Where(x => x.UserId == item.UserId).ToList();
                             if (objs.Count > 0)
                             {
-                                //item.tc1 = objs.Where(x => x.Score == "1_1").Count();
-                                //item.tc2 = objs.Where(x => x.Score == "1_2").Count();
-                                //item.tc3 = objs.Where(x => x.Score == "1_3").Count();
-                                item.Details.AddRange(ycDanhGia);
                                 foreach (var yc in item.Details)
-                                    yc.Id = danhgia.Where(x => x.Score == yc.Code).Count();
+                                {
+                                    var a = new ModelSelectItem();
+                                    Parse.CopyObject(yc, ref a);
+                                    a.Id = danhgia.Where(x => x.Score == yc.Code).Count();
+                                    item.Details.Add(a);
+                                }
                             }
                         }
                     }
@@ -467,6 +494,51 @@ namespace QMS_System.Data.BLL
                 return report;
             }
         }
+
+        public List<string> GetRequireSendSMSForAndroid()
+        {
+            using (var db = new QMSSystemEntities())
+            {
+                var requires = db.Q_CounterSoftRequire.Where(x => x.TypeOfRequire == (int)eCounterSoftRequireType.SendSMS).Select(x => x.Content).ToList();
+
+
+
+                db.Database.ExecuteSqlCommand("delete  Q_CounterSoftRequire where TypeOfRequire = 3");
+                db.SaveChanges();
+                return requires;
+            }
+        }
+
+        public AndroidModel GetInfoForAndroid(string userName, int getSTT, int getSMS, int getUserInfo)
+        {
+            using (var db = new QMSSystemEntities())
+            {
+                AndroidModel androidModel = new AndroidModel();
+                if (getSTT == 1)
+                { 
+                    var obj = db.Q_DailyRequire_Detail.Where(x => (x.StatusId == (int)eStatus.DAGXL || x.StatusId == (int)eStatus.DANHGIA) && x.ProcessTime.Value.Day == DateTime.Now.Day && x.ProcessTime.Value.Month == DateTime.Now.Month && x.ProcessTime.Value.Year == DateTime.Now.Year && x.Q_User.UserName.Trim().ToUpper().Equals(userName)).FirstOrDefault();
+                    if (obj != null)
+                    {
+                        androidModel.TicketNumber = obj.Q_DailyRequire.TicketNumber;
+                        androidModel.Status= (obj.StatusId == (int)eStatus.DANHGIA ? 1 : 0);
+                    }
+                    else
+                        androidModel.TicketNumber = 0;
+                }
+
+                if (getUserInfo == 1)
+                    androidModel.UserInfo = BLLUser.Instance.GetByUserName(userName);
+
+                if (getSMS == 1)
+                {
+                    androidModel.SMS = db.Q_CounterSoftRequire.Where(x => x.TypeOfRequire == (int)eCounterSoftRequireType.SendSMS).Select(x => x.Content).ToList();
+                    db.Database.ExecuteSqlCommand("delete  Q_CounterSoftRequire where TypeOfRequire = 3");
+                    db.SaveChanges();
+                }
+                return androidModel;
+            }
+        }
+
     }
 }
 
@@ -499,6 +571,18 @@ public class SendSMSModel
     {
         SMS = new List<SMSModel>();
         Phones = new List<string>();
+    }
+}
+
+public class AndroidModel
+{
+    public List<string> SMS { get; set; } 
+    public int TicketNumber { get; set; }
+    public int Status { get; set; }
+    public UserModel UserInfo { get; set; }
+    public AndroidModel()
+    {
+        SMS = new List<string>();
     }
 }
 

@@ -37,14 +37,12 @@ namespace QMS_System.Data
         public DbSet<Q_CounterSoftRequire> Q_CounterSoftRequire { get; set; }
         public DbSet<Q_CounterSound> Q_CounterSound { get; set; }
         public DbSet<Q_DailyRequire> Q_DailyRequire { get; set; }
-        public DbSet<Q_DailyRequire_Detail> Q_DailyRequire_Detail { get; set; }
         public DbSet<Q_Equipment> Q_Equipment { get; set; }
         public DbSet<Q_EquipmentType> Q_EquipmentType { get; set; }
         public DbSet<Q_EquipTypeProcess> Q_EquipTypeProcess { get; set; }
         public DbSet<Q_Evaluate> Q_Evaluate { get; set; }
         public DbSet<Q_EvaluateDetail> Q_EvaluateDetail { get; set; }
         public DbSet<Q_HisDailyRequire> Q_HisDailyRequire { get; set; }
-        public DbSet<Q_HisDailyRequire_De> Q_HisDailyRequire_De { get; set; }
         public DbSet<Q_HisUserEvaluate> Q_HisUserEvaluate { get; set; }
         public DbSet<Q_Language> Q_Language { get; set; }
         public DbSet<Q_Login> Q_Login { get; set; }
@@ -55,7 +53,6 @@ namespace QMS_System.Data
         public DbSet<Q_Process> Q_Process { get; set; }
         public DbSet<Q_ReadTemp_Detail> Q_ReadTemp_Detail { get; set; }
         public DbSet<Q_ReadTemplate> Q_ReadTemplate { get; set; }
-        public DbSet<Q_RecieverSMS> Q_RecieverSMS { get; set; }
         public DbSet<Q_RegisterRecieveTicket> Q_RegisterRecieveTicket { get; set; }
         public DbSet<Q_Service> Q_Service { get; set; }
         public DbSet<Q_ServiceShift> Q_ServiceShift { get; set; }
@@ -72,5 +69,9 @@ namespace QMS_System.Data
         public DbSet<Q_Video> Q_Video { get; set; }
         public DbSet<Q_VideoTemplate> Q_VideoTemplate { get; set; }
         public DbSet<Q_VideoTemplate_De> Q_VideoTemplate_De { get; set; }
+        public DbSet<Q_RecieverSMS> Q_RecieverSMS { get; set; }
+        public DbSet<Q_DailyRequire_Detail> Q_DailyRequire_Detail { get; set; }
+        public DbSet<Q_HisDailyRequire_De> Q_HisDailyRequire_De { get; set; }
+        public DbSet<Q_RequestTicket> Q_RequestTicket { get; set; }
     }
 }

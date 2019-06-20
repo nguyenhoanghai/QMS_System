@@ -16,11 +16,11 @@ namespace QMS_System.Data
     {
         public Q_Status()
         {
-            this.Q_DailyRequire_Detail = new HashSet<Q_DailyRequire_Detail>();
             this.Q_Equipment = new HashSet<Q_Equipment>();
-            this.Q_HisDailyRequire_De = new HashSet<Q_HisDailyRequire_De>();
             this.Q_Login = new HashSet<Q_Login>();
             this.Q_LoginHistory = new HashSet<Q_LoginHistory>();
+            this.Q_DailyRequire_Detail = new HashSet<Q_DailyRequire_Detail>();
+            this.Q_HisDailyRequire_De = new HashSet<Q_HisDailyRequire_De>();
         }
     
         public int Id { get; set; }
@@ -28,11 +28,11 @@ namespace QMS_System.Data
         public int StatusTypeId { get; set; }
         public string Note { get; set; }
     
-        public virtual ICollection<Q_DailyRequire_Detail> Q_DailyRequire_Detail { get; set; }
         public virtual ICollection<Q_Equipment> Q_Equipment { get; set; }
-        public virtual ICollection<Q_HisDailyRequire_De> Q_HisDailyRequire_De { get; set; }
         public virtual ICollection<Q_Login> Q_Login { get; set; }
         public virtual ICollection<Q_LoginHistory> Q_LoginHistory { get; set; }
         public virtual Q_StatusType Q_StatusType { get; set; }
+        public virtual ICollection<Q_DailyRequire_Detail> Q_DailyRequire_Detail { get; set; }
+        public virtual ICollection<Q_HisDailyRequire_De> Q_HisDailyRequire_De { get; set; }
     }
 }

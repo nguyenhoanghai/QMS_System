@@ -22,7 +22,7 @@ namespace QMS_System.Data
         public bool IsDeleted { get; set; }
         public System.DateTime CreatedDate { get; set; }
     
-        public virtual Q_DailyRequire_Detail Q_DailyRequire_Detail { get; set; }
         public virtual Q_User Q_User { get; set; }
+        public virtual Q_DailyRequire_Detail Q_DailyRequire_Detail { get; set; }
     }
 }

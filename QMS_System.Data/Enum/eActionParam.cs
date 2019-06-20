@@ -77,9 +77,22 @@ namespace QMS_System.Data.Enum
         /// </summary>
         public const string PHANDIEUNHANVIEN = "PHANDIEUNHANVIEN";
         /// <summary>
-        /// Đổi thời gian phục vụ DK
+        /// Thay thế thời gian phục vụ DK
         /// </summary>
-        public const string DOITHOIGIANPV = "DOITHOIGIANPV";
+        public const string THAYTHE_TGIAN_PVU = "THAYTHE_TGIAN_PVU";
+       
+        /// <summary>
+        /// cộng thêm thời gian phục vụ DK
+        /// </summary>
+        public const string CONGTHEM_TGIAN_PVU = "CONGTHEM_TGIAN_PVU";
 
+        /// <summary>
+        /// gửi thời gian phục vụ dk cho counter 
+        /// </summary>
+        public const string GUI_TGIAN_PVU_DKIEN = "GUI_TGIAN_PVU_DKIEN";
+        /// <summary>
+        /// gửi thời gian kết thúc dk cho counter 
+        /// </summary>
+        public const string GUI_TGIAN_KTHUC_DKIEN = "GUI_TGIAN_KTHUC_DKIEN";
     }
 }

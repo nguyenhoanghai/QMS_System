@@ -24,6 +24,7 @@ namespace QMS_System.Data.BLL
         }
         private BLLCounter() { }
         #endregion
+
         public List<CounterModel> Gets()
         {
             using (db = new QMSSystemEntities())
@@ -38,7 +39,7 @@ namespace QMS_System.Data.BLL
                     Acreage = x.Acreage ,  // Diện tích
                 }).ToList();
             }
-        }
+        } 
 
         public List<ModelSelectItem> GetLookUp()
         {
@@ -99,6 +100,7 @@ namespace QMS_System.Data.BLL
                 return false;
             }
         }
+
         private bool CheckExists(Q_Counter model)
         {
             Q_Counter obj = null;

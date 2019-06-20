@@ -1,4 +1,5 @@
-﻿using QMS_System.Data.Model;
+﻿using QMS_System.Data.Enum;
+using QMS_System.Data.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,12 +30,11 @@ namespace QMS_System.Data.BLL
            var  list = new List<CounterSoftRequireModel>();
             using (db = new QMSSystemEntities())
             {
-                var objs = db.Q_CounterSoftRequire.ToList(); 
+                var objs = db.Q_CounterSoftRequire.Where(x=>x.TypeOfRequire != (int)eCounterSoftRequireType.SendSMS).ToList(); 
                 if (objs.Count > 0)
                 {
                     for (int i = 0; i < objs.Count; i++)
-                    {
-                      //  list.AddRange(objs[i].Content.Split('|').ToList());
+                    { 
                         list.Add(new CounterSoftRequireModel() { Content = objs[i].Content, Type = objs[i].TypeOfRequire });
                         db.Q_CounterSoftRequire.Remove(objs[i]);
                     }

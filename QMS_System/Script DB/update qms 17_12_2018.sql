@@ -40,3 +40,20 @@ GO
 INSERT INTO [dbo].[Q_Config]([Code],[Value],[Note],[IsActived],[IsDeleted])
      VALUES ('UseWithThirdPattern','0','Su Dung Chung Ben Thu 3',1,0)
 GO
+
+alter table [dbo].[Q_DailyRequire_Detail] add [IsSendSMS] bit not null default(0)
+GO
+alter table [dbo].[Q_HisDailyRequire_De] add [IsSendSMS] bit not null default(0)
+GO
+
+alter table [dbo].[Q_DailyRequire_Detail] add [SmsContent] nvarchar(1000) null
+GO
+alter table [dbo].[Q_HisDailyRequire_De] add [SmsContent] nvarchar(250) null
+GO
+
+INSERT INTO [dbo].[Q_Config]([Code],[Value],[Note],[IsActived],[IsDeleted])
+     VALUES ('CheckTimeBeforePrintTicket','0','Kiểm tra thời gian ca làm việc trước khi cấp phiếu',1,0)
+GO
+INSERT INTO [dbo].[Q_Config]([Code],[Value],[Note],[IsActived],[IsDeleted])
+     VALUES ('SoundLockPrintTicket','khoa.wav','file âm thanh thông báo ngưng cấp phiếu',1,0)
+GO 
