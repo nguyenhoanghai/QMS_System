@@ -3,6 +3,7 @@ using QMS_System.Data.BLL.IssueTicketScreen;
 using QMS_System.Data.Enum;
 using System;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace QMS_System.IssueTicketScreen
@@ -17,14 +18,20 @@ namespace QMS_System.IssueTicketScreen
         }
         public void frmIssueTicketScreen_Load(object sender, EventArgs e)
         {
-            string imgPath = BLLConfig.Instance.GetConfigByCode(eConfigCode.Background);
-            if (!string.IsNullOrEmpty(imgPath))
+            try
+            {
+  string imgPath = BLLConfig.Instance.GetConfigByCode(eConfigCode.Background);
+            if (!string.IsNullOrEmpty(imgPath) && File.Exists(imgPath))
             {
                 Image img = new Bitmap(imgPath);
                 this.BackgroundImage = img;
                 this.BackgroundImageLayout = ImageLayout.Stretch;
                 this.WindowState = FormWindowState.Maximized;
             }
+            }
+            catch (Exception)
+            { 
+            } 
 
             GetButton(); //phải để sau cùng
             this.KeyPreview = true; // kích hoạt loạt sự kiên nhấn Keyboard trên form
