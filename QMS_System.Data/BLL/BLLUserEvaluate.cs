@@ -196,14 +196,22 @@ namespace QMS_System.Data.BLL
 
                     if (sendSMS)
                     {
-                        var require = new Q_CounterSoftRequire();
-                        string phones = string.Join(";", (from x in db.Q_RecieverSMS where x.IsActive select x.PhoneNumber.Trim()).ToArray());
-                        if (phones.Length > 0)
+                        Q_CounterSoftRequire require;
+                        string maNV = user.Id.ToString();
+                        var phones = db.Q_RecieverSMS.Where(x => x.IsActive && x.UserIds.Contains(maNV)).ToList();
+                        if (phones.Count > 0)
                         {
-                            require.Content = phones + ":" + user.Name + "(" + user.UserName + ")" + " " + detail.SmsContent;
-                            require.TypeOfRequire = (int)eCounterSoftRequireType.SendSMS;
-                            db.Q_CounterSoftRequire.Add(require);
-                            db.SaveChanges();
+                            foreach (var item in phones)
+                            {
+                                if (item.UserIds.Split(',').ToArray().Contains(maNV) && item.PhoneNumber.Length > 0)
+                                {
+                                    require = new Q_CounterSoftRequire();
+                                    require.Content = item.PhoneNumber + ":" + user.Name + "(" + user.UserName + ")" + " " + detail.SmsContent;
+                                    require.TypeOfRequire = (int)eCounterSoftRequireType.SendSMS;
+                                    db.Q_CounterSoftRequire.Add(require);
+                                }
+                                db.SaveChanges();
+                            }
                         }
                     }
                 }
@@ -501,8 +509,6 @@ namespace QMS_System.Data.BLL
             {
                 var requires = db.Q_CounterSoftRequire.Where(x => x.TypeOfRequire == (int)eCounterSoftRequireType.SendSMS).Select(x => x.Content).ToList();
 
-
-
                 db.Database.ExecuteSqlCommand("delete  Q_CounterSoftRequire where TypeOfRequire = 3");
                 db.SaveChanges();
                 return requires;
@@ -515,12 +521,14 @@ namespace QMS_System.Data.BLL
             {
                 AndroidModel androidModel = new AndroidModel();
                 if (getSTT == 1)
-                { 
+                {
                     var obj = db.Q_DailyRequire_Detail.Where(x => (x.StatusId == (int)eStatus.DAGXL || x.StatusId == (int)eStatus.DANHGIA) && x.ProcessTime.Value.Day == DateTime.Now.Day && x.ProcessTime.Value.Month == DateTime.Now.Month && x.ProcessTime.Value.Year == DateTime.Now.Year && x.Q_User.UserName.Trim().ToUpper().Equals(userName)).FirstOrDefault();
                     if (obj != null)
                     {
+                        var userEval = db.Q_UserEvaluate.FirstOrDefault(x => x.DailyRequireDeId == obj.Id);
+                        androidModel.HasEvaluate = (userEval != null ? true : false);
                         androidModel.TicketNumber = obj.Q_DailyRequire.TicketNumber;
-                        androidModel.Status= (obj.StatusId == (int)eStatus.DANHGIA ? 1 : 0);
+                        androidModel.Status = (obj.StatusId == (int)eStatus.DANHGIA ? 1 : 0);
                     }
                     else
                         androidModel.TicketNumber = 0;
@@ -576,10 +584,11 @@ public class SendSMSModel
 
 public class AndroidModel
 {
-    public List<string> SMS { get; set; } 
+    public List<string> SMS { get; set; }
     public int TicketNumber { get; set; }
     public int Status { get; set; }
     public UserModel UserInfo { get; set; }
+    public bool HasEvaluate { get; set; }
     public AndroidModel()
     {
         SMS = new List<string>();

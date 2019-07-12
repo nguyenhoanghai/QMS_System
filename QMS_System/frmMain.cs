@@ -1058,6 +1058,11 @@ namespace QMS_System
                                                 }
                                             }
                                             break;
+                                        case eActionParam.GOI_PHIEU_TRONG: // goi phan dieu Nghiep vu cho nhan vien
+                                            var c = BLLDailyRequire.Instance.InsertAndCallEmptyTicket(equipCode);
+                                            if (c.IsSuccess)
+                                                ticketInfo = new TicketInfo() { TicketNumber = c.Data, StartTime = c.Data_2, TimeServeAllow = c.Data_1 };
+                                            break;
                                     }
                                     #endregion
                                     break;
@@ -1066,7 +1071,7 @@ namespace QMS_System
                                     switch (userRight[i].ActionParamName)
                                     {
                                         case eActionParam.MOIKH: // gui so len counter
-                                            arrStr = GPRO_Helper.Instance.ChangeNumber((ticketInfo != null ? ticketInfo.TicketNumber : 0));
+                                            arrStr = GPRO_Helper.Instance.ChangeNumber((ticketInfo != null && ticketInfo.TicketNumber > 0 ? ticketInfo.TicketNumber : 0));
                                             if (autoCall)
                                             {
                                                 dataSendToComport.Add(("AA " + hexStr[1] + " " + arrStr[0] + " " + arrStr[1]));
@@ -1377,7 +1382,7 @@ namespace QMS_System
                                 if (!string.IsNullOrEmpty(requires[i].Content))
                                 {
                                     var arr = requires[i].Content.Split(',').ToArray();
-                                    if (arr != null && arr.Length ==5)
+                                    if (arr != null && arr.Length == 5)
                                         CounterProcess(arr);
                                 }
                                 break;

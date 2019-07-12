@@ -93,7 +93,6 @@
         <AssociationConnector Association="QMSSystemModel.FK_Q_UserMajor_Q_User" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_VideoTemplate_De_Q_Video" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_VideoTemplate_De_Q_VideoTemplate" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_RecieverSMS" Width="1.5" PointX="13.375" PointY="3.75" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_DailyRequire_Detail" Width="1.5" PointX="14" PointY="20.25" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_HisDailyRequire_De" Width="1.5" PointX="11" PointY="21.375" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_DailyRequire" />
@@ -107,6 +106,7 @@
         <AssociationConnector Association="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_User" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_HisUserEvaluate_Q_HisDailyRequire_De" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_RequestTicket" Width="1.5" PointX="13.375" PointY="6.75" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_RecieverSMS" Width="1.5" PointX="13.375" PointY="3.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -18,5 +18,6 @@ namespace QMS_System.Data
         public string PhoneNumber { get; set; }
         public string Note { get; set; }
         public bool IsActive { get; set; }
+        public string UserIds { get; set; }
     }
 }

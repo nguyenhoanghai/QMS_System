@@ -419,12 +419,12 @@ namespace QMS_System.Data.BLL
                         else
                         {
                             // login on other counter
-                            obj.LogoutTime = date;
-                            obj.StatusId = (int)eStatus.LOGOUT;
+                           // obj.LogoutTime = date;
+                         //   obj.StatusId = (int)eStatus.LOGOUT;
 
-                            var newobj = new Q_Login() { UserId = userId, EquipCode = equipCode, StatusId = (int)eStatus.LOGIN, Date = date };
-                            db.Q_Login.Add(newobj);
-                            num = 9999;
+                          //  var newobj = new Q_Login() { UserId = userId, EquipCode = equipCode, StatusId = (int)eStatus.LOGIN, Date = date };
+                          //  db.Q_Login.Add(newobj);
+                            num = 7777;
                         }
 
                     }

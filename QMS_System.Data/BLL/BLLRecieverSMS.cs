@@ -74,9 +74,11 @@ namespace QMS_System.Data.BLL
                             }
                             else
                             {
+                                obj.UserIds = model.UserIds;
                                 obj.PhoneNumber = model.PhoneNumber;
                                 obj.Note = model.Note;
                                 obj.IsActive = model.IsActive;
+                                obj.UserIds = model.UserIds;
                                 rs.IsSuccess = true;
                             }
                         }
@@ -104,7 +106,8 @@ namespace QMS_System.Data.BLL
                     Id = x.Id,
                     PhoneNumber = x.PhoneNumber,
                     IsActive = x.IsActive,
-                    Note = x.Note
+                    Note = x.Note,
+                    UserIds =x.UserIds
                 }).ToList();
             }
         }
@@ -121,7 +124,7 @@ namespace QMS_System.Data.BLL
         {
             using (db = new QMSSystemEntities())
             {
-                return db.Q_RecieverSMS.Where(x => !x.IsActive).Select(x => new ModelSelectItem() { Id = x.Id, Name = x.PhoneNumber }).ToList();
+                return db.Q_RecieverSMS.Where(x => !x.IsActive).Select(x => new ModelSelectItem() { Id = x.Id, Name = x.PhoneNumber, Code= x.UserIds }).ToList();
             }
         }
 
@@ -171,6 +174,7 @@ namespace QMS_System.Data.BLL
                             PhoneNumber = x.PhoneNumber,
                             IsActive = x.IsActive,
                             Note = x.Note,
+                            UserIds = x.UserIds
                         });
                         return new PagedList<RecieverSMSModel>(NhanVien.ToList(), pageNumber, pageSize);
                     }

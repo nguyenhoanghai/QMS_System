@@ -69,9 +69,9 @@ namespace QMS_System.Data
         public DbSet<Q_Video> Q_Video { get; set; }
         public DbSet<Q_VideoTemplate> Q_VideoTemplate { get; set; }
         public DbSet<Q_VideoTemplate_De> Q_VideoTemplate_De { get; set; }
-        public DbSet<Q_RecieverSMS> Q_RecieverSMS { get; set; }
         public DbSet<Q_DailyRequire_Detail> Q_DailyRequire_Detail { get; set; }
         public DbSet<Q_HisDailyRequire_De> Q_HisDailyRequire_De { get; set; }
         public DbSet<Q_RequestTicket> Q_RequestTicket { get; set; }
+        public DbSet<Q_RecieverSMS> Q_RecieverSMS { get; set; }
     }
 }

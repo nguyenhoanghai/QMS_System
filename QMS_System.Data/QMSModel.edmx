@@ -362,6 +362,7 @@
           <Property Name="PhoneNumber" Type="char" MaxLength="20" Nullable="false" />
           <Property Name="Note" Type="nvarchar" MaxLength="1000" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="UserIds" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Q_RegisterRecieveTicket">
           <Key>
@@ -1689,7 +1690,6 @@
             <End Role="Q_VideoTemplate" EntitySet="Q_VideoTemplate" />
             <End Role="Q_VideoTemplate_De" EntitySet="Q_VideoTemplate_De" />
           </AssociationSet>
-          <EntitySet Name="Q_RecieverSMS" EntityType="QMSSystemModel.Q_RecieverSMS" />
           <EntitySet Name="Q_DailyRequire_Detail" EntityType="QMSSystemModel.Q_DailyRequire_Detail" />
           <EntitySet Name="Q_HisDailyRequire_De" EntityType="QMSSystemModel.Q_HisDailyRequire_De" />
           <AssociationSet Name="FK_Q_DailyRequire_Detail_Q_DailyRequire" Association="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_DailyRequire">
@@ -1733,6 +1733,7 @@
             <End Role="Q_HisUserEvaluate" EntitySet="Q_HisUserEvaluate" />
           </AssociationSet>
           <EntitySet Name="Q_RequestTicket" EntityType="QMSSystemModel.Q_RequestTicket" />
+          <EntitySet Name="Q_RecieverSMS" EntityType="QMSSystemModel.Q_RecieverSMS" />
           </EntityContainer>
         <EntityType Name="Q_Action">
           <Key>
@@ -2855,15 +2856,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Q_RecieverSMS">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="PhoneNumber" Type="String" Nullable="false" MaxLength="20" FixedLength="true" Unicode="false" />
-          <Property Name="Note" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-        </EntityType>
         <EntityType Name="Q_DailyRequire_Detail">
           <Key>
             <PropertyRef Name="Id" />
@@ -3034,6 +3026,16 @@
           <Property Name="UserId" Type="Int32" Nullable="false" />
           <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
           <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="Q_RecieverSMS">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PhoneNumber" Type="String" Nullable="false" MaxLength="20" FixedLength="true" Unicode="false" />
+          <Property Name="Note" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="UserIds" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -3580,16 +3582,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Q_RecieverSMS">
-            <EntityTypeMapping TypeName="QMSSystemModel.Q_RecieverSMS">
-              <MappingFragment StoreEntitySet="Q_RecieverSMS">
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="Note" ColumnName="Note" />
-                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Q_DailyRequire_Detail">
             <EntityTypeMapping TypeName="QMSSystemModel.Q_DailyRequire_Detail">
               <MappingFragment StoreEntitySet="Q_DailyRequire_Detail">
@@ -3630,6 +3622,17 @@
                 <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
                 <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Q_RecieverSMS">
+            <EntityTypeMapping TypeName="QMSSystemModel.Q_RecieverSMS">
+              <MappingFragment StoreEntitySet="Q_RecieverSMS">
+                <ScalarProperty Name="UserIds" ColumnName="UserIds" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

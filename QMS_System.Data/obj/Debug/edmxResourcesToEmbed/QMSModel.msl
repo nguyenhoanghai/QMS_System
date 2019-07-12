@@ -149,23 +149,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Q_DailyRequire_Detail">
-      <EntityTypeMapping TypeName="QMSSystemModel.Q_DailyRequire_Detail">
-        <MappingFragment StoreEntitySet="Q_DailyRequire_Detail">
-          <ScalarProperty Name="ServeOverCounter" ColumnName="ServeOverCounter" />
-          <ScalarProperty Name="SmsContent" ColumnName="SmsContent" />
-          <ScalarProperty Name="IsSendSMS" ColumnName="IsSendSMS" />
-          <ScalarProperty Name="StatusId" ColumnName="StatusId" />
-          <ScalarProperty Name="EndProcessTime" ColumnName="EndProcessTime" />
-          <ScalarProperty Name="ProcessTime" ColumnName="ProcessTime" />
-          <ScalarProperty Name="EquipCode" ColumnName="EquipCode" />
-          <ScalarProperty Name="UserId" ColumnName="UserId" />
-          <ScalarProperty Name="MajorId" ColumnName="MajorId" />
-          <ScalarProperty Name="DailyRequireId" ColumnName="DailyRequireId" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Q_Equipment">
       <EntityTypeMapping TypeName="QMSSystemModel.Q_Equipment">
         <MappingFragment StoreEntitySet="Q_Equipment">
@@ -248,23 +231,6 @@
           <ScalarProperty Name="BusinessId" ColumnName="BusinessId" />
           <ScalarProperty Name="ServiceId" ColumnName="ServiceId" />
           <ScalarProperty Name="TicketNumber" ColumnName="TicketNumber" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Q_HisDailyRequire_De">
-      <EntityTypeMapping TypeName="QMSSystemModel.Q_HisDailyRequire_De">
-        <MappingFragment StoreEntitySet="Q_HisDailyRequire_De">
-          <ScalarProperty Name="ServeOverCounter" ColumnName="ServeOverCounter" />
-          <ScalarProperty Name="SmsContent" ColumnName="SmsContent" />
-          <ScalarProperty Name="IsSendSMS" ColumnName="IsSendSMS" />
-          <ScalarProperty Name="StatusId" ColumnName="StatusId" />
-          <ScalarProperty Name="EndProcessTime" ColumnName="EndProcessTime" />
-          <ScalarProperty Name="ProcessTime" ColumnName="ProcessTime" />
-          <ScalarProperty Name="EquipCode" ColumnName="EquipCode" />
-          <ScalarProperty Name="UserId" ColumnName="UserId" />
-          <ScalarProperty Name="MajorId" ColumnName="MajorId" />
-          <ScalarProperty Name="HisDailyRequireId" ColumnName="HisDailyRequireId" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>
@@ -376,16 +342,6 @@
           <ScalarProperty Name="Note" ColumnName="Note" />
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="LanguageId" ColumnName="LanguageId" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Q_RecieverSMS">
-      <EntityTypeMapping TypeName="QMSSystemModel.Q_RecieverSMS">
-        <MappingFragment StoreEntitySet="Q_RecieverSMS">
-          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-          <ScalarProperty Name="Note" ColumnName="Note" />
-          <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>
@@ -580,6 +536,61 @@
           <ScalarProperty Name="VideoId" ColumnName="VideoId" />
           <ScalarProperty Name="TemplateId" ColumnName="TemplateId" />
           <ScalarProperty Name="Index" ColumnName="Index" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Q_DailyRequire_Detail">
+      <EntityTypeMapping TypeName="QMSSystemModel.Q_DailyRequire_Detail">
+        <MappingFragment StoreEntitySet="Q_DailyRequire_Detail">
+          <ScalarProperty Name="ServeOverCounter" ColumnName="ServeOverCounter" />
+          <ScalarProperty Name="SmsContent" ColumnName="SmsContent" />
+          <ScalarProperty Name="IsSendSMS" ColumnName="IsSendSMS" />
+          <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+          <ScalarProperty Name="EndProcessTime" ColumnName="EndProcessTime" />
+          <ScalarProperty Name="ProcessTime" ColumnName="ProcessTime" />
+          <ScalarProperty Name="EquipCode" ColumnName="EquipCode" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="MajorId" ColumnName="MajorId" />
+          <ScalarProperty Name="DailyRequireId" ColumnName="DailyRequireId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Q_HisDailyRequire_De">
+      <EntityTypeMapping TypeName="QMSSystemModel.Q_HisDailyRequire_De">
+        <MappingFragment StoreEntitySet="Q_HisDailyRequire_De">
+          <ScalarProperty Name="ServeOverCounter" ColumnName="ServeOverCounter" />
+          <ScalarProperty Name="SmsContent" ColumnName="SmsContent" />
+          <ScalarProperty Name="IsSendSMS" ColumnName="IsSendSMS" />
+          <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+          <ScalarProperty Name="EndProcessTime" ColumnName="EndProcessTime" />
+          <ScalarProperty Name="ProcessTime" ColumnName="ProcessTime" />
+          <ScalarProperty Name="EquipCode" ColumnName="EquipCode" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="MajorId" ColumnName="MajorId" />
+          <ScalarProperty Name="HisDailyRequireId" ColumnName="HisDailyRequireId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Q_RequestTicket">
+      <EntityTypeMapping TypeName="QMSSystemModel.Q_RequestTicket">
+        <MappingFragment StoreEntitySet="Q_RequestTicket">
+          <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Q_RecieverSMS">
+      <EntityTypeMapping TypeName="QMSSystemModel.Q_RecieverSMS">
+        <MappingFragment StoreEntitySet="Q_RecieverSMS">
+          <ScalarProperty Name="UserIds" ColumnName="UserIds" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="Note" ColumnName="Note" />
+          <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>

@@ -1739,5 +1739,34 @@ namespace QMS_System.Data.BLL
                 return null;
             }
         }
+
+        public ResponseBaseModel InsertAndCallEmptyTicket(int equipCode)
+        {
+            var rs = new ResponseBaseModel();
+rs.IsSuccess = false;
+            using (var db = new QMSSystemEntities())
+            {
+                var login = db.Q_Login.FirstOrDefault(x => x.EquipCode == equipCode);
+                if (login != null)
+                {
+                    var userMajor = db.Q_UserMajor.Where(x => !x.IsDeleted && x.UserId == login.UserId).OrderBy(x => x.Index).FirstOrDefault();
+                    if (userMajor != null)
+                    {
+                        var service = db.Q_ServiceStep.Where(x => !x.IsDeleted && x.MajorId == userMajor.MajorId).OrderBy(x => x.Index).FirstOrDefault();
+                        var newTicket = new Q_DailyRequire() { TicketNumber = -1, ServiceId = service.ServiceId, PrintTime = DateTime.Now, ServeTimeAllow = service.Q_Service.TimeProcess.TimeOfDay };
+                        var detail = new Q_DailyRequire_Detail() { Q_DailyRequire = newTicket, EquipCode = equipCode, MajorId = userMajor.MajorId, UserId = login.UserId, ProcessTime = newTicket.PrintTime, StatusId = (int)eStatus.DAGXL };
+                        newTicket.Q_DailyRequire_Detail = new List<Q_DailyRequire_Detail>();
+                        newTicket.Q_DailyRequire_Detail.Add(detail);
+                        db.Q_DailyRequire.Add(newTicket);
+                        db.SaveChanges();
+                        rs.IsSuccess = true;
+                        rs.Data = newTicket.TicketNumber;
+                        rs.Data_2 = newTicket.PrintTime.TimeOfDay;
+                        rs.Data_1 = newTicket.ServeTimeAllow; 
+                    }
+                } 
+                return rs;
+            }
+        }
     }
 }

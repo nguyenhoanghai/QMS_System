@@ -77,6 +77,10 @@ namespace QMS_System.Data.Enum
         /// </summary>
         public const string PHANDIEUNHANVIEN = "PHANDIEUNHANVIEN";
         /// <summary>
+        /// tao va goi mới với so phiếu -1
+        /// </summary>
+        public const string GOI_PHIEU_TRONG = "GOI_PHIEU_TRONG";
+        /// <summary>
         /// Thay thế thời gian phục vụ DK
         /// </summary>
         public const string THAYTHE_TGIAN_PVU = "THAYTHE_TGIAN_PVU";

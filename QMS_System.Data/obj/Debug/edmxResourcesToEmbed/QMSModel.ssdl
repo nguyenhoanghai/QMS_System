@@ -357,6 +357,7 @@
     <Property Name="PhoneNumber" Type="char" MaxLength="20" Nullable="false" />
     <Property Name="Note" Type="nvarchar" MaxLength="1000" />
     <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="UserIds" Type="varchar" MaxLength="50" />
   </EntityType>
   <EntityType Name="Q_RegisterRecieveTicket">
     <Key>
@@ -367,6 +368,15 @@
     <Property Name="UserId" Type="int" Nullable="false" />
     <Property Name="Date" Type="datetime" Nullable="false" />
     <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_RequestTicket">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+    <Property Name="CreatedAt" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="Q_Service">
     <Key>
@@ -1217,6 +1227,7 @@
     <EntitySet Name="Q_ReadTemplate" EntityType="Self.Q_ReadTemplate" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_RecieverSMS" EntityType="Self.Q_RecieverSMS" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_RegisterRecieveTicket" EntityType="Self.Q_RegisterRecieveTicket" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_RequestTicket" EntityType="Self.Q_RequestTicket" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_Service" EntityType="Self.Q_Service" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_ServiceShift" EntityType="Self.Q_ServiceShift" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_ServiceStep" EntityType="Self.Q_ServiceStep" Schema="dbo" store:Type="Tables" />
