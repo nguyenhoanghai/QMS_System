@@ -54,7 +54,6 @@ namespace QMS_System.Data
         public DbSet<Q_ReadTemp_Detail> Q_ReadTemp_Detail { get; set; }
         public DbSet<Q_ReadTemplate> Q_ReadTemplate { get; set; }
         public DbSet<Q_RegisterRecieveTicket> Q_RegisterRecieveTicket { get; set; }
-        public DbSet<Q_Service> Q_Service { get; set; }
         public DbSet<Q_ServiceShift> Q_ServiceShift { get; set; }
         public DbSet<Q_ServiceStep> Q_ServiceStep { get; set; }
         public DbSet<Q_Shift> Q_Shift { get; set; }
@@ -73,5 +72,7 @@ namespace QMS_System.Data
         public DbSet<Q_HisDailyRequire_De> Q_HisDailyRequire_De { get; set; }
         public DbSet<Q_RequestTicket> Q_RequestTicket { get; set; }
         public DbSet<Q_RecieverSMS> Q_RecieverSMS { get; set; }
+        public DbSet<Q_Service> Q_Service { get; set; }
+        public DbSet<Q_ServiceLimit> Q_ServiceLimit { get; set; }
     }
 }

@@ -604,6 +604,19 @@ namespace QMS_System
                 }
             }
         }
+
+        private void btnServiceLimit_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            Form frm = IsActive(typeof(frmServiceLimit));
+            if (frm == null)
+            {
+                frmServiceLimit forms = new frmServiceLimit();
+                forms.MdiParent = this;
+                forms.Show();
+            }
+            else
+                frm.Activate();
+        }
         #endregion
 
         #region Keypad COMPort

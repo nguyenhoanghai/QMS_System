@@ -12,16 +12,17 @@ namespace QMS_System.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class Q_ServiceShift
+    public partial class Q_ServiceLimit
     {
         public int Id { get; set; }
+        public int UserId { get; set; }
         public int ServiceId { get; set; }
-        public int ShiftId { get; set; }
-        public int Index { get; set; }
-        public string Note { get; set; }
+        public int Quantity { get; set; }
         public bool IsDeleted { get; set; }
+        public int CurrentQuantity { get; set; }
+        public string CurrentDay { get; set; }
     
-        public virtual Q_Shift Q_Shift { get; set; }
         public virtual Q_Service Q_Service { get; set; }
+        public virtual Q_User Q_User { get; set; }
     }
 }

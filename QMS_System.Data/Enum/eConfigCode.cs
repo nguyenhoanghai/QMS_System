@@ -101,5 +101,10 @@ namespace QMS_System.Data.Enum
         /// </summary>
         public const string DoneTicketAfterEvaluate = "DoneTicketAfterEvaluate";
 
+        /// <summary>
+        /// ktra giới hạn số phiếu dc lấy theo dịch vụ
+        /// </summary>
+        public const string CheckServiceLimit = "CheckServiceLimit";
+
     }
 }

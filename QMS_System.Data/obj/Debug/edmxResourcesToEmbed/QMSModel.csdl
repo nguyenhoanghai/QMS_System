@@ -30,7 +30,6 @@
     <EntitySet Name="Q_ReadTemp_Detail" EntityType="QMSSystemModel.Q_ReadTemp_Detail" />
     <EntitySet Name="Q_ReadTemplate" EntityType="QMSSystemModel.Q_ReadTemplate" />
     <EntitySet Name="Q_RegisterRecieveTicket" EntityType="QMSSystemModel.Q_RegisterRecieveTicket" />
-    <EntitySet Name="Q_Service" EntityType="QMSSystemModel.Q_Service" />
     <EntitySet Name="Q_ServiceShift" EntityType="QMSSystemModel.Q_ServiceShift" />
     <EntitySet Name="Q_ServiceStep" EntityType="QMSSystemModel.Q_ServiceStep" />
     <EntitySet Name="Q_Shift" EntityType="QMSSystemModel.Q_Shift" />
@@ -97,10 +96,6 @@
       <End Role="Q_Language" EntitySet="Q_Language" />
       <End Role="Q_CounterSound" EntitySet="Q_CounterSound" />
     </AssociationSet>
-    <AssociationSet Name="FK_Q_DailyRequire_Q_Service" Association="QMSSystemModel.FK_Q_DailyRequire_Q_Service">
-      <End Role="Q_Service" EntitySet="Q_Service" />
-      <End Role="Q_DailyRequire" EntitySet="Q_DailyRequire" />
-    </AssociationSet>
     <AssociationSet Name="FK_Q_Equipment_Q_EquipmentType" Association="QMSSystemModel.FK_Q_Equipment_Q_EquipmentType">
       <End Role="Q_EquipmentType" EntitySet="Q_EquipmentType" />
       <End Role="Q_Equipment" EntitySet="Q_Equipment" />
@@ -128,10 +123,6 @@
     <AssociationSet Name="FK_Q_EvaluateDetail_Q_Evaluate" Association="QMSSystemModel.FK_Q_EvaluateDetail_Q_Evaluate">
       <End Role="Q_Evaluate" EntitySet="Q_Evaluate" />
       <End Role="Q_EvaluateDetail" EntitySet="Q_EvaluateDetail" />
-    </AssociationSet>
-    <AssociationSet Name="FK_Q_HisDailyRequire_Q_Service" Association="QMSSystemModel.FK_Q_HisDailyRequire_Q_Service">
-      <End Role="Q_Service" EntitySet="Q_Service" />
-      <End Role="Q_HisDailyRequire" EntitySet="Q_HisDailyRequire" />
     </AssociationSet>
     <AssociationSet Name="FK_Q_HisUserEvaluate_Q_User" Association="QMSSystemModel.FK_Q_HisUserEvaluate_Q_User">
       <End Role="Q_User" EntitySet="Q_User" />
@@ -180,14 +171,6 @@
     <AssociationSet Name="FK_Q_RegisterRecieveTicket_Q_User" Association="QMSSystemModel.FK_Q_RegisterRecieveTicket_Q_User">
       <End Role="Q_User" EntitySet="Q_User" />
       <End Role="Q_RegisterRecieveTicket" EntitySet="Q_RegisterRecieveTicket" />
-    </AssociationSet>
-    <AssociationSet Name="FK_Q_ServiceShift_Q_Service" Association="QMSSystemModel.FK_Q_ServiceShift_Q_Service">
-      <End Role="Q_Service" EntitySet="Q_Service" />
-      <End Role="Q_ServiceShift" EntitySet="Q_ServiceShift" />
-    </AssociationSet>
-    <AssociationSet Name="FK_Q_ServiceStep_Q_Service" Association="QMSSystemModel.FK_Q_ServiceStep_Q_Service">
-      <End Role="Q_Service" EntitySet="Q_Service" />
-      <End Role="Q_ServiceStep" EntitySet="Q_ServiceStep" />
     </AssociationSet>
     <AssociationSet Name="FK_Q_ServiceShift_Q_Shift" Association="QMSSystemModel.FK_Q_ServiceShift_Q_Shift">
       <End Role="Q_Shift" EntitySet="Q_Shift" />
@@ -265,6 +248,32 @@
     </AssociationSet>
     <EntitySet Name="Q_RequestTicket" EntityType="QMSSystemModel.Q_RequestTicket" />
     <EntitySet Name="Q_RecieverSMS" EntityType="QMSSystemModel.Q_RecieverSMS" />
+    <EntitySet Name="Q_Service" EntityType="QMSSystemModel.Q_Service" />
+    <AssociationSet Name="FK_Q_DailyRequire_Q_Service" Association="QMSSystemModel.FK_Q_DailyRequire_Q_Service">
+      <End Role="Q_Service" EntitySet="Q_Service" />
+      <End Role="Q_DailyRequire" EntitySet="Q_DailyRequire" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_HisDailyRequire_Q_Service" Association="QMSSystemModel.FK_Q_HisDailyRequire_Q_Service">
+      <End Role="Q_Service" EntitySet="Q_Service" />
+      <End Role="Q_HisDailyRequire" EntitySet="Q_HisDailyRequire" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_ServiceShift_Q_Service" Association="QMSSystemModel.FK_Q_ServiceShift_Q_Service">
+      <End Role="Q_Service" EntitySet="Q_Service" />
+      <End Role="Q_ServiceShift" EntitySet="Q_ServiceShift" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_ServiceStep_Q_Service" Association="QMSSystemModel.FK_Q_ServiceStep_Q_Service">
+      <End Role="Q_Service" EntitySet="Q_Service" />
+      <End Role="Q_ServiceStep" EntitySet="Q_ServiceStep" />
+    </AssociationSet>
+    <EntitySet Name="Q_ServiceLimit" EntityType="QMSSystemModel.Q_ServiceLimit" />
+    <AssociationSet Name="FK_Q_ServiceLimit_Q_Service" Association="QMSSystemModel.FK_Q_ServiceLimit_Q_Service">
+      <End Role="Q_Service" EntitySet="Q_Service" />
+      <End Role="Q_ServiceLimit" EntitySet="Q_ServiceLimit" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_ServiceLimit_Q_User" Association="QMSSystemModel.FK_Q_ServiceLimit_Q_User">
+      <End Role="Q_User" EntitySet="Q_User" />
+      <End Role="Q_ServiceLimit" EntitySet="Q_ServiceLimit" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="Q_Action">
     <Key>
@@ -419,8 +428,8 @@
     <Property Name="MaBenhNhan" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
     <Property Name="MaPhongKham" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
     <NavigationProperty Name="Q_Business" Relationship="QMSSystemModel.FK_Q_DailyRequire_Q_Business" FromRole="Q_DailyRequire" ToRole="Q_Business" />
-    <NavigationProperty Name="Q_Service" Relationship="QMSSystemModel.FK_Q_DailyRequire_Q_Service" FromRole="Q_DailyRequire" ToRole="Q_Service" />
     <NavigationProperty Name="Q_DailyRequire_Detail" Relationship="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_DailyRequire" FromRole="Q_DailyRequire" ToRole="Q_DailyRequire_Detail" />
+    <NavigationProperty Name="Q_Service" Relationship="QMSSystemModel.FK_Q_DailyRequire_Q_Service" FromRole="Q_DailyRequire" ToRole="Q_Service" />
   </EntityType>
   <EntityType Name="Q_Equipment">
     <Key>
@@ -513,8 +522,8 @@
     <Property Name="MaBenhNhan" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
     <Property Name="MaPhongKham" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
     <NavigationProperty Name="Q_Business" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_Q_Business" FromRole="Q_HisDailyRequire" ToRole="Q_Business" />
-    <NavigationProperty Name="Q_Service" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_Q_Service" FromRole="Q_HisDailyRequire" ToRole="Q_Service" />
     <NavigationProperty Name="Q_HisDailyRequire_De" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_HisDailyRequire" FromRole="Q_HisDailyRequire" ToRole="Q_HisDailyRequire_De" />
+    <NavigationProperty Name="Q_Service" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_Q_Service" FromRole="Q_HisDailyRequire" ToRole="Q_Service" />
   </EntityType>
   <EntityType Name="Q_HisUserEvaluate">
     <Key>
@@ -649,24 +658,6 @@
     <NavigationProperty Name="Q_Equipment" Relationship="QMSSystemModel.FK_Q_RegisterRecieveTicket_Q_Equipment" FromRole="Q_RegisterRecieveTicket" ToRole="Q_Equipment" />
     <NavigationProperty Name="Q_User" Relationship="QMSSystemModel.FK_Q_RegisterRecieveTicket_Q_User" FromRole="Q_RegisterRecieveTicket" ToRole="Q_User" />
   </EntityType>
-  <EntityType Name="Q_Service">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="StartNumber" Type="Int32" Nullable="false" />
-    <Property Name="EndNumber" Type="Int32" Nullable="false" />
-    <Property Name="TimeProcess" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="Note" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-    <Property Name="IsActived" Type="Boolean" Nullable="false" />
-    <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-    <Property Name="Code" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <NavigationProperty Name="Q_DailyRequire" Relationship="QMSSystemModel.FK_Q_DailyRequire_Q_Service" FromRole="Q_Service" ToRole="Q_DailyRequire" />
-    <NavigationProperty Name="Q_HisDailyRequire" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_Q_Service" FromRole="Q_Service" ToRole="Q_HisDailyRequire" />
-    <NavigationProperty Name="Q_ServiceShift" Relationship="QMSSystemModel.FK_Q_ServiceShift_Q_Service" FromRole="Q_Service" ToRole="Q_ServiceShift" />
-    <NavigationProperty Name="Q_ServiceStep" Relationship="QMSSystemModel.FK_Q_ServiceStep_Q_Service" FromRole="Q_Service" ToRole="Q_ServiceStep" />
-  </EntityType>
   <EntityType Name="Q_ServiceShift">
     <Key>
       <PropertyRef Name="Id" />
@@ -677,8 +668,8 @@
     <Property Name="Index" Type="Int32" Nullable="false" />
     <Property Name="Note" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
     <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-    <NavigationProperty Name="Q_Service" Relationship="QMSSystemModel.FK_Q_ServiceShift_Q_Service" FromRole="Q_ServiceShift" ToRole="Q_Service" />
     <NavigationProperty Name="Q_Shift" Relationship="QMSSystemModel.FK_Q_ServiceShift_Q_Shift" FromRole="Q_ServiceShift" ToRole="Q_Shift" />
+    <NavigationProperty Name="Q_Service" Relationship="QMSSystemModel.FK_Q_ServiceShift_Q_Service" FromRole="Q_ServiceShift" ToRole="Q_Service" />
   </EntityType>
   <EntityType Name="Q_ServiceStep">
     <Key>
@@ -768,6 +759,7 @@
     <NavigationProperty Name="Q_UserMajor" Relationship="QMSSystemModel.FK_Q_UserMajor_Q_User" FromRole="Q_User" ToRole="Q_UserMajor" />
     <NavigationProperty Name="Q_DailyRequire_Detail" Relationship="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_User" FromRole="Q_User" ToRole="Q_DailyRequire_Detail" />
     <NavigationProperty Name="Q_HisDailyRequire_De" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_User" FromRole="Q_User" ToRole="Q_HisDailyRequire_De" />
+    <NavigationProperty Name="Q_ServiceLimit" Relationship="QMSSystemModel.FK_Q_ServiceLimit_Q_User" FromRole="Q_User" ToRole="Q_ServiceLimit" />
   </EntityType>
   <EntityType Name="Q_UserCmdRegister">
     <Key>
@@ -1015,18 +1007,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_Q_DailyRequire_Q_Service">
-    <End Type="QMSSystemModel.Q_Service" Role="Q_Service" Multiplicity="1" />
-    <End Type="QMSSystemModel.Q_DailyRequire" Role="Q_DailyRequire" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Q_Service">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="Q_DailyRequire">
-        <PropertyRef Name="ServiceId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_Q_Equipment_Q_EquipmentType">
     <End Type="QMSSystemModel.Q_EquipmentType" Role="Q_EquipmentType" Multiplicity="1" />
     <End Type="QMSSystemModel.Q_Equipment" Role="Q_Equipment" Multiplicity="*" />
@@ -1108,18 +1088,6 @@
       </Principal>
       <Dependent Role="Q_EvaluateDetail">
         <PropertyRef Name="EvaluateId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_Q_HisDailyRequire_Q_Service">
-    <End Type="QMSSystemModel.Q_Service" Role="Q_Service" Multiplicity="1" />
-    <End Type="QMSSystemModel.Q_HisDailyRequire" Role="Q_HisDailyRequire" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Q_Service">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="Q_HisDailyRequire">
-        <PropertyRef Name="ServiceId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -1264,30 +1232,6 @@
       </Principal>
       <Dependent Role="Q_RegisterRecieveTicket">
         <PropertyRef Name="UserId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_Q_ServiceShift_Q_Service">
-    <End Type="QMSSystemModel.Q_Service" Role="Q_Service" Multiplicity="1" />
-    <End Type="QMSSystemModel.Q_ServiceShift" Role="Q_ServiceShift" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Q_Service">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="Q_ServiceShift">
-        <PropertyRef Name="ServiceId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_Q_ServiceStep_Q_Service">
-    <End Type="QMSSystemModel.Q_Service" Role="Q_Service" Multiplicity="1" />
-    <End Type="QMSSystemModel.Q_ServiceStep" Role="Q_ServiceStep" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Q_Service">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="Q_ServiceStep">
-        <PropertyRef Name="ServiceId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -1568,4 +1512,109 @@
     <Property Name="IsActive" Type="Boolean" Nullable="false" />
     <Property Name="UserIds" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
   </EntityType>
+  <EntityType Name="Q_Service">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="StartNumber" Type="Int32" Nullable="false" />
+    <Property Name="EndNumber" Type="Int32" Nullable="false" />
+    <Property Name="TimeProcess" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Note" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+    <Property Name="IsActived" Type="Boolean" Nullable="false" />
+    <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="Q_DailyRequire" Relationship="QMSSystemModel.FK_Q_DailyRequire_Q_Service" FromRole="Q_Service" ToRole="Q_DailyRequire" />
+    <NavigationProperty Name="Q_HisDailyRequire" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_Q_Service" FromRole="Q_Service" ToRole="Q_HisDailyRequire" />
+    <NavigationProperty Name="Q_ServiceShift" Relationship="QMSSystemModel.FK_Q_ServiceShift_Q_Service" FromRole="Q_Service" ToRole="Q_ServiceShift" />
+    <NavigationProperty Name="Q_ServiceStep" Relationship="QMSSystemModel.FK_Q_ServiceStep_Q_Service" FromRole="Q_Service" ToRole="Q_ServiceStep" />
+    <NavigationProperty Name="Q_ServiceLimit" Relationship="QMSSystemModel.FK_Q_ServiceLimit_Q_Service" FromRole="Q_Service" ToRole="Q_ServiceLimit" />
+  </EntityType>
+  <Association Name="FK_Q_DailyRequire_Q_Service">
+    <End Type="QMSSystemModel.Q_Service" Role="Q_Service" Multiplicity="1" />
+    <End Type="QMSSystemModel.Q_DailyRequire" Role="Q_DailyRequire" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Service">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_DailyRequire">
+        <PropertyRef Name="ServiceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_HisDailyRequire_Q_Service">
+    <End Type="QMSSystemModel.Q_Service" Role="Q_Service" Multiplicity="1" />
+    <End Type="QMSSystemModel.Q_HisDailyRequire" Role="Q_HisDailyRequire" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Service">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_HisDailyRequire">
+        <PropertyRef Name="ServiceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_ServiceShift_Q_Service">
+    <End Type="QMSSystemModel.Q_Service" Role="Q_Service" Multiplicity="1" />
+    <End Type="QMSSystemModel.Q_ServiceShift" Role="Q_ServiceShift" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Service">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_ServiceShift">
+        <PropertyRef Name="ServiceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_ServiceStep_Q_Service">
+    <End Type="QMSSystemModel.Q_Service" Role="Q_Service" Multiplicity="1" />
+    <End Type="QMSSystemModel.Q_ServiceStep" Role="Q_ServiceStep" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Service">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_ServiceStep">
+        <PropertyRef Name="ServiceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Q_ServiceLimit">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <Property Name="ServiceId" Type="Int32" Nullable="false" />
+    <Property Name="Quantity" Type="Int32" Nullable="false" />
+    <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+    <Property Name="CurrentQuantity" Type="Int32" Nullable="false" />
+    <Property Name="CurrentDay" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Q_Service" Relationship="QMSSystemModel.FK_Q_ServiceLimit_Q_Service" FromRole="Q_ServiceLimit" ToRole="Q_Service" />
+    <NavigationProperty Name="Q_User" Relationship="QMSSystemModel.FK_Q_ServiceLimit_Q_User" FromRole="Q_ServiceLimit" ToRole="Q_User" />
+  </EntityType>
+  <Association Name="FK_Q_ServiceLimit_Q_Service">
+    <End Type="QMSSystemModel.Q_Service" Role="Q_Service" Multiplicity="1" />
+    <End Type="QMSSystemModel.Q_ServiceLimit" Role="Q_ServiceLimit" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Service">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_ServiceLimit">
+        <PropertyRef Name="ServiceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_ServiceLimit_Q_User">
+    <End Type="QMSSystemModel.Q_User" Role="Q_User" Multiplicity="1" />
+    <End Type="QMSSystemModel.Q_ServiceLimit" Role="Q_ServiceLimit" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_ServiceLimit">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema>

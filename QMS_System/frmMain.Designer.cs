@@ -96,6 +96,7 @@
             this.btnSound2 = new DevExpress.XtraBars.BarButtonItem();
             this.btnVideo = new DevExpress.XtraBars.BarButtonItem();
             this.btnVideoTemplate = new DevExpress.XtraBars.BarButtonItem();
+            this.btnReportDG = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPage3 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
@@ -112,6 +113,7 @@
             this.ribbonPage4 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup10 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup11 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonPageGroup15 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPage5 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup9 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup8 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -130,8 +132,7 @@
             this.barButtonItem3 = new DevExpress.XtraBars.BarButtonItem();
             this.tmerQuetServeOver = new System.Windows.Forms.Timer(this.components);
             this.barButtonItem11 = new DevExpress.XtraBars.BarButtonItem();
-            this.ribbonPageGroup15 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            this.btnReportDG = new DevExpress.XtraBars.BarButtonItem();
+            this.btnServiceLimit = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemRichTextEdit2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemRichTextEdit3)).BeginInit();
@@ -210,10 +211,11 @@
             this.btnSound2,
             this.btnVideo,
             this.btnVideoTemplate,
-            this.btnReportDG});
+            this.btnReportDG,
+            this.btnServiceLimit});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ribbonControl1.MaxItemId = 72;
+            this.ribbonControl1.MaxItemId = 73;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage3,
@@ -739,6 +741,14 @@
             this.btnVideoTemplate.Name = "btnVideoTemplate";
             this.btnVideoTemplate.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnVideoTemplate_ItemClick);
             // 
+            // btnReportDG
+            // 
+            this.btnReportDG.Caption = "Thống kê đánh giá";
+            this.btnReportDG.Id = 71;
+            this.btnReportDG.LargeGlyph = global::QMS_System.Properties.Resources.Report_1_32;
+            this.btnReportDG.Name = "btnReportDG";
+            this.btnReportDG.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnReportDG_ItemClick);
+            // 
             // ribbonPage3
             // 
             this.ribbonPage3.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
@@ -777,6 +787,7 @@
             // ribbonPageGroup7
             // 
             this.ribbonPageGroup7.ItemLinks.Add(this.btnService);
+            this.ribbonPageGroup7.ItemLinks.Add(this.btnServiceLimit, true);
             this.ribbonPageGroup7.ItemLinks.Add(this.btn, true);
             this.ribbonPageGroup7.ItemLinks.Add(this.btnPolicy, true);
             this.ribbonPageGroup7.ItemLinks.Add(this.btnShift, true);
@@ -865,6 +876,12 @@
             this.ribbonPageGroup11.ItemLinks.Add(this.btnR_Cus, true);
             this.ribbonPageGroup11.Name = "ribbonPageGroup11";
             this.ribbonPageGroup11.Text = "Chuyên sâu";
+            // 
+            // ribbonPageGroup15
+            // 
+            this.ribbonPageGroup15.ItemLinks.Add(this.btnReportDG);
+            this.ribbonPageGroup15.Name = "ribbonPageGroup15";
+            this.ribbonPageGroup15.Text = "Đánh giá";
             // 
             // ribbonPage5
             // 
@@ -983,19 +1000,13 @@
             this.barButtonItem11.LargeGlyph = global::QMS_System.Properties.Resources.Music_icon;
             this.barButtonItem11.Name = "barButtonItem11";
             // 
-            // ribbonPageGroup15
+            // btnServiceLimit
             // 
-            this.ribbonPageGroup15.ItemLinks.Add(this.btnReportDG);
-            this.ribbonPageGroup15.Name = "ribbonPageGroup15";
-            this.ribbonPageGroup15.Text = "Đánh giá";
-            // 
-            // btnReportDG
-            // 
-            this.btnReportDG.Caption = "Thống kê đánh giá";
-            this.btnReportDG.Id = 71;
-            this.btnReportDG.LargeGlyph = global::QMS_System.Properties.Resources.Report_1_32;
-            this.btnReportDG.Name = "btnReportDG";
-            this.btnReportDG.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnReportDG_ItemClick);
+            this.btnServiceLimit.Caption = "Giới hạn dịch vụ";
+            this.btnServiceLimit.Id = 72;
+            this.btnServiceLimit.LargeGlyph = global::QMS_System.Properties.Resources.eyes_office_women_glasses_icon;
+            this.btnServiceLimit.Name = "btnServiceLimit";
+            this.btnServiceLimit.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnServiceLimit_ItemClick);
             // 
             // frmMain
             // 
@@ -1138,5 +1149,6 @@
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup14;
         private DevExpress.XtraBars.BarButtonItem btnReportDG;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup15;
+        private DevExpress.XtraBars.BarButtonItem btnServiceLimit;
     }
 }

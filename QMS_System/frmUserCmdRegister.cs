@@ -266,6 +266,11 @@ namespace QMS_System
             GetAction();
         }
 
+        private void btnResetUser_EditValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
         private void btnCmdParam_Click(object sender, EventArgs e)
         {
             GetCMDParam();

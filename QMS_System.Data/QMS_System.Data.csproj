@@ -64,6 +64,7 @@
     <Compile Include="BLL\BLLR_ReportByBusiness.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BLL\BLLServiceLimit.cs" />
     <Compile Include="BLL\BLLServiceShift.cs" />
     <Compile Include="BLL\BLLShift.cs" />
     <Compile Include="BLL\BLLCounterSoftRequire.cs" />
@@ -109,6 +110,7 @@
     <Compile Include="Model\RecieverSMSModel.cs" />
     <Compile Include="Model\ServiceInfoModel.cs" />
     <Compile Include="Model\ReportModel.cs" />
+    <Compile Include="Model\ServiceLimitModel.cs" />
     <Compile Include="Model\TicketInfo.cs" />
     <Compile Include="Model\VideoModel.cs" />
     <Compile Include="Model\VideoPlaylist.cs" />
@@ -296,6 +298,9 @@
       <DependentUpon>QMSModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Q_Service.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_ServiceLimit.cs">
       <DependentUpon>QMSModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Q_ServiceShift.cs">

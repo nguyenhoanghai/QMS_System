@@ -383,14 +383,26 @@
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Code" Type="nvarchar" MaxLength="250" />
+    <Property Name="Name" Type="nvarchar" MaxLength="250" Nullable="false" />
     <Property Name="StartNumber" Type="int" Nullable="false" />
     <Property Name="EndNumber" Type="int" Nullable="false" />
     <Property Name="TimeProcess" Type="datetime" Nullable="false" />
-    <Property Name="Note" Type="nvarchar" MaxLength="100" />
+    <Property Name="Note" Type="nvarchar" MaxLength="1000" />
     <Property Name="IsActived" Type="bit" Nullable="false" />
     <Property Name="IsDeleted" Type="bit" Nullable="false" />
-    <Property Name="Code" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Q_ServiceLimit">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="ServiceId" Type="int" Nullable="false" />
+    <Property Name="Quantity" Type="int" Nullable="false" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+    <Property Name="CurrentQuantity" Type="int" Nullable="false" />
+    <Property Name="CurrentDay" Type="varchar" MaxLength="10" Nullable="false" />
   </EntityType>
   <EntityType Name="Q_ServiceShift">
     <Key>
@@ -978,6 +990,30 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_Q_ServiceLimit_Q_Service">
+    <End Role="Q_Service" Type="Self.Q_Service" Multiplicity="1" />
+    <End Role="Q_ServiceLimit" Type="Self.Q_ServiceLimit" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Service">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_ServiceLimit">
+        <PropertyRef Name="ServiceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_ServiceLimit_Q_User">
+    <End Role="Q_User" Type="Self.Q_User" Multiplicity="1" />
+    <End Role="Q_ServiceLimit" Type="Self.Q_ServiceLimit" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_ServiceLimit">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_Q_ServiceShift_Q_Service">
     <End Role="Q_Service" Type="Self.Q_Service" Multiplicity="1" />
     <End Role="Q_ServiceShift" Type="Self.Q_ServiceShift" Multiplicity="*" />
@@ -1229,6 +1265,7 @@
     <EntitySet Name="Q_RegisterRecieveTicket" EntityType="Self.Q_RegisterRecieveTicket" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_RequestTicket" EntityType="Self.Q_RequestTicket" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_Service" EntityType="Self.Q_Service" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_ServiceLimit" EntityType="Self.Q_ServiceLimit" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_ServiceShift" EntityType="Self.Q_ServiceShift" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_ServiceStep" EntityType="Self.Q_ServiceStep" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_Shift" EntityType="Self.Q_Shift" Schema="dbo" store:Type="Tables" />
@@ -1386,6 +1423,14 @@
     <AssociationSet Name="FK_Q_RegisterRecieveTicket_Q_User" Association="Self.FK_Q_RegisterRecieveTicket_Q_User">
       <End Role="Q_User" EntitySet="Q_User" />
       <End Role="Q_RegisterRecieveTicket" EntitySet="Q_RegisterRecieveTicket" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_ServiceLimit_Q_Service" Association="Self.FK_Q_ServiceLimit_Q_Service">
+      <End Role="Q_Service" EntitySet="Q_Service" />
+      <End Role="Q_ServiceLimit" EntitySet="Q_ServiceLimit" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_ServiceLimit_Q_User" Association="Self.FK_Q_ServiceLimit_Q_User">
+      <End Role="Q_User" EntitySet="Q_User" />
+      <End Role="Q_ServiceLimit" EntitySet="Q_ServiceLimit" />
     </AssociationSet>
     <AssociationSet Name="FK_Q_ServiceShift_Q_Service" Association="Self.FK_Q_ServiceShift_Q_Service">
       <End Role="Q_Service" EntitySet="Q_Service" />

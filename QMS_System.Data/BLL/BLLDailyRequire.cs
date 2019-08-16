@@ -305,12 +305,13 @@ namespace QMS_System.Data.BLL
                     query += "DELETE FROM [dbo].[Q_DailyRequire]   ";
                     query += "DELETE FROM [dbo].[Q_RequestTicket]   ";
                     query += "update [dbo].[q_counter] set [LastCall]='0', [IsRunning]=1 ";
+                    query += "update [dbo].[Q_ServiceLimit] set [CurrentDay]='" + date.ToString("dd/MM/yyyy") + "', [CurrentQuantity]=0 ";
                     db.Database.ExecuteSqlCommand(query);
                     db.SaveChanges();
                     return true;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return false;
             }
@@ -335,9 +336,33 @@ namespace QMS_System.Data.BLL
                     var last = db.Q_DailyRequire_Detail.FirstOrDefault(x => x.UserId == userId && x.EquipCode == equipCode && x.StatusId == (int)eStatus.DAGXL);
                     if (last == null)
                     {
-                        var check = db.Q_DailyRequire_Detail.FirstOrDefault(x => x.Q_DailyRequire.TicketNumber == ticket && x.StatusId == (int)eStatus.CHOXL);
+                        string config = BLLConfig.Instance.GetConfigByCode(eConfigCode.CheckServiceLimit);
+                        List<int> serviceOver = new List<int>();
+                        bool hasCheckLimit = false;
+                        if (!string.IsNullOrEmpty(config) && config == "1")
+                        {
+                            hasCheckLimit = true;
+                        }
+                        Start:
+                        var check = db.Q_DailyRequire_Detail.FirstOrDefault(x => x.Q_DailyRequire.TicketNumber == ticket && x.StatusId == (int)eStatus.CHOXL && !serviceOver.Contains(x.Q_DailyRequire.ServiceId));
                         if (check != null)
                         {
+                            if (hasCheckLimit)
+                            {
+                                var userService = db.Q_ServiceLimit.FirstOrDefault(x => !x.IsDeleted && x.UserId == userId && x.ServiceId == check.Q_DailyRequire.ServiceId);
+                                if (userService != null && userService.Quantity == userService.CurrentQuantity)
+                                {
+                                    //ktra tiep xem co user nao còn gọi dc hay ko
+                                    var otherUsers = db.Q_ServiceLimit.Where(x => !x.IsDeleted && x.Quantity != x.CurrentQuantity && x.ServiceId == check.Q_DailyRequire.ServiceId).ToList();
+                                    if (otherUsers.Count > 0)
+                                    {
+                                        // neu co nguoi con goi dc thi ko dc lay phieu voi dich vu nay ma phai goi dich vu khac
+                                        serviceOver.Add(check.Q_DailyRequire.ServiceId);
+                                        goto Start;
+                                    }
+                                }
+                            }
+
                             check.UserId = userId;
                             check.EquipCode = equipCode;
                             check.StatusId = (int)eStatus.DAGXL;
@@ -420,9 +445,33 @@ namespace QMS_System.Data.BLL
                     var last = db.Q_DailyRequire_Detail.FirstOrDefault(x => x.UserId == userId && x.EquipCode == equipCode && x.StatusId == (int)eStatus.DAGXL);
                     if (last == null)
                     {
-                        var check = db.Q_DailyRequire_Detail.FirstOrDefault(x => x.MajorId == majorId && x.StatusId == (int)eStatus.CHOXL);
+                        string config = BLLConfig.Instance.GetConfigByCode(eConfigCode.CheckServiceLimit);
+                        List<int> serviceOver = new List<int>();
+                        bool hasCheckLimit = false;
+                        if (!string.IsNullOrEmpty(config) && config == "1")
+                        {
+                            hasCheckLimit = true;
+                        }
+                        Start:
+                        var check = db.Q_DailyRequire_Detail.FirstOrDefault(x => x.MajorId == majorId && x.StatusId == (int)eStatus.CHOXL && !serviceOver.Contains(x.Q_DailyRequire.ServiceId));
                         if (check != null)
                         {
+                            if (hasCheckLimit)
+                            {
+                                var userService = db.Q_ServiceLimit.FirstOrDefault(x => !x.IsDeleted && x.UserId == userId && x.ServiceId == check.Q_DailyRequire.ServiceId);
+                                if (userService != null && userService.Quantity == userService.CurrentQuantity)
+                                {
+                                    //ktra tiep xem co user nao còn gọi dc hay ko
+                                    var otherUsers = db.Q_ServiceLimit.Where(x => !x.IsDeleted && x.Quantity != x.CurrentQuantity && x.ServiceId == check.Q_DailyRequire.ServiceId).ToList();
+                                    if (otherUsers.Count > 0)
+                                    {
+                                        // neu co nguoi con goi dc thi ko dc lay phieu voi dich vu nay ma phai goi dich vu khac
+                                        serviceOver.Add(check.Q_DailyRequire.ServiceId);
+                                        goto Start;
+                                    }
+                                }
+                            }
+
                             check.UserId = userId;
                             check.EquipCode = equipCode;
                             check.StatusId = (int)eStatus.DAGXL;
@@ -610,9 +659,33 @@ namespace QMS_System.Data.BLL
                 var last = db.Q_DailyRequire_Detail.FirstOrDefault(x => x.UserId == userId && x.EquipCode == equipCode && x.StatusId == (int)eStatus.DAGXL);
                 if (last == null)
                 {
-                    var obj = db.Q_DailyRequire_Detail.Where(x => majorIds.Contains(x.MajorId) && x.StatusId == (int)eStatus.CHOXL).OrderBy(x => x.Q_DailyRequire.PrintTime).ToList().FirstOrDefault();
+                    string config = BLLConfig.Instance.GetConfigByCode(eConfigCode.CheckServiceLimit);
+                    List<int> serviceOver = new List<int>();
+                    bool hasCheckLimit = false;
+                    if (!string.IsNullOrEmpty(config) && config == "1")
+                    {
+                        hasCheckLimit = true;
+                    }
+                    Start:
+                    var obj = db.Q_DailyRequire_Detail.Where(x => majorIds.Contains(x.MajorId) && x.StatusId == (int)eStatus.CHOXL && !serviceOver.Contains(x.Q_DailyRequire.ServiceId)).OrderBy(x => x.Q_DailyRequire.PrintTime).ToList().FirstOrDefault();
                     if (obj != null)
                     {
+                        if (hasCheckLimit)
+                        {
+                           var userService = db.Q_ServiceLimit.FirstOrDefault(x => !x.IsDeleted && x.UserId == userId && x.ServiceId == obj.Q_DailyRequire.ServiceId); 
+                            if (userService != null && userService.Quantity == userService.CurrentQuantity)
+                            {
+                                //ktra tiep xem co user nao còn gọi dc hay ko
+                                var otherUsers = db.Q_ServiceLimit.Where(x => !x.IsDeleted && x.Quantity != x.CurrentQuantity &&  x.ServiceId ==obj.Q_DailyRequire.ServiceId).ToList();
+                                if(otherUsers.Count > 0)
+                                {
+                                    // neu co nguoi con goi dc thi ko dc lay phieu voi dich vu nay ma phai goi dich vu khac
+                                    serviceOver.Add(obj.Q_DailyRequire.ServiceId);
+                                    goto Start;
+                                }
+                            }
+                        }
+                         
                         obj.UserId = userId;
                         obj.EquipCode = equipCode;
                         obj.StatusId = (int)eStatus.DAGXL;
@@ -712,9 +785,33 @@ namespace QMS_System.Data.BLL
                 var last = db.Q_DailyRequire_Detail.FirstOrDefault(x => x.UserId == userId && x.EquipCode == equipId && x.StatusId == (int)eStatus.DAGXL);
                 if (last == null)
                 {
-                    var obj = db.Q_DailyRequire_Detail.Where(x => majorIds.Contains(x.MajorId) && x.StatusId == (int)eStatus.CHOXL).OrderBy(x => x.Q_DailyRequire.PrintTime).FirstOrDefault();
+                    string config = BLLConfig.Instance.GetConfigByCode(eConfigCode.CheckServiceLimit);
+                    List<int> serviceOver = new List<int>();
+                    bool hasCheckLimit = false;
+                    if (!string.IsNullOrEmpty(config) && config == "1")
+                    {
+                        hasCheckLimit = true;
+                    }
+                    Start:
+                    var obj = db.Q_DailyRequire_Detail.Where(x => majorIds.Contains(x.MajorId) && x.StatusId == (int)eStatus.CHOXL && !serviceOver.Contains(x.Q_DailyRequire.ServiceId)).OrderBy(x => x.Q_DailyRequire.PrintTime).FirstOrDefault();
                     if (obj != null)
                     {
+                        if (hasCheckLimit)
+                        {
+                            var userService = db.Q_ServiceLimit.FirstOrDefault(x => !x.IsDeleted && x.UserId == userId && x.ServiceId == obj.Q_DailyRequire.ServiceId);
+                            if (userService != null && userService.Quantity == userService.CurrentQuantity)
+                            {
+                                //ktra tiep xem co user nao còn gọi dc hay ko
+                                var otherUsers = db.Q_ServiceLimit.Where(x => !x.IsDeleted && x.Quantity != x.CurrentQuantity && x.ServiceId == obj.Q_DailyRequire.ServiceId).ToList();
+                                if (otherUsers.Count > 0)
+                                {
+                                    // neu co nguoi con goi dc thi ko dc lay phieu voi dich vu nay ma phai goi dich vu khac
+                                    serviceOver.Add(obj.Q_DailyRequire.ServiceId);
+                                    goto Start;
+                                }
+                            }
+                        }
+
                         obj.UserId = userId;
                         obj.EquipCode = equipId;
                         obj.StatusId = (int)eStatus.DAGXL;
@@ -1185,8 +1282,8 @@ namespace QMS_System.Data.BLL
             int serviceNumber,
             int businessId,
             DateTime printTime,
-            int printType,
-            TimeSpan serveTimeAllow,
+            int? printType,
+            TimeSpan? serveTimeAllow,
             string Name,
             string Address,
             int? DOB,
@@ -1203,11 +1300,34 @@ namespace QMS_System.Data.BLL
                 {
                     Q_DailyRequire rq = null;
                     int socu = 0;
-                    if (printType == (int)ePrintType.TheoTungDichVu)
-                        rq = db.Q_DailyRequire.Where(x => x.ServiceId == serviceId).OrderByDescending(x => x.TicketNumber).FirstOrDefault();
-                    else if (printType == (int)ePrintType.BatDauChung)
-                        rq = db.Q_DailyRequire.OrderByDescending(x => x.TicketNumber).FirstOrDefault();
+                    int _serviceNumber = 0;
+                    if (!printType.HasValue)
+                    {
+                        var _printType = 1;
+                        var cf = db.Q_Config.FirstOrDefault(x => x.Code == eConfigCode.PrintType);
+                        if (cf != null)
+                            int.TryParse(cf.Value, out _printType);
+                        printType = _printType;
+                    }
 
+                    if (printType == (int)ePrintType.TheoTungDichVu)
+                    {
+                        rq = db.Q_DailyRequire.Where(x => x.ServiceId == serviceId).OrderByDescending(x => x.TicketNumber).FirstOrDefault();
+                        var ser = db.Q_Service.FirstOrDefault(x => x.Id == serviceId);
+                        if (ser != null)
+                        {
+                            _serviceNumber = ser.StartNumber;
+                            if (!serveTimeAllow.HasValue)
+                                serveTimeAllow = ser.TimeProcess.TimeOfDay;
+                        }
+                    }
+                    else if (printType == (int)ePrintType.BatDauChung)
+                    {
+                        rq = db.Q_DailyRequire.OrderByDescending(x => x.TicketNumber).FirstOrDefault();
+                        var cf = db.Q_Config.FirstOrDefault(x => x.Code == eConfigCode.StartNumber);
+                        if (cf != null)
+                            int.TryParse(cf.Value, out _serviceNumber);
+                    }
                     socu = ((rq == null) ? serviceNumber : rq.TicketNumber);
 
                     var nv = db.Q_ServiceStep.Where(x => !x.IsDeleted && !x.Q_Service.IsDeleted && x.ServiceId == serviceId).OrderBy(x => x.Index).FirstOrDefault();
@@ -1225,7 +1345,7 @@ namespace QMS_System.Data.BLL
                         if (businessId != 0)
                             obj.BusinessId = businessId;
                         obj.PrintTime = printTime;
-                        obj.ServeTimeAllow = serveTimeAllow;
+                        obj.ServeTimeAllow = serveTimeAllow ?? new TimeSpan(0, 0, 0);
                         obj.CustomerName = Name;
                         obj.CustomerDOB = DOB;
                         obj.CustomerAddress = Address;
@@ -1743,7 +1863,7 @@ namespace QMS_System.Data.BLL
         public ResponseBaseModel InsertAndCallEmptyTicket(int equipCode)
         {
             var rs = new ResponseBaseModel();
-rs.IsSuccess = false;
+            rs.IsSuccess = false;
             using (var db = new QMSSystemEntities())
             {
                 var login = db.Q_Login.FirstOrDefault(x => x.EquipCode == equipCode);
@@ -1762,9 +1882,9 @@ rs.IsSuccess = false;
                         rs.IsSuccess = true;
                         rs.Data = newTicket.TicketNumber;
                         rs.Data_2 = newTicket.PrintTime.TimeOfDay;
-                        rs.Data_1 = newTicket.ServeTimeAllow; 
+                        rs.Data_1 = newTicket.ServeTimeAllow;
                     }
-                } 
+                }
                 return rs;
             }
         }

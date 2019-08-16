@@ -289,6 +289,12 @@
     <Compile Include="frmService.Designer.cs">
       <DependentUpon>frmService.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmServiceLimit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmServiceLimit.Designer.cs">
+      <DependentUpon>frmServiceLimit.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmServiceShift.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -469,6 +475,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmService.resx">
       <DependentUpon>frmService.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmServiceLimit.resx">
+      <DependentUpon>frmServiceLimit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmServiceShift.resx">
       <DependentUpon>frmServiceShift.cs</DependentUpon>
@@ -894,6 +903,7 @@
     <Content Include="Script DB\update qms 18_3_2019.sql" />
     <Content Include="Script DB\update qms 12_12_2018.sql" />
     <Content Include="Script DB\update qms 17_12_2018.sql" />
+    <Content Include="Script DB\update qms 6_8_2019.sql" />
     <None Include="Resources\list.png" />
     <None Include="Resources\add.png" />
     <None Include="Resources\video template.png" />

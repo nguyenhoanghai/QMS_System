@@ -26,6 +26,7 @@ namespace QMS_System.Data
             this.Q_UserMajor = new HashSet<Q_UserMajor>();
             this.Q_DailyRequire_Detail = new HashSet<Q_DailyRequire_Detail>();
             this.Q_HisDailyRequire_De = new HashSet<Q_HisDailyRequire_De>();
+            this.Q_ServiceLimit = new HashSet<Q_ServiceLimit>();
         }
     
         public int Id { get; set; }
@@ -52,5 +53,6 @@ namespace QMS_System.Data
         public virtual ICollection<Q_UserMajor> Q_UserMajor { get; set; }
         public virtual ICollection<Q_DailyRequire_Detail> Q_DailyRequire_Detail { get; set; }
         public virtual ICollection<Q_HisDailyRequire_De> Q_HisDailyRequire_De { get; set; }
+        public virtual ICollection<Q_ServiceLimit> Q_ServiceLimit { get; set; }
     }
 }

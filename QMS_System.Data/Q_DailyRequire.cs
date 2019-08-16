@@ -35,7 +35,7 @@ namespace QMS_System.Data
         public string MaPhongKham { get; set; }
     
         public virtual Q_Business Q_Business { get; set; }
-        public virtual Q_Service Q_Service { get; set; }
         public virtual ICollection<Q_DailyRequire_Detail> Q_DailyRequire_Detail { get; set; }
+        public virtual Q_Service Q_Service { get; set; }
     }
 }
