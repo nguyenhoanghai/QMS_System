@@ -32,6 +32,9 @@ namespace QMS_System
          PrintTicketCode = 50,
             system = 0,
             timesRepeatReadServeOver = 1,
+            autoCallFollowMajorOrder = 0,
+            silenceTime = 100,
+            printTicketReturnCurrentNumberOrServiceCode = 1,
             _8cUseFor = 1;
 
         public int UseWithThirdPattern = 0,
@@ -75,10 +78,13 @@ namespace QMS_System
             CheckTimeBeforePrintTicket = GetConfigByCode(eConfigCode.CheckTimeBeforePrintTicket);
 
             int.TryParse(GetConfigByCode(eConfigCode.PrintType), out printType);
+            int.TryParse(GetConfigByCode(eConfigCode.PrintTicketReturnCurrentNumberOrServiceCode), out printTicketReturnCurrentNumberOrServiceCode);
+            int.TryParse(GetConfigByCode(eConfigCode.SilenceTime), out silenceTime);
             int.TryParse(GetConfigByCode(eConfigCode.StartNumber), out startNumber);
             int.TryParse(GetConfigByCode(eConfigCode.TimeWaitForRecieveData), out timeQuetComport);
             int.TryParse(GetConfigByCode(eConfigCode.PrintTicketCode), out PrintTicketCode);
             int.TryParse(GetConfigByCode(eConfigCode.TimesRepeatReadServeOver), out timesRepeatReadServeOver);
+            int.TryParse(GetConfigByCode(eConfigCode.AutoCallFollowMajorOrder), out autoCallFollowMajorOrder);
             int.TryParse(GetConfigByCode(eConfigCode.UseWithThirdPattern), out UseWithThirdPattern);
             int.TryParse(GetConfigByCode(eConfigCode.AutoCallIfUserFree), out AutoCallIfUserFree);
             int.TryParse(GetConfigByCode(eConfigCode.System), out system);
@@ -529,6 +535,14 @@ namespace QMS_System
             }
         }
 
+        private void btnDeleteTicket_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (BLLDailyRequire.Instance.DeleteTicket(int.Parse(txtDeleteNumber.EditValue.ToString()), today) == 0)
+                errorsms = "Không tìm thấy được số phiếu cần hủy. Vui lòng kiểm tra lại.";
+            else
+                errorsms = "Hủy phiếu thành công.";
+        }
+
         private void ReadSound(List<string> sounds)
         {
             if (temp.Count > 0)
@@ -540,7 +554,7 @@ namespace QMS_System
                         if (File.Exists(soundPath + temp[0]))
                         {
                             player.SoundLocation = (soundPath + temp[0]);
-                            int iTime = SoundInfo.GetSoundLength(player.SoundLocation.Trim()) - 0;
+                            int iTime = SoundInfo.GetSoundLength(player.SoundLocation.Trim()) + silenceTime;
                             player.Play();
                             Thread.Sleep(iTime);
                             temp.Remove(temp[0]);
@@ -704,8 +718,16 @@ namespace QMS_System
                             }
                             break;
                         case (int)eEquipType.Printer:
-                            if (hexStr[2] == "0A")
-                                hexStr[2] = "10";
+                            switch (hexStr[2])
+                            {
+                                case "0A": hexStr[2] = "10"; break;
+                                case "0B": hexStr[2] = "11"; break;
+                                case "0C": hexStr[2] = "12"; break;
+                                case "0D": hexStr[2] = "13"; break;
+                                case "0E": hexStr[2] = "14"; break;
+                                case "0F": hexStr[2] = "15"; break;
+                                case "10": hexStr[2] = "16"; break;
+                            }
 
                             if (int.Parse(hexStr[2].ToString()) == 30)
                             {
@@ -771,7 +793,14 @@ namespace QMS_System
                                 {
                                     var soArr = GPRO_Helper.Instance.ChangeNumber(((int)rs.Data + 1));
                                     printStr = (soArr[0] + " " + soArr[1] + " ");
-                                    soArr = GPRO_Helper.Instance.ChangeNumber((int)rs.Records);
+                                    if (printTicketReturnCurrentNumberOrServiceCode == 1)
+                                    {
+                                        soArr = GPRO_Helper.Instance.ChangeNumber((int)rs.Records);
+                                    }
+                                    else
+                                    {
+                                        soArr = GPRO_Helper.Instance.ChangeNumber(serviceId);
+                                    }
                                     printStr += (soArr[0] + " " + soArr[1] + " " + now.ToString("dd") + " " + now.ToString("MM") + " " + now.ToString("yy") + " " + now.ToString("HH") + " " + now.ToString("mm"));
                                 }
                                 else if (isProgrammer)
@@ -805,7 +834,14 @@ namespace QMS_System
                                 {
                                     var soArr = GPRO_Helper.Instance.ChangeNumber(((int)rs.Data + 1));
                                     printStr = (soArr[0] + " " + soArr[1] + " ");
-                                    soArr = GPRO_Helper.Instance.ChangeNumber((int)rs.Records);
+                                    if (printTicketReturnCurrentNumberOrServiceCode == 1)
+                                    {
+                                        soArr = GPRO_Helper.Instance.ChangeNumber((int)rs.Records);
+                                    }
+                                    else
+                                    {
+                                        soArr = GPRO_Helper.Instance.ChangeNumber(serviceId);
+                                    }
                                     printStr += (soArr[0] + " " + soArr[1] + " " + now.ToString("dd") + " " + now.ToString("MM") + " " + now.ToString("yy") + " " + now.ToString("HH") + " " + now.ToString("mm"));
                                 }
                                 else if (isProgrammer)
@@ -862,7 +898,15 @@ namespace QMS_System
                                 {
                                     var soArr = GPRO_Helper.Instance.ChangeNumber(lastTicket);
                                     printStr = (soArr[0] + " " + soArr[1] + " ");
-                                    soArr = GPRO_Helper.Instance.ChangeNumber(BLLDailyRequire.Instance.GetCurrentNumber(serviceId));
+                                    if (printTicketReturnCurrentNumberOrServiceCode == 1)
+                                    {
+                                        soArr = GPRO_Helper.Instance.ChangeNumber(BLLDailyRequire.Instance.GetCurrentNumber(serviceId));
+                                    }
+                                    else
+                                    {
+                                        soArr = GPRO_Helper.Instance.ChangeNumber(serviceId);
+                                    }
+
                                     printStr += (soArr[0] + " " + soArr[1] + " " + now.ToString("dd") + " " + now.ToString("MM") + " " + now.ToString("yy") + " " + now.ToString("HH") + " " + now.ToString("mm"));
                                 }
                                 else if (newNumber != 0 && isProgrammer)
@@ -884,7 +928,7 @@ namespace QMS_System
             }
             if (AutoCallIfUserFree == 1 && nghiepVu > 0)
             {
-                var freeUser = (int)BLLDailyRequire.Instance.CheckUserFree(nghiepVu, serviceId, newNumber).Data;
+                var freeUser = (int)BLLDailyRequire.Instance.CheckUserFree(nghiepVu, serviceId, newNumber, autoCallFollowMajorOrder).Data;
                 if (freeUser > 0)
                 {
                     var counter = freeUser < 10 ? ("0" + freeUser) : freeUser.ToString();
@@ -1153,6 +1197,10 @@ namespace QMS_System
                                                 num2 = currentTicketInfo.StartTime.Add(currentTicketInfo.TimeServeAllow).ToString("mm");
                                             }
                                             dataSendToComport.Add(("AB " + hexStr[1] + " " + num1 + " " + num2));
+                                            break;
+                                        case eActionParam.HUY_DKY_LAYSO:
+                                            BLLDailyRequire.Instance.RemoveRegisterAutocall(userId);
+                                            dataSendToComport.Add(("AA " + hexStr[1] + " 00 00"));
                                             break;
                                     }
                                     #endregion

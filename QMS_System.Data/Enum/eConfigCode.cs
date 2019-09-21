@@ -17,6 +17,7 @@ namespace QMS_System.Data.Enum
         public const string StopBits = "StopBits";
         public const string TimeRepeat = "TimeRepeat";
         public const string PrintType = "PrintType";
+        public const string SilenceTime = "SilenceTime";
         public const string NewCustomer = "NewCustomer";
         public const string TimeWaitForRecieveData = "TimeWaitForRecieveData";
         public const string StartNumber = "StartNumber";
@@ -63,7 +64,8 @@ namespace QMS_System.Data.Enum
         /// </summary>
         public const string TemplateSoundServeOverTime = "TemplateSoundServeOverTime";
         public const string TimerQuetServeOverTime = "TimerQuetServeOverTime";
-        public const string TimesRepeatReadServeOver = "TimesRepeatReadServeOver";
+        public const string TimesRepeatReadServeOver = "TimesRepeatReadServeOver"; 
+        public const string  AutoCallFollowMajorOrder = "AutoCallFollowMajorOrder"; 
         public const string  CheckServeOverTime= "CheckServeOverTime";
 
         public const string VideoUrl = "VideoUrl";
@@ -106,5 +108,7 @@ namespace QMS_System.Data.Enum
         /// </summary>
         public const string CheckServiceLimit = "CheckServiceLimit";
 
+        //sau khi in phieu trả về so dang goi hay ma dich vu
+        public const string PrintTicketReturnCurrentNumberOrServiceCode = "PrintTicketReturnCurrentNumberOrServiceCode";
     }
 }

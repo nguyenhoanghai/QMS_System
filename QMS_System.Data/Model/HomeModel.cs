@@ -20,5 +20,7 @@ namespace QMS_System.Data.Model
         public int EquipCode { get; set; }
         public int CountWaitAtCounter { get; set; }
         public bool IsLogout { get; set; }
+        public DateTime? TimeRegister { get; set; }
+
     }
 }

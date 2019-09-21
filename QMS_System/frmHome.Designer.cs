@@ -44,6 +44,7 @@
             this.gridColumn8 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn9 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemButtonEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
+            this.gridColumn10 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             ((System.ComponentModel.ISupportInitialize)(this.gridHome)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridViewHome)).BeginInit();
@@ -66,12 +67,14 @@
             // 
             this.gridHome.Cursor = System.Windows.Forms.Cursors.Default;
             this.gridHome.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridHome.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(4);
             this.gridHome.Location = new System.Drawing.Point(0, 0);
             this.gridHome.MainView = this.gridViewHome;
+            this.gridHome.Margin = new System.Windows.Forms.Padding(4);
             this.gridHome.Name = "gridHome";
             this.gridHome.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemButtonEdit1});
-            this.gridHome.Size = new System.Drawing.Size(1029, 374);
+            this.gridHome.Size = new System.Drawing.Size(1372, 460);
             this.gridHome.TabIndex = 3;
             this.gridHome.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewHome,
@@ -90,7 +93,8 @@
             this.gridColumn5,
             this.gridColumn7,
             this.gridColumn8,
-            this.gridColumn9});
+            this.gridColumn9,
+            this.gridColumn10});
             this.gridViewHome.GridControl = this.gridHome;
             this.gridViewHome.Name = "gridViewHome";
             this.gridViewHome.OptionsBehavior.AllowAddRows = DevExpress.Utils.DefaultBoolean.True;
@@ -119,7 +123,7 @@
             this.gridColumn2.Name = "gridColumn2";
             this.gridColumn2.Visible = true;
             this.gridColumn2.VisibleIndex = 1;
-            this.gridColumn2.Width = 79;
+            this.gridColumn2.Width = 98;
             // 
             // gridColumn1
             // 
@@ -135,7 +139,7 @@
             this.gridColumn1.AppearanceHeader.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center;
             this.gridColumn1.AppearanceHeader.TextOptions.WordWrap = DevExpress.Utils.WordWrap.Wrap;
             this.gridColumn1.Caption = "Thời gian đăng nhập";
-            this.gridColumn1.DisplayFormat.FormatString = "dd/MM/yyyy HH:mm";
+            this.gridColumn1.DisplayFormat.FormatString = "HH:mm:ss";
             this.gridColumn1.DisplayFormat.FormatType = DevExpress.Utils.FormatType.DateTime;
             this.gridColumn1.FieldName = "LoginTime";
             this.gridColumn1.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.DisplayText;
@@ -144,7 +148,7 @@
             this.gridColumn1.OptionsFilter.AutoFilterCondition = DevExpress.XtraGrid.Columns.AutoFilterCondition.Contains;
             this.gridColumn1.Visible = true;
             this.gridColumn1.VisibleIndex = 3;
-            this.gridColumn1.Width = 124;
+            this.gridColumn1.Width = 155;
             // 
             // gridColumn6
             // 
@@ -166,7 +170,7 @@
             this.gridColumn6.OptionsFilter.AutoFilterCondition = DevExpress.XtraGrid.Columns.AutoFilterCondition.Contains;
             this.gridColumn6.Visible = true;
             this.gridColumn6.VisibleIndex = 4;
-            this.gridColumn6.Width = 126;
+            this.gridColumn6.Width = 157;
             // 
             // gridColumn3
             // 
@@ -187,7 +191,7 @@
             this.gridColumn3.Name = "gridColumn3";
             this.gridColumn3.Visible = true;
             this.gridColumn3.VisibleIndex = 5;
-            this.gridColumn3.Width = 118;
+            this.gridColumn3.Width = 147;
             // 
             // gridColumn4
             // 
@@ -206,7 +210,7 @@
             this.gridColumn4.OptionsFilter.AutoFilterCondition = DevExpress.XtraGrid.Columns.AutoFilterCondition.Contains;
             this.gridColumn4.Visible = true;
             this.gridColumn4.VisibleIndex = 6;
-            this.gridColumn4.Width = 122;
+            this.gridColumn4.Width = 152;
             // 
             // gridColumn5
             // 
@@ -226,7 +230,7 @@
             this.gridColumn5.Name = "gridColumn5";
             this.gridColumn5.Visible = true;
             this.gridColumn5.VisibleIndex = 7;
-            this.gridColumn5.Width = 148;
+            this.gridColumn5.Width = 155;
             // 
             // gridColumn7
             // 
@@ -242,13 +246,13 @@
             this.gridColumn7.AppearanceHeader.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center;
             this.gridColumn7.AppearanceHeader.TextOptions.WordWrap = DevExpress.Utils.WordWrap.Wrap;
             this.gridColumn7.Caption = "Vào lúc";
-            this.gridColumn7.DisplayFormat.FormatString = "dd/MM/yyyy HH:mm";
+            this.gridColumn7.DisplayFormat.FormatString = "HH:mm:ss";
             this.gridColumn7.DisplayFormat.FormatType = DevExpress.Utils.FormatType.DateTime;
             this.gridColumn7.FieldName = "CommingTime";
             this.gridColumn7.Name = "gridColumn7";
             this.gridColumn7.Visible = true;
             this.gridColumn7.VisibleIndex = 8;
-            this.gridColumn7.Width = 176;
+            this.gridColumn7.Width = 171;
             // 
             // gridColumn8
             // 
@@ -268,7 +272,7 @@
             this.gridColumn8.Name = "gridColumn8";
             this.gridColumn8.Visible = true;
             this.gridColumn8.VisibleIndex = 2;
-            this.gridColumn8.Width = 79;
+            this.gridColumn8.Width = 98;
             // 
             // gridColumn9
             // 
@@ -277,7 +281,7 @@
             this.gridColumn9.Name = "gridColumn9";
             this.gridColumn9.Visible = true;
             this.gridColumn9.VisibleIndex = 0;
-            this.gridColumn9.Width = 33;
+            this.gridColumn9.Width = 41;
             // 
             // repositoryItemButtonEdit1
             // 
@@ -287,6 +291,28 @@
             this.repositoryItemButtonEdit1.Name = "repositoryItemButtonEdit1";
             this.repositoryItemButtonEdit1.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.HideTextEditor;
             // 
+            // gridColumn10
+            // 
+            this.gridColumn10.AppearanceCell.Font = new System.Drawing.Font("Arial", 9F);
+            this.gridColumn10.AppearanceCell.Options.UseFont = true;
+            this.gridColumn10.AppearanceCell.Options.UseTextOptions = true;
+            this.gridColumn10.AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.gridColumn10.AppearanceCell.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center;
+            this.gridColumn10.AppearanceHeader.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold);
+            this.gridColumn10.AppearanceHeader.Options.UseFont = true;
+            this.gridColumn10.AppearanceHeader.Options.UseTextOptions = true;
+            this.gridColumn10.AppearanceHeader.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.gridColumn10.AppearanceHeader.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center;
+            this.gridColumn10.AppearanceHeader.TextOptions.WordWrap = DevExpress.Utils.WordWrap.Wrap;
+            this.gridColumn10.Caption = "TGian ĐKý lấy phiếu";
+            this.gridColumn10.DisplayFormat.FormatString = "HH:mm:ss";
+            this.gridColumn10.DisplayFormat.FormatType = DevExpress.Utils.FormatType.DateTime;
+            this.gridColumn10.FieldName = "TimeRegister";
+            this.gridColumn10.Name = "gridColumn10";
+            this.gridColumn10.Visible = true;
+            this.gridColumn10.VisibleIndex = 9;
+            this.gridColumn10.Width = 178;
+            // 
             // gridView1
             // 
             this.gridView1.GridControl = this.gridHome;
@@ -294,10 +320,11 @@
             // 
             // frmHome
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1029, 374);
+            this.ClientSize = new System.Drawing.Size(1372, 460);
             this.Controls.Add(this.gridHome);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "frmHome";
             this.Text = "Trang chủ";
             this.Load += new System.EventHandler(this.frmHome_Load);
@@ -326,6 +353,6 @@
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn9;
         private DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit repositoryItemButtonEdit1;
         private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
-
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn10;
     }
 }

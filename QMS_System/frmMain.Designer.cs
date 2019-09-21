@@ -97,8 +97,14 @@
             this.btnVideo = new DevExpress.XtraBars.BarButtonItem();
             this.btnVideoTemplate = new DevExpress.XtraBars.BarButtonItem();
             this.btnReportDG = new DevExpress.XtraBars.BarButtonItem();
+            this.btnServiceLimit = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem12 = new DevExpress.XtraBars.BarButtonItem();
+            this.txtDeleteNumber = new DevExpress.XtraBars.BarEditItem();
+            this.repositoryItemTextEdit7 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
+            this.btnDeleteTicket = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPage3 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonPageGroup16 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup7 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -132,7 +138,6 @@
             this.barButtonItem3 = new DevExpress.XtraBars.BarButtonItem();
             this.tmerQuetServeOver = new System.Windows.Forms.Timer(this.components);
             this.barButtonItem11 = new DevExpress.XtraBars.BarButtonItem();
-            this.btnServiceLimit = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemRichTextEdit2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemRichTextEdit3)).BeginInit();
@@ -143,6 +148,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemRichTextEdit4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit7)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemRichTextEdit1)).BeginInit();
@@ -212,10 +218,13 @@
             this.btnVideo,
             this.btnVideoTemplate,
             this.btnReportDG,
-            this.btnServiceLimit});
+            this.btnServiceLimit,
+            this.barButtonItem12,
+            this.txtDeleteNumber,
+            this.btnDeleteTicket});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ribbonControl1.MaxItemId = 73;
+            this.ribbonControl1.MaxItemId = 76;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage3,
@@ -237,7 +246,8 @@
             this.repositoryItemTextEdit4,
             this.repositoryItemTextEdit5,
             this.repositoryItemTextEdit6,
-            this.repositoryItemRichTextEdit4});
+            this.repositoryItemRichTextEdit4,
+            this.repositoryItemTextEdit7});
             this.ribbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.Office2013;
             this.ribbonControl1.Size = new System.Drawing.Size(1175, 168);
             this.ribbonControl1.StatusBar = this.ribbonStatusBar1;
@@ -749,10 +759,45 @@
             this.btnReportDG.Name = "btnReportDG";
             this.btnReportDG.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnReportDG_ItemClick);
             // 
+            // btnServiceLimit
+            // 
+            this.btnServiceLimit.Caption = "Giới hạn dịch vụ";
+            this.btnServiceLimit.Id = 72;
+            this.btnServiceLimit.LargeGlyph = global::QMS_System.Properties.Resources.eyes_office_women_glasses_icon;
+            this.btnServiceLimit.Name = "btnServiceLimit";
+            this.btnServiceLimit.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnServiceLimit_ItemClick);
+            // 
+            // barButtonItem12
+            // 
+            this.barButtonItem12.Caption = "barButtonItem12";
+            this.barButtonItem12.Id = 73;
+            this.barButtonItem12.Name = "barButtonItem12";
+            // 
+            // txtDeleteNumber
+            // 
+            this.txtDeleteNumber.Edit = this.repositoryItemTextEdit7;
+            this.txtDeleteNumber.Id = 74;
+            this.txtDeleteNumber.Name = "txtDeleteNumber";
+            this.txtDeleteNumber.Width = 90;
+            // 
+            // repositoryItemTextEdit7
+            // 
+            this.repositoryItemTextEdit7.AutoHeight = false;
+            this.repositoryItemTextEdit7.Name = "repositoryItemTextEdit7";
+            // 
+            // btnDeleteTicket
+            // 
+            this.btnDeleteTicket.Caption = "Hủy Phiếu";
+            this.btnDeleteTicket.Glyph = global::QMS_System.Properties.Resources.delete_118920;
+            this.btnDeleteTicket.Id = 75;
+            this.btnDeleteTicket.Name = "btnDeleteTicket";
+            this.btnDeleteTicket.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnDeleteTicket_ItemClick);
+            // 
             // ribbonPage3
             // 
             this.ribbonPage3.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
-            this.ribbonPageGroup2});
+            this.ribbonPageGroup2,
+            this.ribbonPageGroup16});
             this.ribbonPage3.Name = "ribbonPage3";
             this.ribbonPage3.Text = "Trang chủ";
             // 
@@ -765,6 +810,12 @@
             this.ribbonPageGroup2.ItemLinks.Add(this.btnDeleteTicketInDay, true);
             this.ribbonPageGroup2.ItemLinks.Add(this.btnExit, true);
             this.ribbonPageGroup2.Name = "ribbonPageGroup2";
+            // 
+            // ribbonPageGroup16
+            // 
+            this.ribbonPageGroup16.ItemLinks.Add(this.txtDeleteNumber);
+            this.ribbonPageGroup16.ItemLinks.Add(this.btnDeleteTicket);
+            this.ribbonPageGroup16.Name = "ribbonPageGroup16";
             // 
             // ribbonPage1
             // 
@@ -1000,14 +1051,6 @@
             this.barButtonItem11.LargeGlyph = global::QMS_System.Properties.Resources.Music_icon;
             this.barButtonItem11.Name = "barButtonItem11";
             // 
-            // btnServiceLimit
-            // 
-            this.btnServiceLimit.Caption = "Giới hạn dịch vụ";
-            this.btnServiceLimit.Id = 72;
-            this.btnServiceLimit.LargeGlyph = global::QMS_System.Properties.Resources.eyes_office_women_glasses_icon;
-            this.btnServiceLimit.Name = "btnServiceLimit";
-            this.btnServiceLimit.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnServiceLimit_ItemClick);
-            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
@@ -1034,6 +1077,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemRichTextEdit4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit7)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemRichTextEdit1)).EndInit();
@@ -1150,5 +1194,10 @@
         private DevExpress.XtraBars.BarButtonItem btnReportDG;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup15;
         private DevExpress.XtraBars.BarButtonItem btnServiceLimit;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem12;
+        private DevExpress.XtraBars.BarEditItem txtDeleteNumber;
+        private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit repositoryItemTextEdit7;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup16;
+        private DevExpress.XtraBars.BarButtonItem btnDeleteTicket;
     }
 }

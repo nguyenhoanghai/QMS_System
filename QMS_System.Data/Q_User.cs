@@ -16,7 +16,6 @@ namespace QMS_System.Data
     {
         public Q_User()
         {
-            this.Q_HisUserEvaluate = new HashSet<Q_HisUserEvaluate>();
             this.Q_Login = new HashSet<Q_Login>();
             this.Q_LoginHistory = new HashSet<Q_LoginHistory>();
             this.Q_RegisterRecieveTicket = new HashSet<Q_RegisterRecieveTicket>();
@@ -27,6 +26,7 @@ namespace QMS_System.Data
             this.Q_DailyRequire_Detail = new HashSet<Q_DailyRequire_Detail>();
             this.Q_HisDailyRequire_De = new HashSet<Q_HisDailyRequire_De>();
             this.Q_ServiceLimit = new HashSet<Q_ServiceLimit>();
+            this.Q_HisUserEvaluate = new HashSet<Q_HisUserEvaluate>();
         }
     
         public int Id { get; set; }
@@ -43,7 +43,6 @@ namespace QMS_System.Data
         public string Counters { get; set; }
         public bool IsDeleted { get; set; }
     
-        public virtual ICollection<Q_HisUserEvaluate> Q_HisUserEvaluate { get; set; }
         public virtual ICollection<Q_Login> Q_Login { get; set; }
         public virtual ICollection<Q_LoginHistory> Q_LoginHistory { get; set; }
         public virtual ICollection<Q_RegisterRecieveTicket> Q_RegisterRecieveTicket { get; set; }
@@ -54,5 +53,6 @@ namespace QMS_System.Data
         public virtual ICollection<Q_DailyRequire_Detail> Q_DailyRequire_Detail { get; set; }
         public virtual ICollection<Q_HisDailyRequire_De> Q_HisDailyRequire_De { get; set; }
         public virtual ICollection<Q_ServiceLimit> Q_ServiceLimit { get; set; }
+        public virtual ICollection<Q_HisUserEvaluate> Q_HisUserEvaluate { get; set; }
     }
 }

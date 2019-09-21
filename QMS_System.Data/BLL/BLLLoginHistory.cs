@@ -150,6 +150,7 @@ namespace QMS_System.Data.BLL
                     var daily = db.Q_DailyRequire_Detail.Where(x => x.StatusId != (int)eStatus.CHOXL);
                     var usermajors = db.Q_UserMajor.Where(x => !x.IsDeleted && !x.Q_Major.IsDeleted && !x.Q_User.IsDeleted).ToList();
                     EquipmentModel find;
+                    var registers = db.Q_RequestTicket.Where(x=> !x.IsDeleted);
                     foreach (var item in users)
                     {
                         var majorIds = usermajors.Where(x => x.UserId == item.UserId).Select(x => x.MajorId).ToList();
@@ -170,6 +171,9 @@ namespace QMS_System.Data.BLL
                         }
                         find = counters.FirstOrDefault(x => x.Code == item.EquipCode);
                         item.Counter = (find != null ? find.Name : "");
+                        var found = registers.Where(x => x.UserId == item.UserId  ).OrderByDescending(x => x.CreatedAt).FirstOrDefault();
+                        if (found != null)
+                            item.TimeRegister = found.CreatedAt; 
                     }
                 }
                 return users.OrderBy(x => x.UserId).ToList();

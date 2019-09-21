@@ -43,7 +43,6 @@ namespace QMS_System.Data
         public DbSet<Q_Evaluate> Q_Evaluate { get; set; }
         public DbSet<Q_EvaluateDetail> Q_EvaluateDetail { get; set; }
         public DbSet<Q_HisDailyRequire> Q_HisDailyRequire { get; set; }
-        public DbSet<Q_HisUserEvaluate> Q_HisUserEvaluate { get; set; }
         public DbSet<Q_Language> Q_Language { get; set; }
         public DbSet<Q_Login> Q_Login { get; set; }
         public DbSet<Q_LoginHistory> Q_LoginHistory { get; set; }
@@ -74,5 +73,6 @@ namespace QMS_System.Data
         public DbSet<Q_RecieverSMS> Q_RecieverSMS { get; set; }
         public DbSet<Q_Service> Q_Service { get; set; }
         public DbSet<Q_ServiceLimit> Q_ServiceLimit { get; set; }
+        public DbSet<Q_HisUserEvaluate> Q_HisUserEvaluate { get; set; }
     }
 }

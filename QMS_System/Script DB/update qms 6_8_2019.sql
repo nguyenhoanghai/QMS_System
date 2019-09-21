@@ -57,3 +57,24 @@ GO
 INSERT INTO [dbo].[Q_Config]([Code],[Value],[Note],[IsActived],[IsDeleted])
      VALUES ('CheckServiceLimit','0',N'Kiểm tra giới hạn lấy phiếu của nhân viên trong ngày',1,0)
 GO 
+
+INSERT INTO [dbo].[Q_Config]([Code],[Value],[Note],[IsActived],[IsDeleted])
+     VALUES ('AutoCallFollowMajorOrder','0',N'AutoCall lấy theo thứ tự ưu tiên nghiệp vụ',1,0)
+GO   
+
+INSERT INTO [dbo].[Q_ActionParameter] ([ActionId] ,[ParameterCode]  ,[Note]  ,[IsDeleted])
+     VALUES (5 ,'HUY_DKY_LAYSO' ,N'Hủy đăng ký lấy số tự động' ,0)
+GO  
+
+ALTER TABLE [dbo].[Q_HisUserEvaluate] ADD [CreatedDate] datetime  DEFAULT ((getdate())) 
+GO
+
+--update lai lich su danh gia ko co createdDAte
+update Q_HisUserEvaluate set CreatedDate = (select top 1 EndProcessTime from Q_HisDailyRequire_De where Id = HisDailyRequireDeId)
+
+INSERT INTO [dbo].[Q_Config]([Code],[Value],[Note],[IsActived],[IsDeleted])
+     VALUES ('SilenceTime','0',N'khoảng lặng giữa mỗi file âm thanh',1,0)
+GO   
+INSERT INTO [dbo].[Q_Config]([Code],[Value],[Note],[IsActived],[IsDeleted])
+     VALUES ('PrintTicketReturnCurrentNumberOrServiceCode','1',N'Sau khi cấp phiếu trả về số đang gọi hay mã dịch vụ ? 1 -> số đang gọi, 2 -> mã dịch vụ',1,0)
+GO   

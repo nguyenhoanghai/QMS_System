@@ -19,8 +19,9 @@ namespace QMS_System.Data
         public int UserId { get; set; }
         public string Score { get; set; }
         public bool IsDeleted { get; set; }
+        public System.DateTime CreatedDate { get; set; }
     
-        public virtual Q_User Q_User { get; set; }
         public virtual Q_HisDailyRequire_De Q_HisDailyRequire_De { get; set; }
+        public virtual Q_User Q_User { get; set; }
     }
 }

@@ -257,6 +257,7 @@
     <Property Name="UserId" Type="int" Nullable="false" />
     <Property Name="Score" Type="nvarchar" MaxLength="550" Nullable="false" />
     <Property Name="IsDeleted" Type="bit" Nullable="false" />
+    <Property Name="CreatedDate" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="Q_Language">
     <Key>

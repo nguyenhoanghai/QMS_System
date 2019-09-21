@@ -672,12 +672,12 @@ namespace QMS_System.Data.BLL
                     {
                         if (hasCheckLimit)
                         {
-                           var userService = db.Q_ServiceLimit.FirstOrDefault(x => !x.IsDeleted && x.UserId == userId && x.ServiceId == obj.Q_DailyRequire.ServiceId); 
+                            var userService = db.Q_ServiceLimit.FirstOrDefault(x => !x.IsDeleted && x.UserId == userId && x.ServiceId == obj.Q_DailyRequire.ServiceId);
                             if (userService != null && userService.Quantity == userService.CurrentQuantity)
                             {
                                 //ktra tiep xem co user nao còn gọi dc hay ko
-                                var otherUsers = db.Q_ServiceLimit.Where(x => !x.IsDeleted && x.Quantity != x.CurrentQuantity &&  x.ServiceId ==obj.Q_DailyRequire.ServiceId).ToList();
-                                if(otherUsers.Count > 0)
+                                var otherUsers = db.Q_ServiceLimit.Where(x => !x.IsDeleted && x.Quantity != x.CurrentQuantity && x.ServiceId == obj.Q_DailyRequire.ServiceId).ToList();
+                                if (otherUsers.Count > 0)
                                 {
                                     // neu co nguoi con goi dc thi ko dc lay phieu voi dich vu nay ma phai goi dich vu khac
                                     serviceOver.Add(obj.Q_DailyRequire.ServiceId);
@@ -685,7 +685,7 @@ namespace QMS_System.Data.BLL
                                 }
                             }
                         }
-                         
+
                         obj.UserId = userId;
                         obj.EquipCode = equipCode;
                         obj.StatusId = (int)eStatus.DAGXL;
@@ -1735,7 +1735,7 @@ namespace QMS_System.Data.BLL
             return rs;
         }
 
-        public ResponseBase CheckUserFree(int majorId, int serviceId, int withoutTicketNumber)
+        public ResponseBase CheckUserFree(int majorId, int serviceId, int withoutTicketNumber, int checkFollowMajorOrder)
         {
             var rs = new ResponseBase();
             rs.Data = 0;
@@ -1753,64 +1753,37 @@ namespace QMS_System.Data.BLL
                 var requests = db.Q_RequestTicket.Where(x => !x.IsDeleted && userIds.Contains(x.UserId)).OrderBy(x => x.CreatedAt).ToList();
                 if (requests.Count > 0)
                 {
-                    rs.Data = requests[0].UserId;
-                    requests[0].IsDeleted = true;
-                    db.Entry<Q_RequestTicket>(requests[0]).State = System.Data.Entity.EntityState.Modified;
-                    db.SaveChanges();
-                }
-
-
-                /*
-                var waitingTickets = (from x in db.Q_DailyRequire_Detail
-                                      where
-                                              x.Q_DailyRequire.ServiceId == serviceId &&
-                                              x.StatusId == (int)eStatus.CHOXL &&
-                                              !x.UserId.HasValue
-                                      select x).ToList();
-                if (waitingTickets.Count > 0)
-                {
-                    var currentLogins = (from x in db.Q_Login where x.StatusId == (int)eStatus.LOGIN select x.UserId).ToArray();
-
-                    //lay user co nghiep vu và dang login
-                    var userIds = (from x in db.Q_UserMajor
-                                   where
-                                   !x.IsDeleted && !x.Q_Major.IsDeleted &&
-                                   !x.Q_User.IsDeleted && x.MajorId == majorId &&
-                                   currentLogins.Contains(x.UserId)
-                                   select x.UserId).ToList();
-
-                    if (userIds.Count > 0)
+                    Q_RequestTicket foundRequest = null;
+                    if (checkFollowMajorOrder == 1)
                     {
-                        // lấy user nào đã gọi dc 1 phieu tro len
-                        var usersDaGiaoDich = (from x in db.Q_DailyRequire_Detail
-                                               where
-                                               x.UserId.HasValue &&
-                                               userIds.Contains(x.UserId.Value)
-                                               select x.UserId).Distinct().ToList();
-
-                         
-                            //ktra xem co thang nao chua GD ko 
-                            var userChuaGiaoDich = userIds.Where(x => !usersDaGiaoDich.Contains(x)).Select(x => x).OrderBy(x=>x).ToArray();
-                            if (userChuaGiaoDich != null && userChuaGiaoDich.Length > 0)
-                                rs.Data = userChuaGiaoDich[0];
-                            else
+                        var userIdFilters = requests.Select(x => x.UserId).ToArray();
+                        //ktra theo thứ tu nghiep vu
+                        var userMajors = db.Q_UserMajor.Where(x => userIdFilters.Contains(x.UserId) && x.MajorId == majorId).OrderBy(x => x.Index).ToArray();
+                        if (userMajors.Length > 0)
+                        {
+                            var orders = userMajors.Select(x => x.Index).Distinct().OrderBy(x => x).ToList();
+                            for (int i = 0; i < orders.Count; i++)
                             {
-                                var processingUsers = (from x in db.Q_DailyRequire_Detail where x.StatusId == (int)eStatus.DAGXL select x.UserId).ToList();
-                                if (processingUsers.Count > 0)
-                                    usersDaGiaoDich = usersDaGiaoDich.Where(x => !processingUsers.Contains(x)).ToList();
-                                var freeUser = (from x in db.Q_DailyRequire_Detail
-                                                where
-                                                x.StatusId == (int)eStatus.HOTAT &&
-                                                x.IsNew &&
-                                                usersDaGiaoDich.Contains(x.UserId.Value)
-                                                orderby x.EndProcessTime.Value
-                                                select x).OrderBy(x => x.EndProcessTime.Value).ToList();
-                                if (freeUser != null && freeUser.Count > 0)
-                                    rs.Data = freeUser.FirstOrDefault().UserId;
+                                var userWithOrder = userMajors.Where(x => x.Index == orders[i]).Select(x => x.UserId).Distinct().ToList();
+                                var check = requests.Where(x => userWithOrder.Contains(x.UserId)).OrderBy(x => x.CreatedAt).FirstOrDefault();
+                                if (check != null)
+                                {
+                                    rs.Data = check.UserId;
+                                    foundRequest = check;
+                                    break;
+                                }
                             }
-                        
+                        }
                     }
-                }*/
+                    else
+                    {
+                        rs.Data = requests[0].UserId;
+                        foundRequest = requests[0];
+                    }
+                    foundRequest.IsDeleted = true;
+                    db.Entry<Q_RequestTicket>(foundRequest).State = System.Data.Entity.EntityState.Modified;
+                    db.SaveChanges();
+                }                 
                 return rs;
             }
         }
@@ -1886,6 +1859,15 @@ namespace QMS_System.Data.BLL
                     }
                 }
                 return rs;
+            }
+        }
+
+        public void RemoveRegisterAutocall(int userId)
+        {
+            using (var db = new QMSSystemEntities())
+            {
+                db.Database.ExecuteSqlCommand("update Q_RequestTicket set isdeleted = 1 where userid = " + userId);
+                db.SaveChanges();
             }
         }
     }

@@ -116,7 +116,6 @@ namespace QMS_System.Data.BLL
         public ResponseBaseModel Evaluate(string username, string value, int num, string isUseQMS)
         {
             var rs = new ResponseBaseModel();
-
             using (var db = new QMSSystemEntities())
             {
                 var user = db.Q_User.FirstOrDefault(x => x.UserName.Trim().ToUpper().Equals(username.Trim().ToUpper()));
@@ -139,8 +138,14 @@ namespace QMS_System.Data.BLL
                             IQueryable<Q_DailyRequire_Detail> details;
                             details = (from x in db.Q_DailyRequire_Detail
                                        where x.DailyRequireId == firstObj.DailyRequireId &&
-                                       (x.StatusId == (int)eStatus.DANHGIA || x.StatusId == (int)eStatus.DAGXL) &&
-                                       (system == "1" ? true : x.UserId == user.Id)
+                                       //hthong xe may ?
+                                       // YES => lấy Status = DANHGIA | DAGXL
+                                       // NO =>  lấy ststus = HOTAT
+                                       (system == "1" ? x.StatusId == (int)eStatus.HOTAT : (x.StatusId == (int)eStatus.DANHGIA || x.StatusId == (int)eStatus.DAGXL)) &&
+                                       //hthong xe may ?
+                                       // YES => danh gia cho thợ sửa cuối cùng ko phai thu ngân
+                                       // NO =>  danh gia cho user gui yc
+                                       (system == "1" ? x.UserId != user.Id : x.UserId == user.Id)
                                        select x);
 
                             var config = db.Q_Config.FirstOrDefault(x => x.Code == eConfigCode.DoneTicketAfterEvaluate);
@@ -150,6 +155,7 @@ namespace QMS_System.Data.BLL
 
                             foreach (var item in details)
                             {
+                                //ktra so phieu co danh gia chua ?
                                 var obj = (from
                                           ue in db.Q_UserEvaluate
                                            where
@@ -295,18 +301,18 @@ namespace QMS_System.Data.BLL
             return rs;
         }
 
-        public List<ReportEvaluateModel> GetDailyReport()
+        public List<ReportEvaluateModel> GetDailyReport(bool reportForUser)
         {
             using (var db = new QMSSystemEntities())
             {
                 var now = DateTime.Now;
                 List<ReportEvaluateModel> report = new List<ReportEvaluateModel>();
-                report.AddRange(db.Q_Major.Select(x => new ReportEvaluateModel() { ServiceId = x.Id, ServiceName = x.Name }));
+                if (reportForUser)
+                    report.AddRange(db.Q_User.Where(x => !x.IsDeleted).Select(x => new ReportEvaluateModel() { ServiceId = x.Id, ServiceName = x.Name }).ToList());
+                else
+                    report.AddRange(db.Q_Service.Where(x => !x.IsDeleted && x.IsActived).Select(x => new ReportEvaluateModel() { ServiceId = x.Id, ServiceName = x.Name }).ToList());
                 if (report.Count > 0)
                 {
-                    var danhgia = db.Q_UserEvaluate.Where(x => (x.Q_DailyRequire_Detail.EndProcessTime.Value.Day >= now.Day && x.Q_DailyRequire_Detail.EndProcessTime.Value.Month == now.Month && x.Q_DailyRequire_Detail.EndProcessTime.Value.Year == now.Year) && (x.Q_DailyRequire_Detail.EndProcessTime.Value.Day <= now.Day && x.Q_DailyRequire_Detail.EndProcessTime.Value.Month == now.Month && x.Q_DailyRequire_Detail.EndProcessTime.Value.Year == now.Year)).ToList();
-                    var nvDG = db.Q_UserMajor.ToList();
-                    List<int> userIds;
                     List<ModelSelectItem> ycDanhGia = db.Q_EvaluateDetail.
                                                             Where(x => !x.IsDeleted && !x.Q_Evaluate.IsDeleted).
                                                             OrderBy(x => x.Index).
@@ -314,29 +320,33 @@ namespace QMS_System.Data.BLL
                                                            ToList();
                     foreach (var r in report)
                     {
-                        userIds = nvDG.Where(x => x.MajorId == r.ServiceId && x.Index == 1).Select(x => x.UserId).Distinct().ToList();
-                        r.Details.AddRange(ycDanhGia);
-                        if (userIds.Count > 0)
-                            foreach (var yc in r.Details)
-                            {
-                                var a = new ModelSelectItem();
-                                Parse.CopyObject(yc, ref a);
-                                a.Id = danhgia.Where(x => x.Score == yc.Code && userIds.Contains(x.UserId)).Count();
-                                r.Details.Add(a);
-                            }
+                        var danhgia = db.Q_UserEvaluate.Where(x => (x.Q_DailyRequire_Detail.EndProcessTime.Value.Day >= now.Day && x.Q_DailyRequire_Detail.EndProcessTime.Value.Month == now.Month && x.Q_DailyRequire_Detail.EndProcessTime.Value.Year == now.Year) && (x.Q_DailyRequire_Detail.EndProcessTime.Value.Day <= now.Day && x.Q_DailyRequire_Detail.EndProcessTime.Value.Month == now.Month && x.Q_DailyRequire_Detail.EndProcessTime.Value.Year == now.Year)).ToList();
+                        foreach (var yc in ycDanhGia)
+                        {
+                            var a = new ModelSelectItem();
+                            Parse.CopyObject(yc, ref a);
+                            if (reportForUser)
+                                a.Id = danhgia.Where(x => x.Score == yc.Code && x.UserId == r.ServiceId).Count();
+                            else
+                                a.Id = danhgia.Where(x => x.Score == yc.Code && x.Q_DailyRequire_Detail.Q_DailyRequire.ServiceId == r.ServiceId).Count();
+                            r.Details.Add(a);
+                        }
                     }
                 }
-                return report;
+                return report.ToList();
             }
         }
 
-        public List<ReportEvaluateModel> GetDailyReport_NotUseQMS()
+        public List<ReportEvaluateModel> GetDailyReport_NotUseQMS(bool reportForUser)
         {
             using (var db = new QMSSystemEntities())
             {
                 var now = DateTime.Now;
                 var report = new List<ReportEvaluateModel>();
-                report.AddRange(db.Q_User.Select(x => new ReportEvaluateModel() { ServiceId = x.Id, ServiceName = x.Name }).ToList());
+                if (reportForUser)
+                    report.AddRange(db.Q_User.Where(x => !x.IsDeleted).Select(x => new ReportEvaluateModel() { ServiceId = x.Id, ServiceName = x.Name }).ToList());
+                else
+                    report.AddRange(db.Q_Service.Where(x => !x.IsDeleted && x.IsActived).Select(x => new ReportEvaluateModel() { ServiceId = x.Id, ServiceName = x.Name }).ToList());
                 var ycDanhGia = db.Q_EvaluateDetail.
                                     Where(x => !x.IsDeleted && !x.Q_Evaluate.IsDeleted).
                                     OrderBy(x => x.Index).
@@ -351,12 +361,15 @@ namespace QMS_System.Data.BLL
                         {
                             var a = new ModelSelectItem();
                             Parse.CopyObject(yc, ref a);
-                            a.Id = danhgia.Where(x => x.Score == yc.Code && x.UserId == r.ServiceId).Count();
+                            if (reportForUser)
+                                a.Id = danhgia.Where(x => x.Score == yc.Code && x.UserId == r.ServiceId).Count();
+                            else
+                                a.Id = danhgia.Where(x => x.Score == yc.Code && x.Q_DailyRequire_Detail.Q_DailyRequire.ServiceId == r.ServiceId).Count();
                             r.Details.Add(a);
                         }
                     }
                 }
-                return report;
+                return report.ToList();
             }
         }
 
@@ -473,6 +486,53 @@ namespace QMS_System.Data.BLL
             }
         }
 
+
+        public List<ReportEvaluateDetailModel> GetDailyReport_Detail(DateTime fromDate, DateTime toDate)
+        {
+            using (var db = new QMSSystemEntities())
+            {
+                fromDate = new DateTime(fromDate.Year, fromDate.Month, fromDate.Day, 0, 0, 0);
+                toDate = new DateTime(toDate.Year, toDate.Month, toDate.Day, 23, 59, 0);
+                var histories = (from x in db.Q_HisUserEvaluate
+                                 where
+                                    !x.IsDeleted &&
+                                    x.Q_HisDailyRequire_De.Q_HisDailyRequire.PrintTime >= fromDate &&
+                                    x.Q_HisDailyRequire_De.Q_HisDailyRequire.PrintTime <= toDate
+                                 select new ReportEvaluateDetailModel()
+                                 {
+                                     UserId = x.UserId,
+                                     UserName = x.Q_User.Name,
+                                     ServiceId = x.Q_HisDailyRequire_De.Q_HisDailyRequire.ServiceId,
+                                     ServiceName = x.Q_HisDailyRequire_De.Q_HisDailyRequire.Q_Service.Name,
+                                     PrintTime = x.Q_HisDailyRequire_De.Q_HisDailyRequire.PrintTime ,
+                                     EvaluateTime = x.CreatedDate ,
+                                     Score = x.Score,
+                                     Number = x.Q_HisDailyRequire_De.Q_HisDailyRequire.TicketNumber
+                                 }).ToList();
+                if (DateTime.Now < toDate)
+                {
+                    var today = (from x in db.Q_UserEvaluate
+                                 where
+                                    !x.IsDeleted &&
+                                    x.Q_DailyRequire_Detail.Q_DailyRequire.PrintTime >= fromDate &&
+                                    x.Q_DailyRequire_Detail.Q_DailyRequire.PrintTime <= toDate
+                                 select new ReportEvaluateDetailModel()
+                                 {
+                                     UserId = x.UserId,
+                                     UserName = x.Q_User.Name,
+                                     ServiceId = x.Q_DailyRequire_Detail.Q_DailyRequire.ServiceId,
+                                     ServiceName = x.Q_DailyRequire_Detail.Q_DailyRequire.Q_Service.Name,
+                                     PrintTime = x.Q_DailyRequire_Detail.Q_DailyRequire.PrintTime ,
+                                     EvaluateTime = x.CreatedDate ,
+                                     Score = x.Score,
+                                     Number = x.Q_DailyRequire_Detail.Q_DailyRequire.TicketNumber
+                                 }).ToList();
+                    histories.AddRange(today);
+                }
+                return histories.OrderBy(x=>x.PrintTime).ThenBy(x=>x.Number).ToList();                 
+            }
+        }
+
         public SendSMSModel GetRequireSendSMS()
         {
             using (var db = new QMSSystemEntities())
@@ -562,6 +622,20 @@ public class ReportEvaluateModel
         Details = new List<ModelSelectItem>();
     }
 }
+
+
+public class ReportEvaluateDetailModel
+{
+    public int UserId { get; set; }
+    public string UserName { get; set; }
+    public int ServiceId { get; set; }
+    public string ServiceName { get; set; }
+    public DateTime PrintTime { get; set; }
+    public DateTime EvaluateTime { get; set; }
+    public string Score { get; set; }
+    public int Number { get; set; }
+}
+
 
 public class SMSModel
 {

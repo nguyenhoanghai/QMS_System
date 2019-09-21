@@ -262,6 +262,7 @@
           <Property Name="UserId" Type="int" Nullable="false" />
           <Property Name="Score" Type="nvarchar" MaxLength="550" Nullable="false" />
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Q_Language">
           <Key>
@@ -1533,7 +1534,6 @@
           <EntitySet Name="Q_Evaluate" EntityType="QMSSystemModel.Q_Evaluate" />
           <EntitySet Name="Q_EvaluateDetail" EntityType="QMSSystemModel.Q_EvaluateDetail" />
           <EntitySet Name="Q_HisDailyRequire" EntityType="QMSSystemModel.Q_HisDailyRequire" />
-          <EntitySet Name="Q_HisUserEvaluate" EntityType="QMSSystemModel.Q_HisUserEvaluate" />
           <EntitySet Name="Q_Language" EntityType="QMSSystemModel.Q_Language" />
           <EntitySet Name="Q_Login" EntityType="QMSSystemModel.Q_Login" />
           <EntitySet Name="Q_LoginHistory" EntityType="QMSSystemModel.Q_LoginHistory" />
@@ -1637,10 +1637,6 @@
           <AssociationSet Name="FK_Q_EvaluateDetail_Q_Evaluate" Association="QMSSystemModel.FK_Q_EvaluateDetail_Q_Evaluate">
             <End Role="Q_Evaluate" EntitySet="Q_Evaluate" />
             <End Role="Q_EvaluateDetail" EntitySet="Q_EvaluateDetail" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Q_HisUserEvaluate_Q_User" Association="QMSSystemModel.FK_Q_HisUserEvaluate_Q_User">
-            <End Role="Q_User" EntitySet="Q_User" />
-            <End Role="Q_HisUserEvaluate" EntitySet="Q_HisUserEvaluate" />
           </AssociationSet>
           <AssociationSet Name="FK_Q_ReadTemplate_Q_Language" Association="QMSSystemModel.FK_Q_ReadTemplate_Q_Language">
             <End Role="Q_Language" EntitySet="Q_Language" />
@@ -1756,10 +1752,6 @@
             <End Role="Q_User" EntitySet="Q_User" />
             <End Role="Q_HisDailyRequire_De" EntitySet="Q_HisDailyRequire_De" />
           </AssociationSet>
-          <AssociationSet Name="FK_Q_HisUserEvaluate_Q_HisDailyRequire_De" Association="QMSSystemModel.FK_Q_HisUserEvaluate_Q_HisDailyRequire_De">
-            <End Role="Q_HisDailyRequire_De" EntitySet="Q_HisDailyRequire_De" />
-            <End Role="Q_HisUserEvaluate" EntitySet="Q_HisUserEvaluate" />
-          </AssociationSet>
           <EntitySet Name="Q_RequestTicket" EntityType="QMSSystemModel.Q_RequestTicket" />
           <EntitySet Name="Q_RecieverSMS" EntityType="QMSSystemModel.Q_RecieverSMS" />
           <EntitySet Name="Q_Service" EntityType="QMSSystemModel.Q_Service" />
@@ -1787,6 +1779,15 @@
           <AssociationSet Name="FK_Q_ServiceLimit_Q_User" Association="QMSSystemModel.FK_Q_ServiceLimit_Q_User">
             <End Role="Q_User" EntitySet="Q_User" />
             <End Role="Q_ServiceLimit" EntitySet="Q_ServiceLimit" />
+          </AssociationSet>
+          <EntitySet Name="Q_HisUserEvaluate" EntityType="QMSSystemModel.Q_HisUserEvaluate" />
+          <AssociationSet Name="FK_Q_HisUserEvaluate_Q_HisDailyRequire_De" Association="QMSSystemModel.FK_Q_HisUserEvaluate_Q_HisDailyRequire_De">
+            <End Role="Q_HisDailyRequire_De" EntitySet="Q_HisDailyRequire_De" />
+            <End Role="Q_HisUserEvaluate" EntitySet="Q_HisUserEvaluate" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Q_HisUserEvaluate_Q_User" Association="QMSSystemModel.FK_Q_HisUserEvaluate_Q_User">
+            <End Role="Q_User" EntitySet="Q_User" />
+            <End Role="Q_HisUserEvaluate" EntitySet="Q_HisUserEvaluate" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="Q_Action">
@@ -2039,18 +2040,6 @@
           <NavigationProperty Name="Q_HisDailyRequire_De" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_HisDailyRequire" FromRole="Q_HisDailyRequire" ToRole="Q_HisDailyRequire_De" />
           <NavigationProperty Name="Q_Service" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_Q_Service" FromRole="Q_HisDailyRequire" ToRole="Q_Service" />
         </EntityType>
-        <EntityType Name="Q_HisUserEvaluate">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="HisDailyRequireDeId" Type="Int32" Nullable="false" />
-          <Property Name="UserId" Type="Int32" Nullable="false" />
-          <Property Name="Score" Type="String" Nullable="false" MaxLength="550" FixedLength="false" Unicode="true" />
-          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Q_User" Relationship="QMSSystemModel.FK_Q_HisUserEvaluate_Q_User" FromRole="Q_HisUserEvaluate" ToRole="Q_User" />
-          <NavigationProperty Name="Q_HisDailyRequire_De" Relationship="QMSSystemModel.FK_Q_HisUserEvaluate_Q_HisDailyRequire_De" FromRole="Q_HisUserEvaluate" ToRole="Q_HisDailyRequire_De" />
-        </EntityType>
         <EntityType Name="Q_Language">
           <Key>
             <PropertyRef Name="Id" />
@@ -2263,7 +2252,6 @@
           <Property Name="WorkingHistory" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Counters" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Q_HisUserEvaluate" Relationship="QMSSystemModel.FK_Q_HisUserEvaluate_Q_User" FromRole="Q_User" ToRole="Q_HisUserEvaluate" />
           <NavigationProperty Name="Q_Login" Relationship="QMSSystemModel.FK_Q_Login_Q_User" FromRole="Q_User" ToRole="Q_Login" />
           <NavigationProperty Name="Q_LoginHistory" Relationship="QMSSystemModel.FK_Q_LoginHistory_Q_User" FromRole="Q_User" ToRole="Q_LoginHistory" />
           <NavigationProperty Name="Q_RegisterRecieveTicket" Relationship="QMSSystemModel.FK_Q_RegisterRecieveTicket_Q_User" FromRole="Q_User" ToRole="Q_RegisterRecieveTicket" />
@@ -2274,6 +2262,7 @@
           <NavigationProperty Name="Q_DailyRequire_Detail" Relationship="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_User" FromRole="Q_User" ToRole="Q_DailyRequire_Detail" />
           <NavigationProperty Name="Q_HisDailyRequire_De" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_User" FromRole="Q_User" ToRole="Q_HisDailyRequire_De" />
           <NavigationProperty Name="Q_ServiceLimit" Relationship="QMSSystemModel.FK_Q_ServiceLimit_Q_User" FromRole="Q_User" ToRole="Q_ServiceLimit" />
+          <NavigationProperty Name="Q_HisUserEvaluate" Relationship="QMSSystemModel.FK_Q_HisUserEvaluate_Q_User" FromRole="Q_User" ToRole="Q_HisUserEvaluate" />
         </EntityType>
         <EntityType Name="Q_UserCmdRegister">
           <Key>
@@ -2602,18 +2591,6 @@
             </Principal>
             <Dependent Role="Q_EvaluateDetail">
               <PropertyRef Name="EvaluateId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Q_HisUserEvaluate_Q_User">
-          <End Type="QMSSystemModel.Q_User" Role="Q_User" Multiplicity="1" />
-          <End Type="QMSSystemModel.Q_HisUserEvaluate" Role="Q_HisUserEvaluate" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Q_User">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Q_HisUserEvaluate">
-              <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2995,18 +2972,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Q_HisUserEvaluate_Q_HisDailyRequire_De">
-          <End Type="QMSSystemModel.Q_HisDailyRequire_De" Role="Q_HisDailyRequire_De" Multiplicity="1" />
-          <End Type="QMSSystemModel.Q_HisUserEvaluate" Role="Q_HisUserEvaluate" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Q_HisDailyRequire_De">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Q_HisUserEvaluate">
-              <PropertyRef Name="HisDailyRequireDeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="Q_RequestTicket">
           <Key>
             <PropertyRef Name="Id" />
@@ -3127,6 +3092,43 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Q_ServiceLimit">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Q_HisUserEvaluate">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="HisDailyRequireDeId" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="Score" Type="String" Nullable="false" MaxLength="550" FixedLength="false" Unicode="true" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Q_HisDailyRequire_De" Relationship="QMSSystemModel.FK_Q_HisUserEvaluate_Q_HisDailyRequire_De" FromRole="Q_HisUserEvaluate" ToRole="Q_HisDailyRequire_De" />
+          <NavigationProperty Name="Q_User" Relationship="QMSSystemModel.FK_Q_HisUserEvaluate_Q_User" FromRole="Q_HisUserEvaluate" ToRole="Q_User" />
+        </EntityType>
+        <Association Name="FK_Q_HisUserEvaluate_Q_HisDailyRequire_De">
+          <End Type="QMSSystemModel.Q_HisDailyRequire_De" Role="Q_HisDailyRequire_De" Multiplicity="1" />
+          <End Type="QMSSystemModel.Q_HisUserEvaluate" Role="Q_HisUserEvaluate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_HisDailyRequire_De">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_HisUserEvaluate">
+              <PropertyRef Name="HisDailyRequireDeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Q_HisUserEvaluate_Q_User">
+          <End Type="QMSSystemModel.Q_User" Role="Q_User" Multiplicity="1" />
+          <End Type="QMSSystemModel.Q_HisUserEvaluate" Role="Q_HisUserEvaluate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_HisUserEvaluate">
               <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
@@ -3367,17 +3369,6 @@
                 <ScalarProperty Name="BusinessId" ColumnName="BusinessId" />
                 <ScalarProperty Name="ServiceId" ColumnName="ServiceId" />
                 <ScalarProperty Name="TicketNumber" ColumnName="TicketNumber" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Q_HisUserEvaluate">
-            <EntityTypeMapping TypeName="QMSSystemModel.Q_HisUserEvaluate">
-              <MappingFragment StoreEntitySet="Q_HisUserEvaluate">
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="Score" ColumnName="Score" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="HisDailyRequireDeId" ColumnName="HisDailyRequireDeId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -3740,6 +3731,18 @@
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
                 <ScalarProperty Name="ServiceId" ColumnName="ServiceId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Q_HisUserEvaluate">
+            <EntityTypeMapping TypeName="QMSSystemModel.Q_HisUserEvaluate">
+              <MappingFragment StoreEntitySet="Q_HisUserEvaluate">
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="Score" ColumnName="Score" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="HisDailyRequireDeId" ColumnName="HisDailyRequireDeId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

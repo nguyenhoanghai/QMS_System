@@ -235,17 +235,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Q_HisUserEvaluate">
-      <EntityTypeMapping TypeName="QMSSystemModel.Q_HisUserEvaluate">
-        <MappingFragment StoreEntitySet="Q_HisUserEvaluate">
-          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-          <ScalarProperty Name="Score" ColumnName="Score" />
-          <ScalarProperty Name="UserId" ColumnName="UserId" />
-          <ScalarProperty Name="HisDailyRequireDeId" ColumnName="HisDailyRequireDeId" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Q_Language">
       <EntityTypeMapping TypeName="QMSSystemModel.Q_Language">
         <MappingFragment StoreEntitySet="Q_Language">
@@ -604,6 +593,18 @@
           <ScalarProperty Name="Quantity" ColumnName="Quantity" />
           <ScalarProperty Name="ServiceId" ColumnName="ServiceId" />
           <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Q_HisUserEvaluate">
+      <EntityTypeMapping TypeName="QMSSystemModel.Q_HisUserEvaluate">
+        <MappingFragment StoreEntitySet="Q_HisUserEvaluate">
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="Score" ColumnName="Score" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="HisDailyRequireDeId" ColumnName="HisDailyRequireDeId" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>

@@ -98,5 +98,10 @@ namespace QMS_System.Data.Enum
         /// gửi thời gian kết thúc dk cho counter 
         /// </summary>
         public const string GUI_TGIAN_KTHUC_DKIEN = "GUI_TGIAN_KTHUC_DKIEN";
+
+        /// <summary>
+        /// Hủy Đký lấy số tự động
+        /// </summary>
+        public const string HUY_DKY_LAYSO = "HUY_DKY_LAYSO";
     }
 }
