@@ -50,6 +50,7 @@ namespace QMS_System
             isFirstLoad = false,
             isErorr = false,
             isRunning = false,
+            sqlStatus = false,
             autoCall = false;
         public static List<ServiceDayModel> lib_Services;
         public static List<RegisterUserCmdModel> lib_RegisterUserCmds;
@@ -72,48 +73,58 @@ namespace QMS_System
         }
         private void frmMain_Load(object sender, EventArgs e)
         {
-            configs = BLLConfig.Instance.Gets();
-            soundPath = GetConfigByCode(eConfigCode.SoundPath);
-            SoundLockPrintTicket = GetConfigByCode(eConfigCode.SoundLockPrintTicket);
-            CheckTimeBeforePrintTicket = GetConfigByCode(eConfigCode.CheckTimeBeforePrintTicket);
-
-            int.TryParse(GetConfigByCode(eConfigCode.PrintType), out printType);
-            int.TryParse(GetConfigByCode(eConfigCode.PrintTicketReturnCurrentNumberOrServiceCode), out printTicketReturnCurrentNumberOrServiceCode);
-            int.TryParse(GetConfigByCode(eConfigCode.SilenceTime), out silenceTime);
-            int.TryParse(GetConfigByCode(eConfigCode.StartNumber), out startNumber);
-            int.TryParse(GetConfigByCode(eConfigCode.TimeWaitForRecieveData), out timeQuetComport);
-            int.TryParse(GetConfigByCode(eConfigCode.PrintTicketCode), out PrintTicketCode);
-            int.TryParse(GetConfigByCode(eConfigCode.TimesRepeatReadServeOver), out timesRepeatReadServeOver);
-            int.TryParse(GetConfigByCode(eConfigCode.AutoCallFollowMajorOrder), out autoCallFollowMajorOrder);
-            int.TryParse(GetConfigByCode(eConfigCode.UseWithThirdPattern), out UseWithThirdPattern);
-            int.TryParse(GetConfigByCode(eConfigCode.AutoCallIfUserFree), out AutoCallIfUserFree);
-            int.TryParse(GetConfigByCode(eConfigCode.System), out system);
-            int.TryParse(GetConfigByCode(eConfigCode._8cUseFor), out _8cUseFor);
-
-            var query = @"delete from Q_CounterSoftSound ";
-            if (Settings.Default.Today != DateTime.Now.Day)
+            sqlStatus = GPRO_Helper.Instance.CONNECT_STATUS();
+            if (sqlStatus)
             {
-                try
-                {
-                    errorsms = "sang ngày mới " + DateTime.Now.Day;
-                    BLLLoginHistory.Instance.ResetDailyLoginInfor(today, GetConfigByCode(eConfigCode.AutoSetLoginFromYesterday));
-                    BLLDailyRequire.Instance.CopyHistory();
-                    Settings.Default.Today = DateTime.Now.Day;
-                    Settings.Default.Save();
-                    query += "update q_counter set lastcall = 0 ,isrunning =1 GO";
-                    query += "DELETE FROM [dbo].[Q_RequestTicket]  ";
-                    BLLSQLBuilder.Instance.Excecute(query);
+                configs = BLLConfig.Instance.Gets();
+                soundPath = GetConfigByCode(eConfigCode.SoundPath);
+                SoundLockPrintTicket = GetConfigByCode(eConfigCode.SoundLockPrintTicket);
+                CheckTimeBeforePrintTicket = GetConfigByCode(eConfigCode.CheckTimeBeforePrintTicket);
 
-                }
-                catch (Exception ex)
+                int.TryParse(GetConfigByCode(eConfigCode.PrintType), out printType);
+                int.TryParse(GetConfigByCode(eConfigCode.PrintTicketReturnCurrentNumberOrServiceCode), out printTicketReturnCurrentNumberOrServiceCode);
+                int.TryParse(GetConfigByCode(eConfigCode.SilenceTime), out silenceTime);
+                int.TryParse(GetConfigByCode(eConfigCode.StartNumber), out startNumber);
+                int.TryParse(GetConfigByCode(eConfigCode.TimeWaitForRecieveData), out timeQuetComport);
+                int.TryParse(GetConfigByCode(eConfigCode.PrintTicketCode), out PrintTicketCode);
+                int.TryParse(GetConfigByCode(eConfigCode.TimesRepeatReadServeOver), out timesRepeatReadServeOver);
+                int.TryParse(GetConfigByCode(eConfigCode.AutoCallFollowMajorOrder), out autoCallFollowMajorOrder);
+                int.TryParse(GetConfigByCode(eConfigCode.UseWithThirdPattern), out UseWithThirdPattern);
+                int.TryParse(GetConfigByCode(eConfigCode.AutoCallIfUserFree), out AutoCallIfUserFree);
+                int.TryParse(GetConfigByCode(eConfigCode.System), out system);
+                int.TryParse(GetConfigByCode(eConfigCode._8cUseFor), out _8cUseFor);
+
+                var query = @"delete from Q_CounterSoftSound ";
+                if (Settings.Default.Today != DateTime.Now.Day)
                 {
-                    //   MessageBox.Show(ex.ToString(), "New day");
+                    try
+                    {
+                        errorsms = "sang ngày mới " + DateTime.Now.Day;
+                        BLLLoginHistory.Instance.ResetDailyLoginInfor(today, GetConfigByCode(eConfigCode.AutoSetLoginFromYesterday));
+                        BLLDailyRequire.Instance.CopyHistory();
+                        Settings.Default.Today = DateTime.Now.Day;
+                        Settings.Default.Save();
+                        query += "update q_counter set lastcall = 0 ,isrunning =1 GO";
+                        query += "DELETE FROM [dbo].[Q_RequestTicket]  ";
+                        BLLSQLBuilder.Instance.Excecute(query);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        //   MessageBox.Show(ex.ToString(), "New day");
+                    }
                 }
+                else
+                    errorsms = "";
+
+                btRunProcess.PerformClick();
             }
             else
-                errorsms = "";
-
-            btRunProcess.PerformClick();
+            {
+                errorsms = "Kết nối máy chủ SQL thất bại. Vui lòng kiểm tra lại.";
+                Form form = new FrmSQLConnect();
+                form.ShowDialog();
+            }
         }
 
         private Form IsActive(Type ftype)
@@ -543,6 +554,19 @@ namespace QMS_System
                 errorsms = "Hủy phiếu thành công.";
         }
 
+        private void btnConnectSQL_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            Form frm = IsActive(typeof(FrmSQLConnect));
+            //  if (frm == null)
+            //  {
+            var forms = new FrmSQLConnect();
+            // forms.MdiParent = this;
+            forms.Show();
+            //  }
+            //  else
+            //     frm.Activate();
+        }
+
         private void ReadSound(List<string> sounds)
         {
             if (temp.Count > 0)
@@ -727,6 +751,15 @@ namespace QMS_System
                                 case "0E": hexStr[2] = "14"; break;
                                 case "0F": hexStr[2] = "15"; break;
                                 case "10": hexStr[2] = "16"; break;
+                                case "11": hexStr[2] = "17"; break;
+                                case "12": hexStr[2] = "18"; break;
+                                case "13": hexStr[2] = "19"; break;
+                                case "14": hexStr[2] = "20"; break;
+                                case "15": hexStr[2] = "21"; break;
+                                case "16": hexStr[2] = "22"; break;
+                                case "17": hexStr[2] = "23"; break;
+                                case "18": hexStr[2] = "24"; break;
+                                case "19": hexStr[2] = "25"; break;
                             }
 
                             if (int.Parse(hexStr[2].ToString()) == 30)

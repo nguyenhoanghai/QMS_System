@@ -1,8 +1,12 @@
-﻿using System; 
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Data;
+using System.Data.Entity.Core.EntityClient;
+using System.Data.SqlClient;
+using System.IO;
 using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Xml;
 
 namespace QMS_System.Helper
 {
@@ -25,7 +29,7 @@ namespace QMS_System.Helper
         private GPRO_Helper() { }
         #endregion
 
-        public  string Ascii2HexStringNull(string sInput)
+        public string Ascii2HexStringNull(string sInput)
         {
             string hex = "";
             try
@@ -42,7 +46,7 @@ namespace QMS_System.Helper
             return hex.Trim();
         }
 
-        public   string HexString2Ascii(string hexString)
+        public string HexString2Ascii(string hexString)
         {
             StringBuilder sb = new StringBuilder();
             try
@@ -59,9 +63,9 @@ namespace QMS_System.Helper
             }
             return sb.ToString();
         }
-       
-        public   string XOR(string s)  
-        { 
+
+        public string XOR(string s)
+        {
             string sResult = "";
             try
             {
@@ -70,18 +74,18 @@ namespace QMS_System.Helper
                 arrayC = new char[s.Length];
                 arrayC = s.ToCharArray();
                 for (int i = 0; i < s.Length; i++)
-                { 
+                {
                     buffer ^= System.Convert.ToByte(arrayC[i]);
-                } 
+                }
                 sResult = Convert.ToString(buffer, 16).PadLeft(2, '0').PadRight(3, ' ');
             }
             catch (Exception)
             {
             }
-            return sResult.ToUpper().Trim();  
+            return sResult.ToUpper().Trim();
         }
 
-        public   string ConvertVN(string chucodau)
+        public string ConvertVN(string chucodau)
         {
             const string FindText = "áàảãạâấầẩẫậăắằẳẵặđéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵÁÀẢÃẠÂẤẦẨẪẬĂẮẰẲẴẶĐÉÈẺẼẸÊẾỀỂỄỆÍÌỈĨỊÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÚÙỦŨỤƯỨỪỬỮỰÝỲỶỸỴ";
             const string ReplText = "aaaaaaaaaaaaaaaaadeeeeeeeeeeeiiiiiooooooooooooooooouuuuuuuuuuuyyyyyAAAAAAAAAAAAAAAAADEEEEEEEEEEEIIIIIOOOOOOOOOOOOOOOOOUUUUUUUUUUUYYYYY";
@@ -152,5 +156,106 @@ namespace QMS_System.Helper
             return abc;
         }
 
+        public bool CONNECT_STATUS()
+        {
+            try
+            {
+                SqlConnection sqlConnection = new SqlConnection(GetStringConnect());
+                sqlConnection.Open();
+                if (sqlConnection.State == ConnectionState.Open)
+                {
+                    sqlConnection.Close();
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public string GetStringConnect()
+        {
+            try
+            {
+                string filename = Application.StartupPath + "\\DATA.XML";
+                if (File.Exists(filename))
+                {
+                    XmlDocument xmlDocument = new XmlDocument();
+                    xmlDocument.Load(filename);
+                    XmlNodeList elementsByTagName = xmlDocument.GetElementsByTagName("SQLServer");
+                    string innerText = elementsByTagName.Item(0).ChildNodes[0].InnerText;
+                    string innerText2 = elementsByTagName.Item(0).ChildNodes[1].InnerText;
+                    string innerText3 = elementsByTagName.Item(0).ChildNodes[2].InnerText;
+                    string innerText4 = elementsByTagName.Item(0).ChildNodes[3].InnerText;
+                    string innerText5 = elementsByTagName.Item(0).ChildNodes[4].InnerText;
+                    if (Boolean.Parse(innerText5))
+                        return string.Concat(new string[]
+                        {
+                    "Server=",
+                    innerText,
+                    ";Database=",
+                    innerText2,
+                    ";uid=",
+                    innerText3,
+                    ";pwd=",
+                    innerText4
+                        });
+                    else
+                    {
+                        return string.Concat(new string[]
+                           {
+                    "Server = ",
+                    innerText,
+                    ";Trusted_Connection=true;",
+                           });
+                    }
+                }
+                return "";
+            }
+            catch (Exception)
+            {
+                return "";
+            }
+        }
+
+        public string GetEntityConnectString()
+        {
+            try
+            {
+                string filename = Application.StartupPath + "\\DATA.XML";
+                if (File.Exists(filename))
+                {
+                    XmlDocument xmlDocument = new XmlDocument();
+                    xmlDocument.Load(filename);
+                    XmlNodeList elementsByTagName = xmlDocument.GetElementsByTagName("SQLServer");
+                    string innerText = elementsByTagName.Item(0).ChildNodes[0].InnerText;
+                    string innerText2 = elementsByTagName.Item(0).ChildNodes[1].InnerText;
+                    string innerText3 = elementsByTagName.Item(0).ChildNodes[2].InnerText;
+                    string innerText4 = elementsByTagName.Item(0).ChildNodes[3].InnerText;
+                    string innerText5 = elementsByTagName.Item(0).ChildNodes[4].InnerText;
+                    //Build an Entity Framework connection string
+                    var entityString = new EntityConnectionStringBuilder()
+                    {
+                        Provider = "System.Data.SqlClient",
+                        Metadata = "res://*/QMSModel.csdl|res://*/QMSModel.ssdl|res://*/QMSModel.msl"
+                    };
+                    if (!Boolean.Parse(innerText5))
+                    {
+                        entityString.ProviderConnectionString = @"data source=" + innerText + ";initial catalog=" + innerText2 + ";user id=" + innerText3 + ";password=" + innerText4;
+                    }
+                    else
+                    {
+                        entityString.ProviderConnectionString = @"data source=" + innerText + ";initial catalog=" + innerText2 + ";integrated security=True;";
+                    }
+                    return entityString.ConnectionString;
+                }
+                return "";
+            }
+            catch (Exception)
+            {
+                return "";
+            }
+        }
     }
 }

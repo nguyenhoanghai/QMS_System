@@ -56,52 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BLL\BLLAlert.cs" />
-    <Compile Include="BLL\BLLCounterSound.cs" />
-    <Compile Include="BLL\BLLMaindisplayDirection.cs" />
-    <Compile Include="BLL\BLLReadTemp_Detail.cs" />
-    <Compile Include="BLL\BLLReport.cs" />
-    <Compile Include="BLL\BLLR_ReportByBusiness.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="BLL\BLLServiceLimit.cs" />
-    <Compile Include="BLL\BLLServiceShift.cs" />
-    <Compile Include="BLL\BLLShift.cs" />
-    <Compile Include="BLL\BLLCounterSoftRequire.cs" />
-    <Compile Include="BLL\BLLEvaluate.cs" />
-    <Compile Include="BLL\BLLRecieverSMS.cs" />
-    <Compile Include="BLL\BLLSQLBuilder.cs" />
-    <Compile Include="BLL\BLLUserCmdReadSound.cs" />
-    <Compile Include="BLL\BLLUserEvaluate.cs" />
-    <Compile Include="BLL\BLLUserMajor.cs" />
-    <Compile Include="BLL\BLLRegisterUserCmd.cs" />
-    <Compile Include="BLL\BLLDailyRequire.cs" />
-    <Compile Include="BLL\BLLBusiness.cs" />
-    <Compile Include="BLL\BLLConfig.cs" />
-    <Compile Include="BLL\BLLAction.cs" />
     <Compile Include="BLL\BLLMajor.cs" />
-    <Compile Include="BLL\BLLProcess.cs" />
-    <Compile Include="BLL\BLLLoginHistory.cs" />
-    <Compile Include="BLL\BLLActionParameter.cs" />
-    <Compile Include="BLL\BLLCommand.cs" />
-    <Compile Include="BLL\BLLCommandParameter.cs" />
-    <Compile Include="BLL\BLLEquipTypeProcess.cs" />
-    <Compile Include="BLL\BLLReadTempDetail.cs" />
-    <Compile Include="BLL\BLLReadTemplate.cs" />
-    <Compile Include="BLL\BLLServiceStep.cs" />
-    <Compile Include="BLL\BLLSound.cs" />
-    <Compile Include="BLL\BLLLanguage.cs" />
-    <Compile Include="BLL\BLLUser.cs" />
-    <Compile Include="BLL\BLLEquipment.cs" />
-    <Compile Include="BLL\BLLCounter.cs" />
-    <Compile Include="BLL\BLLPolicy.cs" />
-    <Compile Include="BLL\BLLBusinessType.cs" />
-    <Compile Include="BLL\BLLStatus.cs" />
-    <Compile Include="BLL\BLLEquipType.cs" />
-    <Compile Include="BLL\BLLStatusType.cs" />
-    <Compile Include="BLL\BLLService.cs" />
-    <Compile Include="BLL\BLLVideo.cs" />
-    <Compile Include="BLL\BLLVideoTemplate.cs" />
     <Compile Include="Enum\eCounterSoftRequireType.cs" />
     <Compile Include="Model\A_CurrentInfoModel.cs" />
     <Compile Include="Model\CounterSoftRequireModel.cs" />
@@ -118,7 +73,6 @@
     <Compile Include="Model\ViewModel.cs" />
     <Compile Include="Model\UserEvaluateModel.cs" />
     <Compile Include="Model\EvaluateModel.cs" />
-    <Compile Include="BLL\IssueTicketScreen\BLLSetupInterface.cs" />
     <Compile Include="Enum\eCodeHex.cs" />
     <Compile Include="Enum\eEquipType.cs" />
     <Compile Include="Model\AlertModel.cs" />

@@ -36,7 +36,8 @@ namespace QMS_System
 
                         Application.EnableVisualStyles();
                         Application.SetCompatibleTextRenderingDefault(false);
-                        Application.Run(new frmMain());
+                      //  Application.Run(new frmMain());
+                        Application.Run(new FrmSQLConnect());
                         Process[] processe;
                         processe = Process.GetProcessesByName("QMS_System");
                         foreach (Process dovi in processe)

@@ -15,8 +15,8 @@ namespace QMS_System.Data
     
     public partial class QMSSystemEntities : DbContext
     {
-        public QMSSystemEntities()
-            : base("name=QMSSystemEntities")
+        public QMSSystemEntities(string nameOrConnectionString)
+            : base(nameOrConnectionString)
         {
         }
     

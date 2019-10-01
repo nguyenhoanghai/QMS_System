@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<String_Connect>
+  <SQLServer id="1">
+    <Server_Name>.</Server_Name>
+    <Database>DC50</Database>
+    <User>
+    </User>
+    <Password>
+    </Password>
+    <Window_Authenticate>True</Window_Authenticate>
+  </SQLServer>
+</String_Connect>

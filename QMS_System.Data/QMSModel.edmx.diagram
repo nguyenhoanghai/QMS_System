@@ -44,7 +44,6 @@
         <EntityTypeShape EntityType="QMSSystemModel.Q_UserCommandReadSound" Width="1.5" PointX="3" PointY="10.5" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_UserEvaluate" Width="1.5" PointX="11.25" PointY="17.25" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_UserMajor" Width="1.5" PointX="6" PointY="15.75" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_Video" Width="1.5" PointX="5.75" PointY="1.125" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_VideoTemplate" Width="1.5" PointX="5.75" PointY="41" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_VideoTemplate_De" Width="1.5" PointX="8" PointY="1" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_ActionParameter_Q_Action" />
@@ -84,7 +83,6 @@
         <AssociationConnector Association="QMSSystemModel.FK_Q_UserCommandReadSound_Q_User" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_UserEvaluate_NHANVIEN" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_UserMajor_Q_User" />
-        <AssociationConnector Association="QMSSystemModel.FK_Q_VideoTemplate_De_Q_Video" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_VideoTemplate_De_Q_VideoTemplate" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_DailyRequire_Detail" Width="1.5" PointX="14" PointY="20.25" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_HisDailyRequire_De" Width="1.5" PointX="11" PointY="21.375" />
