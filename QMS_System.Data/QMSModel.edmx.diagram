@@ -42,7 +42,6 @@
         <EntityTypeShape EntityType="QMSSystemModel.Q_User" Width="1.5" PointX="0.75" PointY="14.25" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_UserCmdRegister" Width="1.5" PointX="6" PointY="11.375" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_UserCommandReadSound" Width="1.5" PointX="3" PointY="10.5" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_UserEvaluate" Width="1.5" PointX="11.25" PointY="17.25" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_UserMajor" Width="1.5" PointX="6" PointY="15.75" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_VideoTemplate" Width="1.5" PointX="5.75" PointY="41" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_VideoTemplate_De" Width="1.5" PointX="8" PointY="1" />
@@ -81,7 +80,6 @@
         <AssociationConnector Association="QMSSystemModel.FK_Q_Status_Q_StatusType" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_UserCommand_Q_User" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_UserCommandReadSound_Q_User" />
-        <AssociationConnector Association="QMSSystemModel.FK_Q_UserEvaluate_NHANVIEN" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_UserMajor_Q_User" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_VideoTemplate_De_Q_VideoTemplate" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_DailyRequire_Detail" Width="1.5" PointX="14" PointY="20.25" />
@@ -90,7 +88,6 @@
         <AssociationConnector Association="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_Major" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_Status" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_User" />
-        <AssociationConnector Association="QMSSystemModel.FK_Q_UserEvaluate_Q_DailyRequire_Detail" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_HisDailyRequire" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_Major" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_Status" />
@@ -105,9 +102,12 @@
         <EntityTypeShape EntityType="QMSSystemModel.Q_ServiceLimit" Width="1.5" PointX="6" PointY="20.125" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_ServiceLimit_Q_Service" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_ServiceLimit_Q_User" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_HisUserEvaluate" Width="1.5" PointX="14.25" PointY="16.625" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_HisUserEvaluate" Width="1.5" PointX="16.25" PointY="21.5" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_UserEvaluate" Width="1.5" PointX="16.25" PointY="17.875" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_UserEvaluate_Q_DailyRequire_Detail" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_HisUserEvaluate_Q_HisDailyRequire_De" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_HisUserEvaluate_Q_User" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_UserEvaluate_NHANVIEN" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

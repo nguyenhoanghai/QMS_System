@@ -25,9 +25,9 @@ namespace QMS_System.Data.BLL
         private BLLServiceLimit() { }
         #endregion
 
-        public List<ServiceLimitModel> Gets(int? userId)
+        public List<ServiceLimitModel> Gets(string connectString,int? userId)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 if (userId.HasValue)
                     return db.Q_ServiceLimit.Where(x => !x.IsDeleted && x.UserId == userId.Value).Select(x => new ServiceLimitModel() { Id = x.Id, ServiceId = x.ServiceId, Quantity = x.Quantity, CurrentDay = x.CurrentDay, CurrentQuantity = x.CurrentQuantity, UserId = x.UserId }).ToList();
@@ -36,9 +36,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool InsertOrUpdate(Q_ServiceLimit model)
+        public bool InsertOrUpdate(string connectString,Q_ServiceLimit model)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 if (CheckExists(model) == null)
                 {
@@ -67,9 +67,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool UpdateDayInfo(int userId, int serviceId)
+        public bool UpdateDayInfo(string connectString, int userId, int serviceId)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_ServiceLimit.FirstOrDefault(x => !x.IsDeleted && x.ServiceId == serviceId && x.UserId == userId);
                 if (obj != null)
@@ -83,9 +83,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Delete(int Id)
+        public bool Delete(string connectString,int Id)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_ServiceLimit.FirstOrDefault(x => !x.IsDeleted && x.Id == Id);
                 if (obj != null)

@@ -24,9 +24,9 @@ namespace QMS_System.Data.BLL
         }
         private BLLRegisterUserCmd() { }
         #endregion
-        public List<RegisterUserCmdModel> Gets(int userId, int cmdId, int cmdParamId)
+        public List<RegisterUserCmdModel> Gets(string connectString,int userId, int cmdId, int cmdParamId)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var objs = db.Q_UserCmdRegister.Where(x => !x.IsDeleted && !x.Q_User.IsDeleted && !x.Q_CommandParameter.Q_Command.IsDeleted && !x.Q_CommandParameter.IsDeleted && !x.Q_ActionParameter.Q_Action.IsDeleted && !x.Q_ActionParameter.IsDeleted && x.UserId == userId);
                 if (objs != null)
@@ -52,9 +52,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public List<RegisterUserCmdModel> Gets()
+        public List<RegisterUserCmdModel> Gets(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_UserCmdRegister.Where(x => !x.IsDeleted && !x.Q_User.IsDeleted && !x.Q_CommandParameter.Q_Command.IsDeleted && !x.Q_CommandParameter.IsDeleted && !x.Q_ActionParameter.Q_Action.IsDeleted && !x.Q_ActionParameter.IsDeleted).Select(x => new RegisterUserCmdModel()
                 {
@@ -71,9 +71,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public List<RegisterUserCmdModel> Gets(int userId)
+        public List<RegisterUserCmdModel> Gets(string connectString,int userId)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_UserCmdRegister.Where(x => !x.IsDeleted && !x.Q_User.IsDeleted && !x.Q_CommandParameter.Q_Command.IsDeleted && !x.Q_CommandParameter.IsDeleted && !x.Q_ActionParameter.Q_Action.IsDeleted && !x.Q_ActionParameter.IsDeleted && x.UserId == userId).Select(x => new RegisterUserCmdModel()
                 {
@@ -90,9 +90,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public List<RegisterUserCmdModel> GetUserRight(int userId, string cmd, string cmdParam)
+        public List<RegisterUserCmdModel> GetUserRight(string connectString, int userId, string cmd, string cmdParam)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_UserCmdRegister.Where(x => !x.IsDeleted && !x.Q_User.IsDeleted && !x.Q_CommandParameter.Q_Command.IsDeleted && !x.Q_CommandParameter.IsDeleted && !x.Q_ActionParameter.Q_Action.IsDeleted && !x.Q_ActionParameter.IsDeleted && x.UserId == userId && x.Q_CommandParameter.Q_Command.CodeHEX == cmd && x.Q_CommandParameter.Parameter == cmdParam).OrderBy(x => x.Index).Select(x => new RegisterUserCmdModel()
                 {
@@ -110,15 +110,15 @@ namespace QMS_System.Data.BLL
         }
 
 
-        //public List<ModelSelectItem> GetLookUp()
+        //public List<ModelSelectItem> GetLookUp(string connectString)
         //{
-        //      using (db = new QMSSystemEntities()){
+        //      using (db = new QMSSystemEntities(connectString)){
         //    return db.Q_UserCmdRegister.Where(x => !x.IsDeleted).Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Code }).ToList();
         //}
 
-        public int Insert(Q_UserCmdRegister obj)
+        public int Insert(string connectString,Q_UserCmdRegister obj)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 if (!CheckExists(obj))
                 {
@@ -129,9 +129,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public int Update(Q_UserCmdRegister model)
+        public int Update(string connectString,Q_UserCmdRegister model)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_UserCmdRegister.FirstOrDefault(x => !x.IsDeleted && x.Id == model.Id);
                 if (obj != null)
@@ -152,9 +152,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Delete(int Id)
+        public bool Delete(string connectString,int Id)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_UserCmdRegister.FirstOrDefault(x => !x.IsDeleted && x.Id == Id);
                 if (obj != null)
@@ -172,11 +172,11 @@ namespace QMS_System.Data.BLL
             var obj = db.Q_UserCmdRegister.FirstOrDefault(x => !x.IsDeleted && !x.Q_User.IsDeleted && !x.Q_CommandParameter.Q_Command.IsDeleted && !x.Q_CommandParameter.IsDeleted && !x.Q_ActionParameter.Q_Action.IsDeleted && !x.Q_ActionParameter.IsDeleted && x.UserId == model.UserId && x.CmdParamId == model.CmdParamId && x.ActionParamId == model.ActionParamId && x.Id != model.Id);
             return obj != null ? true : false;
         }
-        public bool Copy(List<int> Ids, int userId)
+        public bool Copy(string connectString, List<int> Ids, int userId)
         {
             try
             {
-                using (db = new QMSSystemEntities())
+                using (db = new QMSSystemEntities(connectString))
                 {
                     var src = db.Q_UserCmdRegister.Where(x => !x.IsDeleted && Ids.Contains(x.Id)).ToList();
                     if (src.Count > 0)

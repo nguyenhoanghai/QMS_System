@@ -62,7 +62,6 @@ namespace QMS_System.Data
         public DbSet<Q_User> Q_User { get; set; }
         public DbSet<Q_UserCmdRegister> Q_UserCmdRegister { get; set; }
         public DbSet<Q_UserCommandReadSound> Q_UserCommandReadSound { get; set; }
-        public DbSet<Q_UserEvaluate> Q_UserEvaluate { get; set; }
         public DbSet<Q_UserMajor> Q_UserMajor { get; set; }
         public DbSet<Q_Video> Q_Video { get; set; }
         public DbSet<Q_VideoTemplate> Q_VideoTemplate { get; set; }
@@ -74,5 +73,6 @@ namespace QMS_System.Data
         public DbSet<Q_Service> Q_Service { get; set; }
         public DbSet<Q_ServiceLimit> Q_ServiceLimit { get; set; }
         public DbSet<Q_HisUserEvaluate> Q_HisUserEvaluate { get; set; }
+        public DbSet<Q_UserEvaluate> Q_UserEvaluate { get; set; }
     }
 }

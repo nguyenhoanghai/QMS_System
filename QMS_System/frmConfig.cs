@@ -10,11 +10,14 @@ using System.Windows.Forms;
 using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
 using QMS_System.Data;
+using QMS_System.Helper;
+using GPRO.Core.Hai;
 
 namespace QMS_System
 {
     public partial class frmConfig : Form
     {
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmConfig()
         {
             InitializeComponent();
@@ -25,7 +28,7 @@ namespace QMS_System
         }
         private void GetGridConfig()
         {
-            var list = BLLConfig.Instance.Gets();
+            var list = BLLConfig.Instance.Gets(connect);
             //list.Add(new ConfigModel() { Id = 0, Code = "", Value = "", IsActived = false, Note = "" });
             gridConfig.DataSource = list;
         }
@@ -48,7 +51,7 @@ namespace QMS_System
                     obj.IsActived = (bool)gridViewConfig.GetRowCellValue(gridViewConfig.FocusedRowHandle, "IsActived");
                     obj.Note = gridViewConfig.GetRowCellValue(gridViewConfig.FocusedRowHandle, "Note") != null ? gridViewConfig.GetRowCellValue(gridViewConfig.FocusedRowHandle, "Note").ToString() : "";
 
-                    BLLConfig.Instance.Update(obj);
+                    BLLConfig.Instance.Update(connect, obj);
                     GetGridConfig();
                 }
             }

@@ -24,25 +24,25 @@ namespace QMS_System.Data.BLL
         }
         private BLLBusinessType() { }
         #endregion
-        public List<BusinessTypeModel> Gets()
+        public List<BusinessTypeModel> Gets(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_BusinessType.Where(x => !x.IsDeleted).Select(x => new BusinessTypeModel() { Id = x.Id, Name = x.Name, Note = x.Note }).ToList();
             }
         }
 
-        public List<ModelSelectItem> GetLookUp()
+        public List<ModelSelectItem> GetLookUp(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_BusinessType.Where(x => !x.IsDeleted).Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Name }).ToList();
             }
         }
 
-        public int Insert(Q_BusinessType obj)
+        public int Insert(string connectString,Q_BusinessType obj)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 if (!CheckExists(obj))
                 {
@@ -53,9 +53,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Update(Q_BusinessType model)
+        public bool Update(string connectString,Q_BusinessType model)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_BusinessType.FirstOrDefault(x => !x.IsDeleted && x.Id == model.Id);
                 if (obj != null)
@@ -74,9 +74,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Delete(int Id)
+        public bool Delete(string connectString,int Id)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_BusinessType.FirstOrDefault(x => !x.IsDeleted && x.Id == Id);
                 if (obj != null)

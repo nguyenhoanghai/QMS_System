@@ -1,7 +1,9 @@
 ﻿using DevExpress.XtraEditors.Controls;
+using GPRO.Core.Hai;
 using QMS_System.Data;
 using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
+using QMS_System.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,6 +19,7 @@ namespace QMS_System
     public partial class frmCounter : Form
     {
         int counterId = 0;
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmCounter()
         {
             InitializeComponent();
@@ -31,7 +34,7 @@ namespace QMS_System
         #region Counter
         private void GetGridCounter()
         {
-            var list = BLLCounter.Instance.Gets();
+            var list = BLLCounter.Instance.Gets(connect);
             list.Add(new CounterModel() { Id = 0, ShortName = "", Name = "",   Position = "", Acreage = "" });
             gridCounter.DataSource = list;
         } 
@@ -66,9 +69,9 @@ namespace QMS_System
                     obj.Acreage = gridViewCounter.GetRowCellValue(gridViewCounter.FocusedRowHandle, "Acreage") != null ? gridViewCounter.GetRowCellValue(gridViewCounter.FocusedRowHandle, "Acreage").ToString() : "";
                     int kq = 0;
                     if (obj.Id == 0)
-                        kq = BLLCounter.Instance.Insert(obj);
+                        kq = BLLCounter.Instance.Insert(connect,obj);
                     else
-                        kq = BLLCounter.Instance.Update(obj);
+                        kq = BLLCounter.Instance.Update(connect,obj);
 
                     if (kq == 0)
                     {
@@ -90,7 +93,7 @@ namespace QMS_System
             int Id = int.Parse(gridViewCounter.GetRowCellValue(gridViewCounter.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLCounter.Instance.Delete(Id);
+                BLLCounter.Instance.Delete(connect,Id);
                 GetGridCounter();
             }
         }
@@ -118,7 +121,7 @@ namespace QMS_System
             int Id = int.Parse(gridViewCounter.GetRowCellValue(gridViewCounter.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                var list = BLLCounterSound.Instance.Gets(Id);
+                var list = BLLCounterSound.Instance.Gets(connect, Id);
                 list.Add(new CounterSoundModel() { Id = 0, SoundName = "", });
                 gridChild.DataSource = list;
                 counterId = Id;
@@ -135,7 +138,7 @@ namespace QMS_System
             int Id = int.Parse(gridViewChild.GetRowCellValue(gridViewChild.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLCounterSound.Instance.Delete(Id);
+                BLLCounterSound.Instance.Delete(connect,Id);
                 GetGridChild();
             }
         }
@@ -165,9 +168,9 @@ namespace QMS_System
                     obj.Note = gridViewChild.GetRowCellValue(gridViewChild.FocusedRowHandle, "Note") != null ? gridViewChild.GetRowCellValue(gridViewChild.FocusedRowHandle, "Note").ToString() : "";
                     int kq = 0;
                     if (obj.Id == 0)
-                        kq = BLLCounterSound.Instance.Insert(obj);
+                        kq = BLLCounterSound.Instance.Insert(connect,obj);
                     else
-                        kq = BLLCounterSound.Instance.Update(obj);
+                        kq = BLLCounterSound.Instance.Update(connect,obj);
 
                     if (kq == 0)
                     {
@@ -186,7 +189,7 @@ namespace QMS_System
 
         private void GetLanguage(){
              gridLookUpLanguage.DataSource = null;
-             gridLookUpLanguage.DataSource = BLLLanguage.Instance.GetLookUp();
+             gridLookUpLanguage.DataSource = BLLLanguage.Instance.GetLookUp(connect);
              gridLookUpLanguage.DisplayMember = "Name";
              gridLookUpLanguage.ValueMember = "Id";
              gridLookUpLanguage.PopulateViewColumns();

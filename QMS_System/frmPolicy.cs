@@ -1,6 +1,8 @@
-﻿using QMS_System.Data;
+﻿using GPRO.Core.Hai;
+using QMS_System.Data;
 using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
+using QMS_System.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,6 +17,7 @@ namespace QMS_System
 {
     public partial class frmPolicy : Form
     {
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmPolicy()
         {
             InitializeComponent();
@@ -26,7 +29,7 @@ namespace QMS_System
         }
         private void GetGridPolicy()
         {
-            var list = BLLPolicy.Instance.Gets();
+            var list = BLLPolicy.Instance.Gets(connect);
             list.Add(new PolicyModel() { Id = 0, Name = "", IsActived = false, Note = "" });
             gridPolicy.DataSource = list;
         }
@@ -35,7 +38,7 @@ namespace QMS_System
             int Id = int.Parse(gridViewPolicy.GetRowCellValue(gridViewPolicy.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLPolicy.Instance.Delete(Id);
+                BLLPolicy.Instance.Delete(connect,Id);
                 GetGridPolicy();
             }
         }
@@ -60,7 +63,7 @@ namespace QMS_System
 
                     if (obj.Id == 0)
                     {
-                        int result = BLLPolicy.Instance.Insert(obj);
+                        int result = BLLPolicy.Instance.Insert(connect, obj);
                         if (result == 0)
                         {
                             MessageBox.Show("Tên chính sách này đã tồn tại. Xin nhập tên khác.", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -69,7 +72,7 @@ namespace QMS_System
                     }
                     else
                     {
-                        bool result = BLLPolicy.Instance.Update(obj);
+                        bool result = BLLPolicy.Instance.Update(connect, obj);
                         if(result==false)
                         {
                             MessageBox.Show("Tên chính sách này đã tồn tại. Xin nhập tên khác.", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);

@@ -42,9 +42,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public ResponseBase CreateOrUpdate(Q_User model)
+        public ResponseBase CreateOrUpdate(string connectString,Q_User model)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 try
                 {
@@ -105,9 +105,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public List<UserModel> Gets()
+        public List<UserModel> Gets(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_User.Where(x => !x.IsDeleted).Select(x => new UserModel()
                 {
@@ -127,17 +127,17 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public List<ModelSelectItem> GetLookUp()
+        public List<ModelSelectItem> GetLookUp(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_User.Where(x => !x.IsDeleted).Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Name }).ToList();
             }
         }
 
-        public int Insert(Q_User obj)
+        public int Insert(string connectString,Q_User obj)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 db.Q_User.Add(obj);
                 db.SaveChanges();
@@ -145,9 +145,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Update(Q_User model)
+        public bool Update(string connectString,Q_User model)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_User.FirstOrDefault(x => !x.IsDeleted && x.Id == model.Id);
                 if (obj != null)
@@ -170,9 +170,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Delete(int Id)
+        public bool Delete(string connectString, int Id)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_User.FirstOrDefault(x => !x.IsDeleted && x.Id == Id);
                 if (obj != null)
@@ -185,9 +185,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public Login FindUser(string sUsername, string sPassword)
+        public Login FindUser(string connectString, string sUsername, string sPassword)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 Login login = null;
                 var obj = db.Q_User.FirstOrDefault(x => !x.IsDeleted && x.UserName.Equals(sUsername) && x.Password.Equals(sPassword));
@@ -203,9 +203,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public UserModel Get(int userId)
+        public UserModel Get(string connectString,int userId)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 UserModel obj = null;
                 var user = db.Q_User.FirstOrDefault(x => !x.IsDeleted && x.Id == userId);
@@ -227,9 +227,9 @@ namespace QMS_System.Data.BLL
                 return obj;
             }
         }
-        public UserModel GetByUserName(string userName)
+        public UserModel GetByUserName(string connectString, string userName)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return (from x in db.Q_User
                         where !x.IsDeleted && x.UserName.Trim().Equals(userName)
@@ -251,22 +251,22 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public Q_User Get(string userName, string password)
+        public Q_User Get(string connectString,string userName, string password)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_User.Where(x => !x.IsDeleted && x.UserName.Trim().ToUpper().Equals(userName) && x.Password.Trim().ToUpper().Equals(password)).FirstOrDefault();
             }
         }
 
-        public Q_User Get(string username)
+        public Q_User Get(string connectString,string username)
         {
-            using (db = new QMSSystemEntities()) { return db.Q_User.FirstOrDefault(x => !x.IsDeleted && x.UserName.Trim().Equals(username)); }
+            using (db = new QMSSystemEntities(connectString)) { return db.Q_User.FirstOrDefault(x => !x.IsDeleted && x.UserName.Trim().Equals(username)); }
         }
 
-        public PagedList<UserModel> GetList(string keyWord, int searchBy, int startIndexRecord, int pageSize, string sorting)
+        public PagedList<UserModel> GetList(string connectString, string keyWord, int searchBy, int startIndexRecord, int pageSize, string sorting)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 try
                 {
@@ -309,9 +309,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public string GetUserAvatar(string userName)
+        public string GetUserAvatar(string connectString, string userName)
         {
-            using (var _db = new QMSSystemEntities())
+            using (var _db = new QMSSystemEntities(connectString))
             {
                 var user = _db.Q_User.FirstOrDefault(x => !x.IsDeleted && x.UserName.Trim().ToUpper().Equals(userName.ToUpper().Trim()));
                 if (user != null && !string.IsNullOrEmpty(user.Avatar))

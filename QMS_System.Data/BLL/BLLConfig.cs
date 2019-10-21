@@ -24,25 +24,33 @@ namespace QMS_System.Data.BLL
         }
         private BLLConfig() { }
         #endregion
-        public List<ConfigModel> Gets()
+        public List<ConfigModel> Gets(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            try
             {
-                return db.Q_Config.Where(x => !x.IsDeleted).Select(x => new ConfigModel() { Id = x.Id, Code = x.Code, Value = x.Value, Note = x.Note, IsActived = x.IsActived }).ToList();
+                using (db = new QMSSystemEntities(connectString))
+                {
+                    return db.Q_Config.Where(x => !x.IsDeleted).Select(x => new ConfigModel() { Id = x.Id, Code = x.Code, Value = x.Value, Note = x.Note, IsActived = x.IsActived }).ToList();
+                }
             }
+            catch (Exception ex)
+            {
+               // throw ex.InnerException;
+            }
+            return new List<ConfigModel>();
         }
 
-        public List<ModelSelectItem> GetLookUp()
+        public List<ModelSelectItem> GetLookUp(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_Config.Where(x => !x.IsDeleted).Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Code }).ToList();
             }
         }
 
-        public int Insert(Q_Config obj)
+        public int Insert(string connectString, Q_Config obj)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 db.Q_Config.Add(obj);
                 db.SaveChanges();
@@ -50,13 +58,13 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Update(Q_Config model)
+        public bool Update(string connectString, Q_Config model)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_Config.FirstOrDefault(x => !x.IsDeleted && x.Id == model.Id);
                 if (obj != null)
-                { 
+                {
                     obj.Value = model.Value;
                     obj.IsActived = model.IsActived;
                     obj.Note = model.Note;
@@ -67,14 +75,14 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Update(string code, string value)
+        public bool Update(string connectString, string code, string value)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
-                var obj = db.Q_Config.FirstOrDefault(x => !x.IsDeleted && x.Code.Trim().ToUpper().Equals( code.Trim().ToUpper()));
+                var obj = db.Q_Config.FirstOrDefault(x => !x.IsDeleted && x.Code.Trim().ToUpper().Equals(code.Trim().ToUpper()));
                 if (obj != null)
-                { 
-                    obj.Value = value; 
+                {
+                    obj.Value = value;
                     db.SaveChanges();
                     return true;
                 }
@@ -82,9 +90,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Delete(int Id)
+        public bool Delete(string connectString, int Id)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_Config.FirstOrDefault(x => !x.IsDeleted && x.Id == Id);
                 if (obj != null)
@@ -97,17 +105,17 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public string GetConfigByCode(string code)
+        public string GetConfigByCode(string connectString, string code)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_Config.FirstOrDefault(x => !x.IsDeleted && x.IsActived == true && x.Code.Trim().ToUpper().Equals(code.Trim().ToUpper()));
                 return obj != null ? obj.Value : string.Empty;
             }
         }
-        public bool UpdateConfigValueFromInterface(Q_Config model)
+        public bool UpdateConfigValueFromInterface(string connectString, Q_Config model)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_Config.FirstOrDefault(x => !x.IsDeleted && x.Id == model.Id);
                 if (obj != null)

@@ -28,17 +28,17 @@ namespace QMS_System.Data.BLL
         private BLLDailyRequire() { }
         #endregion
 
-        public Q_DailyRequire GetTicket(int ticket)
+        public Q_DailyRequire GetTicket(string connectString, int ticket)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_DailyRequire.FirstOrDefault(x => x.TicketNumber == ticket);
             }
         }
 
-        public int UpdateTicketInfo(int ticket, TimeSpan serveTimeAllow, string customerName, int customerDOB, string Address)
+        public int UpdateTicketInfo(string connectString, int ticket, TimeSpan serveTimeAllow, string customerName, int customerDOB, string Address)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_DailyRequire.FirstOrDefault(x => x.TicketNumber == ticket);
                 if (obj != null)
@@ -55,9 +55,9 @@ namespace QMS_System.Data.BLL
             return 0;
         }
 
-        public int CurentTicket(int equipcode)
+        public int CurentTicket(string connectString, int equipcode)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var equip = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipcode);
                 if (equip != null)
@@ -67,9 +67,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public int GetTicket(int majorId, int userId, int equipCode)
+        public int GetTicket(string connectString, int majorId, int userId, int equipCode)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_DailyRequire_Detail.Where(x => x.MajorId == majorId).OrderBy(x => x.Q_DailyRequire.PrintTime).FirstOrDefault();
                 if (obj != null)
@@ -91,12 +91,12 @@ namespace QMS_System.Data.BLL
         /// <param name="equipCode"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        public int DoneTicket(int userId, int equipCode, DateTime date)
+        public int DoneTicket(string connectString, int userId, int equipCode, DateTime date)
         {
             int ticket = 0;
             try
             {
-                using (db = new QMSSystemEntities())
+                using (db = new QMSSystemEntities(connectString))
                 {
                     var last = db.Q_DailyRequire_Detail.Where(x => x.UserId == userId && x.EquipCode == equipCode && x.StatusId == (int)eStatus.DAGXL);
                     if (last != null && last.Count() > 0)
@@ -113,7 +113,7 @@ namespace QMS_System.Data.BLL
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             { }
             return ticket;
         }
@@ -125,12 +125,12 @@ namespace QMS_System.Data.BLL
         /// <param name="equipCode"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        public int Next(int userId, int equipCode, DateTime date, int useWithThirdPattern)
+        public int Next(string connectString, int userId, int equipCode, DateTime date, int useWithThirdPattern)
         {
             int ticket = 0;
             try
             {
-                using (db = new QMSSystemEntities())
+                using (db = new QMSSystemEntities(connectString))
                 {
                     var oldTickets = db.Q_DailyRequire_Detail.Where(x => x.UserId == userId && x.EquipCode == equipCode && x.StatusId == (int)eStatus.DAGXL);
                     if (oldTickets != null && oldTickets.Count() > 0)
@@ -171,12 +171,12 @@ namespace QMS_System.Data.BLL
             return ticket;
         }
 
-        public int CurrentTicket(int userId, int equipCode, DateTime date, int useWithThirdPattern)
+        public int CurrentTicket(string connectString, int userId, int equipCode, DateTime date, int useWithThirdPattern)
         {
             int ticket = 0;
             try
             {
-                using (db = new QMSSystemEntities())
+                using (db = new QMSSystemEntities(connectString))
                 {
                     var last = db.Q_DailyRequire_Detail.Where(x => x.Q_DailyRequire.PrintTime.Year == date.Year && x.Q_DailyRequire.PrintTime.Month == date.Month && x.Q_DailyRequire.PrintTime.Day == date.Day && x.UserId == userId && x.EquipCode == equipCode && x.StatusId == (int)eStatus.DAGXL).ToList();
                     if (last.Count > 0)
@@ -191,11 +191,11 @@ namespace QMS_System.Data.BLL
             return ticket;
         }
 
-        public TicketInfo GetCurrentTicketInfo(int userId, int equipCode, DateTime date, int useWithThirdPattern)
+        public TicketInfo GetCurrentTicketInfo(string connectString, int userId, int equipCode, DateTime date, int useWithThirdPattern)
         {
             try
             {
-                using (db = new QMSSystemEntities())
+                using (db = new QMSSystemEntities(connectString))
                 {
                     var last = db.Q_DailyRequire_Detail.Where(x => x.Q_DailyRequire.PrintTime.Year == date.Year && x.Q_DailyRequire.PrintTime.Month == date.Month && x.Q_DailyRequire.PrintTime.Day == date.Day && x.UserId == userId && x.EquipCode == equipCode && x.StatusId == (int)eStatus.DAGXL).ToList();
                     if (last.Count > 0)
@@ -217,12 +217,12 @@ namespace QMS_System.Data.BLL
             return null;
         }
 
-        public bool StoreTicket(int ticket, int userId, int equipCode, DateTime date)
+        public bool StoreTicket(string connectString, int ticket, int userId, int equipCode, DateTime date)
         {
 
             try
             {
-                using (db = new QMSSystemEntities())
+                using (db = new QMSSystemEntities(connectString))
                 {
                     Q_DailyRequire parent;
                     Q_DailyRequire_Detail child;
@@ -260,11 +260,11 @@ namespace QMS_System.Data.BLL
         /// <param name="ticket"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        public int DeleteTicket(int ticket, DateTime date)
+        public int DeleteTicket(string connectString, int ticket, DateTime date)
         {
             try
             {
-                using (db = new QMSSystemEntities())
+                using (db = new QMSSystemEntities(connectString))
                 {
                     var objs = db.Q_DailyRequire_Detail.Where(x => x.Q_DailyRequire.TicketNumber == ticket);
                     if (objs != null && objs.Count() > 0)
@@ -294,11 +294,11 @@ namespace QMS_System.Data.BLL
             return 0;
         }
 
-        public bool DeleteAllTicketInDay(DateTime date)
+        public bool DeleteAllTicketInDay(string connectString, DateTime date)
         {
             try
             {
-                using (db = new QMSSystemEntities())
+                using (db = new QMSSystemEntities(connectString))
                 {
                     string query = "DELETE FROM [dbo].[q_userevaluate]   ";
                     query += "DELETE FROM [dbo].[Q_DailyRequire_Detail]   ";
@@ -326,17 +326,17 @@ namespace QMS_System.Data.BLL
         /// <param name="ticket"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        public ResponseBaseModel CallAny(int majorId, int userId, int equipCode, int ticket, DateTime date, int UseWithThirdPattern)
+        public ResponseBaseModel CallAny(string connectString, int majorId, int userId, int equipCode, int ticket, DateTime date, int UseWithThirdPattern)
         {
             ResponseBaseModel res = new ResponseBaseModel();
             try
             {
-                using (db = new QMSSystemEntities())
+                using (db = new QMSSystemEntities(connectString))
                 {
                     var last = db.Q_DailyRequire_Detail.FirstOrDefault(x => x.UserId == userId && x.EquipCode == equipCode && x.StatusId == (int)eStatus.DAGXL);
                     if (last == null)
                     {
-                        string config = BLLConfig.Instance.GetConfigByCode(eConfigCode.CheckServiceLimit);
+                        string config = BLLConfig.Instance.GetConfigByCode(connectString, eConfigCode.CheckServiceLimit);
                         List<int> serviceOver = new List<int>();
                         bool hasCheckLimit = false;
                         if (!string.IsNullOrEmpty(config) && config == "1")
@@ -435,17 +435,17 @@ namespace QMS_System.Data.BLL
         /// <param name="equipCode"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        public ResponseBaseModel CallByMajor(int majorId, int userId, int equipCode, DateTime date, int UseWithThirdPattern)
+        public ResponseBaseModel CallByMajor(string connectString, int majorId, int userId, int equipCode, DateTime date, int UseWithThirdPattern)
         {
             ResponseBaseModel res = new ResponseBaseModel();
             try
             {
-                using (db = new QMSSystemEntities())
+                using (db = new QMSSystemEntities(connectString))
                 {
                     var last = db.Q_DailyRequire_Detail.FirstOrDefault(x => x.UserId == userId && x.EquipCode == equipCode && x.StatusId == (int)eStatus.DAGXL);
                     if (last == null)
                     {
-                        string config = BLLConfig.Instance.GetConfigByCode(eConfigCode.CheckServiceLimit);
+                        string config = BLLConfig.Instance.GetConfigByCode(connectString, eConfigCode.CheckServiceLimit);
                         List<int> serviceOver = new List<int>();
                         bool hasCheckLimit = false;
                         if (!string.IsNullOrEmpty(config) && config == "1")
@@ -521,9 +521,9 @@ namespace QMS_System.Data.BLL
         /// <param name="date"></param>
         /// <param name="UseWithThirdPattern"></param>
         /// <returns></returns>
-        public bool ChekCanCallNext(int majorId, int userId)
+        public bool ChekCanCallNext(string connectString, int majorId, int userId)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var continnue = false;
                 var currentUsersLogin = (from x in db.Q_Login where x.StatusId == (int)eStatus.LOGIN select x.UserId).Distinct().ToList();
@@ -566,13 +566,13 @@ namespace QMS_System.Data.BLL
         /// <param name="ticket"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        public ResponseBaseModel CallAny(int userId, int equipCode, int ticket, DateTime date)
+        public ResponseBaseModel CallAny(string connectString, int userId, int equipCode, int ticket, DateTime date)
         {
             ResponseBaseModel res = new ResponseBaseModel();
             bool hasChange = false;
             try
             {
-                using (db = new QMSSystemEntities())
+                using (db = new QMSSystemEntities(connectString))
                 {
                     var oldTickets = db.Q_DailyRequire_Detail.Where(x => x.UserId == userId && x.EquipCode == equipCode && x.StatusId == (int)eStatus.DAGXL);
                     if (oldTickets != null && oldTickets.Count() > 0)
@@ -651,15 +651,15 @@ namespace QMS_System.Data.BLL
         /// <param name="IsDoneCurrentTicket"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        public TicketInfo CallNewTicket(int[] majorIds, int userId, int equipCode, bool IsDoneCurrentTicket, DateTime date, int UseWithThirdPattern)
+        public TicketInfo CallNewTicket(string connectString, int[] majorIds, int userId, int equipCode, bool IsDoneCurrentTicket, DateTime date, int UseWithThirdPattern)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 TicketInfo ticketInfo = null;
                 var last = db.Q_DailyRequire_Detail.FirstOrDefault(x => x.UserId == userId && x.EquipCode == equipCode && x.StatusId == (int)eStatus.DAGXL);
                 if (last == null)
                 {
-                    string config = BLLConfig.Instance.GetConfigByCode(eConfigCode.CheckServiceLimit);
+                    string config = BLLConfig.Instance.GetConfigByCode(connectString, eConfigCode.CheckServiceLimit);
                     List<int> serviceOver = new List<int>();
                     bool hasCheckLimit = false;
                     if (!string.IsNullOrEmpty(config) && config == "1")
@@ -739,9 +739,9 @@ namespace QMS_System.Data.BLL
         /// <param name="equipId"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        public int CallNewTicket(int majorId, int userId, int equipId, DateTime date)
+        public int CallNewTicket(string connectString, int majorId, int userId, int equipId, DateTime date)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var last = db.Q_DailyRequire_Detail.FirstOrDefault(x => x.UserId == userId && x.EquipCode == equipId && x.StatusId == (int)eStatus.DAGXL);
                 if (last == null)
@@ -778,14 +778,14 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public TicketInfo CallNewTicket_GLP_NghiepVu(int[] majorIds, int userId, int equipId, DateTime date, int UseWithThirdPattern)
+        public TicketInfo CallNewTicket_GLP_NghiepVu(string connectString, int[] majorIds, int userId, int equipId, DateTime date, int UseWithThirdPattern)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var last = db.Q_DailyRequire_Detail.FirstOrDefault(x => x.UserId == userId && x.EquipCode == equipId && x.StatusId == (int)eStatus.DAGXL);
                 if (last == null)
                 {
-                    string config = BLLConfig.Instance.GetConfigByCode(eConfigCode.CheckServiceLimit);
+                    string config = BLLConfig.Instance.GetConfigByCode(connectString, eConfigCode.CheckServiceLimit);
                     List<int> serviceOver = new List<int>();
                     bool hasCheckLimit = false;
                     if (!string.IsNullOrEmpty(config) && config == "1")
@@ -855,11 +855,11 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool TranferTicket(int equipCode, int majorId, int ticket, DateTime date, bool isCountersoftCall)
+        public bool TranferTicket(string connectString, int equipCode, int majorId, int ticket, DateTime date, bool isCountersoftCall)
         {
             try
             {
-                using (db = new QMSSystemEntities())
+                using (db = new QMSSystemEntities(connectString))
                 {
                     Q_DailyRequire_Detail obj = db.Q_DailyRequire_Detail.Where(x => x.Q_DailyRequire.PrintTime.Year == date.Year && x.Q_DailyRequire.PrintTime.Month == date.Month && x.Q_DailyRequire.PrintTime.Day == date.Day && x.MajorId == majorId && x.StatusId == (int)eStatus.CHOXL && x.Q_DailyRequire.TicketNumber == ticket).FirstOrDefault();
                     if (obj == null)
@@ -907,9 +907,9 @@ namespace QMS_System.Data.BLL
         /// <param name="equipCode"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        public int GetTicket(List<int> majorId, int userId, int equipCode, DateTime date)
+        public int GetTicket(string connectString, List<int> majorId, int userId, int equipCode, DateTime date)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var last = db.Q_DailyRequire_Detail.FirstOrDefault(x => x.UserId == userId && x.EquipCode == equipCode && x.StatusId == (int)eStatus.DAGXL);
                 if (last == null)
@@ -932,35 +932,35 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public int CountTicketDoneProcessed(int equipCode)
+        public int CountTicketDoneProcessed(string connectString, int equipCode)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_DailyRequire_Detail.Where(x => x.StatusId == (int)eStatus.HOTAT && x.EquipCode == equipCode).Count();
             }
         }
 
-        public int CountTicketWatingProcessed(int equipCode)
+        public int CountTicketWatingProcessed(string connectString, int equipCode)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_DailyRequire_Detail.Where(x => x.StatusId == (int)eStatus.HOTAT && x.EquipCode == equipCode).Count();
             }
         }
 
-        public int CountTicket(int businessId)
+        public int CountTicket(string connectString, int businessId)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_DailyRequire.Where(x => x.BusinessId == businessId).Count();
             }
         }
 
-        public ResponseBase Insert(int ticketNumber, int serviceId, int businessId, DateTime printTime)
+        public ResponseBase Insert(string connectString,int ticketNumber, int serviceId, int businessId, DateTime printTime)
         {
             var rs = new ResponseBase();
             rs.IsSuccess = false;
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = new Q_DailyRequire();
                 obj.TicketNumber = ticketNumber;
@@ -986,9 +986,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public int GetCurrentNumber(int serviceId)
+        public int GetCurrentNumber(string connectString, int serviceId)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 int num = 0;
                 if (serviceId != 0)
@@ -1000,9 +1000,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public int GetLastTicketNumber(int serviceId, DateTime date)
+        public int GetLastTicketNumber(string connectString, int serviceId, DateTime date)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 Q_DailyRequire obj;
                 if (serviceId != 0)
@@ -1020,9 +1020,9 @@ namespace QMS_System.Data.BLL
         /// <param name="maNVThuNganTienThu"></param>
         /// <param name="counterIdsNotShow"></param>
         /// <returns></returns>
-        public ViewModel GetDayInfo(bool IsTienthu, int maNVThuNganTienThu, int[] counterIdsNotShow, int[] distanceTimeAllow)
+        public ViewModel GetDayInfo(string connectString, bool IsTienthu, int maNVThuNganTienThu, int[] counterIdsNotShow, int[] distanceTimeAllow)
         {
-            using (var db_ = new QMSSystemEntities())
+            using (var db_ = new QMSSystemEntities(connectString))
             {
                 TimeSpan distanceWarning = new TimeSpan(0, 2, 0);
                 var cf = db_.Q_Config.FirstOrDefault(x => x.Code == eConfigCode.DistanceWarningTimeEnd);
@@ -1153,9 +1153,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public ViewModel GetDayInfo(int[] counterIds, int[] services)
+        public ViewModel GetDayInfo(string connectString, int[] counterIds, int[] services)
         {
-            using (var db_ = new QMSSystemEntities())
+            using (var db_ = new QMSSystemEntities(connectString))
             {
                 var returnModel = new ViewModel();
                 try
@@ -1200,10 +1200,10 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public ModelSelectItem GetCurrentProcess(string userName)
+        public ModelSelectItem GetCurrentProcess(string connectString, string userName)
         {
             var rs = new ModelSelectItem();
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_DailyRequire_Detail.Where(x => (x.StatusId == (int)eStatus.DAGXL || x.StatusId == (int)eStatus.DANHGIA) && x.ProcessTime.Value.Day == DateTime.Now.Day && x.ProcessTime.Value.Month == DateTime.Now.Month && x.ProcessTime.Value.Year == DateTime.Now.Year && x.Q_User.UserName.Trim().ToUpper().Equals(userName)).FirstOrDefault();
                 if (obj != null)
@@ -1217,9 +1217,9 @@ namespace QMS_System.Data.BLL
             return rs;
         }
 
-        public void CopyHistory()
+        public void CopyHistory(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 DateTime now = DateTime.Now,
                   today = new DateTime(now.Year, now.Month, now.Day);
@@ -1277,7 +1277,7 @@ namespace QMS_System.Data.BLL
         /// <param name="serviceId"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        public ResponseBase PrintNewTicket(
+        public ResponseBase PrintNewTicket(string connectString,
             int serviceId,
             int serviceNumber,
             int businessId,
@@ -1296,7 +1296,7 @@ namespace QMS_System.Data.BLL
             ResponseBase rs = new ResponseBase();
             try
             {
-                using (db = new QMSSystemEntities())
+                using (db = new QMSSystemEntities(connectString))
                 {
                     Q_DailyRequire rq = null;
                     int socu = 0;
@@ -1387,12 +1387,12 @@ namespace QMS_System.Data.BLL
         /// <param name="phone"></param>
         /// <param name="printTime"></param>
         /// <returns></returns>
-        public ResponseBase RegisterByPhone(int serviceId, string phone, DateTime printTime)
+        public ResponseBase RegisterByPhone(string connectString, int serviceId, string phone, DateTime printTime)
         {
             ResponseBase rs = new ResponseBase();
             try
             {
-                using (db = new QMSSystemEntities())
+                using (db = new QMSSystemEntities(connectString))
                 {
                     int printType = 1;
                     int.TryParse(db.Q_Config.FirstOrDefault(x => x.Code == eConfigCode.PrintType).Value, out printType);
@@ -1468,11 +1468,11 @@ namespace QMS_System.Data.BLL
         /// <param name="phone"></param>
         /// <param name="printTime"></param>
         /// <returns></returns>
-        public List<ModelSelectItem> CheckRegister(string phone, DateTime date)
+        public List<ModelSelectItem> CheckRegister(string connectString, string phone, DateTime date)
         {
             try
             {
-                using (db = new QMSSystemEntities())
+                using (db = new QMSSystemEntities(connectString))
                 {
                     return db.Q_DailyRequire.Where(x => x.PhoneNumber == phone).OrderByDescending(x => x.TicketNumber).Select(x => new ModelSelectItem() { Id = x.Id, Data = x.TicketNumber, Name = x.Q_Service.Name }).ToList();
                 }
@@ -1487,11 +1487,11 @@ namespace QMS_System.Data.BLL
         /// </summary>
         /// <param name="requireId"></param>
         /// <returns></returns>
-        public A_CurrentInfoModel CurrentInfo(int requireId)
+        public A_CurrentInfoModel CurrentInfo(string connectString, int requireId)
         {
             try
             {
-                using (db = new QMSSystemEntities())
+                using (db = new QMSSystemEntities(connectString))
                 {
                     var obj = db.Q_DailyRequire_Detail.Where(x => x.DailyRequireId == requireId && x.StatusId == (int)eStatus.DAGXL).OrderByDescending(x => x.ProcessTime).Select(x => new A_CurrentInfoModel()
                     {
@@ -1511,12 +1511,12 @@ namespace QMS_System.Data.BLL
             return new A_CurrentInfoModel();
         }
 
-        public ResponseBase CheckServeInformation(int ticket)
+        public ResponseBase CheckServeInformation(string connectString, int ticket)
         {
             var rs = new ResponseBase();
             try
             {
-                using (db = new QMSSystemEntities())
+                using (db = new QMSSystemEntities(connectString))
                 {
                     var details = db.Q_DailyRequire_Detail.Where(x => x.Q_DailyRequire.TicketNumber == ticket).Select(x => new A_CurrentInfoModel()
                     {
@@ -1609,7 +1609,7 @@ namespace QMS_System.Data.BLL
         }
 
 
-        public ResponseBase API_PrintNewTicket(
+        public ResponseBase API_PrintNewTicket(string connectString,
             string Name,
             string Address,
             int? DOB,
@@ -1621,7 +1621,7 @@ namespace QMS_System.Data.BLL
             ResponseBase rs = new ResponseBase();
             try
             {
-                using (db = new QMSSystemEntities())
+                using (db = new QMSSystemEntities(connectString))
                 {
                     var DV = db.Q_Service.FirstOrDefault(x => !x.IsDeleted && x.IsActived && x.Code.Trim().ToUpper().Equals(MaPhongKham.Trim().ToUpper()));
                     if (DV != null)
@@ -1700,7 +1700,7 @@ namespace QMS_System.Data.BLL
             return rs;
         }
 
-        public ResponseBase API_UpdateTicketInfo(
+        public ResponseBase API_UpdateTicketInfo(string connectString,
             string Name,
             string MaBenhNhan,
             string SttPhongKham
@@ -1709,7 +1709,7 @@ namespace QMS_System.Data.BLL
             ResponseBase rs = new ResponseBase();
             try
             {
-                using (db = new QMSSystemEntities())
+                using (db = new QMSSystemEntities(connectString))
                 {
                     var tket = db.Q_DailyRequire.FirstOrDefault(x => x.STT_PhongKham == SttPhongKham);
                     if (tket == null)
@@ -1735,11 +1735,11 @@ namespace QMS_System.Data.BLL
             return rs;
         }
 
-        public ResponseBase CheckUserFree(int majorId, int serviceId, int withoutTicketNumber, int checkFollowMajorOrder)
+        public ResponseBase CheckUserFree(string connectString, int majorId, int serviceId, int withoutTicketNumber, int checkFollowMajorOrder)
         {
             var rs = new ResponseBase();
             rs.Data = 0;
-            using (var db = new QMSSystemEntities())
+            using (var db = new QMSSystemEntities(connectString))
             {
                 var currentLogins = (from x in db.Q_Login where x.StatusId == (int)eStatus.LOGIN select x.UserId).ToArray();
                 //lay user co nghiep vu và dang login
@@ -1788,9 +1788,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public void UpdateCounterRepeatServeOver(List<int> dailyDetailIds)
+        public void UpdateCounterRepeatServeOver(string connectString, List<int> dailyDetailIds)
         {
-            using (var db = new QMSSystemEntities())
+            using (var db = new QMSSystemEntities(connectString))
             {
                 var details = from x in db.Q_DailyRequire_Detail where dailyDetailIds.Contains(x.Id) select x;
                 if (details != null && details.Count() > 0)
@@ -1805,9 +1805,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public TicketInfo UpdateServeTime(int userId, int minutes, bool replaceByNew)
+        public TicketInfo UpdateServeTime(string connectString, int userId, int minutes, bool replaceByNew)
         {
-            using (var db = new QMSSystemEntities())
+            using (var db = new QMSSystemEntities(connectString))
             {
                 var ticketDetail = (from x in db.Q_DailyRequire_Detail where x.UserId.HasValue && x.UserId == userId && x.StatusId == (int)eStatus.DAGXL select x).FirstOrDefault();
                 if (ticketDetail != null)
@@ -1833,11 +1833,11 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public ResponseBaseModel InsertAndCallEmptyTicket(int equipCode)
+        public ResponseBaseModel InsertAndCallEmptyTicket(string connectString, int equipCode)
         {
             var rs = new ResponseBaseModel();
             rs.IsSuccess = false;
-            using (var db = new QMSSystemEntities())
+            using (var db = new QMSSystemEntities(connectString))
             {
                 var login = db.Q_Login.FirstOrDefault(x => x.EquipCode == equipCode);
                 if (login != null)
@@ -1862,9 +1862,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public void RemoveRegisterAutocall(int userId)
+        public void RemoveRegisterAutocall(string connectString, int userId)
         {
-            using (var db = new QMSSystemEntities())
+            using (var db = new QMSSystemEntities(connectString))
             {
                 db.Database.ExecuteSqlCommand("update Q_RequestTicket set isdeleted = 1 where userid = " + userId);
                 db.SaveChanges();

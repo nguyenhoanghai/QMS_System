@@ -1,6 +1,8 @@
-﻿using QMS_System.Data;
+﻿using GPRO.Core.Hai;
+using QMS_System.Data;
 using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
+using QMS_System.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +18,7 @@ namespace QMS_System
     public partial class frmAction : Form
     {
         int actionId = 0;
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmAction()
         {
             InitializeComponent();
@@ -30,8 +33,8 @@ namespace QMS_System
         #region Action
         private void GetGridAction()
         { 
-            var list = BLLAction.Instance.Gets();
-            list.Add(new ActionModel() { Id = 0, Index = BLLAction.Instance.GetLastIndex() + 1, Code = "", Function = "", Note = "" });
+            var list = BLLAction.Instance.Gets(connect);
+            list.Add(new ActionModel() { Id = 0, Index = BLLAction.Instance.GetLastIndex(connect) + 1, Code = "", Function = "", Note = "" });
             gridAction.DataSource = list;
         }
         private void repbtn_deleteAction_ButtonClick(object sender, DevExpress.XtraEditors.Controls.ButtonPressedEventArgs e)
@@ -39,7 +42,7 @@ namespace QMS_System
             int Id = int.Parse(gridViewAction.GetRowCellValue(gridViewAction.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLAction.Instance.Delete(Id);
+                BLLAction.Instance.Delete(connect, Id);
                 GetGridAction();
             }
         }
@@ -64,7 +67,7 @@ namespace QMS_System
 
                     if (obj.Id == 0)
                     {
-                        int result = BLLAction.Instance.Insert(obj);
+                        int result = BLLAction.Instance.Insert(connect, obj);
                         if (result == 0)
                         {
                             MessageBox.Show("Mã hành động đã tồn tại. Xin nhập mã khác", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -73,7 +76,7 @@ namespace QMS_System
                     }
                     else
                     {
-                        bool result = BLLAction.Instance.Update(obj);
+                        bool result = BLLAction.Instance.Update(connect, obj);
                         if (result == false)
                         {
                             MessageBox.Show("Mã hành động đã tồn tại. Xin nhập mã khác", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -97,7 +100,7 @@ namespace QMS_System
         #region ActionParameter
         private void GetGridActionParameter()
         {
-            var list = BLLActionParameter.Instance.Gets(actionId);
+            var list = BLLActionParameter.Instance.Gets(connect, actionId);
             list.Add(new ActionParamModel() { Id = 0, ActionId = 0, ParameterCode = "", Note = "" });
             gridActionParameter.DataSource = list;
         }
@@ -106,7 +109,7 @@ namespace QMS_System
             int Id = int.Parse(gridViewActionParameter.GetRowCellValue(gridViewActionParameter.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLActionParameter.Instance.Delete(Id);
+                BLLActionParameter.Instance.Delete(connect, Id);
                 GetGridActionParameter();
             }
         }
@@ -130,9 +133,9 @@ namespace QMS_System
                     obj.Note = gridViewActionParameter.GetRowCellValue(gridViewActionParameter.FocusedRowHandle, "Note") != null ? gridViewActionParameter.GetRowCellValue(gridViewActionParameter.FocusedRowHandle, "Note").ToString() : "";
 
                     if (obj.Id == 0)
-                        BLLActionParameter.Instance.Insert(obj);
+                        BLLActionParameter.Instance.Insert(connect, obj);
                     else
-                        BLLActionParameter.Instance.Update(obj);
+                        BLLActionParameter.Instance.Update(connect, obj);
                     GetGridActionParameter();
                 }
             }

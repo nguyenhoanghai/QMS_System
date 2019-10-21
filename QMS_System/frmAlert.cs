@@ -1,6 +1,8 @@
-﻿using QMS_System.Data;
+﻿using GPRO.Core.Hai;
+using QMS_System.Data;
 using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
+using QMS_System.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,6 +17,7 @@ namespace QMS_System
 {
     public partial class frmAlert : Form
     {
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmAlert()
         {
             InitializeComponent();
@@ -27,7 +30,7 @@ namespace QMS_System
         #region Alert
         private void GetGridAlert()
         {
-            var list = BLLAlert.Instance.Gets();
+            var list = BLLAlert.Instance.Gets(connect);
             var now = DateTime.Now;
             var date = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0);
             list.Add(new AlertModel() { Id = 0, SoundId = 0, Start = date, End = date, Note = "" });
@@ -38,7 +41,7 @@ namespace QMS_System
             int Id = int.Parse(gridViewAlert.GetRowCellValue(gridViewAlert.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLAlert.Instance.Delete(Id);
+                BLLAlert.Instance.Delete(connect,Id);
                 GetGridAlert();
             }
         }
@@ -77,7 +80,7 @@ namespace QMS_System
 
                     if (obj.Id == 0)
                     {
-                        int result = BLLAlert.Instance.Insert(obj);
+                        int result = BLLAlert.Instance.Insert(connect,obj);
                         if (result == 0)
                         {
                             MessageBox.Show("Câu hướng dẫn này đã tồn tại. Xin kiểm tra lại.", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -86,7 +89,7 @@ namespace QMS_System
                     }
                     else
                     {
-                        bool result = BLLAlert.Instance.Update(obj);
+                        bool result = BLLAlert.Instance.Update(connect,obj);
                         if (result == false)
                         {
                             MessageBox.Show("Câu hướng dẫn này đã tồn tại. Xin kiểm tra lại.", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -108,7 +111,7 @@ namespace QMS_System
         private void GetGridSound()
         {
             lookUpSound.DataSource = null;
-            lookUpSound.DataSource = BLLSound.Instance.GetLookUp();
+            lookUpSound.DataSource = BLLSound.Instance.GetLookUp(connect);
             lookUpSound.DisplayMember = "Name";
             lookUpSound.ValueMember = "Id";
             lookUpSound.PopulateViewColumns();

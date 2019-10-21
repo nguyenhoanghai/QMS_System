@@ -258,6 +258,7 @@
     <Property Name="Score" Type="nvarchar" MaxLength="550" Nullable="false" />
     <Property Name="IsDeleted" Type="bit" Nullable="false" />
     <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+    <Property Name="Comment" Type="nvarchar(max)" />
   </EntityType>
   <EntityType Name="Q_Language">
     <Key>
@@ -519,6 +520,7 @@
     <Property Name="SendSMS" Type="bit" Nullable="false" />
     <Property Name="IsDeleted" Type="bit" Nullable="false" />
     <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+    <Property Name="Comment" Type="nvarchar(max)" />
   </EntityType>
   <EntityType Name="Q_UserMajor">
     <Key>

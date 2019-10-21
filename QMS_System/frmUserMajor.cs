@@ -1,6 +1,8 @@
-﻿using QMS_System.Data;
+﻿using GPRO.Core.Hai;
+using QMS_System.Data;
 using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
+using QMS_System.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +18,7 @@ namespace QMS_System
     public partial class frmUserMajor : Form
     {
         int userId = 0;
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmUserMajor()
         {
             InitializeComponent();
@@ -43,7 +46,7 @@ namespace QMS_System
             else
             {
                 gridLookUpMajor.DataSource = null;
-                gridLookUpMajor.DataSource = BLLMajor.Instance.GetLookUp();
+                gridLookUpMajor.DataSource = BLLMajor.Instance.GetLookUp(connect);
                 gridLookUpMajor.DisplayMember = "Name";
                 gridLookUpMajor.ValueMember = "Id";
                 gridLookUpMajor.PopulateViewColumns();
@@ -51,7 +54,7 @@ namespace QMS_System
                     gridLookUpMajor.View.Columns[2].Visible = false;
                     gridLookUpMajor.View.Columns[3].Visible = false;
                     gridLookUpMajor.View.Columns[1].Caption = "Nghiệp vụ";
-                 var list = BLLUserMajor.Instance.Gets(userId);
+                 var list = BLLUserMajor.Instance.Gets(connect, userId);
                 list.Add(new UserMajorModel() { Id = 0, Index = (list.Count + 1), MajorId = 0 });
                 gridUserMajor.DataSource = list;
 
@@ -61,7 +64,7 @@ namespace QMS_System
         private void GetUser()
         {
             lkUser.Properties.DataSource = null;
-            lkUser.Properties.DataSource = BLLUser.Instance.GetLookUp();
+            lkUser.Properties.DataSource = BLLUser.Instance.GetLookUp(connect);
             lkUser.Properties.DisplayMember = "Name";
             lkUser.Properties.ValueMember = "Id";
             lkUser.Properties.PopulateColumns();
@@ -76,7 +79,7 @@ namespace QMS_System
             GetUser();
 
             gridLookUpMajor.DataSource = null;
-            gridLookUpMajor.DataSource = BLLMajor.Instance.GetLookUp();
+            gridLookUpMajor.DataSource = BLLMajor.Instance.GetLookUp(connect);
             gridLookUpMajor.DisplayMember = "Name";
             gridLookUpMajor.ValueMember = "Id";
             gridLookUpMajor.PopulateViewColumns();
@@ -116,7 +119,7 @@ namespace QMS_System
 
                     if (obj.Id == 0)
                     {
-                        int result = BLLUserMajor.Instance.Insert(obj);
+                        int result = BLLUserMajor.Instance.Insert(connect,obj);
                         if (result == 0)
                         {
                             MessageBox.Show("Nhân viên đã tồn tại nghiệp vụ này. Xin chọn lại nghiệp vụ khác", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -125,7 +128,7 @@ namespace QMS_System
                     }
                     else
                     {
-                        bool result = BLLUserMajor.Instance.Update(obj);
+                        bool result = BLLUserMajor.Instance.Update(connect,obj);
                         if (result == false)
                         {
                             MessageBox.Show("Nhân viên đã tồn tại nghiệp vụ này. Xin chọn lại nghiệp vụ khác", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -133,7 +136,7 @@ namespace QMS_System
                         }
                     }
                     GetGrid();
-                   frmMain.lib_UserMajors = BLLUserMajor.Instance.Gets();
+                   frmMain.lib_UserMajors = BLLUserMajor.Instance.Gets(connect);
                 }
             }
             catch (Exception ex) { }
@@ -145,9 +148,9 @@ namespace QMS_System
             int Id = int.Parse(gridViewUserMajor.GetRowCellValue(gridViewUserMajor.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLUserMajor.Instance.Delete(Id);
+                BLLUserMajor.Instance.Delete(connect,Id);
                 GetGrid();
-                frmMain.lib_UserMajors = BLLUserMajor.Instance.Gets();
+                frmMain.lib_UserMajors = BLLUserMajor.Instance.Gets(connect);
 
             }
         }

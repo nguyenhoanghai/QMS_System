@@ -27,9 +27,9 @@ namespace QMS_System.Data.BLL
         private BLLR_ReportByBusiness() { }
         #endregion
 
-        public List<R_ReportByBusinessModel> GetLongestWaitingBusiness(int num) // Khách hàng có thời gian chờ lâu nhất
+        public List<R_ReportByBusinessModel> GetLongestWaitingBusiness(string connectString, int num) // Khách hàng có thời gian chờ lâu nhất
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 List<R_ReportByBusinessModel> list = null;
                 var today = DateTime.Now.Date; // chi lay phan ngay thang nam ko lay gio phut giay
@@ -75,9 +75,9 @@ namespace QMS_System.Data.BLL
         }
 
 
-        public List<R_ReportByBusinessModel> GetLongestTransBusiness(int num) // Lay n khach hang co thoi gian giao dich lau nhat
+        public List<R_ReportByBusinessModel> GetLongestTransBusiness(string connectString, int num) // Lay n khach hang co thoi gian giao dich lau nhat
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 List<R_ReportByBusinessModel> list = null;
                 var today = DateTime.Now.Date; // chi lay phan ngay thang nam ko lay gio phut giay
@@ -120,9 +120,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public List<R_ReportByBusinessModel> GetInProgressTrans()  // Số khách hàng đang giao dịch
+        public List<R_ReportByBusinessModel> GetInProgressTrans(string connectString)  // Số khách hàng đang giao dịch
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 List<R_ReportByBusinessModel> list = null;
                 var today = DateTime.Now.Date; // chi lay phan ngay thang nam ko lay gio phut giay
@@ -155,9 +155,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public List<R_ReportByBusinessModel> GetWaitingTransInternal()  // Số khách hàng đang chờ nội bộ
+        public List<R_ReportByBusinessModel> GetWaitingTransInternal(string connectString)  // Số khách hàng đang chờ nội bộ
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 List<R_ReportByBusinessModel> list = null;
                 var today = DateTime.Now.Date; // chi lay phan ngay thang nam ko lay gio phut giay

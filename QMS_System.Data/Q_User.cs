@@ -21,12 +21,12 @@ namespace QMS_System.Data
             this.Q_RegisterRecieveTicket = new HashSet<Q_RegisterRecieveTicket>();
             this.Q_UserCmdRegister = new HashSet<Q_UserCmdRegister>();
             this.Q_UserCommandReadSound = new HashSet<Q_UserCommandReadSound>();
-            this.Q_UserEvaluate = new HashSet<Q_UserEvaluate>();
             this.Q_UserMajor = new HashSet<Q_UserMajor>();
             this.Q_DailyRequire_Detail = new HashSet<Q_DailyRequire_Detail>();
             this.Q_HisDailyRequire_De = new HashSet<Q_HisDailyRequire_De>();
             this.Q_ServiceLimit = new HashSet<Q_ServiceLimit>();
             this.Q_HisUserEvaluate = new HashSet<Q_HisUserEvaluate>();
+            this.Q_UserEvaluate = new HashSet<Q_UserEvaluate>();
         }
     
         public int Id { get; set; }
@@ -48,11 +48,11 @@ namespace QMS_System.Data
         public virtual ICollection<Q_RegisterRecieveTicket> Q_RegisterRecieveTicket { get; set; }
         public virtual ICollection<Q_UserCmdRegister> Q_UserCmdRegister { get; set; }
         public virtual ICollection<Q_UserCommandReadSound> Q_UserCommandReadSound { get; set; }
-        public virtual ICollection<Q_UserEvaluate> Q_UserEvaluate { get; set; }
         public virtual ICollection<Q_UserMajor> Q_UserMajor { get; set; }
         public virtual ICollection<Q_DailyRequire_Detail> Q_DailyRequire_Detail { get; set; }
         public virtual ICollection<Q_HisDailyRequire_De> Q_HisDailyRequire_De { get; set; }
         public virtual ICollection<Q_ServiceLimit> Q_ServiceLimit { get; set; }
         public virtual ICollection<Q_HisUserEvaluate> Q_HisUserEvaluate { get; set; }
+        public virtual ICollection<Q_UserEvaluate> Q_UserEvaluate { get; set; }
     }
 }

@@ -25,31 +25,31 @@ namespace QMS_System.Data.BLL
         private BLLUserCmdReadSound() { }
         #endregion
 
-        public List<UserCmdReadSoundModel> Gets( )
+        public List<UserCmdReadSoundModel> Gets(string connectString )
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_UserCommandReadSound.Where(x => !x.IsDeleted && !x.Q_User.IsDeleted && !x.Q_Command.IsDeleted && !x.Q_ReadTemplate.IsDeleted ).Select(x => new UserCmdReadSoundModel() { Id = x.Id, UserId = x.UserId, Index = x.Index, CommandId = x.CommandId, Note = x.Q_Command.CodeHEX.Trim().ToUpper(), ReadTemplateId = x.ReadTemplateId }).ToList();
             }
         }
-        public List<UserCmdReadSoundModel> Gets(int userId, int cmdId)
+        public List<UserCmdReadSoundModel> Gets(string connectString,int userId, int cmdId)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_UserCommandReadSound.Where(x => !x.IsDeleted && !x.Q_User.IsDeleted && !x.Q_Command.IsDeleted && !x.Q_ReadTemplate.IsDeleted && x.UserId == userId && x.CommandId == cmdId).Select(x => new UserCmdReadSoundModel() { Id = x.Id, UserId = x.UserId, Index = x.Index, CommandId = x.CommandId, Note = x.Note, ReadTemplateId = x.ReadTemplateId }).ToList();
             }
         }
-        public List<int> GetReadTemplateIds(int userId, string cmdCodeHex)
+        public List<int> GetReadTemplateIds(string connectString,int userId, string cmdCodeHex)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_UserCommandReadSound.Where(x => !x.IsDeleted && !x.Q_User.IsDeleted && !x.Q_Command.IsDeleted && !x.Q_ReadTemplate.IsDeleted && x.UserId == userId && x.Q_Command.CodeHEX.Trim().ToUpper().Equals(cmdCodeHex.ToUpper())).Select(x => x.ReadTemplateId).ToList();
             }
         }
 
-        public int Insert(Q_UserCommandReadSound obj)
+        public int Insert(string connectString,Q_UserCommandReadSound obj)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 if (!CheckExists(obj))
                 {
@@ -60,9 +60,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public int Update(Q_UserCommandReadSound model)
+        public int Update(string connectString,Q_UserCommandReadSound model)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_UserCommandReadSound.FirstOrDefault(x => !x.IsDeleted && x.Id == model.Id);
                 if (obj != null)
@@ -84,9 +84,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Delete(int Id)
+        public bool Delete(string connectString,int Id)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_UserCommandReadSound.FirstOrDefault(x => !x.IsDeleted && x.Id == Id);
                 if (obj != null)

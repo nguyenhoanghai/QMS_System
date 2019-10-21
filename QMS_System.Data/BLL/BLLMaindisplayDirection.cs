@@ -24,9 +24,9 @@ namespace QMS_System.Data.BLL
         }
         private BLLMaindisplayDirection() { }
         #endregion
-        public List<MaindisplayDirectionModel> Gets(int counterId)
+        public List<MaindisplayDirectionModel> Gets(string connectString,int counterId)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var list = db.Q_MaindisplayDirection.Where(x => !x.IsDeleted && !x.Q_Equipment.IsDeleted && !x.Q_Counter.IsDeleted && x.CounterId == counterId).Select(x => new MaindisplayDirectionModel()
                 {
@@ -50,9 +50,9 @@ namespace QMS_System.Data.BLL
         }
 
 
-        public int Insert(Q_MaindisplayDirection obj)
+        public int Insert(string connectString,Q_MaindisplayDirection obj)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 if (!CheckExists(obj))
                 {
@@ -63,9 +63,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Update(Q_MaindisplayDirection model)
+        public bool Update(string connectString,Q_MaindisplayDirection model)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 if (!CheckExists(model))
                 {
@@ -84,9 +84,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Delete(int Id)
+        public bool Delete(string connectString,int Id)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_MaindisplayDirection.FirstOrDefault(x => !x.IsDeleted && x.Id == Id);
                 if (obj != null)

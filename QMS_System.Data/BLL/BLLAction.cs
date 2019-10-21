@@ -24,25 +24,25 @@ namespace QMS_System.Data.BLL
         }
         private BLLAction() { }
         #endregion
-        public List<ActionModel> Gets()
+        public List<ActionModel> Gets(string connectString )
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_Action.Where(x => !x.IsDeleted).Select(x => new ActionModel() { Id = x.Id, Code = x.Code, Index = x.Index, Function = x.Function, Note = x.Note }).ToList();
             }
         }
 
-        public List<ModelSelectItem> GetLookUp()
+        public List<ModelSelectItem> GetLookUp(string connectString )
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_Action.Where(x => !x.IsDeleted).Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Code }).ToList();
             }
         }
 
-        public int Insert(Q_Action obj)
+        public int Insert(string connectString,Q_Action obj )
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 if (!CheckExists(obj))
                 {
@@ -53,9 +53,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Update(Q_Action model)
+        public bool Update(string connectString,Q_Action model )
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_Action.FirstOrDefault(x => !x.IsDeleted && x.Id == model.Id);
                 if (obj != null)
@@ -76,9 +76,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Delete(int Id)
+        public bool Delete(string connectString,int Id )
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_Action.FirstOrDefault(x => !x.IsDeleted && x.Id == Id);
                 if (obj != null)
@@ -91,16 +91,16 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        private bool CheckExists(Q_Action model)
+        private bool CheckExists(Q_Action model )
         {
             Q_Action obj = null;
             if (!string.IsNullOrEmpty(model.Code))
                 obj = db.Q_Action.FirstOrDefault(x => !x.IsDeleted && x.Id != model.Id && x.Code.Trim().ToUpper().Equals(model.Code.Trim().ToUpper()));
             return obj != null ? true : false;
         }
-        public int GetLastIndex()
+        public int GetLastIndex(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_Action.Where(x => !x.IsDeleted).OrderByDescending(x => x.Index).FirstOrDefault();
                 return obj != null ? obj.Index : 0;

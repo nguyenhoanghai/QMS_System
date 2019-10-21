@@ -25,7 +25,7 @@ namespace QMS_System.Data.BLL
         }
         private BLLMajor() { }
         #endregion
-        public List<MajorModel> Gets(string connectString)
+        public List<MajorModel> Gets(string connectString )
         {
             using (db = new QMSSystemEntities(connectString))
             {
@@ -40,7 +40,7 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public List<ModelSelectItem> GetLookUp(string connectString)
+        public List<ModelSelectItem> GetLookUp(string connectString )
         {
             using (db = new QMSSystemEntities(connectString))
             {
@@ -48,7 +48,7 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public int Insert(Q_Major obj, string connectString)
+        public int Insert(string connectString,Q_Major obj )
         {
             using (db = new QMSSystemEntities(connectString))
             {
@@ -61,7 +61,7 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Update(Q_Major model, string connectString)
+        public bool Update(string connectString,Q_Major model )
         {
             using (db = new QMSSystemEntities(connectString))
             {
@@ -82,7 +82,7 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Delete(int Id, string connectString)
+        public bool Delete(string connectString,int Id )
         {
             using (db = new QMSSystemEntities(connectString))
             {

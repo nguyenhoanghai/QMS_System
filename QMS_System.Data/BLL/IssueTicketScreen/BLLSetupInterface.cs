@@ -26,9 +26,9 @@ namespace QMS_System.Data.BLL.IssueTicketScreen
         }
         private BLLSetupInterface() { }
         #endregion
-        public List<ButtonServiceModel> GetButtonService()
+        public List<ButtonServiceModel> GetButtonService(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var list = db.Q_Service.Where(x => !x.IsDeleted).Select(x => new ButtonServiceModel() { Id = x.Id, Name = x.Name }).ToList();
                 int i = 1;

@@ -1,6 +1,8 @@
-﻿using QMS_System.Data;
+﻿using GPRO.Core.Hai;
+using QMS_System.Data;
 using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
+using QMS_System.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,6 +17,7 @@ namespace QMS_System
 {
     public partial class frmMajor :  Form
     {
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmMajor()
         {
             InitializeComponent();
@@ -28,7 +31,7 @@ namespace QMS_System
         #region Major
         private void GetGridMajor()
         {
-            var list = BLLMajor.Instance.Gets();
+            var list = BLLMajor.Instance.Gets(connect);
             list.Add(new MajorModel() { Id = 0, Name = "", Note = "" });
             gridMajor.DataSource = list;
         }
@@ -37,7 +40,7 @@ namespace QMS_System
             int Id = int.Parse(gridViewMajor.GetRowCellValue(gridViewMajor.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLMajor.Instance.Delete(Id);
+                BLLMajor.Instance.Delete(connect,Id);
                 GetGridMajor();
             }
         }
@@ -60,7 +63,7 @@ namespace QMS_System
 
                     if (obj.Id == 0)
                     {
-                        int result = BLLMajor.Instance.Insert(obj);
+                        int result = BLLMajor.Instance.Insert(connect, obj);
                         if(result == 0)
                         {
                             MessageBox.Show("Tên nghiệp vụ đã tồn tại. Xin nhập tên khác", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -69,7 +72,7 @@ namespace QMS_System
                     } 
                     else
                     {
-                        bool result = BLLMajor.Instance.Update(obj);
+                        bool result = BLLMajor.Instance.Update(connect, obj);
                         if(result == false)
                         {
                             MessageBox.Show("Tên nghiệp vụ đã tồn tại. Xin nhập tên khác", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);

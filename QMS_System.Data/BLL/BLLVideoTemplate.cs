@@ -24,9 +24,9 @@ namespace QMS_System.Data.BLL
         private BLLVideoTemplate() { }
         #endregion
 
-        public List<VideoTemplateModel> Gets()
+        public List<VideoTemplateModel> Gets(string connectString )
         {
-            using (var db = new QMSSystemEntities())
+            using (var db = new QMSSystemEntities(connectString))
             {
                 return db.Q_VideoTemplate.Where(x => !x.IsDeleted).Select(x => new VideoTemplateModel()
                 {
@@ -38,18 +38,18 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public List<ModelSelectItem> GetLookUp()
+        public List<ModelSelectItem> GetLookUp(string connectString  )
         {
-            using (var db = new QMSSystemEntities())
+            using (var db = new QMSSystemEntities(connectString))
             {
                 return db.Q_VideoTemplate.Where(x => !x.IsDeleted).Select(x => new ModelSelectItem() { Id = x.Id, Name = x.TemplateName }).ToList();
             }
         }
 
-        public ResponseBase InsertOrUpdate(Q_VideoTemplate model)
+        public ResponseBase InsertOrUpdate(string connectString,Q_VideoTemplate model )
         {
             var rs = new ResponseBase();
-            using (var db = new QMSSystemEntities())
+            using (var db = new QMSSystemEntities(connectString))
             {
                 try
                 {
@@ -92,9 +92,9 @@ namespace QMS_System.Data.BLL
             return db.Q_VideoTemplate.FirstOrDefault(x => !x.IsDeleted && x.Id != model.Id && x.TemplateName.Equals(model.TemplateName));
         }
 
-        public bool Delete(int Id)
+        public bool Delete(string connectString,int Id )
         {
-            using (var db = new QMSSystemEntities())
+            using (var db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_VideoTemplate.FirstOrDefault(x => !x.IsDeleted && x.Id == Id);
                 if (obj != null)
@@ -107,9 +107,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public List<VideoPlaylist> GetPlaylist()
+        public List<VideoPlaylist> GetPlaylist(string connectString)
         {
-            using (var db = new QMSSystemEntities())
+            using (var db = new QMSSystemEntities(connectString))
             {
                 return db.Q_VideoTemplate_De.Where(x => !x.IsDeleted &&
                         !x.Q_VideoTemplate.IsDeleted &&
@@ -144,9 +144,9 @@ namespace QMS_System.Data.BLL
         private BLLVideoTemplate_De() { }
         #endregion
 
-        public List<VideoTemplate_DeModel> Gets(int templateId)
+        public List<VideoTemplate_DeModel> Gets(string connectString,int templateId )
         {
-            using (var db = new QMSSystemEntities())
+            using (var db = new QMSSystemEntities(connectString))
             {
                 return db.Q_VideoTemplate_De.Where(x => !x.IsDeleted && !x.Q_VideoTemplate.IsDeleted && !x.Q_Video.IsDeleted && x.TemplateId == templateId).Select(x => new VideoTemplate_DeModel()
                 {
@@ -158,10 +158,10 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public ResponseBase InsertOrUpdate(Q_VideoTemplate_De model)
+        public ResponseBase InsertOrUpdate(string connectString,Q_VideoTemplate_De model )
         {
             var rs = new ResponseBase();
-            using (var db = new QMSSystemEntities())
+            using (var db = new QMSSystemEntities(connectString))
             {
                 try
                 {
@@ -191,9 +191,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Delete(int Id)
+        public bool Delete(string connectString,int Id )
         {
-            using (var db = new QMSSystemEntities())
+            using (var db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_VideoTemplate_De.FirstOrDefault(x => !x.IsDeleted && x.Id == Id);
                 if (obj != null)

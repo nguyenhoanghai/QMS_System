@@ -1,5 +1,7 @@
-﻿using QMS_System.Data.BLL;
+﻿using GPRO.Core.Hai;
+using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
+using QMS_System.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +18,7 @@ namespace QMS_System
 {
     public partial class frmR_DanhGia : Form
     {
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmR_DanhGia()
         {
             InitializeComponent();
@@ -25,7 +28,7 @@ namespace QMS_System
         {
             var list = new List<ModelSelectItem>();
             list.Add(new ModelSelectItem() { Id = 0, Name = "Tất cả nhân viên" });
-            list.AddRange(BLLUser.Instance.GetLookUp());
+            list.AddRange(BLLUser.Instance.GetLookUp(connect));
             cbUser.DataSource = list;
             cbUser.DisplayMember = "Name";
         }
@@ -36,7 +39,7 @@ namespace QMS_System
             if (user.Id >= 0)
             {
                 gridControl1.DataSource = null;
-                gridControl1.DataSource = BLLUserEvaluate.Instance.Gets(user.Id, new DateTime(dtFrom.Value.Year, dtFrom.Value.Month, dtFrom.Value.Day), dtTo.Value);
+                gridControl1.DataSource = BLLUserEvaluate.Instance.Gets(connect, user.Id, new DateTime(dtFrom.Value.Year, dtFrom.Value.Month, dtFrom.Value.Day), dtTo.Value);
             }
         }
 

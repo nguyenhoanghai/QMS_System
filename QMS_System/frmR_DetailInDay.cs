@@ -16,12 +16,14 @@ using DevExpress.XtraGrid.Columns;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System.IO;
-
+using QMS_System.Helper;
+using GPRO.Core.Hai;
 
 namespace QMS_System
 {
     public partial class frmR_DetailInDay : Form
     {
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmR_DetailInDay()
         {
             InitializeComponent();
@@ -41,7 +43,7 @@ namespace QMS_System
             try
             {
                 int value = int.Parse(radioGroup1.Properties.Items[radioGroup1.SelectedIndex].Value.ToString());
-                var list = BLLReport.Instance.DetailReport(((string.IsNullOrEmpty(lookUpSelect.EditValue.ToString()) || lookUpSelect.EditValue.ToString() == "-1") ? 0 : int.Parse(lookUpSelect.EditValue.ToString())), value, new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day),DateTime.Now);
+                var list = BLLReport.Instance.DetailReport(connect,((string.IsNullOrEmpty(lookUpSelect.EditValue.ToString()) || lookUpSelect.EditValue.ToString() == "-1") ? 0 : int.Parse(lookUpSelect.EditValue.ToString())), value, new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day),DateTime.Now);
                 switch (value)
                 {
                     case 1:
@@ -557,7 +559,7 @@ namespace QMS_System
         {
             var list = new List<ModelSelectItem>();
             list.Add(new ModelSelectItem() { Id = 0, Name = "Chọn tất cả" });
-            var listObj = BLLUser.Instance.GetLookUp();
+            var listObj = BLLUser.Instance.GetLookUp(connect);
             foreach (var item in listObj)
             {
                 list.Add(new ModelSelectItem() { Id = item.Id, Name = item.Name });
@@ -580,7 +582,7 @@ namespace QMS_System
         {
             var list = new List<ModelSelectItem>();
             list.Add(new ModelSelectItem() { Id = 0, Name = "Chọn tất cả" });
-            var listObj = BLLMajor.Instance.GetLookUp();
+            var listObj = BLLMajor.Instance.GetLookUp(connect);
             foreach (var item in listObj)
             {
                 list.Add(new ModelSelectItem() { Id = item.Id, Name = item.Name });
@@ -604,7 +606,7 @@ namespace QMS_System
         {
             var list = new List<ModelSelectItem>();
             list.Add(new ModelSelectItem() { Id = 0, Name = "Chọn tất cả" });
-            var listObj = BLLService.Instance.GetLookUp();
+            var listObj = BLLService.Instance.GetLookUp(connect);
             foreach (var item in listObj)
             {
                 list.Add(new ModelSelectItem() { Id = item.Id, Name = item.Name });

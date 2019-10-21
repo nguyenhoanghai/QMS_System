@@ -1,6 +1,8 @@
-﻿using QMS_System.Data;
+﻿using GPRO.Core.Hai;
+using QMS_System.Data;
 using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
+using QMS_System.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,6 +17,7 @@ namespace QMS_System
 {
     public partial class frmCounterSound : Form
     {
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmCounterSound()
         {
             InitializeComponent();
@@ -30,7 +33,7 @@ namespace QMS_System
         #region CounterSound
         private void GetGridCounterSound()
         {
-            var list = BLLCounterSound.Instance.Gets(1);
+            var list = BLLCounterSound.Instance.Gets(connect, 1);
             list.Add(new CounterSoundModel() { Id = 0, CounterId = 0,   Note = "" });
             gridCounterSound.DataSource = list;
         }
@@ -38,7 +41,7 @@ namespace QMS_System
         private void GetCounter()
         {
             lookUpCounter.DataSource = null;
-            lookUpCounter.DataSource = BLLCounter.Instance.GetLookUp();
+            lookUpCounter.DataSource = BLLCounter.Instance.GetLookUp(connect);
             lookUpCounter.DisplayMember = "Name";
             lookUpCounter.ValueMember = "Id";
             lookUpCounter.PopulateViewColumns();
@@ -48,7 +51,7 @@ namespace QMS_System
         private void GetSound()
         {
             lookUpSound.DataSource = null;
-            lookUpSound.DataSource = BLLSound.Instance.GetLookUp();
+            lookUpSound.DataSource = BLLSound.Instance.GetLookUp(connect);
             lookUpSound.DisplayMember = "Name";
             lookUpSound.ValueMember = "Id";
             lookUpSound.PopulateViewColumns();
@@ -60,9 +63,9 @@ namespace QMS_System
             int Id = int.Parse(gridViewCounterSound.GetRowCellValue(gridViewCounterSound.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLCounterSound.Instance.Delete(Id);
+                BLLCounterSound.Instance.Delete(connect, Id);
                 GetGridCounterSound();
-                frmMain.lib_CounterSound = BLLCounterSound.Instance.Gets();
+                frmMain.lib_CounterSound = BLLCounterSound.Instance.Gets(connect);
             }
         }
         private void gridViewCounterSound_CellValueChanged(object sender, DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs e)
@@ -89,11 +92,11 @@ namespace QMS_System
                     obj.Note = gridViewCounterSound.GetRowCellValue(gridViewCounterSound.FocusedRowHandle, "Note") != null ? gridViewCounterSound.GetRowCellValue(gridViewCounterSound.FocusedRowHandle, "Note").ToString() : "";
 
                     if (obj.Id == 0)
-                        BLLCounterSound.Instance.Insert(obj);
+                        BLLCounterSound.Instance.Insert(connect, obj);
                     else
-                        BLLCounterSound.Instance.Update(obj);
+                        BLLCounterSound.Instance.Update(connect, obj);
                     GetGridCounterSound();
-                    frmMain.lib_CounterSound = BLLCounterSound.Instance.Gets();
+                    frmMain.lib_CounterSound = BLLCounterSound.Instance.Gets(connect);
                 }
             }
             catch (Exception ex)

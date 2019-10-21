@@ -102,6 +102,8 @@
             this.txtDeleteNumber = new DevExpress.XtraBars.BarEditItem();
             this.repositoryItemTextEdit7 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             this.btnDeleteTicket = new DevExpress.XtraBars.BarButtonItem();
+            this.btnConnectSQL = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem13 = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPage3 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup16 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -138,7 +140,6 @@
             this.barButtonItem3 = new DevExpress.XtraBars.BarButtonItem();
             this.tmerQuetServeOver = new System.Windows.Forms.Timer(this.components);
             this.barButtonItem11 = new DevExpress.XtraBars.BarButtonItem();
-            this.btnConnectSQL = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemRichTextEdit2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemRichTextEdit3)).BeginInit();
@@ -223,10 +224,11 @@
             this.barButtonItem12,
             this.txtDeleteNumber,
             this.btnDeleteTicket,
-            this.btnConnectSQL});
+            this.btnConnectSQL,
+            this.barButtonItem13});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ribbonControl1.MaxItemId = 77;
+            this.ribbonControl1.MaxItemId = 78;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage3,
@@ -795,6 +797,21 @@
             this.btnDeleteTicket.Name = "btnDeleteTicket";
             this.btnDeleteTicket.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnDeleteTicket_ItemClick);
             // 
+            // btnConnectSQL
+            // 
+            this.btnConnectSQL.Caption = "Kết nối máy chủ";
+            this.btnConnectSQL.Id = 76;
+            this.btnConnectSQL.LargeGlyph = global::QMS_System.Properties.Resources.server_connect;
+            this.btnConnectSQL.Name = "btnConnectSQL";
+            this.btnConnectSQL.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnConnectSQL_ItemClick);
+            // 
+            // barButtonItem13
+            // 
+            this.barButtonItem13.Caption = "test audio";
+            this.barButtonItem13.Id = 77;
+            this.barButtonItem13.Name = "barButtonItem13";
+            this.barButtonItem13.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem13_ItemClick);
+            // 
             // ribbonPage3
             // 
             this.ribbonPage3.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
@@ -817,6 +834,7 @@
             // 
             this.ribbonPageGroup16.ItemLinks.Add(this.txtDeleteNumber);
             this.ribbonPageGroup16.ItemLinks.Add(this.btnDeleteTicket);
+            this.ribbonPageGroup16.ItemLinks.Add(this.barButtonItem13);
             this.ribbonPageGroup16.Name = "ribbonPageGroup16";
             // 
             // ribbonPage1
@@ -897,8 +915,8 @@
             this.ribbonPageGroup4.ItemLinks.Add(this.btnRegisterUserCmd, true);
             this.ribbonPageGroup4.ItemLinks.Add(this.btnNV_CMD_ReadSound, true);
             this.ribbonPageGroup4.ItemLinks.Add(this.btnServiceShift, true);
-            this.ribbonPageGroup4.ItemLinks.Add(this.btnMainDirection);
-            this.ribbonPageGroup4.ItemLinks.Add(this.btnConnectSQL);
+            this.ribbonPageGroup4.ItemLinks.Add(this.btnMainDirection, true);
+            this.ribbonPageGroup4.ItemLinks.Add(this.btnConnectSQL, true);
             this.ribbonPageGroup4.Name = "ribbonPageGroup4";
             // 
             // ribbonPageGroup5
@@ -1054,13 +1072,6 @@
             this.barButtonItem11.LargeGlyph = global::QMS_System.Properties.Resources.Music_icon;
             this.barButtonItem11.Name = "barButtonItem11";
             // 
-            // btnConnectSQL
-            // 
-            this.btnConnectSQL.Caption = "Kết nối SQL";
-            this.btnConnectSQL.Id = 76;
-            this.btnConnectSQL.Name = "btnConnectSQL";
-            this.btnConnectSQL.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnConnectSQL_ItemClick);
-            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
@@ -1210,5 +1221,6 @@
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup16;
         private DevExpress.XtraBars.BarButtonItem btnDeleteTicket;
         private DevExpress.XtraBars.BarButtonItem btnConnectSQL;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem13;
     }
 }

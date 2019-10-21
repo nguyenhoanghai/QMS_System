@@ -1,5 +1,7 @@
-﻿using QMS_System.Data.BLL;
+﻿using GPRO.Core.Hai;
+using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
+using QMS_System.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,6 +16,7 @@ namespace QMS_System
 {
     public partial class frmCopyRegisterCmd : Form
     {
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmCopyRegisterCmd()
         {
             InitializeComponent();
@@ -26,7 +29,7 @@ namespace QMS_System
 
         private void GetUser(int type)
         {
-            var users = BLLUser.Instance.GetLookUp();
+            var users = BLLUser.Instance.GetLookUp(connect);
             switch (type)
             {
                 case 0:
@@ -90,7 +93,7 @@ namespace QMS_System
                         for (int i = 0; i < selectR.Length; i++)
                             Ids.Add(int.Parse(gridViewRegister.GetRowCellValue(i, "Id").ToString()));
 
-                        if (!BLLRegisterUserCmd.Instance.Copy(Ids, uRecive.Id))
+                        if (!BLLRegisterUserCmd.Instance.Copy(connect,Ids, uRecive.Id))
                             MessageBox.Show("Lỗi trong quá trình thực thi dữ liệu không thể sao chép. Vui lòng kiểm tra lại", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         else
                             this.Close();
@@ -126,7 +129,7 @@ namespace QMS_System
             if (userObj == null)
                 MessageBox.Show("Vui lòng chọn nhân viên", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else
-                gridRegister.DataSource = BLLRegisterUserCmd.Instance.Gets(userObj.Id);
+                gridRegister.DataSource = BLLRegisterUserCmd.Instance.Gets(connect, userObj.Id);
         }
 
         private void btnResetUser_Click(object sender, EventArgs e)

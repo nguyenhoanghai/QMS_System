@@ -1,6 +1,8 @@
-﻿using QMS_System.Data;
+﻿using GPRO.Core.Hai;
+using QMS_System.Data;
 using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
+using QMS_System.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,6 +17,7 @@ namespace QMS_System
 {
     public partial class frmShift : Form
     {
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmShift()
         {
             InitializeComponent();
@@ -26,7 +29,7 @@ namespace QMS_System
         #region Shift
         private void GetGridShift()
         {
-            var list = BLLShift.Instance.Gets();
+            var list = BLLShift.Instance.Gets(connect);
             var now = DateTime.Now;
             var date = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0);
             list.Add(new ShiftModel() { Id = 0, Name = "", Start = date, End = date, Note = "" });
@@ -65,7 +68,7 @@ namespace QMS_System
 
                     if (obj.Id == 0)
                     {
-                        int result = BLLShift.Instance.Insert(obj);
+                        int result = BLLShift.Instance.Insert(connect,obj);
                         if (result == 0)
                         {
                             MessageBox.Show("Tên ca làm việc này đã tồn tại. Xin chọn lại", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -74,7 +77,7 @@ namespace QMS_System
                     }
                     else
                     {
-                        bool result = BLLShift.Instance.Update(obj);
+                        bool result = BLLShift.Instance.Update(connect, obj);
                         if (result == false)
                         {
                             MessageBox.Show("Tên ca làm việc này đã tồn tại. Xin chọn lại", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -97,7 +100,7 @@ namespace QMS_System
             int Id = int.Parse(gridViewShift.GetRowCellValue(gridViewShift.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLShift.Instance.Delete(Id);
+                BLLShift.Instance.Delete(connect,Id);
                 GetGridShift();
             }
         }

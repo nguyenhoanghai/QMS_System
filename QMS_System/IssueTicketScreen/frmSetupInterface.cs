@@ -13,6 +13,8 @@ using System.Configuration;
 using QMS_System.Data;
 using QMS_System.Data.BLL;
 using QMS_System.Data.Enum;
+using QMS_System.Helper;
+using GPRO.Core.Hai;
 
 namespace QMS_System.IssueTicketScreen
 {
@@ -20,6 +22,7 @@ namespace QMS_System.IssueTicketScreen
     {
         QMSSystemEntities db;
         frmIssueTicketScreen frm;
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmSetupInterface()
         {
             InitializeComponent();
@@ -43,17 +46,17 @@ namespace QMS_System.IssueTicketScreen
 
                 dlg.Filter = "JPEG Format Picture (*.jpg) | *.jpg|All files (*.*)| *.*";
                 dlg.DefaultExt = "*.jpg";
-                dlg.InitialDirectory = BLLConfig.Instance.GetConfigByCode(eConfigCode.ImagePath);
+                dlg.InitialDirectory = BLLConfig.Instance.GetConfigByCode(connect, eConfigCode.ImagePath);
                 if (dlg.ShowDialog() == DialogResult.OK)
                 {
                     if (File.Exists(dlg.FileName))
                     {
-                        db = new QMSSystemEntities();
+                        db = new QMSSystemEntities(connect);
                         Q_Config model = db.Q_Config.FirstOrDefault(x => !x.IsDeleted && x.IsActived && x.Code.Equals(eConfigCode.Background));
                         if (model != null)
                         {
                             model.Value = dlg.FileName;
-                            BLLConfig.Instance.UpdateConfigValueFromInterface(model);
+                            BLLConfig.Instance.UpdateConfigValueFromInterface(connect, model);
                         }
                         Image img = new Bitmap(dlg.FileName);
                         this.frm.BackgroundImage = img;

@@ -1,6 +1,8 @@
-﻿using QMS_System.Data;
+﻿using GPRO.Core.Hai;
+using QMS_System.Data;
 using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
+using QMS_System.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,6 +17,7 @@ namespace QMS_System
 {
     public partial class frmBusiness : Form
     {
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmBusiness()
         {
             InitializeComponent();
@@ -30,7 +33,7 @@ namespace QMS_System
         #region Business
         private void GetGridBusiness()
         {
-            var list = BLLBusiness.Instance.Gets(businessTypeId);
+            var list = BLLBusiness.Instance.Gets(connect, businessTypeId);
             list.Add(new BusinessModel() { Id = 0, Name = "", BusinessTypeId = 0, Address = "", TotalTicket = 0, Note = "" });
             gridBusiness.DataSource = list;
         }
@@ -72,7 +75,7 @@ namespace QMS_System
 
                     if (obj.Id == 0)
                     {
-                        int result = BLLBusiness.Instance.Insert(obj);
+                        int result = BLLBusiness.Instance.Insert(connect,obj);
                         if (result == 0)
                         {
                             MessageBox.Show("Tên doanh nghiệp đã tồn tại. Xin nhập tên khác", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -81,7 +84,7 @@ namespace QMS_System
                     }
                     else
                     {
-                        bool result = BLLBusiness.Instance.Update(obj);
+                        bool result = BLLBusiness.Instance.Update(connect,obj);
                         if (result == false)
                         {
                             MessageBox.Show("Tên doanh nghiệp đã tồn tại. Xin nhập tên khác", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -104,7 +107,7 @@ namespace QMS_System
             int Id = int.Parse(gridViewBusiness.GetRowCellValue(gridViewBusiness.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLBusiness.Instance.Delete(Id);
+                BLLBusiness.Instance.Delete(connect,Id);
                 GetGridBusiness();
             }
         }
@@ -114,14 +117,14 @@ namespace QMS_System
         private void GetGridBusinessType()
         {
             lookUpBusinessType.DataSource = null;
-            lookUpBusinessType.DataSource = BLLBusinessType.Instance.GetLookUp();
+            lookUpBusinessType.DataSource = BLLBusinessType.Instance.GetLookUp(connect);
             lookUpBusinessType.DisplayMember = "Name";
             lookUpBusinessType.ValueMember = "Id";
             lookUpBusinessType.PopulateViewColumns();
             lookUpBusinessType.View.Columns[0].Visible = false;
             lookUpBusinessType.View.Columns[1].Caption = "Loại doanh nghiệp";
 
-            var list = BLLBusinessType.Instance.Gets();
+            var list = BLLBusinessType.Instance.Gets(connect);
             list.Add(new BusinessTypeModel() { Id = 0, Name = "", Note = "" });
             gridBusinessType.DataSource = list;
         }
@@ -144,7 +147,7 @@ namespace QMS_System
 
                     if (obj.Id == 0)
                     {
-                        int result = BLLBusinessType.Instance.Insert(obj);
+                        int result = BLLBusinessType.Instance.Insert(connect,obj);
                         if (result == 0)
                         {
                             MessageBox.Show("Tên loại doanh nghiệp đã tồn tại. Xin nhập tên khác", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -153,7 +156,7 @@ namespace QMS_System
                     }
                     else
                     {
-                        bool result = BLLBusinessType.Instance.Update(obj);
+                        bool result = BLLBusinessType.Instance.Update(connect,obj);
                         if (result == false)
                         {
                             MessageBox.Show("Tên loại doanh nghiệp đã tồn tại. Xin nhập tên khác", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -176,7 +179,7 @@ namespace QMS_System
             int Id = int.Parse(gridViewBusinessType.GetRowCellValue(gridViewBusinessType.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLBusinessType.Instance.Delete(Id);
+                BLLBusinessType.Instance.Delete(connect,Id);
                 GetGridBusinessType();
             }
         }

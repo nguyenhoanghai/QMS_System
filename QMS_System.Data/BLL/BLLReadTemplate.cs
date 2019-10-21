@@ -25,9 +25,9 @@ namespace QMS_System.Data.BLL
         private BLLReadTemplate() { }
         #endregion
 
-        public List<ReadTemplateModel> GetsForMain( )
+        public List<ReadTemplateModel> GetsForMain(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var objs = db.Q_ReadTemplate.Where(x => !x.IsDeleted ).Select(x => new ReadTemplateModel() { Id = x.Id, Name = x.Name, LanguageId = x.LanguageId }).ToList();
                 if (objs.Count > 0)
@@ -47,33 +47,33 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public List<ReadTemplateModel> Gets()
+        public List<ReadTemplateModel> Gets(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_ReadTemplate.Where(x => !x.IsDeleted).Select(x => new ReadTemplateModel() { Id = x.Id, Name = x.Name, LanguageId = x.LanguageId, Note = x.Note }).ToList();
             }
         }
 
-        public  Q_ReadTemplate   Get(string name)
+        public  Q_ReadTemplate   Get(string connectString,string name)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_ReadTemplate.FirstOrDefault(x => !x.IsDeleted && x.Name.Trim().ToUpper().Equals(name.Trim().ToUpper()));
             }
         }
 
-        public List<ModelSelectItem> GetLookUp()
+        public List<ModelSelectItem> GetLookUp(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_ReadTemplate.Where(x => !x.IsDeleted).Select(x => new ModelSelectItem() { Id = x.Id, Name = (x.Name + " (" + x.Q_Language.Name + ")") }).ToList();
             }
         }
 
-        public int Insert(Q_ReadTemplate obj)
+        public int Insert(string connectString,Q_ReadTemplate obj)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 db.Q_ReadTemplate.Add(obj);
                 db.SaveChanges();
@@ -81,9 +81,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Update(Q_ReadTemplate model)
+        public bool Update(string connectString,Q_ReadTemplate model)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_ReadTemplate.FirstOrDefault(x => !x.IsDeleted && x.Id == model.Id);
                 if (obj != null)
@@ -98,9 +98,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Delete(int Id)
+        public bool Delete(string connectString,int Id)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_ReadTemplate.FirstOrDefault(x => !x.IsDeleted && x.Id == Id);
                 if (obj != null)

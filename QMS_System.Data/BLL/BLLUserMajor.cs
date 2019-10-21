@@ -24,32 +24,32 @@ namespace QMS_System.Data.BLL
         }
         private BLLUserMajor() { }
         #endregion
-        public List<UserMajorModel> Gets( )
+        public List<UserMajorModel> Gets(string connectString )
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_UserMajor.Where(x => !x.IsDeleted && !x.Q_Major.IsDeleted && !x.Q_User.IsDeleted ).Select(x => new UserMajorModel() { Id = x.Id, UserId = x.UserId, MajorId = x.MajorId, Index = x.Index }).OrderBy(x=>x.Index).ToList();
             }
         }
-        public List<UserMajorModel> Gets(int userId)
+        public List<UserMajorModel> Gets(string connectString,int userId)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_UserMajor.Where(x => !x.IsDeleted && !x.Q_Major.IsDeleted && !x.Q_User.IsDeleted && x.UserId == userId).Select(x => new UserMajorModel() { Id = x.Id, UserId = x.UserId, MajorId = x.MajorId, Index = x.Index }).OrderBy(x => x.Index).ToList();
             }
         }
-        public int GetUserFirstMajor(int userId)
+        public int GetUserFirstMajor(string connectString, int userId)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_UserMajor.Where(x => !x.IsDeleted && !x.Q_Major.IsDeleted && !x.Q_User.IsDeleted && x.UserId == userId).OrderBy(x => x.Index).FirstOrDefault();
                 return (obj != null ? obj.MajorId : 0);
             }
         }
 
-        public int Insert(Q_UserMajor obj)
+        public int Insert(string connectString,Q_UserMajor obj)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 if (!CheckExists(obj))
                 {
@@ -60,9 +60,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Update(Q_UserMajor model)
+        public bool Update(string connectString,Q_UserMajor model)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_UserMajor.FirstOrDefault(x => !x.IsDeleted && x.Id == model.Id);
                 if (obj != null)
@@ -80,9 +80,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Delete(int Id)
+        public bool Delete(string connectString,int Id)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_UserMajor.FirstOrDefault(x => !x.IsDeleted && x.Id == Id);
                 if (obj != null)

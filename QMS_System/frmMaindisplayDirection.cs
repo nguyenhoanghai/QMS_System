@@ -1,7 +1,9 @@
 ﻿using DevExpress.XtraEditors;
+using GPRO.Core.Hai;
 using QMS_System.Data;
 using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
+using QMS_System.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +18,7 @@ namespace QMS_System
 {
     public partial class frmMaindisplayDirection : Form
     {
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         int counterId = 0;
         public frmMaindisplayDirection()
         {
@@ -50,7 +53,7 @@ namespace QMS_System
             {
 
                 GetEquipment();
-                var list = BLLMaindisplayDirection.Instance.Gets(counterId);
+                var list = BLLMaindisplayDirection.Instance.Gets(connect, counterId);
                 list.Add(new MaindisplayDirectionModel() { Id = 0, Index = (list.Count + 1), EquipmentId = 0, Direction = false });
                 gridMaindisplayDirection.DataSource = list;
                 
@@ -61,7 +64,7 @@ namespace QMS_System
         private void GetCounter()
         {
             lookUpCounter.Properties.DataSource = null;
-            lookUpCounter.Properties.DataSource = BLLCounter.Instance.GetLookUp();
+            lookUpCounter.Properties.DataSource = BLLCounter.Instance.GetLookUp(connect);
             lookUpCounter.Properties.DisplayMember = "Name";
             lookUpCounter.Properties.ValueMember = "Id";
             lookUpCounter.Properties.PopulateColumns();
@@ -74,7 +77,7 @@ namespace QMS_System
         private void GetEquipment()
         {
             gridLookUpEquipment.DataSource = null;
-            gridLookUpEquipment.DataSource = BLLEquipment.Instance.GetMaindisplay();
+            gridLookUpEquipment.DataSource = BLLEquipment.Instance.GetMaindisplay(connect);
             gridLookUpEquipment.DisplayMember = "Name";
             gridLookUpEquipment.ValueMember = "Id";
             gridLookUpEquipment.View.PopulateColumns();
@@ -111,7 +114,7 @@ namespace QMS_System
                     obj.Note = gridViewMaindisplayDirection.GetRowCellValue(gridViewMaindisplayDirection.FocusedRowHandle, "Note") != null ? gridViewMaindisplayDirection.GetRowCellValue(gridViewMaindisplayDirection.FocusedRowHandle, "Note").ToString() : null;
                     if (obj.Id == 0)
                     {
-                        int result = BLLMaindisplayDirection.Instance.Insert(obj);
+                        int result = BLLMaindisplayDirection.Instance.Insert(connect,obj);
                         if (result == 0)
                         {
                             MessageBox.Show("Đã tồn tại Quầy có hướng đi Maindisplay này. Xin chọn lại", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -120,7 +123,7 @@ namespace QMS_System
                     }
                     else
                     {
-                        bool result = BLLMaindisplayDirection.Instance.Update(obj);
+                        bool result = BLLMaindisplayDirection.Instance.Update(connect,obj);
                         if (result == false)
                         {
                             MessageBox.Show("Đã tồn tại Quầy có hướng đi Maindisplay này. Xin chọn lại", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -139,7 +142,7 @@ namespace QMS_System
             int Id = int.Parse(gridViewMaindisplayDirection.GetRowCellValue(gridViewMaindisplayDirection.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLMaindisplayDirection.Instance.Delete(Id);
+                BLLMaindisplayDirection.Instance.Delete(connect,Id);
                 GetGrid();
             }
         }

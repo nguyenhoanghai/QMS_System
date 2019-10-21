@@ -25,9 +25,9 @@ namespace QMS_System.Data.BLL
         private BLLCounterSound() { }
         #endregion
 
-        public List<CounterSoundModel> Gets( )
+        public List<CounterSoundModel> Gets(string connectString )
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_CounterSound.Where(x => !x.IsDeleted && !x.Q_Counter.IsDeleted && !x.Q_Language.IsDeleted  ).Select(x => new CounterSoundModel()
                 {
@@ -39,9 +39,9 @@ namespace QMS_System.Data.BLL
                 }).ToList();
             }
         }
-        public List<CounterSoundModel> Gets(int counterId)
+        public List<CounterSoundModel> Gets(string connectString,int counterId)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_CounterSound.Where(x => !x.IsDeleted && !x.Q_Counter.IsDeleted && !x.Q_Language.IsDeleted && x.CounterId == counterId).Select(x => new CounterSoundModel()
                 {
@@ -54,18 +54,18 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public string GetSoundName(int counterId, int languageId)
+        public string GetSoundName(string connectString, int counterId, int languageId)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_CounterSound.FirstOrDefault(x => !x.IsDeleted && !x.Q_Counter.IsDeleted && !x.Q_Language.IsDeleted && x.CounterId == counterId && x.LanguageId == languageId);
                 return (obj != null ? obj.SoundName : "");
             }
         }
 
-        public int Insert(Q_CounterSound obj)
+        public int Insert(string connectString,Q_CounterSound obj)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 if (!CheckExists(obj))
                 {
@@ -76,9 +76,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public int Update(Q_CounterSound model)
+        public int Update(string connectString,Q_CounterSound model)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_CounterSound.FirstOrDefault(x => !x.IsDeleted && x.Id == model.Id);
                 if (obj != null)
@@ -99,9 +99,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Delete(int Id)
+        public bool Delete(string connectString,int Id)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_CounterSound.FirstOrDefault(x => !x.IsDeleted && x.Id == Id);
                 if (obj != null)

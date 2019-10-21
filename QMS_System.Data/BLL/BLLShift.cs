@@ -24,21 +24,21 @@ namespace QMS_System.Data.BLL
         }
         private BLLShift() { }
         #endregion
-        public List<ShiftModel> Gets()
+        public List<ShiftModel> Gets(string connectString)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             return db.Q_Shift.Where(x => !x.IsDeleted).Select(x => new ShiftModel() { Id = x.Id, Name = x.Name, Note = x.Note, Start = x.Start, End = x.End }).ToList();
         }}
 
-        public List<ModelSelectItem> GetLookUp()
+        public List<ModelSelectItem> GetLookUp(string connectString)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             return db.Q_Shift.Where(x => !x.IsDeleted).ToList().Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Name, Code = (x.Start.ToString("HH:mm")+" - "+x.End.ToString("HH:mm")) }).ToList();
         }}
        
-        public int Insert(Q_Shift obj)
+        public int Insert(string connectString,Q_Shift obj)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             if (!CheckExists(obj))
             {
                 db.Q_Shift.Add(obj);
@@ -47,9 +47,9 @@ namespace QMS_System.Data.BLL
             return obj.Id;
         }}
 
-        public bool Update(Q_Shift model)
+        public bool Update(string connectString,Q_Shift model)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             var obj = db.Q_Shift.FirstOrDefault(x => !x.IsDeleted && x.Id == model.Id);
             if (obj != null)
             {
@@ -66,9 +66,9 @@ namespace QMS_System.Data.BLL
             return false;
         }}
 
-        public bool Delete(int Id)
+        public bool Delete(string connectString, int Id)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             var obj = db.Q_Shift.FirstOrDefault(x => !x.IsDeleted && x.Id == Id);
             if (obj != null)
             {

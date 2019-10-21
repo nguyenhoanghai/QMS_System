@@ -26,10 +26,10 @@ namespace QMS_System.Data.BLL
         private BLLReport() { }
         #endregion
 
-        public List<ReportModel> DetailReport(int objId, int typeOfSearch, DateTime from, DateTime to)
+        public List<ReportModel> DetailReport(string connectString, int objId, int typeOfSearch, DateTime from, DateTime to)
         {
             List<ReportModel> list = new List<ReportModel>();
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
 
                 try
@@ -148,9 +148,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public List<R_GeneralInDayModel> GeneralReport(int objId, int typeOfSearch, DateTime from, DateTime to)
+        public List<R_GeneralInDayModel> GeneralReport(string connectString, int objId, int typeOfSearch, DateTime from, DateTime to)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 List<R_GeneralInDayModel> objs = null;
 
@@ -253,9 +253,9 @@ namespace QMS_System.Data.BLL
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public List<R_GeneralInDayModel> GeneralReport_DichVuTienThu(int objId, int thuNganId, DateTime from, DateTime to)
+        public List<R_GeneralInDayModel> GeneralReport_DichVuTienThu(string connectString, int objId, int thuNganId, DateTime from, DateTime to)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             { 
                 List<R_GeneralInDayModel> objs = null;
                 List<R_GeneralInDayModel> ThuNganObjs = null;
@@ -514,13 +514,13 @@ namespace QMS_System.Data.BLL
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public List<ReportModel> DetailReport_DichVuTienThu(int objId, int ThuNganId, DateTime from, DateTime to)
+        public List<ReportModel> DetailReport_DichVuTienThu(string connectString, int objId, int ThuNganId, DateTime from, DateTime to)
         {
             List<ReportModel> yesList = new List<ReportModel>(),
                             todayList = new List<ReportModel>(),
                             returnList = new List<ReportModel>();
             TimeSpan time = new TimeSpan(0, 0, 0);
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 try
                 {

@@ -24,22 +24,22 @@ namespace QMS_System.Data.BLL
         }
         private BLLStatusType() { }
         #endregion
-        public List<StatusTypeModel> Gets()
+        public List<StatusTypeModel> Gets(string connectString)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             return db.Q_StatusType.Select(x => new StatusTypeModel() { Id = x.Id, Name = x.Name, Note = x.Note  }).ToList();
         }
         }
 
-        public List<ModelSelectItem> GetLookUp()
+        public List<ModelSelectItem> GetLookUp(string connectString)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             return db.Q_StatusType.Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Name }).ToList();
         }}
        
-        public int Insert(Q_StatusType obj)
+        public int Insert(string connectString,Q_StatusType obj)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             if (!CheckExists(obj))
             {
                 db.Q_StatusType.Add(obj);
@@ -49,9 +49,9 @@ namespace QMS_System.Data.BLL
         }
         }
 
-        public bool Update(Q_StatusType model)
+        public bool Update(string connectString,Q_StatusType model)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_StatusType.FirstOrDefault(x => x.Id == model.Id);
                 if (obj != null)
@@ -70,9 +70,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        //public bool Delete(int Id)
+        //public bool Delete(string connectString,int Id)
         //{
-        //      using (db = new QMSSystemEntities()){
+        //      using (db = new QMSSystemEntities(connectString)){
         //    var obj = db.Q_StatusType.FirstOrDefault(x => x.Id == Id);
         //    if (obj != null)
         //    {

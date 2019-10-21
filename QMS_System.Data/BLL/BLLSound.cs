@@ -24,32 +24,32 @@ namespace QMS_System.Data.BLL
         }
         private BLLSound() { }
         #endregion
-        public List<SoundModel> Gets()
+        public List<SoundModel> Gets(string connectString)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             return db.Q_Sound.Where(x => !x.IsDeleted).Select(x => new SoundModel() { Id = x.Id,Code = x.Code, Name = x.Name, LanguageId = x.LanguageId, Note = x.Note }).ToList();
         }
         }
 
-        public List<ModelSelectItem> GetLookUp()
+        public List<ModelSelectItem> GetLookUp(string connectString)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             return db.Q_Sound.Where(x => !x.IsDeleted).Select(x => new ModelSelectItem() { Id = x.Id, Name = (x.Name +" ("+ x.Q_Language.Name+")") }).ToList();
         }
        
         }
-        public int Insert(Q_Sound obj)
+        public int Insert(string connectString,Q_Sound obj)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             db.Q_Sound.Add(obj);
             db.SaveChanges();
             return obj.Id;
         }
         }
 
-        public bool Update(Q_Sound model)
+        public bool Update(string connectString,Q_Sound model)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             var obj = db.Q_Sound.FirstOrDefault(x => !x.IsDeleted && x.Id == model.Id);
             if (obj != null)
             {
@@ -64,9 +64,9 @@ namespace QMS_System.Data.BLL
         }
         }
 
-        public bool Delete(int Id)
+        public bool Delete(string connectString, int Id)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_Sound.FirstOrDefault(x => !x.IsDeleted && x.Id == Id);
                 if (obj != null)

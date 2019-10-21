@@ -1,7 +1,9 @@
 ﻿using DevExpress.XtraEditors;
+using GPRO.Core.Hai;
 using QMS_System.Data;
 using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
+using QMS_System.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,6 +19,7 @@ namespace QMS_System
     public partial class frmServiceShift : Form
     {
         int serviceId = 0;
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmServiceShift()
         {
             InitializeComponent();
@@ -49,7 +52,7 @@ namespace QMS_System
             else
             {
                 GetShift();
-                var list = BLLServiceShift.Instance.Gets(serviceId);
+                var list = BLLServiceShift.Instance.Gets(connect, serviceId);
                 list.Add(new ServiceShiftModel() { Id = 0, Index = (list.Count + 1), ShiftId = 0 });
                 gridServiceShift.DataSource = list;
             }
@@ -58,7 +61,7 @@ namespace QMS_System
         private void GetService()
         {
             lookUpService.Properties.DataSource = null;
-            lookUpService.Properties.DataSource = BLLService.Instance.GetLookUp();
+            lookUpService.Properties.DataSource = BLLService.Instance.GetLookUp(connect);
             lookUpService.Properties.DisplayMember = "Name";
             lookUpService.Properties.ValueMember = "Id";
             lookUpService.Properties.PopulateColumns();
@@ -71,7 +74,7 @@ namespace QMS_System
         private void GetShift()
         {
             gridLookUpShift.DataSource = null;
-            gridLookUpShift.DataSource = BLLShift.Instance.GetLookUp();
+            gridLookUpShift.DataSource = BLLShift.Instance.GetLookUp(connect);
             gridLookUpShift.DisplayMember = "Name";
             gridLookUpShift.ValueMember = "Id";
             gridLookUpShift.PopulateViewColumns();
@@ -110,7 +113,7 @@ namespace QMS_System
 
                     if (obj.Id == 0)
                     {
-                        int result = BLLServiceShift.Instance.Insert(obj);
+                        int result = BLLServiceShift.Instance.Insert(connect,obj);
                         if (result == 0)
                         {
                             MessageBox.Show("Dịch vụ đã tồn tại thời gian cấp phiếu này. Xin chọn lại", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -119,7 +122,7 @@ namespace QMS_System
                     }
                     else
                     {
-                        bool result = BLLServiceShift.Instance.Update(obj);
+                        bool result = BLLServiceShift.Instance.Update(connect,obj);
                         if (result == false)
                         {
                             MessageBox.Show("Dịch vụ đã tồn tại thời gian cấp phiếu này. Xin chọn lại", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -138,7 +141,7 @@ namespace QMS_System
             int Id = int.Parse(gridViewServiceShift.GetRowCellValue(gridViewServiceShift.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLServiceShift.Instance.Delete(Id);
+                BLLServiceShift.Instance.Delete(connect,Id);
                 GetGrid();
             }
         }

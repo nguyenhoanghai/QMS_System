@@ -1,6 +1,8 @@
-﻿using QMS_System.Data;
+﻿using GPRO.Core.Hai;
+using QMS_System.Data;
 using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
+using QMS_System.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +12,7 @@ namespace QMS_System
 {
     public partial class frmReadTemplate : Form
     {
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmReadTemplate()
         {
             InitializeComponent();
@@ -36,7 +39,7 @@ namespace QMS_System
         private void GetLanguages()
         {
             repLookUpLanguage.DataSource = null;
-            repLookUpLanguage.DataSource = BLLLanguage.Instance.GetLookUp();
+            repLookUpLanguage.DataSource = BLLLanguage.Instance.GetLookUp(connect);
             repLookUpLanguage.DisplayMember = "Name";
             repLookUpLanguage.ValueMember = "Id";
             repLookUpLanguage.PopulateViewColumns();
@@ -48,7 +51,7 @@ namespace QMS_System
         private void GetSounds()
         {
             repLookUpSound.DataSource = null;
-            var objs = BLLSound.Instance.GetLookUp();
+            var objs = BLLSound.Instance.GetLookUp(connect);
             objs.Add(new ModelSelectItem() { Id = 9999, Name = "Số phiếu" });
             objs.Add(new ModelSelectItem() { Id = 10000, Name = "Tên quầy" });
             repLookUpSound.DataSource = objs;
@@ -62,7 +65,7 @@ namespace QMS_System
         }
         private void GetGridView()
         {
-            var list = BLLReadTemplate.Instance.Gets();
+            var list = BLLReadTemplate.Instance.Gets(connect);
             list.Add(new ReadTemplateModel() { Id = 0 });
             gridReadTemplate.DataSource = list;
         }
@@ -78,7 +81,7 @@ namespace QMS_System
             gridDetail.DataSource = null;
             if (Id != 0)
             {
-                var list = BLLReadTempDetail.Instance.Gets(Id);
+                var list = BLLReadTempDetail.Instance.Gets(connect, Id);
                 list.Add(new ReadTemplateDetailModel() { Id = 0, ReadTemplateId = Id, Index = 0 });
                 gridDetail.DataSource = list;
                 GetSounds();
@@ -90,9 +93,9 @@ namespace QMS_System
             int Id = int.Parse(gridViewReadTemplate.GetRowCellValue(gridViewReadTemplate.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLReadTempDetail.Instance.Delete(Id);
+                BLLReadTempDetail.Instance.Delete(connect, Id);
                 GetGridView();
-               frmMain.lib_ReadTemplates = BLLReadTemplate.Instance.GetsForMain();
+               frmMain.lib_ReadTemplates = BLLReadTemplate.Instance.GetsForMain(connect);
             }
         }
         private void gridViewReadTemplate_CellValueChanged(object sender, DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs e)
@@ -119,11 +122,11 @@ namespace QMS_System
                     obj.Note = gridViewReadTemplate.GetRowCellValue(gridViewReadTemplate.FocusedRowHandle, "Note") != null ? gridViewReadTemplate.GetRowCellValue(gridViewReadTemplate.FocusedRowHandle, "Note").ToString() : "";
 
                     if (obj.Id == 0)
-                        BLLReadTemplate.Instance.Insert(obj);
+                        BLLReadTemplate.Instance.Insert(connect, obj);
                     else
-                        BLLReadTemplate.Instance.Update(obj);
+                        BLLReadTemplate.Instance.Update(connect, obj);
                     GetGridView();
-                    frmMain.lib_ReadTemplates = BLLReadTemplate.Instance.GetsForMain();
+                    frmMain.lib_ReadTemplates = BLLReadTemplate.Instance.GetsForMain(connect);
                 }
             }
             catch (Exception ex)
@@ -138,9 +141,9 @@ namespace QMS_System
             int Id = int.Parse(gridViewDetail.GetRowCellValue(gridViewDetail.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLReadTempDetail.Instance.Delete(Id);
+                BLLReadTempDetail.Instance.Delete(connect, Id);
                 GetGridDetail(Id);
-                frmMain.lib_ReadTemplates = BLLReadTemplate.Instance.GetsForMain();
+                frmMain.lib_ReadTemplates = BLLReadTemplate.Instance.GetsForMain(connect);
             }
         }
         private void gridViewDetail_CellValueChanged(object sender, DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs e)
@@ -167,11 +170,11 @@ namespace QMS_System
                     obj.ReadTemplateId = int.Parse(gridViewDetail.GetRowCellValue(gridViewDetail.FocusedRowHandle, "ReadTemplateId").ToString());
 
                     if (obj.Id == 0)
-                        BLLReadTempDetail.Instance.Insert(obj);
+                        BLLReadTempDetail.Instance.Insert(connect, obj);
                     else
-                        BLLReadTempDetail.Instance.Update(obj);
+                        BLLReadTempDetail.Instance.Update(connect, obj);
                     GetGridDetail(obj.ReadTemplateId);
-                    frmMain.lib_ReadTemplates = BLLReadTemplate.Instance.GetsForMain();
+                    frmMain.lib_ReadTemplates = BLLReadTemplate.Instance.GetsForMain(connect);
                 }
             }
             catch (Exception ex)

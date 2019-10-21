@@ -13,11 +13,14 @@ using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
 using QMS_System.Data;
 using QMS_System.Data.Enum;
+using QMS_System.Helper;
+using GPRO.Core.Hai;
 
 namespace QMS_System
 {
     public partial class frmSound : DevExpress.XtraEditors.XtraForm
     {
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmSound()
         {
             InitializeComponent();
@@ -57,7 +60,7 @@ namespace QMS_System
             //    }                
             //}
             lookUpLanguage.DataSource = null;
-            lookUpLanguage.DataSource = BLLLanguage.Instance.GetLookUp();
+            lookUpLanguage.DataSource = BLLLanguage.Instance.GetLookUp(connect);
             lookUpLanguage.DisplayMember = "Name";
             lookUpLanguage.ValueMember = "Id";
             lookUpLanguage.PopulateViewColumns();
@@ -66,7 +69,7 @@ namespace QMS_System
             lookUpLanguage.View.Columns[3].Visible = false;
             lookUpLanguage.View.Columns[1].Caption = "Ngôn ngữ";
 
-            var list = BLLSound.Instance.Gets();
+            var list = BLLSound.Instance.Gets(connect);
             list.Add(new SoundModel() { Id = 0, Name = "", LanguageId = 1, Note = "" });
             gridSound.DataSource = list;
         }
@@ -75,9 +78,9 @@ namespace QMS_System
             int Id = int.Parse(gridViewSound.GetRowCellValue(gridViewSound.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLSound.Instance.Delete(Id);
+                BLLSound.Instance.Delete(connect,Id);
                 GetGridSound();
-                frmMain.lib_Sounds = BLLSound.Instance.Gets();
+                frmMain.lib_Sounds = BLLSound.Instance.Gets(connect);
             }
         }
         private void gridViewSound_CellValueChanged(object sender, DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs e)
@@ -105,11 +108,11 @@ namespace QMS_System
                     obj.Note = gridViewSound.GetRowCellValue(gridViewSound.FocusedRowHandle, "Note") != null ? gridViewSound.GetRowCellValue(gridViewSound.FocusedRowHandle, "Note").ToString() : "";
 
                     if (obj.Id == 0)
-                        BLLSound.Instance.Insert(obj);
+                        BLLSound.Instance.Insert( connect, obj);
                     else
-                        BLLSound.Instance.Update(obj);
+                        BLLSound.Instance.Update(connect, obj);
                     GetGridSound();
-                    frmMain.lib_Sounds = BLLSound.Instance.Gets();
+                    frmMain.lib_Sounds = BLLSound.Instance.Gets(connect);
                 }
             }
             catch (Exception ex)

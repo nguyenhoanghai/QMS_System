@@ -24,16 +24,16 @@ namespace QMS_System.Data.BLL
         }
         private BLLEquipment() { }
         #endregion
-        public List<ModelSelectItem> GetMaindisplay()
+        public List<ModelSelectItem> GetMaindisplay(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_Equipment.Where(x => !x.IsDeleted && !x.Q_EquipmentType.IsDeleted && x.EquipTypeId == (int)eEquipType.Maindisplay).Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Name }).ToList();
             }
         }
-        public List<EquipmentModel> Gets(int equipTypeId)
+        public List<EquipmentModel> Gets(string connectString,int equipTypeId)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_Equipment.Where(x => !x.IsDeleted && !x.Q_EquipmentType.IsDeleted && x.EquipTypeId == equipTypeId).Select(x => new EquipmentModel()
                 {
@@ -50,34 +50,34 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public List<ModelSelectItem> GetLookUp()
+        public List<ModelSelectItem> GetLookUp(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_Equipment.Where(x => !x.IsDeleted).Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Name }).ToList();
             }
         }
 
-        public int GetCounterId(int equipCode)
+        public int GetCounterId(string connectString, int equipCode)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipCode);
                 return (obj != null ? obj.CounterId : 0);
             }
         }
-        public int GetEquipTypeId(int equipId)
+        public int GetEquipTypeId(string connectString, int equipId)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipId);
                 return (obj != null ? obj.EquipTypeId : 0);
             }
         }
 
-        public int Insert(Q_Equipment obj)
+        public int Insert(string connectString,Q_Equipment obj)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 if (!CheckExists(obj))
                 {
@@ -88,9 +88,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Update(Q_Equipment model)
+        public bool Update(string connectString,Q_Equipment model)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Id == model.Id);
                 if (obj != null)
@@ -115,9 +115,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Delete(int Id)
+        public bool Delete(string connectString,int Id)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Id == Id);
                 if (obj != null)
@@ -131,16 +131,16 @@ namespace QMS_System.Data.BLL
         }
         private bool CheckExists(Q_Equipment model)
         {
-            //  using (db = new QMSSystemEntities()){
+            //  using (db = new QMSSystemEntities(connectString)){
             Q_Equipment obj = null;
             if (!string.IsNullOrEmpty(model.Name))
                 obj = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Id != model.Id && x.Name.Trim().ToUpper().Equals(model.Name.Trim().ToUpper()));
             return obj != null ? true : false;
         }
 
-        public List<string> Gets()
+        public List<string> Gets(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 List<string> codeArr = new List<string>();
                 var codes = db.Q_Equipment.Where(x => !x.IsDeleted && (x.EquipTypeId == (int)eEquipType.Counter || x.EquipTypeId == (int)eEquipType.Printer) && x.StatusId == (int)eStatus.HOTAT).Select(x => x.Code).ToList();
@@ -150,9 +150,9 @@ namespace QMS_System.Data.BLL
                 return codeArr;
             }
         }
-        public List<ModelSelectItem> GetsEquipments()
+        public List<ModelSelectItem> GetsEquipments(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var equips = db.Q_Equipment.Where(x => !x.IsDeleted && x.EquipTypeId == (int)eEquipType.Counter && x.StatusId == (int)eStatus.HOTAT).Select(x =>
                 new ModelSelectItem()

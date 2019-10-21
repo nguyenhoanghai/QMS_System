@@ -25,33 +25,41 @@ namespace QMS_System.Data.BLL
         private BLLCounter() { }
         #endregion
 
-        public List<CounterModel> Gets()
+        public List<CounterModel> Gets(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
-                return db.Q_Counter.Where(x => !x.IsDeleted).OrderBy(x=>x.Index).Select(x => new CounterModel()
+                return db.Q_Counter.Where(x => !x.IsDeleted).OrderBy(x => x.Index).Select(x => new CounterModel()
                 {
                     Id = x.Id,
                     ShortName = x.ShortName,
                     Name = x.Name,
                     Position = x.Position,
                     Index = x.Index,
-                    Acreage = x.Acreage ,  // Diện tích
+                    Acreage = x.Acreage,  // Diện tích
                 }).ToList();
             }
-        } 
-
-        public List<ModelSelectItem> GetLookUp()
-        {
-            using (db = new QMSSystemEntities())
-            {
-                return db.Q_Counter.Where(x => !x.IsDeleted).OrderBy(x=>x.Index).Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Name }).ToList();
-            };
         }
 
-        public int Insert(Q_Counter obj)
+        public List<ModelSelectItem> GetLookUp(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            try
+            {
+                using (db = new QMSSystemEntities(connectString))
+                {
+                    return db.Q_Counter.Where(x => !x.IsDeleted).OrderBy(x => x.Index).Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Name }).ToList();
+                };
+            }
+            catch (Exception ex)
+            { 
+                throw ex;
+            }
+
+        }
+
+        public int Insert(string connectString, Q_Counter obj)
+        {
+            using (db = new QMSSystemEntities(connectString))
             {
                 if (!CheckExists(obj))
                 {
@@ -62,9 +70,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public int Update(Q_Counter model)
+        public int Update(string connectString, Q_Counter model)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_Counter.FirstOrDefault(x => !x.IsDeleted && x.Id == model.Id);
                 if (obj != null)
@@ -86,9 +94,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Delete(int Id)
+        public bool Delete(string connectString, int Id)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_Counter.FirstOrDefault(x => !x.IsDeleted && x.Id == Id);
                 if (obj != null)

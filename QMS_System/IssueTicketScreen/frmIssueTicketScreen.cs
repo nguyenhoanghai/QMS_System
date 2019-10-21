@@ -1,6 +1,8 @@
-﻿using QMS_System.Data.BLL;
+﻿using GPRO.Core.Hai;
+using QMS_System.Data.BLL;
 using QMS_System.Data.BLL.IssueTicketScreen;
 using QMS_System.Data.Enum;
+using QMS_System.Helper;
 using System;
 using System.Drawing;
 using System.IO;
@@ -11,6 +13,7 @@ namespace QMS_System.IssueTicketScreen
     public partial class frmIssueTicketScreen : DevExpress.XtraEditors.XtraForm
     {
         frmMain frmain;
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmIssueTicketScreen(frmMain _frmain)
         {
             InitializeComponent();
@@ -20,7 +23,7 @@ namespace QMS_System.IssueTicketScreen
         {
             try
             {
-  string imgPath = BLLConfig.Instance.GetConfigByCode(eConfigCode.Background);
+  string imgPath = BLLConfig.Instance.GetConfigByCode(connect, eConfigCode.Background);
             if (!string.IsNullOrEmpty(imgPath) && File.Exists(imgPath))
             {
                 Image img = new Bitmap(imgPath);
@@ -89,7 +92,7 @@ namespace QMS_System.IssueTicketScreen
 
         private void GetButton()
         {
-            var list = BLLSetupInterface.Instance.GetButtonService();
+            var list = BLLSetupInterface.Instance.GetButtonService(connect);
 
             if (list.Count > 0)
             {
@@ -102,14 +105,14 @@ namespace QMS_System.IssueTicketScreen
                 int midY = height / 2;
 
                 int numbutton = list.Count;
-                int numcol = int.Parse(BLLConfig.Instance.GetConfigByCode(eConfigCode.Column));  // số cột hiển thị
+                int numcol = int.Parse(BLLConfig.Instance.GetConfigByCode(connect, eConfigCode.Column));  // số cột hiển thị
                 if (numcol > numbutton)
                     numcol = numbutton;
                 int numrow = (numbutton % numcol == 0) ? numbutton / numcol : (numbutton / numcol) + 1;  // số dòng hiển thị
 
-                int buttonwidth = int.Parse(BLLConfig.Instance.GetConfigByCode(eConfigCode.ButtonWidth));
-                int buttonheight = int.Parse(BLLConfig.Instance.GetConfigByCode(eConfigCode.ButtonHeight)); ;
-                int space = int.Parse(BLLConfig.Instance.GetConfigByCode(eConfigCode.ButtonSpace)); ; // khoảng cách giữa 2 nút với nhau
+                int buttonwidth = int.Parse(BLLConfig.Instance.GetConfigByCode(connect, eConfigCode.ButtonWidth));
+                int buttonheight = int.Parse(BLLConfig.Instance.GetConfigByCode(connect, eConfigCode.ButtonHeight)); ;
+                int space = int.Parse(BLLConfig.Instance.GetConfigByCode(connect, eConfigCode.ButtonSpace)); ; // khoảng cách giữa 2 nút với nhau
 
                 // Tọa độ của button đầu tiên
                 int x = midX - (((numcol - 1) * space + (numcol * buttonwidth)) / 2);
@@ -119,10 +122,10 @@ namespace QMS_System.IssueTicketScreen
                 int tmpY = y;
 
                 FontConverter converter = new FontConverter();
-                Font font = (Font)converter.ConvertFromString(BLLConfig.Instance.GetConfigByCode(eConfigCode.ButtonFont));
+                Font font = (Font)converter.ConvertFromString(BLLConfig.Instance.GetConfigByCode(connect, eConfigCode.ButtonFont));
 
-                string forecolor = BLLConfig.Instance.GetConfigByCode(eConfigCode.ButtonForeColor);
-                string backcolor = BLLConfig.Instance.GetConfigByCode(eConfigCode.ButtonBackColor);
+                string forecolor = BLLConfig.Instance.GetConfigByCode(connect, eConfigCode.ButtonForeColor);
+                string backcolor = BLLConfig.Instance.GetConfigByCode(connect, eConfigCode.ButtonBackColor);
                 int k = 0; // biến đếm chỉ số của nút tăng dần
                 for (int i = 0; i < numrow; i++)  // dòng
                 {

@@ -15,11 +15,14 @@ using OfficeOpenXml.Style;
 using System.Threading;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Diagnostics;
+using QMS_System.Helper;
+using GPRO.Core.Hai;
 
 namespace QMS_System
 {
     public partial class frmR_DetailByTimeRange : Form
     {
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         Thread loadDataThread;
         List<ReportModel> list;
         bool isShow = false;
@@ -53,7 +56,7 @@ namespace QMS_System
         {
             var list = new List<ModelSelectItem>();
             list.Add(new ModelSelectItem() { Id = 0, Name = "Chọn tất cả" });
-            var listObj = BLLUser.Instance.GetLookUp();
+            var listObj = BLLUser.Instance.GetLookUp(connect);
             foreach (var item in listObj)
                 list.Add(new ModelSelectItem() { Id = item.Id, Name = item.Name });
 
@@ -73,7 +76,7 @@ namespace QMS_System
         {
             var list = new List<ModelSelectItem>();
             list.Add(new ModelSelectItem() { Id = 0, Name = "Chọn tất cả" });
-            var listObj = BLLMajor.Instance.GetLookUp();
+            var listObj = BLLMajor.Instance.GetLookUp(connect);
             foreach (var item in listObj)
                 list.Add(new ModelSelectItem() { Id = item.Id, Name = item.Name });
 
@@ -94,7 +97,7 @@ namespace QMS_System
         {
             var list = new List<ModelSelectItem>();
             list.Add(new ModelSelectItem() { Id = 0, Name = "Chọn tất cả" });
-            var listObj = BLLService.Instance.GetLookUp();
+            var listObj = BLLService.Instance.GetLookUp(connect);
             foreach (var item in listObj)
                 list.Add(new ModelSelectItem() { Id = item.Id, Name = item.Name });
 
@@ -664,7 +667,7 @@ namespace QMS_System
             try
             {
                 int value = int.Parse(radioGroup1.Properties.Items[radioGroup1.SelectedIndex].Value.ToString());
-                list = BLLReport.Instance.DetailReport(((string.IsNullOrEmpty(lookUpSelect.EditValue.ToString()) || lookUpSelect.EditValue.ToString() == "-1") ? 0 : int.Parse(lookUpSelect.EditValue.ToString())), value, DateTime.Parse(dtFromDate.EditValue.ToString()), DateTime.Parse(dtToDate.EditValue.ToString()));
+                list = BLLReport.Instance.DetailReport(connect,((string.IsNullOrEmpty(lookUpSelect.EditValue.ToString()) || lookUpSelect.EditValue.ToString() == "-1") ? 0 : int.Parse(lookUpSelect.EditValue.ToString())), value, DateTime.Parse(dtFromDate.EditValue.ToString()), DateTime.Parse(dtToDate.EditValue.ToString()));
                 isShow = false;
             }
             catch (Exception ex)

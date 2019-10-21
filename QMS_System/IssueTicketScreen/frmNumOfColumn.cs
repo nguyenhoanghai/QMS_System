@@ -10,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using QMS_System.Data.Enum;
+using QMS_System.Helper;
+using GPRO.Core.Hai;
 
 namespace QMS_System.IssueTicketScreen
 {
@@ -17,6 +19,7 @@ namespace QMS_System.IssueTicketScreen
     {
         QMSSystemEntities db;
         frmIssueTicketScreen frm;
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         string numcol = "";
         public frmNumOfColumn()
         {
@@ -29,7 +32,7 @@ namespace QMS_System.IssueTicketScreen
         }
         private void frmNumOfColumn_Load(object sender, EventArgs e)
         {
-            UpDownNumOfColumn.Value = int.Parse(BLLConfig.Instance.GetConfigByCode(eConfigCode.Column));
+            UpDownNumOfColumn.Value = int.Parse(BLLConfig.Instance.GetConfigByCode(connect, eConfigCode.Column));
         }
 
         private void btnApply_Click(object sender, EventArgs e)
@@ -39,12 +42,12 @@ namespace QMS_System.IssueTicketScreen
                 numcol = UpDownNumOfColumn.Value.ToString();
                 if (numcol != "")
                 {
-                    db = new QMSSystemEntities();
+                    db = new QMSSystemEntities(connect);
                     Q_Config model = db.Q_Config.FirstOrDefault(x => !x.IsDeleted && x.IsActived && x.Code.Trim().ToUpper().Equals(eConfigCode.Column));
                     if (model != null)
                     {
                         model.Value = numcol;
-                        BLLConfig.Instance.UpdateConfigValueFromInterface(model);
+                        BLLConfig.Instance.UpdateConfigValueFromInterface(connect, model);
                         //if (MessageBox.Show("Điều chỉnh này chỉ có tác dụng khi bạn khởi động lại chương trình", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
                         //    this.Close();
 

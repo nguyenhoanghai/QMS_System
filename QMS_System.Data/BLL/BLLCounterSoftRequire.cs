@@ -25,10 +25,10 @@ namespace QMS_System.Data.BLL
         }
         private BLLCounterSoftRequire() { }
         #endregion
-        public List<CounterSoftRequireModel> Gets()
+        public List<CounterSoftRequireModel> Gets(string connectString)
         {
            var  list = new List<CounterSoftRequireModel>();
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var objs = db.Q_CounterSoftRequire.Where(x=>x.TypeOfRequire != (int)eCounterSoftRequireType.SendSMS).ToList(); 
                 if (objs.Count > 0)
@@ -50,9 +50,9 @@ namespace QMS_System.Data.BLL
         /// <param name="str"></param>
         /// <param name="requireType">0:read sound , 1 print Ticket</param>
         /// <returns></returns>
-        public bool Insert(string str, int requireType)
+        public bool Insert(string connectString,string str, int requireType)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 db.Q_CounterSoftRequire.Add(new Q_CounterSoftRequire() { Content = str, TypeOfRequire = requireType });
                 db.SaveChanges();
@@ -61,9 +61,9 @@ namespace QMS_System.Data.BLL
             return false;
         }
 
-        public void DeleteAll()
+        public void DeleteAll(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var objs = db.Q_CounterSoftRequire.ToList();
                 if (objs.Count > 0)

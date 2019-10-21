@@ -24,23 +24,23 @@ namespace QMS_System.Data.BLL
         }
         private BLLLanguage() { }
         #endregion
-        public List<LanguageModel> Gets()
+        public List<LanguageModel> Gets(string connectString)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             return db.Q_Language.Where(x => !x.IsDeleted).Select(x => new LanguageModel() { Id = x.Id, Name  = x.Name, Note = x.Note }).ToList();
         }
         }
 
-        public List<ModelSelectItem> GetLookUp()
+        public List<ModelSelectItem> GetLookUp(string connectString)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             return db.Q_Language.Where(x => !x.IsDeleted).Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Name }).ToList();
         }
         }
        
-        public int Insert(Q_Language obj)
+        public int Insert(string connectString,Q_Language obj)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             if (!CheckExists(obj))
             {
                 db.Q_Language.Add(obj);
@@ -50,9 +50,9 @@ namespace QMS_System.Data.BLL
         }
         }
 
-        public bool Update(Q_Language model)
+        public bool Update(string connectString,Q_Language model)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             var obj = db.Q_Language.FirstOrDefault(x => !x.IsDeleted && x.Id == model.Id);
             if (obj != null)
             {
@@ -68,9 +68,9 @@ namespace QMS_System.Data.BLL
         }
         }
 
-        public bool Delete(int Id)
+        public bool Delete(string connectString,int Id)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_Language.FirstOrDefault(x => !x.IsDeleted && x.Id == Id);
                 if (obj != null)

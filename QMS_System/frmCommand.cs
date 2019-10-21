@@ -1,6 +1,8 @@
-﻿using QMS_System.Data;
+﻿using GPRO.Core.Hai;
+using QMS_System.Data;
 using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
+using QMS_System.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +18,7 @@ namespace QMS_System
     public partial class frmCommand : Form
     {
         int commandId = 0;
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmCommand()
         {
             InitializeComponent();
@@ -30,7 +33,7 @@ namespace QMS_System
         #region Command
         private void GetGridCommand()
         {
-            var list = BLLCommand.Instance.Gets();
+            var list = BLLCommand.Instance.Gets(connect);
             list.Add(new CommandModel() { Id = 0, Code = "", CodeHEX = "", Note = "" });
             gridCommand.DataSource = list;
         }
@@ -39,7 +42,7 @@ namespace QMS_System
             int Id = int.Parse(gridViewCommand.GetRowCellValue(gridViewCommand.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLCommand.Instance.Delete(Id);
+                BLLCommand.Instance.Delete(connect,Id);
                 GetGridCommand();
             }
         }
@@ -66,9 +69,9 @@ namespace QMS_System
                     obj.Note = gridViewCommand.GetRowCellValue(gridViewCommand.FocusedRowHandle, "Note") != null ? gridViewCommand.GetRowCellValue(gridViewCommand.FocusedRowHandle, "Note").ToString() : "";
 
                     if (obj.Id == 0)
-                        BLLCommand.Instance.Insert(obj);
+                        BLLCommand.Instance.Insert(connect,obj);
                     else
-                        BLLCommand.Instance.Update(obj);
+                        BLLCommand.Instance.Update(connect,obj);
                     GetGridCommand();
                 }
             }
@@ -85,7 +88,7 @@ namespace QMS_System
         #region CommandParameter
         private void GetGridCommandParameter()
         {
-            var list = BLLCommandParameter.Instance.Gets(commandId);
+            var list = BLLCommandParameter.Instance.Gets(connect, commandId);
             list.Add(new CommandParamModel() { Id = 0, CommandId = 0, Parameter = "0", Note = "" });
             gridCommandParameter.DataSource = list;
         }
@@ -94,7 +97,7 @@ namespace QMS_System
             int Id = int.Parse(gridViewCommandParameter.GetRowCellValue(gridViewCommandParameter.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLCommandParameter.Instance.Delete(Id);
+                BLLCommandParameter.Instance.Delete(connect,Id);
                 GetGridCommandParameter();
             }
         }
@@ -118,9 +121,9 @@ namespace QMS_System
                     obj.Note = gridViewCommandParameter.GetRowCellValue(gridViewCommandParameter.FocusedRowHandle, "Note") != null ? gridViewCommandParameter.GetRowCellValue(gridViewCommandParameter.FocusedRowHandle, "Note").ToString() : "";
 
                     if (obj.Id == 0)
-                        BLLCommandParameter.Instance.Insert(obj);
+                        BLLCommandParameter.Instance.Insert(connect,obj);
                     else
-                        BLLCommandParameter.Instance.Update(obj);
+                        BLLCommandParameter.Instance.Update(connect,obj);
                     GetGridCommandParameter();
                 }
             }

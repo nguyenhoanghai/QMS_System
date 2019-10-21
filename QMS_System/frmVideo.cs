@@ -1,4 +1,6 @@
-﻿using QMS_System.Data.BLL;
+﻿using GPRO.Core.Hai;
+using QMS_System.Data.BLL;
+using QMS_System.Helper;
 using System;
 using System.Configuration;
 using System.IO;
@@ -7,8 +9,8 @@ using System.Windows.Forms;
 namespace QMS_System
 {
     public partial class frmVideo : Form
-    { 
-
+    {
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmVideo( )
         {
             InitializeComponent(); 
@@ -22,7 +24,7 @@ namespace QMS_System
         private void LoadData()
         {
             gridChild.DataSource = null;
-            gridChild.DataSource = BLLVideo.Instance.Gets();
+            gridChild.DataSource = BLLVideo.Instance.Gets(connect);
         }
 
         private void btnReset_Click(object sender, EventArgs e)
@@ -48,7 +50,7 @@ namespace QMS_System
 
                     string fakeName = (DateTime.Now.ToString("ddMMyyyyyHHmmss") + "" + openFileDialog1.FileName.Substring(openFileDialog1.FileName.LastIndexOf('.')));
                     File.Copy(path, (savePath+ fakeName),true );
-                    BLLVideo.Instance.AddFile(new Data.Q_Video() { FileName = openFileDialog1.SafeFileName, FakeName = fakeName });
+                    BLLVideo.Instance.AddFile(connect,new Data.Q_Video() { FileName = openFileDialog1.SafeFileName, FakeName = fakeName });
                     LoadData();
                 }
                 catch (Exception ex)
@@ -63,7 +65,7 @@ namespace QMS_System
             int Id = int.Parse(gridViewChild.GetRowCellValue(gridViewChild.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLVideo.Instance.Delete(Id);
+                BLLVideo.Instance.Delete(connect,Id);
                 LoadData();
             }
         }

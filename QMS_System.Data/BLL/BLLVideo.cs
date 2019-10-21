@@ -23,9 +23,9 @@ namespace QMS_System.Data.BLL
         private BLLVideo() { }
         #endregion
 
-        public List<VideoModel> Gets()
+        public List<VideoModel> Gets(string connectString)
         {
-            using (var db = new QMSSystemEntities())
+            using (var db = new QMSSystemEntities(connectString))
             {
                 return db.Q_Video.Where(x => !x.IsDeleted).Select(x => new VideoModel()
                 {
@@ -35,17 +35,17 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public List<ModelSelectItem> GetLookUp()
+        public List<ModelSelectItem> GetLookUp(string connectString)
         {
-            using (var db = new QMSSystemEntities())
+            using (var db = new QMSSystemEntities(connectString))
             {
                 return db.Q_Video.Where(x => !x.IsDeleted).Select(x => new ModelSelectItem() { Id = x.Id, Name = x.FileName }).ToList();
             }
         }
 
-        public int AddFile(Q_Video model)
+        public int AddFile(string connectString, Q_Video model)
         {
-            using (var db = new QMSSystemEntities())
+            using (var db = new QMSSystemEntities(connectString))
             {
                 db.Q_Video.Add(model);
                 db.SaveChanges();
@@ -53,9 +53,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Delete(int Id)
+        public bool Delete(string connectString,int Id)
         {
-            using (var db = new QMSSystemEntities())
+            using (var db = new QMSSystemEntities(connectString))
             {
                 try
                 {

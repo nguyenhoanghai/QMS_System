@@ -24,9 +24,9 @@ namespace QMS_System.Data.BLL
         }
         private BLLEquipTypeProcess() { }
         #endregion
-        public List<EquipTypeProcessModel> Gets()
+        public List<EquipTypeProcessModel> Gets(string connectString)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             return db.Q_EquipTypeProcess.Where(x => !x.IsDeleted).Select(x => new EquipTypeProcessModel()
             {
                 Id = x.Id,
@@ -38,23 +38,23 @@ namespace QMS_System.Data.BLL
             }).ToList();
         }}
 
-        //public List<ModelSelectItem> GetLookUp()
+        //public List<ModelSelectItem> GetLookUp(string connectString)
         //{
-        //      using (db = new QMSSystemEntities()){
+        //      using (db = new QMSSystemEntities(connectString)){
         //    return db.Q_EquipTypeProcess.Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Name }).ToList();
         //}
        
-        public int Insert(Q_EquipTypeProcess obj)
+        public int Insert(string connectString,Q_EquipTypeProcess obj)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             db.Q_EquipTypeProcess.Add(obj);
             db.SaveChanges();
             return obj.Id;
         }}
 
-        public bool Update(Q_EquipTypeProcess model)
+        public bool Update(string connectString,Q_EquipTypeProcess model)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             var obj = db.Q_EquipTypeProcess.FirstOrDefault(x => x.Id == model.Id);
             if (obj != null)
             {
@@ -69,9 +69,9 @@ namespace QMS_System.Data.BLL
             return false;
         }}
 
-        public bool Delete(int Id)
+        public bool Delete(string connectString,int Id)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             var obj = db.Q_EquipTypeProcess.FirstOrDefault(x => !x.IsDeleted && x.Id == Id);
             if (obj != null)
             {

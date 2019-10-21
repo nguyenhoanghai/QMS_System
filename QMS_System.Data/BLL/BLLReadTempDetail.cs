@@ -29,18 +29,18 @@ namespace QMS_System.Data.BLL
         /// </summary>
         /// <param name="Id">TemplateId</param>
         /// <returns></returns>
-        public List<ReadTemplateDetailModel> Gets(int Id)
+        public List<ReadTemplateDetailModel> Gets(string connectString,int Id)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_ReadTemp_Detail.Where(x => !x.IsDeleted && !x.Q_ReadTemplate.IsDeleted && x.ReadTemplateId == Id).Select(x => new ReadTemplateDetailModel() { Id = x.Id, Index = x.Index, ReadTemplateId = x.ReadTemplateId, SoundId = x.SoundId }).OrderBy(x => x.Index).ToList();
 
             }
         }
 
-        public List<ReadTemplateModel> Gets(List<int> Ids)
+        public List<ReadTemplateModel> Gets(string connectString,List<int> Ids)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var objs = db.Q_ReadTemplate.Where(x => !x.IsDeleted && Ids.Contains(x.Id)).Select(x => new ReadTemplateModel() { Id = x.Id, Name = x.Name, LanguageId = x.LanguageId }).ToList();
                 if (objs.Count > 0)
@@ -59,9 +59,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public int Insert(Q_ReadTemp_Detail obj)
+        public int Insert(string connectString,Q_ReadTemp_Detail obj)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 db.Q_ReadTemp_Detail.Add(obj);
                 db.SaveChanges();
@@ -69,9 +69,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Update(Q_ReadTemp_Detail model)
+        public bool Update(string connectString,Q_ReadTemp_Detail model)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_ReadTemp_Detail.FirstOrDefault(x => !x.IsDeleted && x.Id == model.Id);
                 if (obj != null)
@@ -86,9 +86,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Delete(int Id)
+        public bool Delete(string connectString,int Id)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_ReadTemp_Detail.FirstOrDefault(x => !x.IsDeleted && x.Id == Id);
                 if (obj != null)

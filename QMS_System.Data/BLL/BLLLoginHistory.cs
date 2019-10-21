@@ -27,9 +27,9 @@ namespace QMS_System.Data.BLL
         private BLLLoginHistory() { }
         #endregion
 
-        public List<LoginHistoryModel> GetsForMain()
+        public List<LoginHistoryModel> GetsForMain(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_Login.Where(x => x.StatusId == (int)eStatus.LOGIN).Select(x => new LoginHistoryModel()
                 {
@@ -43,9 +43,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public List<LoginHistoryModel> Gets()
+        public List<LoginHistoryModel> Gets(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_LoginHistory.Select(x => new LoginHistoryModel()
                 {
@@ -59,9 +59,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public List<LoginHistoryModel> Gets_()
+        public List<LoginHistoryModel> Gets_(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_LoginHistory.Where(x => x.StatusId == (int)eStatus.LOGIN).Select(x => new LoginHistoryModel()
                 {
@@ -75,9 +75,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public void ResetDailyLoginInfor(DateTime date, string IsCopyToNewDay)
+        public void ResetDailyLoginInfor(string connectString, DateTime date, string IsCopyToNewDay)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var yes = db.Q_Login.Where(x => (x.Date.Year != date.Year ||
                 x.Date.Month != date.Month ||
@@ -130,9 +130,9 @@ namespace QMS_System.Data.BLL
         /// </summary>
         /// <param name="date"></param>
         /// <returns></returns>
-        public List<HomeModel> GetForHome(DateTime date, int useWithThridPattern)
+        public List<HomeModel> GetForHome(string connectString, DateTime date, int useWithThridPattern)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var users = db.Q_Login.Where(x => !x.Q_User.IsDeleted && x.StatusId == (int)eStatus.LOGIN).Select(x => new HomeModel()
                 {
@@ -188,10 +188,10 @@ namespace QMS_System.Data.BLL
         /// <param name="date"></param>
         /// <param name="useWithThridPattern"></param>
         /// <returns></returns>
-        public HomeModel GetForHome(int userId, int equipCode, DateTime date, int useWithThridPattern)
+        public HomeModel GetForHome(string connectString, int userId, int equipCode, DateTime date, int useWithThridPattern)
         {
             var model = new HomeModel();
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var user = db.Q_Login.FirstOrDefault(x => x.StatusId == (int)eStatus.LOGIN && x.UserId == userId && x.EquipCode == equipCode);
                 if (user != null)
@@ -246,9 +246,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Login(Q_LoginHistory obj)
+        public bool Login(string connectString, Q_LoginHistory obj)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 db.Q_LoginHistory.Add(obj);
                 db.SaveChanges();
@@ -263,10 +263,10 @@ namespace QMS_System.Data.BLL
         /// <param name="password"></param>
         /// <param name="equipCode"></param>
         /// <returns></returns>
-        public ResponseBaseModel Login(string userName, string password, int equipCode)
+        public ResponseBaseModel Login(string connectString, string userName, string password, int equipCode)
         {
             ResponseBaseModel rs = new ResponseBaseModel();
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var user = db.Q_User.FirstOrDefault(x => !x.IsDeleted && x.UserName.Trim().ToUpper().Equals(userName.Trim().ToUpper()) && x.Password.Trim().ToUpper().Equals(password.Trim().ToUpper()));
                 if (user != null)
@@ -351,9 +351,9 @@ namespace QMS_System.Data.BLL
         /// <param name="userId"></param>
         /// <param name="equipCode"></param>
         /// <param name="date"></param>
-        public void Logout(int userId, int equipCode, DateTime date)
+        public void Logout(string connectString, int userId, int equipCode, DateTime date)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var objs = db.Q_Login.Where(x => x.UserId == userId && x.EquipCode == equipCode && x.StatusId == (int)eStatus.LOGIN).ToList();
                 if (objs.Count > 0)
@@ -370,9 +370,9 @@ namespace QMS_System.Data.BLL
         }
 
 
-        public int GetUserId(int equipCode, DateTime date)
+        public int GetUserId(string connectString, int equipCode, DateTime date)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_Login.FirstOrDefault(x => x.EquipCode == equipCode && x.StatusId == (int)eStatus.LOGIN);
                 return (obj != null ? obj.UserId : 0);
@@ -386,12 +386,12 @@ namespace QMS_System.Data.BLL
         /// <param name="equipCode"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        public int CounterLoginLogOut(int userId, int equipCode, DateTime date)
+        public int CounterLoginLogOut(string connectString, int userId, int equipCode, DateTime date)
         {
             int num = 8888;
             try
             {
-                using (db = new QMSSystemEntities())
+                using (db = new QMSSystemEntities(connectString))
                 {
                     var obj = db.Q_Login.FirstOrDefault(x => x.StatusId == (int)eStatus.LOGIN && (x.UserId == userId || x.EquipCode == equipCode));
                     if (obj == null)

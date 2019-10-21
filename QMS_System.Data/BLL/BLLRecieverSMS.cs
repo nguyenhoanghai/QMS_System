@@ -42,9 +42,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public ResponseBase InsertOrUpdate(Q_RecieverSMS model)
+        public ResponseBase InsertOrUpdate(string connectString,Q_RecieverSMS model)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 try
                 {
@@ -97,9 +97,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public List<RecieverSMSModel> Gets()
+        public List<RecieverSMSModel> Gets(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_RecieverSMS.Select(x => new RecieverSMSModel()
                 {
@@ -112,26 +112,26 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public List<string> GetPhones()
+        public List<string> GetPhones(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_RecieverSMS.Where(x=>x.IsActive).Select(x => x.PhoneNumber  ).ToList();
             }
         }
 
-        public List<ModelSelectItem> GetLookUp()
+        public List<ModelSelectItem> GetLookUp(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_RecieverSMS.Where(x => !x.IsActive).Select(x => new ModelSelectItem() { Id = x.Id, Name = x.PhoneNumber, Code= x.UserIds }).ToList();
             }
         }
 
-        public ResponseBase Delete(int Id)
+        public ResponseBase Delete(string connectString,int Id)
         {
             var rs = new ResponseBase();
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_RecieverSMS.FirstOrDefault(x => !x.IsActive && x.Id == Id);
                 if (obj != null)
@@ -150,9 +150,9 @@ namespace QMS_System.Data.BLL
             return rs;
         }
 
-        public PagedList<RecieverSMSModel> Gets(string keyWord, int startIndexRecord, int pageSize, string sorting)
+        public PagedList<RecieverSMSModel> Gets(string connectString,string keyWord, int startIndexRecord, int pageSize, string sorting)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 try
                 {

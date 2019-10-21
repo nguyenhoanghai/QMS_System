@@ -24,25 +24,25 @@ namespace QMS_System.Data.BLL
         }
         private BLLProcess() { }
         #endregion
-        public List<ProcessModel> Gets()
+        public List<ProcessModel> Gets(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_Process.Where(x => !x.IsDeleted).Select(x => new ProcessModel() { Id = x.Id, Name = x.Name, Index = x.Index, Note = x.Note }).ToList();
             }
         }
 
-        public List<ModelSelectItem> GetLookUp()
+        public List<ModelSelectItem> GetLookUp(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_Process.Where(x => !x.IsDeleted).Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Name }).ToList();
             }
         }
 
-        public int Insert(Q_Process obj)
+        public int Insert(string connectString,Q_Process obj)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 if (!CheckExists(obj))
                 {
@@ -52,9 +52,9 @@ namespace QMS_System.Data.BLL
                 return obj.Id;
             }
         }
-        public bool Update(Q_Process model)
+        public bool Update(string connectString,Q_Process model)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_Process.FirstOrDefault(x => !x.IsDeleted && x.Id == model.Id);
                 if (obj != null)
@@ -73,9 +73,9 @@ namespace QMS_System.Data.BLL
                 return false;
             }
         }
-        public bool Delete(int Id)
+        public bool Delete(string connectString,int Id)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_Process.FirstOrDefault(x => !x.IsDeleted && x.Id == Id);
                 if (obj != null)
@@ -94,9 +94,9 @@ namespace QMS_System.Data.BLL
                 obj = db.Q_Process.FirstOrDefault(x => !x.IsDeleted && x.Id != model.Id && x.Name.Trim().ToUpper().Equals(model.Name.Trim().ToUpper()));
             return obj != null ? true : false;
         }
-        public int GetLastIndex()
+        public int GetLastIndex(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_Process.Where(x => !x.IsDeleted).OrderByDescending(x => x.Index).FirstOrDefault();
                 return obj != null ? obj.Index : 0;

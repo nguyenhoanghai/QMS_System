@@ -458,19 +458,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Q_UserEvaluate">
-      <EntityTypeMapping TypeName="QMSSystemModel.Q_UserEvaluate">
-        <MappingFragment StoreEntitySet="Q_UserEvaluate">
-          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-          <ScalarProperty Name="SendSMS" ColumnName="SendSMS" />
-          <ScalarProperty Name="Score" ColumnName="Score" />
-          <ScalarProperty Name="UserId" ColumnName="UserId" />
-          <ScalarProperty Name="DailyRequireDeId" ColumnName="DailyRequireDeId" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Q_UserMajor">
       <EntityTypeMapping TypeName="QMSSystemModel.Q_UserMajor">
         <MappingFragment StoreEntitySet="Q_UserMajor">
@@ -600,11 +587,26 @@
     <EntitySetMapping Name="Q_HisUserEvaluate">
       <EntityTypeMapping TypeName="QMSSystemModel.Q_HisUserEvaluate">
         <MappingFragment StoreEntitySet="Q_HisUserEvaluate">
+          <ScalarProperty Name="Comment" ColumnName="Comment" />
           <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
           <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
           <ScalarProperty Name="Score" ColumnName="Score" />
           <ScalarProperty Name="UserId" ColumnName="UserId" />
           <ScalarProperty Name="HisDailyRequireDeId" ColumnName="HisDailyRequireDeId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Q_UserEvaluate">
+      <EntityTypeMapping TypeName="QMSSystemModel.Q_UserEvaluate">
+        <MappingFragment StoreEntitySet="Q_UserEvaluate">
+          <ScalarProperty Name="Comment" ColumnName="Comment" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="SendSMS" ColumnName="SendSMS" />
+          <ScalarProperty Name="Score" ColumnName="Score" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="DailyRequireDeId" ColumnName="DailyRequireDeId" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>

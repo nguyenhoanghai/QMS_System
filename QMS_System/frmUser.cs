@@ -1,7 +1,9 @@
 ﻿using DevExpress.XtraEditors.Controls;
+using GPRO.Core.Hai;
 using QMS_System.Data;
 using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
+using QMS_System.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +18,7 @@ namespace QMS_System
 {
     public partial class frmUser : Form
     {
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmUser()
         {
             InitializeComponent();
@@ -45,7 +48,7 @@ namespace QMS_System
             lookUpSex.View.Columns[0].AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Near;
 
 
-            var list = BLLUser.Instance.Gets();
+            var list = BLLUser.Instance.Gets(connect);
             list.Add(new UserModel()
             {
                 Id = 0,
@@ -67,7 +70,7 @@ namespace QMS_System
             int Id = int.Parse(gridViewUser.GetRowCellValue(gridViewUser.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLUser.Instance.Delete(Id);
+                BLLUser.Instance.Delete(connect,Id);
                 GetGridUser();
             }
         }
@@ -97,9 +100,9 @@ namespace QMS_System
                     obj.WorkingHistory = gridViewUser.GetRowCellValue(gridViewUser.FocusedRowHandle, "WorkingHistory") != null ? gridViewUser.GetRowCellValue(gridViewUser.FocusedRowHandle, "WorkingHistory").ToString() : "";
                     obj.Counters = gridViewUser.GetRowCellValue(gridViewUser.FocusedRowHandle, "Counters") != null ? gridViewUser.GetRowCellValue(gridViewUser.FocusedRowHandle, "Counters").ToString() : "0";
                      if (obj.Id == 0)
-                        BLLUser.Instance.Insert(obj);
+                        BLLUser.Instance.Insert(connect,obj);
                     else
-                        BLLUser.Instance.Update(obj);
+                        BLLUser.Instance.Update(connect,obj);
                     GetGridUser();
                 }
             }
@@ -125,7 +128,7 @@ namespace QMS_System
         private void GetCounter()
         {
             repcbCounter.Items.Clear();
-            var objs = BLLCounter.Instance.GetLookUp();
+            var objs = BLLCounter.Instance.GetLookUp(connect);
             if (objs.Count > 0)
                 for (int i = 0; i < objs.Count; i++)
                     repcbCounter.Items.Add(new CheckedListBoxItem(objs[i].Id, objs[i].Name));

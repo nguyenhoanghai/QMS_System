@@ -1,7 +1,9 @@
-﻿using QMS_System.Data;
+﻿using GPRO.Core.Hai;
+using QMS_System.Data;
 using QMS_System.Data.BLL;
 using QMS_System.Data.Enum;
 using QMS_System.Data.Model;
+using QMS_System.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,6 +24,7 @@ namespace QMS_System
             InitializeComponent();
         }
         int equipTypeId = 0;
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
 
         private void frmEquipment_Load(object sender, EventArgs e)
         {
@@ -34,7 +37,7 @@ namespace QMS_System
         #region Equipment
         private void GetGridEquipment()
         {
-            var list = BLLEquipment.Instance.Gets(equipTypeId);
+            var list = BLLEquipment.Instance.Gets(connect, equipTypeId);
             list.Add(new EquipmentModel() { Id = 0, Code = 0, Name = "", EquipTypeId = 0, CounterId = 0, StatusId = 0, Position = "", EndTime = null, Note = "" });
             gridEquipment.DataSource = list;
         }
@@ -84,7 +87,7 @@ namespace QMS_System
 
                     if (obj.Id == 0)
                     {
-                        int result = BLLEquipment.Instance.Insert(obj);
+                        int result = BLLEquipment.Instance.Insert(connect, obj);
                         if(result == 0)
                         {
                             MessageBox.Show("Tên thiết bị đã tồn tại. Xin nhập tên khác", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -93,7 +96,7 @@ namespace QMS_System
                     }
                     else
                     {
-                        bool result = BLLEquipment.Instance.Update(obj);
+                        bool result = BLLEquipment.Instance.Update(connect, obj);
                         if(result == false)
                         {
                             MessageBox.Show("Tên thiết bị đã tồn tại. Xin nhập tên khác", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -101,7 +104,7 @@ namespace QMS_System
                         }
                     }
                     GetGridEquipment();
-                   frmMain.lib_Equipments = BLLEquipment.Instance.Gets((int)eEquipType.Counter);
+                   frmMain.lib_Equipments = BLLEquipment.Instance.Gets(connect, (int)eEquipType.Counter);
                 }  
             }
             catch (Exception ex)
@@ -117,9 +120,9 @@ namespace QMS_System
             int Id = int.Parse(gridViewEquipment.GetRowCellValue(gridViewEquipment.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLEquipment.Instance.Delete(Id);
+                BLLEquipment.Instance.Delete(connect,Id);
                 GetGridEquipment();
-                frmMain.lib_Equipments = BLLEquipment.Instance.Gets((int)eEquipType.Counter);
+                frmMain.lib_Equipments = BLLEquipment.Instance.Gets(connect, (int)eEquipType.Counter);
             }
         }
 
@@ -127,7 +130,7 @@ namespace QMS_System
         {
             //Load SelectBox Quầy
             lookUpCounter.DataSource = null;
-            lookUpCounter.DataSource = BLLCounter.Instance.GetLookUp();
+            lookUpCounter.DataSource = BLLCounter.Instance.GetLookUp(connect);
             lookUpCounter.DisplayMember = "Name";
             lookUpCounter.ValueMember = "Id";
             lookUpCounter.PopulateViewColumns();
@@ -139,7 +142,7 @@ namespace QMS_System
         {
             //Load SelectBox Trạng Thái
             lookUpStatus.DataSource = null;
-            lookUpStatus.DataSource = BLLStatus.Instance.GetLookUp();
+            lookUpStatus.DataSource = BLLStatus.Instance.GetLookUp(connect);
             lookUpStatus.DisplayMember = "Name";
             lookUpStatus.ValueMember = "Id";
             lookUpStatus.PopulateViewColumns();
@@ -152,14 +155,14 @@ namespace QMS_System
         private void GetGridEquipType()  // vua load len gridview, vua load len combobox Loai thiet bi
         {
             lookUpEquipType.DataSource = null;
-            lookUpEquipType.DataSource = BLLEquipType.Instance.GetLookUp();
+            lookUpEquipType.DataSource = BLLEquipType.Instance.GetLookUp(connect);
             lookUpEquipType.DisplayMember = "Name";
             lookUpEquipType.ValueMember = "Id";
             lookUpEquipType.PopulateViewColumns();
             lookUpEquipType.View.Columns[0].Visible = false;
             lookUpEquipType.View.Columns[1].Caption = "Loại thiết bị";
 
-            var list = BLLEquipType.Instance.Gets();
+            var list = BLLEquipType.Instance.Gets(connect);
             list.Add(new EquipTypeModel() { Id = 0, Name = "", Note = "" });
             gridEquipType.DataSource = list;
         }
@@ -182,7 +185,7 @@ namespace QMS_System
 
                     if (obj.Id == 0)
                     {
-                        int result = BLLEquipType.Instance.Insert(obj);
+                        int result = BLLEquipType.Instance.Insert(connect, obj);
                         if (result == 0)
                         {
                             MessageBox.Show("Tên loại thiết bị đã tồn tại. Xin nhập tên khác.", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -191,7 +194,7 @@ namespace QMS_System
                     }
                     else
                     {
-                        bool result = BLLEquipType.Instance.Update(obj);
+                        bool result = BLLEquipType.Instance.Update(connect, obj);
                         if (result == false)
                         {
                             MessageBox.Show("Tên loại thiết bị đã tồn tại. Xin nhập tên khác.", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -214,7 +217,7 @@ namespace QMS_System
             int Id = int.Parse(gridViewEquipType.GetRowCellValue(gridViewEquipType.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLEquipType.Instance.Delete(Id);
+                BLLEquipType.Instance.Delete(connect,Id);
                 GetGridEquipType();
             }
         }

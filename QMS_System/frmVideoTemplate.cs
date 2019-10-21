@@ -1,7 +1,9 @@
 ﻿using DevExpress.XtraEditors.Repository;
+using GPRO.Core.Hai;
 using QMS_System.Data;
 using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
+using QMS_System.Helper;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -10,6 +12,7 @@ namespace QMS_System
 {
     public partial class frmVideoTemplate : Form
     {
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         int temId = 0;
         public frmVideoTemplate()
         {
@@ -27,11 +30,11 @@ namespace QMS_System
             gridVideo.DataSource = null;
             var templates = new List<VideoTemplateModel>();
             templates.Add(new VideoTemplateModel() { Id = 0, TemplateName = "", Note = "", IsActive = true });
-            templates.AddRange(BLLVideoTemplate.Instance.Gets());
+            templates.AddRange(BLLVideoTemplate.Instance.Gets(connect));
             gridVideo.DataSource = templates;
 
             repLKVideo.DataSource = null;
-            repLKVideo.DataSource = BLLVideo.Instance.GetLookUp();
+            repLKVideo.DataSource = BLLVideo.Instance.GetLookUp(connect);
             repLKVideo.DisplayMember = "Name";
             repLKVideo.ValueMember = "Id";
             repLKVideo.PopulateViewColumns();
@@ -87,7 +90,7 @@ namespace QMS_System
                     obj.TemplateName = gridViewVideo.GetRowCellValue(gridViewVideo.FocusedRowHandle, "TemplateName").ToString();
                     obj.IsActive = Convert.ToBoolean(gridViewVideo.GetRowCellValue(gridViewVideo.FocusedRowHandle, "IsActive").ToString());
                     obj.Note = gridViewVideo.GetRowCellValue(gridViewVideo.FocusedRowHandle, "Note") != null ? gridViewVideo.GetRowCellValue(gridViewVideo.FocusedRowHandle, "Note").ToString() : "";
-                    var rs = BLLVideoTemplate.Instance.InsertOrUpdate(obj);
+                    var rs = BLLVideoTemplate.Instance.InsertOrUpdate(connect, obj);
                     if (rs.IsSuccess)
                     {
                         LoadGridVideoTemplate();
@@ -114,7 +117,7 @@ namespace QMS_System
             int Id = int.Parse(gridViewVideo.GetRowCellValue(gridViewVideo.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLVideoTemplate.Instance.Delete(Id);
+                BLLVideoTemplate.Instance.Delete(connect,Id);
                 LoadGridVideoTemplate();
             }
         }
@@ -137,7 +140,7 @@ namespace QMS_System
             gridChild.DataSource = null;
             var details = new List<VideoTemplate_DeModel>();
             details.Add(new VideoTemplate_DeModel() { Id = 0, Index = 0, TemplateId = 0, VideoId = 0 });
-            details.AddRange(BLLVideoTemplate_De.Instance.Gets(temId));
+            details.AddRange(BLLVideoTemplate_De.Instance.Gets(connect, temId));
             gridChild.DataSource = details;
         }
 
@@ -187,7 +190,7 @@ namespace QMS_System
                     obj.TemplateId = temId;
                     obj.Index = Convert.ToInt32(gridViewChild.GetRowCellValue(gridViewChild.FocusedRowHandle, "Index").ToString());
                     obj.VideoId = Convert.ToInt32(gridViewChild.GetRowCellValue(gridViewChild.FocusedRowHandle, "VideoId").ToString());
-                    var rs = BLLVideoTemplate_De.Instance.InsertOrUpdate(obj);
+                    var rs = BLLVideoTemplate_De.Instance.InsertOrUpdate (connect, obj);
                     if (rs.IsSuccess)
                     {
                         LoadGridDetail();
@@ -206,7 +209,7 @@ namespace QMS_System
             int Id = int.Parse(gridViewChild.GetRowCellValue(gridViewChild.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLVideoTemplate.Instance.Delete(Id);
+                BLLVideoTemplate.Instance.Delete(connect,Id);
                 LoadGridVideoTemplate();
             }
         }

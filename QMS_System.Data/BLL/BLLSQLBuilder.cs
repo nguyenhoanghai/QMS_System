@@ -25,12 +25,12 @@ namespace QMS_System.Data.BLL
         private BLLSQLBuilder() { }
         #endregion
 
-        public bool Excecute(string query)
+        public bool Excecute(string connectString, string query)
         {
             var rs = true;
             try
             {
-                using (var db = new QMSSystemEntities())
+                using (var db = new QMSSystemEntities(connectString))
                 {
                     db.Database.ExecuteSqlCommand(query);
                     db.SaveChanges();

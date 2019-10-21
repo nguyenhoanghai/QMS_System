@@ -11,6 +11,7 @@ namespace QMS_System.Data.Model
         public string TENNV { get; set; }
         public int MAPHIEU { get; set; }
         public string DANHGIA { get; set; }
+        public string YKIEN { get; set; }
         public DateTime  GLAYPHIEU { get; set; }
         public DateTime?  GDENQUAY { get; set; }
         public DateTime? GGIAODICH { get; set; }

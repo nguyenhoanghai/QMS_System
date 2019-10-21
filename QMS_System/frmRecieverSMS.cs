@@ -1,6 +1,8 @@
-﻿using QMS_System.Data;
+﻿using GPRO.Core.Hai;
+using QMS_System.Data;
 using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
+using QMS_System.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,6 +17,7 @@ namespace QMS_System
 {
     public partial class frmRecieverSMS : Form
     {
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmRecieverSMS()
         {
             InitializeComponent();
@@ -43,7 +46,7 @@ namespace QMS_System
                     obj.IsActive = bool.Parse(gridViewSMS.GetRowCellValue(gridViewSMS.FocusedRowHandle, "IsActive").ToString());
                     obj.Note = gridViewSMS.GetRowCellValue(gridViewSMS.FocusedRowHandle, "Note") != null ? gridViewSMS.GetRowCellValue(gridViewSMS.FocusedRowHandle, "Note").ToString() : "";
 
-                    var rs = BLLRecieverSMS.Instance.InsertOrUpdate(obj);
+                    var rs = BLLRecieverSMS.Instance.InsertOrUpdate(connect, obj);
                     if (rs.IsSuccess)
                         GetGrid();
                     else
@@ -63,7 +66,7 @@ namespace QMS_System
             int Id = int.Parse(gridViewSMS.GetRowCellValue(gridViewSMS.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                var rs = BLLRecieverSMS.Instance.Delete(Id);
+                var rs = BLLRecieverSMS.Instance.Delete(connect,Id);
                 if (rs.IsSuccess)
                     GetGrid();
                 MessageBox.Show(rs.Errors[0].Message, rs.Errors[0].MemberName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -77,7 +80,7 @@ namespace QMS_System
 
         private void GetGrid()
         {
-            var list = BLLRecieverSMS.Instance.Gets();
+            var list = BLLRecieverSMS.Instance.Gets(connect);
             list.Add(new RecieverSMSModel() { Id = 0 });
             gridSMS.DataSource = list;
         }

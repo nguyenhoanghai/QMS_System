@@ -1,6 +1,8 @@
-﻿using QMS_System.Data;
+﻿using GPRO.Core.Hai;
+using QMS_System.Data;
 using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
+using QMS_System.Helper;
 using System;
 using System.Windows.Forms;
 
@@ -9,6 +11,7 @@ namespace QMS_System
     public partial class frmServiceLimit : Form
     {
         int userId = 0;
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmServiceLimit()
         {
             InitializeComponent();
@@ -25,7 +28,7 @@ namespace QMS_System
             int Id = int.Parse(gridViewService.GetRowCellValue(gridViewService.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLServiceLimit.Instance.Delete(Id);
+                BLLServiceLimit.Instance.Delete(connect,Id);
                 LoadGrid();
             }
         }
@@ -35,7 +38,7 @@ namespace QMS_System
             if (userId != 0)
             {
                 gridService.DataSource = null;
-                var list = BLLServiceLimit.Instance.Gets(userId);
+                var list = BLLServiceLimit.Instance.Gets(connect, userId);
                 list.Add(new ServiceLimitModel() { Id = 0, ServiceId = 0, Quantity = 0, UserId = userId });
                 gridService.DataSource = list;
             }
@@ -66,7 +69,7 @@ namespace QMS_System
 
                     if (obj.Id == 0)
                     {
-                        bool result = BLLServiceLimit.Instance.InsertOrUpdate(obj);
+                        bool result = BLLServiceLimit.Instance.InsertOrUpdate(connect, obj);
                         if (!result  )
                         {
                             MessageBox.Show("Dịch vụ đã tồn tại thời gian cấp phiếu này. Xin chọn lại", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -75,7 +78,7 @@ namespace QMS_System
                     }
                     else
                     {
-                        bool result = BLLServiceLimit.Instance.InsertOrUpdate(obj);
+                        bool result = BLLServiceLimit.Instance.InsertOrUpdate(connect, obj);
                         if (!result )
                         {
                             MessageBox.Show("Dịch vụ đã tồn tại thời gian cấp phiếu này. Xin chọn lại", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -98,7 +101,7 @@ namespace QMS_System
         private void LoadUser()
         {
             lkUser.Properties.DataSource = null;
-            lkUser.Properties.DataSource = BLLUser.Instance.GetLookUp();
+            lkUser.Properties.DataSource = BLLUser.Instance.GetLookUp(connect);
             lkUser.Properties.DisplayMember = "Name";
             lkUser.Properties.ValueMember = "Id";
             lkUser.Properties.PopulateColumns();
@@ -130,7 +133,7 @@ namespace QMS_System
         private void loadService()
         {
             repLKService.DataSource = null;
-            repLKService.DataSource = BLLService.Instance.GetLookUp();
+            repLKService.DataSource = BLLService.Instance.GetLookUp(connect);
             repLKService.DisplayMember = "Name";
             repLKService.ValueMember = "Id";
             repLKService.PopulateViewColumns();

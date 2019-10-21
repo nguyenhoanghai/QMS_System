@@ -1,6 +1,8 @@
-﻿using QMS_System.Data;
+﻿using GPRO.Core.Hai;
+using QMS_System.Data;
 using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
+using QMS_System.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,6 +17,7 @@ namespace QMS_System
 {
     public partial class frmProcess : Form
     {
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmProcess()
         {
             InitializeComponent();
@@ -28,8 +31,8 @@ namespace QMS_System
         #region Process
         private void GetGridProcess()
         {
-            var list = BLLProcess.Instance.Gets();
-            list.Add(new ProcessModel() { Id = 0, Name = "", Index = BLLProcess.Instance.GetLastIndex() +1 , Note = "" });
+            var list = BLLProcess.Instance.Gets(connect);
+            list.Add(new ProcessModel() { Id = 0, Name = "", Index = BLLProcess.Instance.GetLastIndex(connect) +1 , Note = "" });
             gridProcess.DataSource = list;
         }
         private void repbtn_deleteProcess_ButtonClick(object sender, DevExpress.XtraEditors.Controls.ButtonPressedEventArgs e)
@@ -37,7 +40,7 @@ namespace QMS_System
             int Id = int.Parse(gridViewProcess.GetRowCellValue(gridViewProcess.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLProcess.Instance.Delete(Id);
+                BLLProcess.Instance.Delete(connect,Id);
                 GetGridProcess();
             }
         }
@@ -61,7 +64,7 @@ namespace QMS_System
 
                     if (obj.Id == 0)
                     {
-                        int result = BLLProcess.Instance.Insert(obj);
+                        int result = BLLProcess.Instance.Insert(connect, obj);
                         if (result == 0)
                         {
                             MessageBox.Show("Tên tiến trình đã tồn tại. Xin nhập tên khác.", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -70,7 +73,7 @@ namespace QMS_System
                     }  
                     else
                     {
-                        bool result = BLLProcess.Instance.Update(obj);
+                        bool result = BLLProcess.Instance.Update(connect, obj);
                         if (result == false)
                         {
                             MessageBox.Show("Tên tiến trình đã tồn tại. Xin nhập tên khác.", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);

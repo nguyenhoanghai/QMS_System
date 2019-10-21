@@ -1,6 +1,8 @@
-﻿using QMS_System.Data;
+﻿using GPRO.Core.Hai;
+using QMS_System.Data;
 using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
+using QMS_System.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +12,7 @@ namespace QMS_System
 {
     public partial class frmService : Form
     {
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmService()
         {
             InitializeComponent();
@@ -28,7 +31,7 @@ namespace QMS_System
             int Id = int.Parse(gridViewService.GetRowCellValue(gridViewService.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLService.Instance.Delete(Id);
+                BLLService.Instance.Delete(connect,Id);
                 GetGridService();
             }
         }
@@ -83,7 +86,7 @@ namespace QMS_System
 
                     if (obj.Id == 0)
                     {
-                        int result = BLLService.Instance.Insert(obj);
+                        int result = BLLService.Instance.Insert(connect, obj);
                         if (result == 0)
                         {
                             MessageBox.Show("Tên dịch vụ đã tồn tại. Xin nhập tên khác", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -92,7 +95,7 @@ namespace QMS_System
                     }
                     else
                     {
-                        bool result = BLLService.Instance.Update(obj);
+                        bool result = BLLService.Instance.Update(connect, obj);
                         if (result == false)
                         {
                             MessageBox.Show("Tên dịch vụ đã tồn tại. Xin nhập tên khác", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -112,7 +115,7 @@ namespace QMS_System
         }
         private void GetGridService()
         {
-            var list = BLLService.Instance.Gets();
+            var list = BLLService.Instance.Gets(connect);
             var now = DateTime.Now;
             var date = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0);
             list.Add(new ServiceModel() { Id = 0, Name = "", StartNumber = 0, EndNumber = 0, TimeProcess = date });
@@ -135,7 +138,7 @@ namespace QMS_System
 
         private void GetGridServiceStep()
         {      
-            var list = BLLServiceStep.Instance.Gets(serId);
+            var list = BLLServiceStep.Instance.Gets(connect, serId);
             list.Add(new ServiceStepModel() { Id = 0, ServiceId = 0, MajorId = 0, Index = 1 });
             gridStep.DataSource = list;
         }
@@ -143,7 +146,7 @@ namespace QMS_System
         private void GetMajor()
         {
             gridLookUpMajor.DataSource = null;
-            gridLookUpMajor.DataSource = BLLMajor.Instance.GetLookUp();
+            gridLookUpMajor.DataSource = BLLMajor.Instance.GetLookUp(connect);
             gridLookUpMajor.DisplayMember = "Name";
             gridLookUpMajor.ValueMember = "Id";
             gridLookUpMajor.PopulateViewColumns();
@@ -178,7 +181,7 @@ namespace QMS_System
 
                     if (obj.Id == 0)
                     {
-                        int result = BLLServiceStep.Instance.Insert(obj);
+                        int result = BLLServiceStep.Instance.Insert(connect, obj);
                         if (result == 0)
                         {
                             MessageBox.Show("Dịch vụ đã tồn tại nghiệp vụ này. Xin chọn lại nghiệp vụ khác", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -187,7 +190,7 @@ namespace QMS_System
                     }
                     else
                     {
-                        bool result = BLLServiceStep.Instance.Update(obj);
+                        bool result = BLLServiceStep.Instance.Update(connect, obj);
                         if (result == false)
                         {
                             MessageBox.Show("Dịch vụ đã tồn tại nghiệp vụ này. Xin chọn lại nghiệp vụ khác", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -206,7 +209,7 @@ namespace QMS_System
             int Id = int.Parse(gridViewStep.GetRowCellValue(gridViewStep.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLServiceStep.Instance.Delete(Id);
+                BLLServiceStep.Instance.Delete(connect,Id);
                 GetGridServiceStep();
             }
         }
@@ -225,7 +228,7 @@ namespace QMS_System
 
         private void GetGridServiceShift()
         {
-            var list = BLLServiceShift.Instance.Gets(serId);
+            var list = BLLServiceShift.Instance.Gets(connect, serId);
             list.Add(new ServiceShiftModel() { Id = 0, Index = (list.Count + 1), ShiftId = 0 });
             gridServiceShift.DataSource = list;
         }
@@ -233,7 +236,7 @@ namespace QMS_System
         private void GetShift()
         {
             gridLookUpShift.DataSource = null;
-            gridLookUpShift.DataSource = BLLShift.Instance.GetLookUp();
+            gridLookUpShift.DataSource = BLLShift.Instance.GetLookUp(connect);
             gridLookUpShift.DisplayMember = "Name";
             gridLookUpShift.ValueMember = "Id";
             gridLookUpShift.PopulateViewColumns();
@@ -268,7 +271,7 @@ namespace QMS_System
 
                     if (obj.Id == 0)
                     {
-                        int result = BLLServiceShift.Instance.Insert(obj);
+                        int result = BLLServiceShift.Instance.Insert(connect, obj);
                         if (result == 0)
                         {
                             MessageBox.Show("Dịch vụ đã tồn tại thời gian cấp phiếu này. Xin chọn lại", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -277,7 +280,7 @@ namespace QMS_System
                     }
                     else
                     {
-                        bool result = BLLServiceShift.Instance.Update(obj);
+                        bool result = BLLServiceShift.Instance.Update(connect, obj);
                         if (result == false)
                         {
                             MessageBox.Show("Dịch vụ đã tồn tại thời gian cấp phiếu này. Xin chọn lại", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -296,7 +299,7 @@ namespace QMS_System
             int Id = int.Parse(gridViewServiceShift.GetRowCellValue(gridViewServiceShift.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLServiceShift.Instance.Delete(Id);
+                BLLServiceShift.Instance.Delete(connect,Id);
                 GetGridServiceShift();
             }
         }

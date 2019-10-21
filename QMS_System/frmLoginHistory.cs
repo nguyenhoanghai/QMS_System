@@ -1,5 +1,7 @@
-﻿using QMS_System.Data.BLL;
+﻿using GPRO.Core.Hai;
+using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
+using QMS_System.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,6 +16,7 @@ namespace QMS_System
 {
     public partial class frmLoginHistory : Form
     {
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmLoginHistory()
         {
             InitializeComponent();
@@ -29,23 +32,23 @@ namespace QMS_System
 
             //Load SelectBox Nhan vien
             lookUpUser.DataSource = null;
-            lookUpUser.DataSource = BLLUser.Instance.GetLookUp();
+            lookUpUser.DataSource = BLLUser.Instance.GetLookUp(connect);
             lookUpUser.DisplayMember = "Name";
             lookUpUser.ValueMember = "Id";
 
             //Load SelectBox Thiet bi
             lookUpEquip.DataSource = null;
-            lookUpEquip.DataSource = BLLEquipment.Instance.GetLookUp();
+            lookUpEquip.DataSource = BLLEquipment.Instance.GetLookUp(connect);
             lookUpEquip.DisplayMember = "Name";
             lookUpEquip.ValueMember = "Id";
 
             //Load SelectBox Trạng Thái
             lookUpStatus.DataSource = null;
-            lookUpStatus.DataSource = BLLStatus.Instance.GetLookUp();
+            lookUpStatus.DataSource = BLLStatus.Instance.GetLookUp(connect);
             lookUpStatus.DisplayMember = "Name";
             lookUpStatus.ValueMember = "Id";
 
-            var list = BLLLoginHistory.Instance.Gets();
+            var list = BLLLoginHistory.Instance.Gets(connect);
             gridLoginHistory.DataSource = list;
         }
 

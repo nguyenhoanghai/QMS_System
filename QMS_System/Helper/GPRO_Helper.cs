@@ -184,22 +184,22 @@ namespace QMS_System.Helper
                     XmlDocument xmlDocument = new XmlDocument();
                     xmlDocument.Load(filename);
                     XmlNodeList elementsByTagName = xmlDocument.GetElementsByTagName("SQLServer");
-                    string innerText = elementsByTagName.Item(0).ChildNodes[0].InnerText;
-                    string innerText2 = elementsByTagName.Item(0).ChildNodes[1].InnerText;
-                    string innerText3 = elementsByTagName.Item(0).ChildNodes[2].InnerText;
-                    string innerText4 = elementsByTagName.Item(0).ChildNodes[3].InnerText;
-                    string innerText5 = elementsByTagName.Item(0).ChildNodes[4].InnerText;
-                    if (Boolean.Parse(innerText5))
+                    string innerText = EncryptionHelper.Instance.Decrypt(elementsByTagName.Item(0).ChildNodes[0].InnerText);
+                    string databaseName = EncryptionHelper.Instance.Decrypt(elementsByTagName.Item(0).ChildNodes[1].InnerText);
+                    string login = EncryptionHelper.Instance.Decrypt(elementsByTagName.Item(0).ChildNodes[2].InnerText);
+                    string password = EncryptionHelper.Instance.Decrypt(elementsByTagName.Item(0).ChildNodes[3].InnerText);
+                    string windowAuthen = elementsByTagName.Item(0).ChildNodes[4].InnerText;
+                    if (Boolean.Parse(windowAuthen))
                         return string.Concat(new string[]
                         {
                     "Server=",
                     innerText,
                     ";Database=",
-                    innerText2,
+                    databaseName,
                     ";uid=",
-                    innerText3,
+                    login,
                     ";pwd=",
-                    innerText4
+                    password
                         });
                     else
                     {
@@ -219,6 +219,32 @@ namespace QMS_System.Helper
             }
         }
 
+        public string  GetStringConnectInfo()
+        {
+            try
+            {
+                string filename = Application.StartupPath + "\\DATA.XML";
+                if (File.Exists(filename))
+                {
+                    XmlDocument xmlDocument = new XmlDocument();
+                    xmlDocument.Load(filename);
+                    XmlNodeList elementsByTagName = xmlDocument.GetElementsByTagName("SQLServer");
+                    string serverName = EncryptionHelper.Instance.Decrypt(elementsByTagName.Item(0).ChildNodes[0].InnerText);
+                    string databaseName = EncryptionHelper.Instance.Decrypt(elementsByTagName.Item(0).ChildNodes[1].InnerText);
+                    string login = EncryptionHelper.Instance.Decrypt(elementsByTagName.Item(0).ChildNodes[2].InnerText);
+                    string password = EncryptionHelper.Instance.Decrypt(elementsByTagName.Item(0).ChildNodes[3].InnerText);
+                    string windowAuthen = elementsByTagName.Item(0).ChildNodes[4].InnerText;
+                    return string.Format("{0},{1},{2},{3},{4}", serverName, databaseName, login, password, windowAuthen); 
+                }
+                return null;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+
         public string GetEntityConnectString()
         {
             try
@@ -229,24 +255,24 @@ namespace QMS_System.Helper
                     XmlDocument xmlDocument = new XmlDocument();
                     xmlDocument.Load(filename);
                     XmlNodeList elementsByTagName = xmlDocument.GetElementsByTagName("SQLServer");
-                    string innerText = elementsByTagName.Item(0).ChildNodes[0].InnerText;
-                    string innerText2 = elementsByTagName.Item(0).ChildNodes[1].InnerText;
-                    string innerText3 = elementsByTagName.Item(0).ChildNodes[2].InnerText;
-                    string innerText4 = elementsByTagName.Item(0).ChildNodes[3].InnerText;
-                    string innerText5 = elementsByTagName.Item(0).ChildNodes[4].InnerText;
+                    string serverName = EncryptionHelper.Instance.Decrypt(elementsByTagName.Item(0).ChildNodes[0].InnerText);
+                    string databaseName = EncryptionHelper.Instance.Decrypt(elementsByTagName.Item(0).ChildNodes[1].InnerText);
+                    string login = EncryptionHelper.Instance.Decrypt(elementsByTagName.Item(0).ChildNodes[2].InnerText);
+                    string password = EncryptionHelper.Instance.Decrypt(elementsByTagName.Item(0).ChildNodes[3].InnerText);
+                    string windowAuthen = elementsByTagName.Item(0).ChildNodes[4].InnerText;
                     //Build an Entity Framework connection string
                     var entityString = new EntityConnectionStringBuilder()
                     {
                         Provider = "System.Data.SqlClient",
                         Metadata = "res://*/QMSModel.csdl|res://*/QMSModel.ssdl|res://*/QMSModel.msl"
                     };
-                    if (!Boolean.Parse(innerText5))
+                    if (!Boolean.Parse(windowAuthen))
                     {
-                        entityString.ProviderConnectionString = @"data source=" + innerText + ";initial catalog=" + innerText2 + ";user id=" + innerText3 + ";password=" + innerText4;
+                        entityString.ProviderConnectionString = @"data source=" + serverName + ";initial catalog=" + databaseName + ";user id=" + login + ";password=" + password+ ";MultipleActiveResultSets=true;";
                     }
                     else
                     {
-                        entityString.ProviderConnectionString = @"data source=" + innerText + ";initial catalog=" + innerText2 + ";integrated security=True;";
+                        entityString.ProviderConnectionString = @"data source=" + serverName + ";initial catalog=" + databaseName + ";integrated security=True;MultipleActiveResultSets=true;";
                     }
                     return entityString.ConnectionString;
                 }

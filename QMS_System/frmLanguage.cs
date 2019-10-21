@@ -1,6 +1,8 @@
-﻿using QMS_System.Data;
+﻿using GPRO.Core.Hai;
+using QMS_System.Data;
 using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
+using QMS_System.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,6 +17,7 @@ namespace QMS_System
 {
     public partial class frmLanguage : Form
     {
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmLanguage()
         {
             InitializeComponent();
@@ -28,7 +31,7 @@ namespace QMS_System
         #region Language
         private void GetGridLanguage()
         {
-            var list = BLLLanguage.Instance.Gets();
+            var list = BLLLanguage.Instance.Gets(connect);
             list.Add(new LanguageModel() { Id = 0, Name = "", Note = "" });
             gridLanguage.DataSource = list;
         }
@@ -37,7 +40,7 @@ namespace QMS_System
             int Id = int.Parse(gridViewLanguage.GetRowCellValue(gridViewLanguage.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLLanguage.Instance.Delete(Id);
+                BLLLanguage.Instance.Delete(connect,Id);
                 GetGridLanguage();
             }
         }
@@ -61,7 +64,7 @@ namespace QMS_System
 
                     if (obj.Id == 0)
                     {
-                        int result = BLLLanguage.Instance.Insert(obj);
+                        int result = BLLLanguage.Instance.Insert(connect,obj);
                         if(result == 0)
                         {
                             MessageBox.Show("Tên ngôn ngữ này đã tồn tại. Xin nhập lại.", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -70,7 +73,7 @@ namespace QMS_System
                     }  
                     else
                     {
-                        bool result = BLLLanguage.Instance.Update(obj);
+                        bool result = BLLLanguage.Instance.Update(connect,obj);
                         if(result == false)
                         {
                             MessageBox.Show("Tên ngôn ngữ này đã tồn tại. Xin nhập lại.", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);

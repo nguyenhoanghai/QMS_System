@@ -1,6 +1,8 @@
-﻿using QMS_System.Data;
+﻿using GPRO.Core.Hai;
+using QMS_System.Data;
 using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
+using QMS_System.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,6 +19,7 @@ namespace QMS_System
     {
         int Id = 0, userId = 0, cmdId = 0, cmdParamId = 0, acParamId = 0;
         string cmdParamName = "", acParamName = "";
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmUserCmdRegister()
         {
             InitializeComponent();
@@ -34,7 +37,7 @@ namespace QMS_System
         private void GetAction()
         {
             lkAction.Properties.DataSource = null;
-            lkAction.Properties.DataSource = BLLAction.Instance.GetLookUp();
+            lkAction.Properties.DataSource = BLLAction.Instance.GetLookUp(connect);
             lkAction.Properties.DisplayMember = "Name";
             lkAction.Properties.ValueMember = "Id";
             lkAction.Properties.PopulateColumns();
@@ -50,7 +53,7 @@ namespace QMS_System
             lkCmdParam.Properties.DataSource = null;
             if (obj != null)
             {
-                lkCmdParam.Properties.DataSource = BLLCommandParameter.Instance.GetLookUp(obj.Id);
+                lkCmdParam.Properties.DataSource = BLLCommandParameter.Instance.GetLookUp(connect, obj.Id);
                 lkCmdParam.Properties.DisplayMember = "Name";
                 lkCmdParam.Properties.ValueMember = "Id";
                 lkCmdParam.Properties.PopulateColumns();
@@ -69,7 +72,7 @@ namespace QMS_System
         private void GetCMD()
         {
             lkCmd.Properties.DataSource = null;
-            lkCmd.Properties.DataSource = BLLCommand.Instance.GetLookUp();
+            lkCmd.Properties.DataSource = BLLCommand.Instance.GetLookUp(connect);
             lkCmd.Properties.DisplayMember = "Name";
             lkCmd.Properties.ValueMember = "Id";
             lkCmd.Properties.PopulateColumns();
@@ -82,7 +85,7 @@ namespace QMS_System
         private void GetUser()
         {
             lkUser.Properties.DataSource = null;
-            lkUser.Properties.DataSource = BLLUser.Instance.GetLookUp();
+            lkUser.Properties.DataSource = BLLUser.Instance.GetLookUp(connect);
             lkUser.Properties.DisplayMember = "Name";
             lkUser.Properties.ValueMember = "Id";
             lkUser.Properties.PopulateColumns();
@@ -117,7 +120,7 @@ namespace QMS_System
             if (userId != 0)
             {
                 gridRegister.DataSource = null;
-                var list = BLLRegisterUserCmd.Instance.Gets(userId,cmdId, cmdParamId);
+                var list = BLLRegisterUserCmd.Instance.Gets(connect, userId,cmdId, cmdParamId);
                 gridRegister.DataSource = list;
                 txtStt.Value = (list.Count + 1);
             }
@@ -128,9 +131,9 @@ namespace QMS_System
             int Id = int.Parse(gridViewRegister.GetRowCellValue(gridViewRegister.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLRegisterUserCmd.Instance.Delete(Id);
+                BLLRegisterUserCmd.Instance.Delete(connect, Id);
                 GetGridView();
-                frmMain.lib_RegisterUserCmds = BLLRegisterUserCmd.Instance.Gets();
+                frmMain.lib_RegisterUserCmds = BLLRegisterUserCmd.Instance.Gets(connect);
             }
         }
 
@@ -157,7 +160,7 @@ namespace QMS_System
             if (actionObj != null)
             {
                 lkActionParam.Properties.DataSource = null;
-                lkActionParam.Properties.DataSource = BLLActionParameter.Instance.GetLookUp(actionObj.Id);
+                lkActionParam.Properties.DataSource = BLLActionParameter.Instance.GetLookUp(connect, actionObj.Id);
                 lkActionParam.Properties.DisplayMember = "Name";
                 lkActionParam.Properties.ValueMember = "Id";
                 lkActionParam.Properties.PopulateColumns();
@@ -191,16 +194,16 @@ namespace QMS_System
                     var obj = new Q_UserCmdRegister() { Id = Id, CmdParamId = cmdParamId, ActionParamId = acParamId, Index = (int)txtStt.Value, Param = txtparam.Text, Note = "", UserId = userId };
                     int kq = 0;
                     if (obj.Id == 0)
-                        kq = BLLRegisterUserCmd.Instance.Insert(obj);
+                        kq = BLLRegisterUserCmd.Instance.Insert(connect, obj);
                     else
-                        kq = BLLRegisterUserCmd.Instance.Update(obj);
+                        kq = BLLRegisterUserCmd.Instance.Update(connect, obj);
                     if (kq == 0)
                         MessageBox.Show("Tham số hành động này đã tồn tại. Vui lòng chọn tham số hành động khác", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     else
                     {
                         GetGridView();
                         btnCancel_Click(sender, e);
-                        frmMain.lib_RegisterUserCmds = BLLRegisterUserCmd.Instance.Gets();
+                        frmMain.lib_RegisterUserCmds = BLLRegisterUserCmd.Instance.Gets(connect);
                     }
                 }
             }

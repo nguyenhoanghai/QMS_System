@@ -24,31 +24,31 @@ namespace QMS_System.Data.BLL
         }
         private BLLStatus() { }
         #endregion
-        public List<StatusModel> Gets(int typeId)
+        public List<StatusModel> Gets(string connectString,int typeId)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             if(typeId != 0)
             return db.Q_Status.Where(x =>  typeId == x.StatusTypeId).Select(x => new StatusModel() { Id = x.Id, Code  = x.Code, Note = x.Note, StatusTypeId = x.StatusTypeId  }).ToList();
             return new List<StatusModel>();
         }}
 
-        public List<ModelSelectItem> GetLookUp()
+        public List<ModelSelectItem> GetLookUp(string connectString)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             return db.Q_Status.Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Code }).ToList();
         }}
        
-        public int Insert(Q_Status obj)
+        public int Insert(string connectString,Q_Status obj)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             db.Q_Status.Add(obj);
             db.SaveChanges();
             return obj.Id;
         }}
 
-        public bool Update(Q_Status model)
+        public bool Update(string connectString,Q_Status model)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             var obj = db.Q_Status.FirstOrDefault(x =>  x.Id == model.Id);
             if (obj != null)
             {
@@ -62,9 +62,9 @@ namespace QMS_System.Data.BLL
               }
         }
 
-        //public bool Delete(int Id)
+        //public bool Delete(string connectString,int Id)
         //{
-        //      using (db = new QMSSystemEntities()){
+        //      using (db = new QMSSystemEntities(connectString)){
         //    var obj = db.Q_Status.FirstOrDefault(x =>  x.Id == Id);
         //    if (obj != null)
         //    {

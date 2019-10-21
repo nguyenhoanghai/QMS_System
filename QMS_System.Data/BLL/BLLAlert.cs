@@ -24,21 +24,21 @@ namespace QMS_System.Data.BLL
         }
         private BLLAlert() { }
         #endregion
-        public List<AlertModel> Gets()
+        public List<AlertModel> Gets(string connectString)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             return db.Q_Alert.Where(x => !x.IsDeleted).Select(x => new AlertModel() { Id = x.Id, Note = x.Note, SoundId = x.SoundId, Start = x.Start, End = x.End }).ToList();
         }}
 
-        //public List<ModelSelectItem> GetLookUp()
+        //public List<ModelSelectItem> GetLookUp(string connectString)
         //{
-        //      using (db = new QMSSystemEntities()){
+        //      using (db = new QMSSystemEntities(connectString)){
         //    return db.Q_Alert.Where(x => !x.IsDeleted).Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Code }).ToList();
         //}
        
-        public int Insert(Q_Alert obj)
+        public int Insert(string connectString,Q_Alert obj)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             if (!CheckExist(obj))
             {
                 db.Q_Alert.Add(obj);
@@ -47,9 +47,9 @@ namespace QMS_System.Data.BLL
             return obj.Id;
         }}
 
-        public bool Update(Q_Alert model)
+        public bool Update(string connectString,Q_Alert model)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             var obj = db.Q_Alert.FirstOrDefault(x => !x.IsDeleted && x.Id == model.Id);
             if (obj != null)
             {
@@ -66,9 +66,9 @@ namespace QMS_System.Data.BLL
             return false;
         }}
 
-        public bool Delete(int Id)
+        public bool Delete(string connectString,int Id)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             var obj = db.Q_Alert.FirstOrDefault(x => !x.IsDeleted && x.Id == Id);
             if (obj != null)
             {

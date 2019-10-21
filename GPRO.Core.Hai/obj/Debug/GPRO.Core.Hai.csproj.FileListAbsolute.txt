@@ -1,0 +1,12 @@
+E:\Hai_GPRO\Git QMS\QMS_System\GPRO.Core.Hai\bin\Debug\GPRO.Core.Hai.dll.config
+E:\Hai_GPRO\Git QMS\QMS_System\GPRO.Core.Hai\bin\Debug\GPRO.Core.Hai.dll
+E:\Hai_GPRO\Git QMS\QMS_System\GPRO.Core.Hai\bin\Debug\GPRO.Core.Hai.pdb
+E:\Hai_GPRO\Git QMS\QMS_System\GPRO.Core.Hai\bin\Debug\EntityFramework.dll
+E:\Hai_GPRO\Git QMS\QMS_System\GPRO.Core.Hai\bin\Debug\EntityFramework.SqlServer.dll
+E:\Hai_GPRO\Git QMS\QMS_System\GPRO.Core.Hai\bin\Debug\EntityFramework.xml
+E:\Hai_GPRO\Git QMS\QMS_System\GPRO.Core.Hai\bin\Debug\EntityFramework.SqlServer.xml
+E:\Hai_GPRO\Git QMS\QMS_System\GPRO.Core.Hai\obj\Debug\GPRO.Core.Hai.csprojAssemblyReference.cache
+E:\Hai_GPRO\Git QMS\QMS_System\GPRO.Core.Hai\obj\Debug\GPRO.Core.Hai.csproj.CoreCompileInputs.cache
+E:\Hai_GPRO\Git QMS\QMS_System\GPRO.Core.Hai\obj\Debug\GPRO.Core.Hai.csproj.CopyComplete
+E:\Hai_GPRO\Git QMS\QMS_System\GPRO.Core.Hai\obj\Debug\GPRO.Core.Hai.dll
+E:\Hai_GPRO\Git QMS\QMS_System\GPRO.Core.Hai\obj\Debug\GPRO.Core.Hai.pdb

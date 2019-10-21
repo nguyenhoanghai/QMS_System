@@ -24,32 +24,32 @@ namespace QMS_System.Data.BLL
         }
         private BLLCommandParameter() { }
         #endregion
-        public List<CommandParamModel> Gets(int commandId)
+        public List<CommandParamModel> Gets(string connectString,int commandId)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             return db.Q_CommandParameter.Where(x => !x.IsDeleted && !x.Q_Command.IsDeleted && x.CommandId == commandId).Select(x => new CommandParamModel() { Id = x.Id, CommandId = x.CommandId, Parameter = x.Parameter, Note = x.Note }).ToList();
         }
         }
 
-        public List<ModelSelectItem> GetLookUp(int cmdId)
+        public List<ModelSelectItem> GetLookUp(string connectString,int cmdId)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             return db.Q_CommandParameter.Where(x => !x.IsDeleted && !x.Q_Command.IsDeleted && x.CommandId == cmdId).Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Parameter,  Code = x.Note }).ToList();
         }
         }
        
-        public int Insert(Q_CommandParameter obj)
+        public int Insert(string connectString,Q_CommandParameter obj)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             db.Q_CommandParameter.Add(obj);
             db.SaveChanges();
             return obj.Id;
         }
         }
 
-        public bool Update(Q_CommandParameter model)
+        public bool Update(string connectString,Q_CommandParameter model)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             var obj = db.Q_CommandParameter.FirstOrDefault(x => !x.IsDeleted && x.Id == model.Id);
             if (obj != null)
             {
@@ -63,9 +63,9 @@ namespace QMS_System.Data.BLL
         }
         }
 
-        public bool Delete(int Id)
+        public bool Delete(string connectString,int Id)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_CommandParameter.FirstOrDefault(x => !x.IsDeleted && x.Id == Id);
                 if (obj != null)

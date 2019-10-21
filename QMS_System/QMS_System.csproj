@@ -133,14 +133,261 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="frmAction.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmAction.Designer.cs">
+      <DependentUpon>frmAction.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmAlert.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmAlert.Designer.cs">
+      <DependentUpon>frmAlert.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmBusiness.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmBusiness.Designer.cs">
+      <DependentUpon>frmBusiness.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmCommand.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmCommand.Designer.cs">
+      <DependentUpon>frmCommand.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmConfig.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmConfig.Designer.cs">
+      <DependentUpon>frmConfig.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmCopyRegisterCmd.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmCopyRegisterCmd.Designer.cs">
+      <DependentUpon>frmCopyRegisterCmd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmCounter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmCounter.Designer.cs">
+      <DependentUpon>frmCounter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmCounterSound.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmCounterSound.Designer.cs">
+      <DependentUpon>frmCounterSound.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmEquipment.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmEquipment.Designer.cs">
+      <DependentUpon>frmEquipment.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmEquipTypeProcess.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmEquipTypeProcess.Designer.cs">
+      <DependentUpon>frmEquipTypeProcess.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmHome.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmHome.Designer.cs">
+      <DependentUpon>frmHome.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmLanguage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmLanguage.Designer.cs">
+      <DependentUpon>frmLanguage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmLoginHistory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmLoginHistory.Designer.cs">
+      <DependentUpon>frmLoginHistory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmMain.Designer.cs">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmMaindisplayDirection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmMaindisplayDirection.Designer.cs">
+      <DependentUpon>frmMaindisplayDirection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmMajor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmMajor.Designer.cs">
+      <DependentUpon>frmMajor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmPolicy.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmPolicy.Designer.cs">
+      <DependentUpon>frmPolicy.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmProcess.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmProcess.Designer.cs">
+      <DependentUpon>frmProcess.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmReadTemplate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmReadTemplate.Designer.cs">
+      <DependentUpon>frmReadTemplate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmRecieverSMS.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmRecieverSMS.Designer.cs">
+      <DependentUpon>frmRecieverSMS.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmR_DanhGia.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmR_DanhGia.Designer.cs">
+      <DependentUpon>frmR_DanhGia.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmR_DetailByTimeRange.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmR_DetailByTimeRange.Designer.cs">
+      <DependentUpon>frmR_DetailByTimeRange.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmR_DetailInDay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmR_DetailInDay.Designer.cs">
+      <DependentUpon>frmR_DetailInDay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmR_GeneralByTimeRange.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmR_GeneralByTimeRange.Designer.cs">
+      <DependentUpon>frmR_GeneralByTimeRange.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmR_GeneralInDay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmR_GeneralInDay.Designer.cs">
+      <DependentUpon>frmR_GeneralInDay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmService.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmService.Designer.cs">
+      <DependentUpon>frmService.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmServiceLimit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmServiceLimit.Designer.cs">
+      <DependentUpon>frmServiceLimit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmServiceShift.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmServiceShift.Designer.cs">
+      <DependentUpon>frmServiceShift.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmShift.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmShift.Designer.cs">
+      <DependentUpon>frmShift.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmSound.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmSound.Designer.cs">
+      <DependentUpon>frmSound.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmSQLConnect.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FrmSQLConnect.Designer.cs">
       <DependentUpon>FrmSQLConnect.cs</DependentUpon>
     </Compile>
-    <Compile Include="Helper\GPRO_Helper.cs" />
+    <Compile Include="frmStatus.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmStatus.Designer.cs">
+      <DependentUpon>frmStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmUser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmUser.Designer.cs">
+      <DependentUpon>frmUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmUserCmdRegister.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmUserCmdRegister.Designer.cs">
+      <DependentUpon>frmUserCmdRegister.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmUserCommandReadSound.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmUserCommandReadSound.Designer.cs">
+      <DependentUpon>frmUserCommandReadSound.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmUserMajor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmUserMajor.Designer.cs">
+      <DependentUpon>frmUserMajor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmVideo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmVideo.Designer.cs">
+      <DependentUpon>frmVideo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmVideoTemplate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmVideoTemplate.Designer.cs">
+      <DependentUpon>frmVideoTemplate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Helper\SoundInfo.cs" />
+    <Compile Include="IssueTicketScreen\FormState.cs" />
+    <Compile Include="IssueTicketScreen\frmButtonStyle.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IssueTicketScreen\frmButtonStyle.designer.cs">
+      <DependentUpon>frmButtonStyle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IssueTicketScreen\frmIssueTicketScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IssueTicketScreen\frmIssueTicketScreen.designer.cs">
+      <DependentUpon>frmIssueTicketScreen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IssueTicketScreen\frmNumOfColumn.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IssueTicketScreen\frmNumOfColumn.designer.cs">
+      <DependentUpon>frmNumOfColumn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IssueTicketScreen\frmSetupInterface.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IssueTicketScreen\frmSetupInterface.designer.cs">
+      <DependentUpon>frmSetupInterface.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IssueTicketScreen\WinApi.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -156,8 +403,131 @@
     </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="WebApi\CallServiceApi.cs" />
+    <EmbeddedResource Include="frmAction.resx">
+      <DependentUpon>frmAction.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmAlert.resx">
+      <DependentUpon>frmAlert.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmBusiness.resx">
+      <DependentUpon>frmBusiness.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmCommand.resx">
+      <DependentUpon>frmCommand.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmConfig.resx">
+      <DependentUpon>frmConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmCopyRegisterCmd.resx">
+      <DependentUpon>frmCopyRegisterCmd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmCounter.resx">
+      <DependentUpon>frmCounter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmCounterSound.resx">
+      <DependentUpon>frmCounterSound.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmEquipment.resx">
+      <DependentUpon>frmEquipment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmEquipTypeProcess.resx">
+      <DependentUpon>frmEquipTypeProcess.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmHome.resx">
+      <DependentUpon>frmHome.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmLanguage.resx">
+      <DependentUpon>frmLanguage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmLoginHistory.resx">
+      <DependentUpon>frmLoginHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmMain.resx">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmMaindisplayDirection.resx">
+      <DependentUpon>frmMaindisplayDirection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmMajor.resx">
+      <DependentUpon>frmMajor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmPolicy.resx">
+      <DependentUpon>frmPolicy.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmProcess.resx">
+      <DependentUpon>frmProcess.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmReadTemplate.resx">
+      <DependentUpon>frmReadTemplate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmRecieverSMS.resx">
+      <DependentUpon>frmRecieverSMS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmR_DanhGia.resx">
+      <DependentUpon>frmR_DanhGia.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmR_DetailByTimeRange.resx">
+      <DependentUpon>frmR_DetailByTimeRange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmR_DetailInDay.resx">
+      <DependentUpon>frmR_DetailInDay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmR_GeneralByTimeRange.resx">
+      <DependentUpon>frmR_GeneralByTimeRange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmR_GeneralInDay.resx">
+      <DependentUpon>frmR_GeneralInDay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmService.resx">
+      <DependentUpon>frmService.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmServiceLimit.resx">
+      <DependentUpon>frmServiceLimit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmServiceShift.resx">
+      <DependentUpon>frmServiceShift.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmShift.resx">
+      <DependentUpon>frmShift.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmSound.resx">
+      <DependentUpon>frmSound.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmSQLConnect.resx">
       <DependentUpon>FrmSQLConnect.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmStatus.resx">
+      <DependentUpon>frmStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmUser.resx">
+      <DependentUpon>frmUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmUserCmdRegister.resx">
+      <DependentUpon>frmUserCmdRegister.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmUserCommandReadSound.resx">
+      <DependentUpon>frmUserCommandReadSound.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmUserMajor.resx">
+      <DependentUpon>frmUserMajor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmVideo.resx">
+      <DependentUpon>frmVideo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmVideoTemplate.resx">
+      <DependentUpon>frmVideoTemplate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IssueTicketScreen\frmButtonStyle.resx">
+      <DependentUpon>frmButtonStyle.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IssueTicketScreen\frmIssueTicketScreen.resx">
+      <DependentUpon>frmIssueTicketScreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IssueTicketScreen\frmNumOfColumn.resx">
+      <DependentUpon>frmNumOfColumn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IssueTicketScreen\frmSetupInterface.resx">
+      <DependentUpon>frmSetupInterface.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -186,6 +556,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GPRO.Core.Hai\GPRO.Core.Hai.csproj">
+      <Project>{c2c806f2-56d4-4cba-846e-e24b76d0531a}</Project>
+      <Name>GPRO.Core.Hai</Name>
+    </ProjectReference>
     <ProjectReference Include="..\QMS_System.Data\QMS_System.Data.csproj">
       <Project>{da64d714-1d68-4a11-b6a5-da2803aa5ccc}</Project>
       <Name>QMS_System.Data</Name>
@@ -537,10 +911,12 @@
     <Content Include="Image\21.jpg" />
     <Content Include="Image\ghepxanh.jpg" />
     <Content Include="Q.ico" />
+    <None Include="Resources\server_connect.png" />
     <Content Include="Script DB\goc qms.sql" />
     <Content Include="Script DB\update qms 18_3_2019.sql" />
     <Content Include="Script DB\update qms 12_12_2018.sql" />
     <Content Include="Script DB\update qms 17_12_2018.sql" />
+    <Content Include="Script DB\update qms 16_10_2019.sql" />
     <Content Include="Script DB\update qms 6_8_2019.sql" />
     <None Include="Resources\list.png" />
     <None Include="Resources\add.png" />

@@ -1,8 +1,7 @@
-﻿using QMS_System.Data.BLL;
+﻿using GPRO.Core.Hai;
 using QMS_System.Helper;
 using System;
 using System.Data;
-using System.Data.Entity.Core.EntityClient;
 using System.Data.SqlClient;
 using System.Windows.Forms;
 using System.Xml;
@@ -19,6 +18,17 @@ namespace QMS_System
 
         private void FrmSQLConnect_Load(object sender, EventArgs e)
         {
+            string info = BaseCore.Instance.GetStringConnectInfo(Application.StartupPath + "\\DATA.XML");
+            if (!string.IsNullOrEmpty(info))
+            {
+                var infos = info.Split(',');
+                txtServerName.Text = infos[0];
+                cbDatabases.Text = infos[1];
+                txtLogin.Text = infos[2];
+                txtPass.Text = infos[3];
+                chkIsAuthen.Checked = bool.Parse(infos[4]);
+                chkIsAuthen_CheckedChanged(sender, e);
+            }
         }
 
         private void chkIsAuthen_CheckedChanged(object sender, EventArgs e)
@@ -109,9 +119,9 @@ namespace QMS_System
         {
             if (checkValid())
                 CreateNewXMLFile();
-                
+
         }
-        private void CreateNewXMLFile( )
+        private void CreateNewXMLFile()
         {
             string filename = Application.StartupPath + "\\DATA.XML";
             XmlDocument xmlDocument = new XmlDocument();
@@ -127,19 +137,19 @@ namespace QMS_System
             xmlNode.AppendChild(xmlNode2);
 
             XmlNode xmlNode3 = xmlDocument.CreateElement("Server_Name");
-            xmlNode3.AppendChild(xmlDocument.CreateTextNode(txtServerName.Text));
+            xmlNode3.AppendChild(xmlDocument.CreateTextNode(EncryptionHelper.Instance.Encrypt(txtServerName.Text)));
             xmlNode2.AppendChild(xmlNode3);
 
             XmlNode xmlNode4 = xmlDocument.CreateElement("Database");
-            xmlNode4.AppendChild(xmlDocument.CreateTextNode(cbDatabases.Text));
+            xmlNode4.AppendChild(xmlDocument.CreateTextNode(EncryptionHelper.Instance.Encrypt(cbDatabases.Text)));
             xmlNode2.AppendChild(xmlNode4);
 
             XmlNode xmlNode5 = xmlDocument.CreateElement("User");
-            xmlNode5.AppendChild(xmlDocument.CreateTextNode(txtLogin.Text));
+            xmlNode5.AppendChild(xmlDocument.CreateTextNode(EncryptionHelper.Instance.Encrypt(txtLogin.Text)));
             xmlNode2.AppendChild(xmlNode5);
 
             XmlNode xmlNode6 = xmlDocument.CreateElement("Password");
-            xmlNode6.AppendChild(xmlDocument.CreateTextNode(txtPass.Text));
+            xmlNode6.AppendChild(xmlDocument.CreateTextNode(EncryptionHelper.Instance.Encrypt(txtPass.Text)));
             xmlNode2.AppendChild(xmlNode6);
 
             XmlNode xmlNode7 = xmlDocument.CreateElement("Window_Authenticate");
@@ -147,11 +157,14 @@ namespace QMS_System
             xmlNode2.AppendChild(xmlNode7);
 
             xmlDocument.Save(filename);
-             
 
+            Application.Restart();
+            Environment.Exit(0); 
+        }
 
-            var list = BLLMajor.Instance.Gets( GPRO_Helper.Instance.GetEntityConnectString());
-         //   this.Close(); 
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

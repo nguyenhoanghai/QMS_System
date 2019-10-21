@@ -1,6 +1,8 @@
-﻿using QMS_System.Data;
+﻿using GPRO.Core.Hai;
+using QMS_System.Data;
 using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
+using QMS_System.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +18,7 @@ namespace QMS_System
     public partial class frmUserCommandReadSound : Form
     {
         int userId = 0, cmdId = 0;
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmUserCommandReadSound() { InitializeComponent(); }
         private void btnResetUser_Click(object sender, EventArgs e) { GetUser(); }
         private void btnResetCmd_Click(object sender, EventArgs e) { GetCMD(); }
@@ -69,9 +72,9 @@ namespace QMS_System
 
                     int kq = 0;
                     if (obj.Id == 0)
-                        kq = BLLUserCmdReadSound.Instance.Insert(obj);
+                        kq = BLLUserCmdReadSound.Instance.Insert(connect,obj);
                     else
-                        kq = BLLUserCmdReadSound.Instance.Update(obj);
+                        kq = BLLUserCmdReadSound.Instance.Update(connect,obj);
 
                     if (kq == 0)
                     {
@@ -81,7 +84,7 @@ namespace QMS_System
                     else
                     {
                         GetGrid();
-                       frmMain.lib_UserCMDReadSound = BLLUserCmdReadSound.Instance.Gets();
+                       frmMain.lib_UserCMDReadSound = BLLUserCmdReadSound.Instance.Gets(connect);
                     }
                 }
             }
@@ -94,16 +97,16 @@ namespace QMS_System
             int Id = int.Parse(gridView.GetRowCellValue(gridView.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLUserCmdReadSound.Instance.Delete(Id);
+                BLLUserCmdReadSound.Instance.Delete(connect,Id);
                 GetGrid();
-                frmMain.lib_UserCMDReadSound = BLLUserCmdReadSound.Instance.Gets();
+                frmMain.lib_UserCMDReadSound = BLLUserCmdReadSound.Instance.Gets(connect);
 
             }
         }
         private void GetUser()
         {
             lkUser.Properties.DataSource = null;
-            lkUser.Properties.DataSource = BLLUser.Instance.GetLookUp();
+            lkUser.Properties.DataSource = BLLUser.Instance.GetLookUp(connect);
             lkUser.Properties.DisplayMember = "Name";
             lkUser.Properties.ValueMember = "Id";
             lkUser.Properties.PopulateColumns();
@@ -115,7 +118,7 @@ namespace QMS_System
         private void GetCMD()
         {
             lkCmd.Properties.DataSource = null;
-            lkCmd.Properties.DataSource = BLLCommand.Instance.GetLookUp();
+            lkCmd.Properties.DataSource = BLLCommand.Instance.GetLookUp(connect);
             lkCmd.Properties.DisplayMember = "Name";
             lkCmd.Properties.ValueMember = "Id";
             lkCmd.Properties.PopulateColumns();
@@ -128,7 +131,7 @@ namespace QMS_System
         private void GetReadTemplate()
         {
             gridLookUpRead.DataSource = null;
-            gridLookUpRead.DataSource = BLLReadTemplate.Instance.GetLookUp();
+            gridLookUpRead.DataSource = BLLReadTemplate.Instance.GetLookUp(connect);
             gridLookUpRead.DisplayMember = "Name";
             gridLookUpRead.ValueMember = "Id";
             gridLookUpRead.PopulateViewColumns();
@@ -141,7 +144,7 @@ namespace QMS_System
         {
             if (userId != 0 && cmdId != 0)
             {
-                var list = BLLUserCmdReadSound.Instance.Gets(userId, cmdId);
+                var list = BLLUserCmdReadSound.Instance.Gets(connect, userId, cmdId);
                 list.Add(new UserCmdReadSoundModel() { Id = 0, UserId = userId, CommandId = cmdId, Index = (list.Count + 1) });
                 gridcontrol.DataSource = list;
             }

@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QMS_System", "QMS_System\QMS_System.csproj", "{71CCB128-5DF6-45E2-9F63-307489C3F96F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QMS_System.Data", "QMS_System.Data\QMS_System.Data.csproj", "{DA64D714-1D68-4A11-B6A5-DA2803AA5CCC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GPRO.Core.Hai", "GPRO.Core.Hai\GPRO.Core.Hai.csproj", "{C2C806F2-56D4-4CBA-846E-E24B76D0531A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,8 +23,15 @@ Global
 		{DA64D714-1D68-4A11-B6A5-DA2803AA5CCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA64D714-1D68-4A11-B6A5-DA2803AA5CCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA64D714-1D68-4A11-B6A5-DA2803AA5CCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2C806F2-56D4-4CBA-846E-E24B76D0531A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2C806F2-56D4-4CBA-846E-E24B76D0531A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2C806F2-56D4-4CBA-846E-E24B76D0531A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2C806F2-56D4-4CBA-846E-E24B76D0531A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DEF23F1D-736C-4BC8-A263-22394E3E7CB6}
 	EndGlobalSection
 EndGlobal

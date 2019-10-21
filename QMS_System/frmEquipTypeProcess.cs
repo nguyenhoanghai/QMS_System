@@ -1,6 +1,8 @@
-﻿using QMS_System.Data;
+﻿using GPRO.Core.Hai;
+using QMS_System.Data;
 using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
+using QMS_System.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,6 +17,7 @@ namespace QMS_System
 {
     public partial class frmEquipTypeProcess : Form
     {
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmEquipTypeProcess()
         {
             InitializeComponent();
@@ -29,7 +32,7 @@ namespace QMS_System
         #region EquipTypeProcess
         private void GetGridEquipTypeProcess()
         {
-            var list = BLLEquipTypeProcess.Instance.Gets();
+            var list = BLLEquipTypeProcess.Instance.Gets(connect);
             list.Add(new EquipTypeProcessModel() { Id = 0, EquipTypeId = 0, ProcessId = 0, Step = 0, Priority = 0, Count = 0 });
             gridEquipTypeProcess.DataSource = list;
         }
@@ -38,7 +41,7 @@ namespace QMS_System
             int Id = int.Parse(gridViewEquipTypeProcess.GetRowCellValue(gridViewEquipTypeProcess.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLEquipTypeProcess.Instance.Delete(Id);
+                BLLEquipTypeProcess.Instance.Delete(connect,Id);
                 GetGridEquipTypeProcess();
             }
         }
@@ -80,9 +83,9 @@ namespace QMS_System
                     obj.Count = int.Parse(gridViewEquipTypeProcess.GetRowCellValue(gridViewEquipTypeProcess.FocusedRowHandle, "Count").ToString());
 
                     if (obj.Id == 0)
-                        BLLEquipTypeProcess.Instance.Insert(obj);
+                        BLLEquipTypeProcess.Instance.Insert(connect, obj);
                     else
-                        BLLEquipTypeProcess.Instance.Update(obj);
+                        BLLEquipTypeProcess.Instance.Update(connect, obj);
                     GetGridEquipTypeProcess();
                 }
             }
@@ -99,7 +102,7 @@ namespace QMS_System
         {
             //Load SelectBox Loại thiết bị
             lookUpEquipType.DataSource = null;
-            lookUpEquipType.DataSource = BLLEquipType.Instance.GetLookUp();
+            lookUpEquipType.DataSource = BLLEquipType.Instance.GetLookUp(connect);
             lookUpEquipType.DisplayMember = "Name";
             lookUpEquipType.ValueMember = "Id";
             lookUpEquipType.PopulateViewColumns(); // Thao tác với tất cả column của datasource được bind vào control
@@ -111,7 +114,7 @@ namespace QMS_System
         {
             //Load SelectBox Tiến trình
             lookUpProcess.DataSource = null;
-            lookUpProcess.DataSource = BLLProcess.Instance.GetLookUp();
+            lookUpProcess.DataSource = BLLProcess.Instance.GetLookUp(connect);
             lookUpProcess.DisplayMember = "Name";
             lookUpProcess.ValueMember = "Id";
             lookUpProcess.PopulateViewColumns(); // Thao tác với tất cả column của datasource được bind vào control

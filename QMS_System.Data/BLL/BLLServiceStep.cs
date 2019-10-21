@@ -24,22 +24,22 @@ namespace QMS_System.Data.BLL
         }
         private BLLServiceStep() { }
         #endregion
-        public List<ServiceStepModel> Gets(int serviceId)
+        public List<ServiceStepModel> Gets(string connectString,int serviceId)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             return db.Q_ServiceStep.Where(x => !x.IsDeleted && !x.Q_Service.IsDeleted && x.ServiceId == serviceId).Select(x => new ServiceStepModel() { Id = x.Id, MajorId = x.MajorId, ServiceId = x.ServiceId, Index = x.Index }).OrderBy(x => x.Index).ToList();
         }
         }
 
-        //public List<ModelSelectItem> GetLookUp()
+        //public List<ModelSelectItem> GetLookUp(string connectString)
         //{
-        //      using (db = new QMSSystemEntities()){
+        //      using (db = new QMSSystemEntities(connectString)){
         //    return db.Q_ServiceStep.Where(x => !x.IsDeleted).Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Name }).ToList();
         //}
 
-        public int Insert(Q_ServiceStep obj)
+        public int Insert(string connectString,Q_ServiceStep obj)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             if (!CheckExists(obj))
             {
                 db.Q_ServiceStep.Add(obj);
@@ -48,9 +48,9 @@ namespace QMS_System.Data.BLL
             return obj.Id;
         }
         }
-        public bool Update(Q_ServiceStep model)
+        public bool Update(string connectString,Q_ServiceStep model)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             var obj = db.Q_ServiceStep.FirstOrDefault(x => !x.IsDeleted && x.Id == model.Id);
             if (obj != null)
             {
@@ -69,9 +69,9 @@ namespace QMS_System.Data.BLL
         }
         }
 
-        public bool Delete(int Id)
+        public bool Delete(string connectString, int Id)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_ServiceStep.FirstOrDefault(x => !x.IsDeleted && x.Id == Id);
                 if (obj != null)

@@ -1,6 +1,8 @@
-﻿using QMS_System.Data;
+﻿using GPRO.Core.Hai;
+using QMS_System.Data;
 using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
+using QMS_System.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +18,7 @@ namespace QMS_System
     public partial class frmStatus : Form
     {
         int typeId = 0;
+        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
         public frmStatus()
         {
             InitializeComponent();
@@ -29,7 +32,7 @@ namespace QMS_System
         #region Status
         private void GetGridStatus()
         {
-            var list = BLLStatus.Instance.Gets(typeId);
+            var list = BLLStatus.Instance.Gets(connect ,typeId);
             list.Add(new StatusModel() { Id = 0, Code = "", StatusTypeId = 0 });
             gridStatus.DataSource = list;
         }
@@ -38,7 +41,7 @@ namespace QMS_System
             //int Id = int.Parse(gridViewStatus.GetRowCellValue(gridViewStatus.FocusedRowHandle, "Id").ToString());
             //if (Id != 0)
             //{
-            //    BLLStatus.Instance.Delete(Id);
+            //    BLLStatus.Instance.Delete(connect,Id);
             //    GetGridStatus();
             //}
         }
@@ -62,9 +65,9 @@ namespace QMS_System
                     obj.Note = gridViewStatus.GetRowCellValue(gridViewStatus.FocusedRowHandle, "Note") != null ? gridViewStatus.GetRowCellValue(gridViewStatus.FocusedRowHandle, "Note").ToString() : "";
 
                     if (obj.Id == 0)
-                        BLLStatus.Instance.Insert(obj);
+                        BLLStatus.Instance.Insert(connect, obj);
                     else
-                        BLLStatus.Instance.Update(obj);
+                        BLLStatus.Instance.Update(connect, obj);
                     GetGridStatus();
                 }
             }
@@ -82,7 +85,7 @@ namespace QMS_System
         private void GetGridType()
         {
             lookUpType.DataSource = null;
-            lookUpType.DataSource = BLLStatusType.Instance.GetLookUp();
+            lookUpType.DataSource = BLLStatusType.Instance.GetLookUp(connect);
             lookUpType.DisplayMember = "Name";
             lookUpType.ValueMember = "Id";
             lookUpType.PopulateViewColumns();
@@ -91,7 +94,7 @@ namespace QMS_System
             lookUpType.View.Columns[1].Caption = "Loại trạng thái";
             lookUpType.View.Columns[0].AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Near;
 
-            var list = BLLStatusType.Instance.Gets();
+            var list = BLLStatusType.Instance.Gets(connect);
             list.Add(new StatusTypeModel() { Id = 0, Name = "", Note = "" });
             gridStatusType.DataSource = list;
         }
@@ -100,7 +103,7 @@ namespace QMS_System
             //int Id = int.Parse(gridViewType.GetRowCellValue(gridViewType.FocusedRowHandle, "Id").ToString());
             //if (Id != 0)
             //{
-            //    BLLStatusType.Instance.Delete(Id);
+            //    BLLStatusType.Instance.Delete(connect,Id);
             //    GetGridType();
             //}
 
@@ -128,7 +131,7 @@ namespace QMS_System
 
                     if (obj.Id == 0)
                     {
-                        int result = BLLStatusType.Instance.Insert(obj);
+                        int result = BLLStatusType.Instance.Insert(connect, obj);
                         if (result == 0)
                         {
                             MessageBox.Show("Tên loại thiết bị này đã tồn tại. Xin nhập tên khác", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -137,7 +140,7 @@ namespace QMS_System
                     }
                     else
                     {
-                        bool result = BLLStatusType.Instance.Update(obj);
+                        bool result = BLLStatusType.Instance.Update(connect, obj);
                         if (result == false)
                         {
                             MessageBox.Show("Tên loại thiết bị này đã tồn tại. Xin nhập tên khác", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);

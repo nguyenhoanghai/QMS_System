@@ -26,25 +26,25 @@ namespace QMS_System.Data.BLL
         }
         private BLLEvaluate() { }
         #endregion
-        public List<EvaluateModel> Gets()
+        public List<EvaluateModel> Gets(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_Evaluate.Where(x => !x.IsDeleted).OrderBy(x => x.Index).Select(x => new EvaluateModel() { Id = x.Id, Name = x.Name, Note = x.Note }).ToList();
             }
         }
 
-        public List<ModelSelectItem> GetLookUp()
+        public List<ModelSelectItem> GetLookUp(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_Evaluate.Where(x => !x.IsDeleted).OrderBy(x => x.Index).Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Name }).ToList();
             }
         }
 
-        public int Insert(Q_Evaluate obj)
+        public int Insert(string connectString,Q_Evaluate obj)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 if (!CheckExists(obj))
                 {
@@ -55,9 +55,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public int Update(Q_Evaluate model)
+        public int Update(string connectString,Q_Evaluate model)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_Evaluate.FirstOrDefault(x => x.Id == model.Id);
                 if (obj != null)
@@ -76,9 +76,9 @@ namespace QMS_System.Data.BLL
                 return 0;
             }
         }
-        public ResponseBase InsertOrUpdate(Q_Evaluate obj)
+        public ResponseBase InsertOrUpdate(string connectString,Q_Evaluate obj)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var rs = new ResponseBase();
                 try
@@ -106,9 +106,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Delete(int Id)
+        public bool Delete(string connectString,int Id)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_Evaluate.FirstOrDefault(x => x.Id == Id);
                 if (obj != null)
@@ -128,9 +128,9 @@ namespace QMS_System.Data.BLL
             return obj != null ? true : false;
         }
 
-        public List<EvaluateModel> GetWithChild()
+        public List<EvaluateModel> GetWithChild(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var parents = db.Q_Evaluate.Where(x => !x.IsDeleted).OrderBy(x => x.Index).Select(x => new EvaluateModel()
                 {
@@ -163,11 +163,11 @@ namespace QMS_System.Data.BLL
 
         }
 
-        public PagedList<EvaluateModel> GetList(string keyWord, int startIndexRecord, int pageSize, string sorting)
+        public PagedList<EvaluateModel> GetList(string connectString, string keyWord, int startIndexRecord, int pageSize, string sorting)
         {
             try
             {
-                using (db = new QMSSystemEntities())
+                using (db = new QMSSystemEntities(connectString))
                 {
                     IEnumerable<Q_Evaluate> objs = null;
                     var pageNumber = (startIndexRecord / pageSize) + 1;
@@ -210,26 +210,26 @@ namespace QMS_System.Data.BLL
         }
         private BLLEvaluateDetail() { }
         #endregion
-        public List<EvaluateDetailModel> Gets(int Id)
+        public List<EvaluateDetailModel> Gets(string connectString,int Id)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_EvaluateDetail.Where(x => !x.IsDeleted && !x.Q_Evaluate.IsDeleted && x.EvaluateId == Id).OrderBy(x => x.Index).Select(x => new EvaluateDetailModel() { Id = x.Id, Name = x.Name, Note = x.Note }).ToList();
             }
         }
 
-        public List<ModelSelectItem> GetLookUp()
+        public List<ModelSelectItem> GetLookUp(string connectString)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 return db.Q_EvaluateDetail.Where(x => !x.IsDeleted).OrderBy(x => x.Index).Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Name }).ToList();
             }
         }
 
-        public ResponseBase InsertOrUpdate(Q_EvaluateDetail model)
+        public ResponseBase InsertOrUpdate(string connectString,Q_EvaluateDetail model)
         {
             var rs = new ResponseBase();
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 if (!CheckExists(model))
                 {
@@ -272,9 +272,9 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Delete(int Id)
+        public bool Delete(string connectString,int Id)
         {
-            using (db = new QMSSystemEntities())
+            using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_EvaluateDetail.FirstOrDefault(x => x.Id == Id);
                 if (obj != null)
@@ -293,11 +293,11 @@ namespace QMS_System.Data.BLL
                 obj = db.Q_EvaluateDetail.FirstOrDefault(x => x.Id != model.Id && x.EvaluateId == model.EvaluateId && x.Name.Trim().ToUpper().Equals(model.Name.Trim().ToUpper()));
             return obj != null ? true : false;
         }
-        public PagedList<EvaluateDetailModel> Gets(int type, int startIndexRecord, int pageSize, string sorting)
+        public PagedList<EvaluateDetailModel> Gets(string connectString,int type, int startIndexRecord, int pageSize, string sorting)
         {
             try
             {
-                using (db = new QMSSystemEntities())
+                using (db = new QMSSystemEntities(connectString))
                 {
                     var pageNumber = (startIndexRecord / pageSize) + 1;
                     if (string.IsNullOrEmpty(sorting))

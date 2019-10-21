@@ -24,9 +24,9 @@ namespace QMS_System.Data.BLL
         }
         private BLLBusiness() { }
         #endregion
-        public List<BusinessModel> Gets(int businessTypeId)
+        public List<BusinessModel> Gets(string connectString,int businessTypeId)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             return db.Q_Business.Where(x => !x.IsDeleted && !x.Q_BusinessType.IsDeleted && x.BusinessTypeId == businessTypeId).Select(x => new BusinessModel()
             {
                 Id = x.Id,
@@ -38,22 +38,22 @@ namespace QMS_System.Data.BLL
             }).ToList();
         }}
 
-        public int GetTicketAllow(int businessId)
+        public int GetTicketAllow(string connectString, int businessId)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             var obj = db.Q_Business.Where(x => !x.IsDeleted && !x.Q_BusinessType.IsDeleted && x.Id == businessId).FirstOrDefault();
             return (obj != null ? obj.TotalTicket : 0);
         }}
 
-        public List<ModelSelectItem> GetLookUp()
+        public List<ModelSelectItem> GetLookUp(string connectString)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             return db.Q_Business.Where(x => !x.IsDeleted).Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Name }).ToList();
         }}
 
-        public int Insert(Q_Business obj)
+        public int Insert(string connectString,Q_Business obj)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             if (!CheckExists(obj))
             {
                 db.Q_Business.Add(obj);
@@ -62,9 +62,9 @@ namespace QMS_System.Data.BLL
             return obj.Id;
         }}
 
-        public bool Update(Q_Business model)
+        public bool Update(string connectString,Q_Business model)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             var obj = db.Q_Business.FirstOrDefault(x => !x.IsDeleted && x.Id == model.Id);
             if (obj != null)
             {
@@ -84,9 +84,9 @@ namespace QMS_System.Data.BLL
             return false;
         }}
 
-        public bool Delete(int Id)
+        public bool Delete(string connectString,int Id)
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             var obj = db.Q_Business.FirstOrDefault(x => !x.IsDeleted && x.Id == Id);
             if (obj != null)
             {

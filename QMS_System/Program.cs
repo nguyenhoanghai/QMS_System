@@ -1,8 +1,7 @@
-﻿using QMS_System.Data.Model;
+﻿using GPRO.Core.Hai;
+using QMS_System.Data.Model;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows.Forms;
 using SystemGPRO.Serial;
 
@@ -36,8 +35,10 @@ namespace QMS_System
 
                         Application.EnableVisualStyles();
                         Application.SetCompatibleTextRenderingDefault(false);
-                      //  Application.Run(new frmMain());
-                        Application.Run(new FrmSQLConnect());
+                        if (BaseCore.Instance.CONNECT_STATUS(Application.StartupPath + "\\DATA.XML"))
+                            Application.Run(new frmMain());
+                        else
+                            Application.Run(new FrmSQLConnect());
                         Process[] processe;
                         processe = Process.GetProcessesByName("QMS_System");
                         foreach (Process dovi in processe)
@@ -52,7 +53,10 @@ namespace QMS_System
             }
             catch (Exception ex)
             {
-            } 
+
+                string errorsms = "Kết nối máy chủ SQL thất bại. Vui lòng kiểm tra lại.";
+                MessageBox.Show(errorsms, "Lỗi SQL", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

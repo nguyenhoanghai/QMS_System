@@ -21,8 +21,9 @@ namespace QMS_System.Data
         public bool SendSMS { get; set; }
         public bool IsDeleted { get; set; }
         public System.DateTime CreatedDate { get; set; }
+        public string Comment { get; set; }
     
-        public virtual Q_User Q_User { get; set; }
         public virtual Q_DailyRequire_Detail Q_DailyRequire_Detail { get; set; }
+        public virtual Q_User Q_User { get; set; }
     }
 }

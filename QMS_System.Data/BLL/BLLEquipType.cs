@@ -24,9 +24,9 @@ namespace QMS_System.Data.BLL
         }
         private BLLEquipType() { }
         #endregion
-        public List<EquipTypeModel> Gets() // load len gridview
+        public List<EquipTypeModel> Gets(string connectString) // load len gridview
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             return db.Q_EquipmentType.Where(x => !x.IsDeleted).Select(x => new EquipTypeModel() 
             {
                 Id = x.Id, 
@@ -35,15 +35,15 @@ namespace QMS_System.Data.BLL
             }).ToList();
         }}
 
-        public List<ModelSelectItem> GetLookUp()  // dua len combobox
+        public List<ModelSelectItem> GetLookUp(string connectString)  // dua len combobox
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             return db.Q_EquipmentType.Where(x => !x.IsDeleted).Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Name }).ToList();
         }}
        
-        public int Insert(Q_EquipmentType obj)  // them
+        public int Insert(string connectString,Q_EquipmentType obj)  // them
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             if(!CheckExists(obj))
             {
                 db.Q_EquipmentType.Add(obj);
@@ -52,9 +52,9 @@ namespace QMS_System.Data.BLL
             return obj.Id;
         }}
 
-        public bool Update(Q_EquipmentType model)  // cap nhat
+        public bool Update(string connectString,Q_EquipmentType model)  // cap nhat
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             var obj = db.Q_EquipmentType.FirstOrDefault(x => !x.IsDeleted && x.Id == model.Id);
             if (obj != null)
             {
@@ -71,9 +71,9 @@ namespace QMS_System.Data.BLL
             return false;
         }}
 
-        public bool Delete(int Id)  // xoa
+        public bool Delete(string connectString,int Id)  // xoa
         {
-              using (db = new QMSSystemEntities()){
+              using (db = new QMSSystemEntities(connectString)){
             var obj = db.Q_EquipmentType.FirstOrDefault(x => !x.IsDeleted && x.Id == Id);
             if (obj != null)
             {
