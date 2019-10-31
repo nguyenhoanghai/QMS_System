@@ -110,5 +110,10 @@ namespace QMS_System.Data.Enum
 
         //sau khi in phieu trả về so dang goi hay ma dich vu
         public const string PrintTicketReturnCurrentNumberOrServiceCode = "PrintTicketReturnCurrentNumberOrServiceCode";
+
+        //mau phieu
+        public const string TicketTemplate = "TicketTemplate";
+        // so liên in phiếu mỗi lần
+        public const string NumberOfLinePerTime = "NumberOfLinePerTime";
     }
 }

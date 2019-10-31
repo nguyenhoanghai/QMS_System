@@ -133,7 +133,7 @@ namespace QMS_System
         private void loadService()
         {
             repLKService.DataSource = null;
-            repLKService.DataSource = BLLService.Instance.GetLookUp(connect);
+            repLKService.DataSource = BLLService.Instance.GetLookUp(connect,false);
             repLKService.DisplayMember = "Name";
             repLKService.ValueMember = "Id";
             repLKService.PopulateViewColumns();

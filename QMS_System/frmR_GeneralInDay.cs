@@ -87,7 +87,7 @@ namespace QMS_System
         {
             var list = new List<ModelSelectItem>();
             list.Add(new ModelSelectItem() { Id = 0, Name = "Chọn tất cả" });
-            var listObj = BLLService.Instance.GetLookUp(connect);
+            var listObj = BLLService.Instance.GetLookUp(connect,false);
             foreach (var item in listObj)
             {
                 list.Add(new ModelSelectItem() { Id = item.Id, Name = item.Name });

@@ -28,7 +28,7 @@ namespace QMS_System
         }
         private void GetGridConfig()
         {
-            var list = BLLConfig.Instance.Gets(connect);
+            var list = BLLConfig.Instance.Gets(connect,false);
             //list.Add(new ConfigModel() { Id = 0, Code = "", Value = "", IsActived = false, Note = "" });
             gridConfig.DataSource = list;
         }

@@ -61,7 +61,7 @@ namespace QMS_System
         private void GetService()
         {
             lookUpService.Properties.DataSource = null;
-            lookUpService.Properties.DataSource = BLLService.Instance.GetLookUp(connect);
+            lookUpService.Properties.DataSource = BLLService.Instance.GetLookUp(connect,false);
             lookUpService.Properties.DisplayMember = "Name";
             lookUpService.Properties.ValueMember = "Id";
             lookUpService.Properties.PopulateColumns();

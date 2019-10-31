@@ -79,7 +79,7 @@
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Code" Type="varchar" MaxLength="50" Nullable="false" />
-    <Property Name="Value" Type="varchar" MaxLength="500" Nullable="false" />
+    <Property Name="Value" Type="nvarchar(max)" />
     <Property Name="Note" Type="nvarchar(max)" />
     <Property Name="IsActived" Type="bit" Nullable="false" />
     <Property Name="IsDeleted" Type="bit" Nullable="false" />

@@ -1,4 +1,5 @@
-﻿using QMS_System.Data.Model;
+﻿using QMS_System.Data.Enum;
+using QMS_System.Data.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,18 +25,21 @@ namespace QMS_System.Data.BLL
         }
         private BLLConfig() { }
         #endregion
-        public List<ConfigModel> Gets(string connectString)
+        public List<ConfigModel> Gets(string connectString, bool getall)
         {
             try
             {
                 using (db = new QMSSystemEntities(connectString))
                 {
-                    return db.Q_Config.Where(x => !x.IsDeleted).Select(x => new ConfigModel() { Id = x.Id, Code = x.Code, Value = x.Value, Note = x.Note, IsActived = x.IsActived }).ToList();
+                    if (getall)
+                        return db.Q_Config.Where(x => !x.IsDeleted).Select(x => new ConfigModel() { Id = x.Id, Code = x.Code, Value = x.Value, Note = x.Note, IsActived = x.IsActived }).ToList();
+                    else
+                        return db.Q_Config.Where(x => !x.IsDeleted && x.Code != eConfigCode.TicketTemplate).Select(x => new ConfigModel() { Id = x.Id, Code = x.Code, Value = x.Value, Note = x.Note, IsActived = x.IsActived }).ToList();
                 }
             }
             catch (Exception ex)
             {
-               // throw ex.InnerException;
+                // throw ex.InnerException;
             }
             return new List<ConfigModel>();
         }

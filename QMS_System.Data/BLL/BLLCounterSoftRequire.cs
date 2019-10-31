@@ -1,6 +1,5 @@
 ﻿using QMS_System.Data.Enum;
 using QMS_System.Data.Model;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -25,18 +24,22 @@ namespace QMS_System.Data.BLL
         }
         private BLLCounterSoftRequire() { }
         #endregion
+
         public List<CounterSoftRequireModel> Gets(string connectString)
         {
-           var  list = new List<CounterSoftRequireModel>();
+            var list = new List<CounterSoftRequireModel>();
             using (db = new QMSSystemEntities(connectString))
             {
-                var objs = db.Q_CounterSoftRequire.Where(x=>x.TypeOfRequire != (int)eCounterSoftRequireType.SendSMS).ToList(); 
+                var objs = db.Q_CounterSoftRequire.Where(x => x.TypeOfRequire != (int)eCounterSoftRequireType.SendSMS).ToList();
                 if (objs.Count > 0)
                 {
                     for (int i = 0; i < objs.Count; i++)
-                    { 
-                        list.Add(new CounterSoftRequireModel() { Content = objs[i].Content, Type = objs[i].TypeOfRequire });
-                        db.Q_CounterSoftRequire.Remove(objs[i]);
+                    {
+                        list.Add(new CounterSoftRequireModel() { Id = objs[i].Id, Content = objs[i].Content, Type = objs[i].TypeOfRequire });
+                        if (objs[i].TypeOfRequire == (int)eCounterSoftRequireType.ReadSound ||
+                            objs[i].TypeOfRequire == (int)eCounterSoftRequireType.SendNextToMainDisplay ||
+                            objs[i].TypeOfRequire == (int)eCounterSoftRequireType.SendRecallToMainDisplay)
+                            db.Q_CounterSoftRequire.Remove(objs[i]);
                     }
                     db.SaveChanges();
                 }
@@ -50,7 +53,7 @@ namespace QMS_System.Data.BLL
         /// <param name="str"></param>
         /// <param name="requireType">0:read sound , 1 print Ticket</param>
         /// <returns></returns>
-        public bool Insert(string connectString,string str, int requireType)
+        public bool Insert(string connectString, string str, int requireType)
         {
             using (db = new QMSSystemEntities(connectString))
             {
@@ -72,6 +75,31 @@ namespace QMS_System.Data.BLL
                         db.Q_CounterSoftRequire.Remove(objs[i]);
                     db.SaveChanges();
                 }
+            }
+        }
+
+        public void Delete(int Id, string connectString)
+        {
+            using (db = new QMSSystemEntities(connectString))
+            {
+                var obj = db.Q_CounterSoftRequire.FirstOrDefault(x => x.Id == Id);
+                if (obj != null)
+                {
+                    db.Q_CounterSoftRequire.Remove(obj);
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        /// <summary>
+        /// ktra co dang xu lý in phiếu hay goi next hay khong ?
+        /// </summary>
+        /// <returns></returns> 
+        public Q_CounterSoftRequire HasProcessing(string connectString, int type)
+        {
+            using (db = new QMSSystemEntities(connectString))
+            {
+                return db.Q_CounterSoftRequire.FirstOrDefault(x => x.TypeOfRequire == type);
             }
         }
     }

@@ -12,7 +12,6 @@
         <EntityTypeShape EntityType="QMSSystemModel.Q_BusinessType" Width="1.5" PointX="1.5" PointY="40.25" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_Command" Width="1.5" PointX="0.75" PointY="9.125" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_CommandParameter" Width="1.5" PointX="3.75" PointY="3.375" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_Config" Width="1.5" PointX="10.75" PointY="0.75" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_Counter" Width="1.5" PointX="4.5" PointY="30.75" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_CounterSoftRequire" Width="1.5" PointX="11.75" PointY="9.75" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_CounterSound" Width="1.5" PointX="11.75" PointY="13.5" />
@@ -108,6 +107,7 @@
         <AssociationConnector Association="QMSSystemModel.FK_Q_HisUserEvaluate_Q_HisDailyRequire_De" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_HisUserEvaluate_Q_User" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_UserEvaluate_NHANVIEN" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Config" Width="1.5" PointX="14.375" PointY="9.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

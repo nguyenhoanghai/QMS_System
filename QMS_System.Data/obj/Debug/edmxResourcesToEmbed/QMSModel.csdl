@@ -8,7 +8,6 @@
     <EntitySet Name="Q_BusinessType" EntityType="QMSSystemModel.Q_BusinessType" />
     <EntitySet Name="Q_Command" EntityType="QMSSystemModel.Q_Command" />
     <EntitySet Name="Q_CommandParameter" EntityType="QMSSystemModel.Q_CommandParameter" />
-    <EntitySet Name="Q_Config" EntityType="QMSSystemModel.Q_Config" />
     <EntitySet Name="Q_Counter" EntityType="QMSSystemModel.Q_Counter" />
     <EntitySet Name="Q_CounterSoftRequire" EntityType="QMSSystemModel.Q_CounterSoftRequire" />
     <EntitySet Name="Q_CounterSound" EntityType="QMSSystemModel.Q_CounterSound" />
@@ -274,6 +273,7 @@
       <End Role="Q_User" EntitySet="Q_User" />
       <End Role="Q_UserEvaluate" EntitySet="Q_UserEvaluate" />
     </AssociationSet>
+    <EntitySet Name="Q_Config" EntityType="QMSSystemModel.Q_Config" />
   </EntityContainer>
   <EntityType Name="Q_Action">
     <Key>
@@ -359,17 +359,6 @@
     <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
     <NavigationProperty Name="Q_Command" Relationship="QMSSystemModel.FK_Q_CommandParameter_Q_Command" FromRole="Q_CommandParameter" ToRole="Q_Command" />
     <NavigationProperty Name="Q_UserCmdRegister" Relationship="QMSSystemModel.FK_Q_UserCommand_Q_CommandParameter" FromRole="Q_CommandParameter" ToRole="Q_UserCmdRegister" />
-  </EntityType>
-  <EntityType Name="Q_Config">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-    <Property Name="Value" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-    <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-    <Property Name="IsActived" Type="Boolean" Nullable="false" />
-    <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
   </EntityType>
   <EntityType Name="Q_Counter">
     <Key>
@@ -1620,4 +1609,15 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <EntityType Name="Q_Config">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsActived" Type="Boolean" Nullable="false" />
+    <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+  </EntityType>
 </Schema>

@@ -1,5 +1,4 @@
 ﻿using QMS_System.Data.Model;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -28,7 +27,7 @@ namespace QMS_System.Data.BLL
         {
             using (db = new QMSSystemEntities(connectString))
             {
-                return db.Q_Service.Where(x => !x.IsDeleted).Select(x => new ServiceModel() { Id = x.Id, Name = x.Name, StartNumber = x.StartNumber, EndNumber = x.EndNumber, TimeProcess = x.TimeProcess, Note = x.Note, IsActived = x.IsActived,Code = x.Code }).ToList();
+                return db.Q_Service.Where(x => !x.IsDeleted).Select(x => new ServiceModel() { Id = x.Id, Name = x.Name, StartNumber = x.StartNumber, EndNumber = x.EndNumber, TimeProcess = x.TimeProcess, Note = x.Note, IsActived = x.IsActived, Code = x.Code }).ToList();
             }
         }
 
@@ -36,7 +35,7 @@ namespace QMS_System.Data.BLL
         {
             using (db = new QMSSystemEntities(connectString))
             {
-                var sers = db.Q_Service.Where(x => !x.IsDeleted&&x.IsActived).Select(x => new ServiceDayModel() { Id = x.Id, Name = x.Name, StartNumber = x.StartNumber, EndNumber = x.EndNumber, TimeProcess = x.TimeProcess }).ToList();
+                var sers = db.Q_Service.Where(x => !x.IsDeleted && x.IsActived).Select(x => new ServiceDayModel() { Id = x.Id, Name = x.Name, StartNumber = x.StartNumber, EndNumber = x.EndNumber, TimeProcess = x.TimeProcess }).ToList();
                 var serShifts = db.Q_ServiceShift.Where(x => !x.IsDeleted && !x.Q_Service.IsDeleted && !x.Q_Shift.IsDeleted).Select(x => new ServiceShiftModel() { Id = x.Id, ServiceId = x.ServiceId, ShiftId = x.ShiftId, Index = x.Index, Start = x.Q_Shift.Start, End = x.Q_Shift.End }).ToList();
                 if (sers.Count > 0)
                     foreach (var item in sers)
@@ -45,7 +44,7 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public Q_Service Get(string connectString,int serviceId)
+        public Q_Service Get(string connectString, int serviceId)
         {
             using (db = new QMSSystemEntities(connectString))
             {
@@ -53,15 +52,28 @@ namespace QMS_System.Data.BLL
                 return obj;
             }
         }
-        public List<ModelSelectItem> GetLookUp(string connectString)
+        public List<ModelSelectItem> GetLookUp(string connectString, bool countWaiting)
         {
             using (db = new QMSSystemEntities(connectString))
             {
-                return db.Q_Service.Where(x => !x.IsDeleted&&x.IsActived).AsEnumerable().Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Name, Code = x.TimeProcess.TimeOfDay.ToString() }).ToList();
+
+                var services = db.Q_Service.Where(x => !x.IsDeleted && x.IsActived).AsEnumerable().Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Name, Code = x.TimeProcess.TimeOfDay.ToString(), Data = 0 }).ToList();
+                if (countWaiting)
+                {
+                    var details = (from x in db.Q_DailyRequire_Detail where !x.UserId.HasValue select x).ToList();
+                    foreach (var item in services)
+                    {
+                        var found = details.Where(x => x.Q_DailyRequire.ServiceId == item.Id);
+                        if (found != null && found.Count() > 0)
+                            item.Data = found.Count();
+                    }
+                }
+                return services;
+
             }
         }
 
-        public int Insert(string connectString,Q_Service obj)
+        public int Insert(string connectString, Q_Service obj)
         {
             using (db = new QMSSystemEntities(connectString))
             {
@@ -73,7 +85,7 @@ namespace QMS_System.Data.BLL
                 return obj.Id;
             }
         }
-        public bool Update(string connectString,Q_Service model)
+        public bool Update(string connectString, Q_Service model)
         {
             using (db = new QMSSystemEntities(connectString))
             {
@@ -98,7 +110,7 @@ namespace QMS_System.Data.BLL
                 return false;
             }
         }
-        public bool Delete(string connectString,int Id)
+        public bool Delete(string connectString, int Id)
         {
             using (db = new QMSSystemEntities(connectString))
             {

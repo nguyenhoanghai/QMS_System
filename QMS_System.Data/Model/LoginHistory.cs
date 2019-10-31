@@ -8,7 +8,10 @@ namespace QMS_System.Data.Model
     {
         public int Id { get; set; }
         public int EquipCode { get; set; }
+        public int CounterCode { get; set; }
         public int UserId { get; set; }
+        public string UserName { get; set; }
+        public string CounterName { get; set; }
         public DateTime? Date { get; set; }
         public int StatusId { get; set; }
         public DateTime? LogoutTime { get; set; }

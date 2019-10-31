@@ -78,7 +78,7 @@ namespace QMS_System
             if (sqlStatus)
             {
                 entityConnectString = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
-                configs = BLLConfig.Instance.Gets(entityConnectString);
+                configs = BLLConfig.Instance.Gets(entityConnectString,true);
                 soundPath = GetConfigByCode(eConfigCode.SoundPath);
                 SoundLockPrintTicket = GetConfigByCode(eConfigCode.SoundLockPrintTicket);
                 CheckTimeBeforePrintTicket = GetConfigByCode(eConfigCode.CheckTimeBeforePrintTicket);
@@ -109,7 +109,6 @@ namespace QMS_System
                         query += "update q_counter set lastcall = 0 ,isrunning =1 GO";
                         query += "DELETE FROM [dbo].[Q_RequestTicket]  ";
                         BLLSQLBuilder.Instance.Excecute(entityConnectString, query);
-
                     }
                     catch (Exception ex)
                     {
@@ -118,7 +117,6 @@ namespace QMS_System
                 }
                 else
                     errorsms = "";
-
                 btRunProcess.PerformClick();
             }
             else
@@ -596,10 +594,10 @@ namespace QMS_System
                         {
                             player.SoundLocation = (soundPath + temp[0]);
 
-                           // MessageBox.Show(SoundInfo.GetSoundLength(player.SoundLocation.Trim()).ToString());
-                             int iTime = SoundInfo.GetSoundLength(player.SoundLocation.Trim()) + silenceTime;
+                            // MessageBox.Show(SoundInfo.GetSoundLength(player.SoundLocation.Trim()).ToString());
+                            int iTime = SoundInfo.GetSoundLength(player.SoundLocation.Trim()) + silenceTime;
                             player.Play();
-                            Thread.Sleep(iTime); 
+                            Thread.Sleep(iTime);
                             temp.Remove(temp[0]);
                         }
                         else
@@ -720,8 +718,7 @@ namespace QMS_System
                 MessageBox.Show("Lấy thông tin Com Keypad bị lỗi.\n" + ex.Message, "Lỗi Com Keypad");
             }
         }
-
-
+        
         private void comPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             this.Invoke(new EventHandler(RecieverData));
@@ -757,7 +754,7 @@ namespace QMS_System
                             else if (hexStr.Length >= 4 || hexStr.Contains("8C"))
                             {
                                 //  MessageBox.Show("VO COUNTER");
-                                CounterProcess(hexStr);
+                                CounterProcess(hexStr,0);
                             }
                             break;
                         case (int)eEquipType.Printer:
@@ -802,7 +799,7 @@ namespace QMS_System
             catch (Exception) { }
         }
 
-        public void PrintNewTicket(int printerId,
+        public bool PrintNewTicket(int printerId,
             int serviceId,
             int businessId,
             bool isTouchScreen,
@@ -986,9 +983,10 @@ namespace QMS_System
                     var counter = freeUser < 10 ? ("0" + freeUser) : freeUser.ToString();
                     var str = ("AA," + counter + ",8B,00,00");
                     autoCall = true;
-                    CounterProcess(str.Split(',').ToArray());
+                    CounterProcess(str.Split(',').ToArray(),0);
                 }
             }
+            return true;
         }
 
         private void TmerQuetComport_Tick(object sender, EventArgs e)
@@ -1059,7 +1057,7 @@ namespace QMS_System
             { }
         }
 
-        private void CounterProcess(string[] hexStr)
+        private void CounterProcess(string[] hexStr, int requireId)
         {
             try
             {
@@ -1384,9 +1382,10 @@ namespace QMS_System
             {
                 MessageBox.Show("Lỗi hàm CounterProcess => " + ex.Message);
             }
+            if (requireId != 0)
+                BLLCounterSoftRequire.Instance.Delete(requireId, entityConnectString);
         }
-
-
+        
         #endregion
 
         private void btnVideo_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -1479,6 +1478,7 @@ namespace QMS_System
                 {
                     IsDatabaseChange = true;
                     bool hasSound = false;
+                    List<MaindisplayDirectionModel> mains;
                     for (int i = 0; i < requires.Count; i++)
                     {
                         switch (requires[i].Type)
@@ -1489,16 +1489,56 @@ namespace QMS_System
                                 break;
                             case (int)eCounterSoftRequireType.PrintTicket:
                                 var requireObj = JsonConvert.DeserializeObject<PrinterRequireModel>(requires[i].Content);
-                                PrintNewTicket(requireObj.PrinterId, requireObj.ServiceId, 0, true, false, requireObj.ServeTime.TimeOfDay, requireObj.Name, requireObj.Address, requireObj.DOB, requireObj.MaBenhNhan, requireObj.MaPhongKham, requireObj.SttPhongKham, requireObj.SoXe);
+                                var result = PrintNewTicket(requireObj.PrinterId, requireObj.ServiceId, 0, true, false, requireObj.ServeTime.TimeOfDay, requireObj.Name, requireObj.Address, requireObj.DOB, requireObj.MaBenhNhan, requireObj.MaPhongKham, requireObj.SttPhongKham, requireObj.SoXe);
+                                if (result)
+                                    BLLCounterSoftRequire.Instance.Delete(requires[i].Id, entityConnectString);
                                 break;
                             case (int)eCounterSoftRequireType.CounterEvent:
                                 if (!string.IsNullOrEmpty(requires[i].Content))
                                 {
                                     var arr = requires[i].Content.Split(',').ToArray();
                                     if (arr != null && arr.Length == 5)
-                                        CounterProcess(arr);
+                                        CounterProcess(arr, requires[i].Id);
                                 }
                                 break;
+                            case (int)eCounterSoftRequireType.SendNextToMainDisplay:  // gui so len hien thi chính
+                                var mainRequireObj = JsonConvert.DeserializeObject< RequireMainDisplay>(requires[i].Content);
+                                mains = BLLMaindisplayDirection.Instance.Gets(entityConnectString, mainRequireObj.EquipCode);
+                                if (mains.Count > 0)
+                                {
+                                    arrStr = BaseCore.Instance.ChangeNumber(mainRequireObj.TicketNumber);
+                                    string id = "";
+                                    for (int z = 0; z < mains.Count; z++)
+                                    {
+                                        id = (mains[z].EquipmentCode < 10 ? ("0" + mains[z].EquipmentCode) : mains[z].EquipmentCode.ToString());
+                                        int mainDiric = (mains[z].Direction ? 8 : 0);
+                                        if (mainRequireObj.EquipCode > 1)
+                                            mainDiric = mainDiric + mainRequireObj.EquipCode;
+                                        dataSendToComport.Add("AA " + id);
+                                        dataSendToComport.Add(("AA " + id + " " + arrStr[0] + " " + arrStr[1] + " 0" + mainRequireObj.EquipCode));
+                                        lbRecieve.Caption = dataSendToComport[1];
+                                    }
+                                }
+                                break;
+                           case (int)eCounterSoftRequireType.SendRecallToMainDisplay: // gui so len hien thi chính
+                                var _mainRequireObj = JsonConvert.DeserializeObject<RequireMainDisplay>(requires[i].Content);
+                                mains = BLLMaindisplayDirection.Instance.Gets(entityConnectString, _mainRequireObj.EquipCode);
+                                if (mains.Count > 0)
+                                {
+                                    arrStr = BaseCore.Instance.ChangeNumber(_mainRequireObj.TicketNumber);
+                                    string id = "";
+                                    for (int z = 0; z < mains.Count; z++)
+                                    {
+                                        id = (mains[z].EquipmentCode < 10 ? ("0" + mains[z].EquipmentCode) : mains[z].EquipmentCode.ToString());
+
+                                        int mainDiric = (mains[z].Direction ? 8 : 0);
+                                        if (_mainRequireObj.EquipCode > 1)
+                                            mainDiric = mainDiric + _mainRequireObj.EquipCode;
+                                        dataSendToComport.Add("AA " + id);
+                                        dataSendToComport.Add(("AA " + id + " " + arrStr[0] + " " + arrStr[1] + " 0" + _mainRequireObj.EquipCode));
+                                    }
+                                }
+                                break; 
                         }
                     }
 
@@ -1542,7 +1582,7 @@ namespace QMS_System
             else
             {
                 var str = "AA," + txtmatb.EditValue.ToString() + "," + radioLenh.EditValue.ToString() + "," + txtparam1.EditValue.ToString() + "," + txtparam2.EditValue.ToString();
-                CounterProcess(str.Split(',').ToArray());
+                CounterProcess(str.Split(',').ToArray(),0);
             }
         }
 

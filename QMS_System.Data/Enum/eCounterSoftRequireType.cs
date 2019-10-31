@@ -11,6 +11,8 @@ namespace QMS_System.Data.Enum
         ReadSound=1,
         PrintTicket=2 ,
         SendSMS = 3,
-        CounterEvent = 4
+        CounterEvent = 4,
+        SendNextToMainDisplay = 5,
+        SendRecallToMainDisplay = 6,
     }
 }

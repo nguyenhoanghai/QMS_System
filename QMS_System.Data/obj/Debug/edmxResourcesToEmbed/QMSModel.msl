@@ -81,18 +81,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Q_Config">
-      <EntityTypeMapping TypeName="QMSSystemModel.Q_Config">
-        <MappingFragment StoreEntitySet="Q_Config">
-          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-          <ScalarProperty Name="IsActived" ColumnName="IsActived" />
-          <ScalarProperty Name="Note" ColumnName="Note" />
-          <ScalarProperty Name="Value" ColumnName="Value" />
-          <ScalarProperty Name="Code" ColumnName="Code" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Q_Counter">
       <EntityTypeMapping TypeName="QMSSystemModel.Q_Counter">
         <MappingFragment StoreEntitySet="Q_Counter">
@@ -607,6 +595,18 @@
           <ScalarProperty Name="Score" ColumnName="Score" />
           <ScalarProperty Name="UserId" ColumnName="UserId" />
           <ScalarProperty Name="DailyRequireDeId" ColumnName="DailyRequireDeId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Q_Config">
+      <EntityTypeMapping TypeName="QMSSystemModel.Q_Config">
+        <MappingFragment StoreEntitySet="Q_Config">
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="IsActived" ColumnName="IsActived" />
+          <ScalarProperty Name="Note" ColumnName="Note" />
+          <ScalarProperty Name="Value" ColumnName="Value" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>

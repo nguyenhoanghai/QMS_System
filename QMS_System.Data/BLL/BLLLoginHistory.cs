@@ -31,15 +31,27 @@ namespace QMS_System.Data.BLL
         {
             using (db = new QMSSystemEntities(connectString))
             {
-                return db.Q_Login.Where(x => x.StatusId == (int)eStatus.LOGIN).Select(x => new LoginHistoryModel()
+                var logins = db.Q_Login.Where(x => x.StatusId == (int)eStatus.LOGIN && !x.Q_User.IsDeleted).Select(x => new LoginHistoryModel()
                 {
                     Id = x.Id,
                     UserId = x.UserId,
+                    UserName = x.Q_User.UserName, 
                     EquipCode = x.EquipCode,
                     Date = x.Date,
                     StatusId = x.StatusId,
                     LogoutTime = x.LogoutTime
                 }).ToList();
+                var equips = from x in db.Q_Equipment where !x.IsDeleted select x;
+                foreach (var item in logins)
+                {
+                    var found = equips.FirstOrDefault(x => x.Code == item.EquipCode);
+                    if(found != null)
+                    {
+                        item.CounterName = found.Q_Counter.Name;
+                        item.CounterCode = found.CounterId;
+                    }
+                }
+                return logins;
             }
         }
 
