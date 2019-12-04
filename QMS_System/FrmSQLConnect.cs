@@ -1,5 +1,4 @@
 ﻿using GPRO.Core.Hai;
-using QMS_System.Helper;
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -18,17 +17,22 @@ namespace QMS_System
 
         private void FrmSQLConnect_Load(object sender, EventArgs e)
         {
-            string info = BaseCore.Instance.GetStringConnectInfo(Application.StartupPath + "\\DATA.XML");
-            if (!string.IsNullOrEmpty(info))
+            try
             {
-                var infos = info.Split(',');
-                txtServerName.Text = infos[0];
-                cbDatabases.Text = infos[1];
-                txtLogin.Text = infos[2];
-                txtPass.Text = infos[3];
-                chkIsAuthen.Checked = bool.Parse(infos[4]);
-                chkIsAuthen_CheckedChanged(sender, e);
+                string info = BaseCore.Instance.GetStringConnectInfo(Application.StartupPath + "\\DATA.XML");
+                if (!string.IsNullOrEmpty(info))
+                {
+                    var infos = info.Split(',');
+                    txtServerName.Text = infos[0];
+                    cbDatabases.Text = infos[1];
+                    txtLogin.Text = infos[2];
+                    txtPass.Text = infos[3];
+                    chkIsAuthen.Checked = bool.Parse(infos[4]);
+                    chkIsAuthen_CheckedChanged(sender, e);
+                }
             }
+            catch (Exception)
+            { }
         }
 
         private void chkIsAuthen_CheckedChanged(object sender, EventArgs e)
@@ -159,7 +163,7 @@ namespace QMS_System
             xmlDocument.Save(filename);
 
             Application.Restart();
-            Environment.Exit(0); 
+            Environment.Exit(0);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)

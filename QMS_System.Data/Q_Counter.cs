@@ -19,6 +19,7 @@ namespace QMS_System.Data
             this.Q_CounterSound = new HashSet<Q_CounterSound>();
             this.Q_Equipment = new HashSet<Q_Equipment>();
             this.Q_MaindisplayDirection = new HashSet<Q_MaindisplayDirection>();
+            this.Q_TVReadSound = new HashSet<Q_TVReadSound>();
         }
     
         public int Id { get; set; }
@@ -34,5 +35,6 @@ namespace QMS_System.Data
         public virtual ICollection<Q_CounterSound> Q_CounterSound { get; set; }
         public virtual ICollection<Q_Equipment> Q_Equipment { get; set; }
         public virtual ICollection<Q_MaindisplayDirection> Q_MaindisplayDirection { get; set; }
+        public virtual ICollection<Q_TVReadSound> Q_TVReadSound { get; set; }
     }
 }

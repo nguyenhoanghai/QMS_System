@@ -16,11 +16,13 @@ namespace QMS_System.Data.Model
         public List<ViewDetailModel> Details { get; set; }
 
          public List<SubModel> Services { get; set; }
-        
+        public List<string> Sounds { get; set; }
+
         public ViewModel()
         {
             Details = new List<ViewDetailModel>(); 
             Services = new List<SubModel>();
+            Sounds = new List<string>();
         }
     }
 

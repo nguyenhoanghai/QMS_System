@@ -1,5 +1,6 @@
 ﻿using QMS_System.Data.Enum;
 using QMS_System.Data.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -58,6 +59,29 @@ namespace QMS_System.Data.BLL
             using (db = new QMSSystemEntities(connectString))
             {
                 db.Q_CounterSoftRequire.Add(new Q_CounterSoftRequire() { Content = str, TypeOfRequire = requireType });
+                db.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
+        public bool Insert(string connectString, string str, int requireType, int _counterId)
+        {
+            using (db = new QMSSystemEntities(connectString))
+            {
+                db.Q_CounterSoftRequire.Add(new Q_CounterSoftRequire() { Content = str, TypeOfRequire = requireType });
+                if (requireType == (int)eCounterSoftRequireType.ReadSound)
+                {
+                    var config = db.Q_Config.FirstOrDefault(x => x.Code == eConfigCode.TVReadSound);
+                    if (config != null && config.Value == "1")
+                        db.Q_TVReadSound.Add(new Q_TVReadSound()
+                        {
+                            CounterId = _counterId,
+                            Sounds = str,
+                            CreatedAt = DateTime.Now,
+                            UsersReaded = "0,"
+                        });
+                }
                 db.SaveChanges();
                 return true;
             }

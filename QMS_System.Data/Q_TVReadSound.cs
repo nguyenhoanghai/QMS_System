@@ -12,17 +12,14 @@ namespace QMS_System.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class Q_ServiceLimit
+    public partial class Q_TVReadSound
     {
         public int Id { get; set; }
-        public int UserId { get; set; }
-        public int ServiceId { get; set; }
-        public int Quantity { get; set; }
-        public bool IsDeleted { get; set; }
-        public int CurrentQuantity { get; set; }
-        public string CurrentDay { get; set; }
+        public string Sounds { get; set; }
+        public string UsersReaded { get; set; }
+        public Nullable<int> CounterId { get; set; }
+        public Nullable<System.DateTime> CreatedAt { get; set; }
     
-        public virtual Q_User Q_User { get; set; }
-        public virtual Q_Service Q_Service { get; set; }
+        public virtual Q_Counter Q_Counter { get; set; }
     }
 }

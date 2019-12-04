@@ -93,13 +93,7 @@
         <AssociationConnector Association="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_User" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_RequestTicket" Width="1.5" PointX="13.375" PointY="6.75" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_RecieverSMS" Width="1.5" PointX="13.375" PointY="3.75" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_Service" Width="1.5" PointX="0.75" PointY="39" />
-        <AssociationConnector Association="QMSSystemModel.FK_Q_DailyRequire_Q_Service" />
-        <AssociationConnector Association="QMSSystemModel.FK_Q_HisDailyRequire_Q_Service" />
-        <AssociationConnector Association="QMSSystemModel.FK_Q_ServiceShift_Q_Service" />
-        <AssociationConnector Association="QMSSystemModel.FK_Q_ServiceStep_Q_Service" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_ServiceLimit" Width="1.5" PointX="6" PointY="20.125" />
-        <AssociationConnector Association="QMSSystemModel.FK_Q_ServiceLimit_Q_Service" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_ServiceLimit_Q_User" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_HisUserEvaluate" Width="1.5" PointX="16.25" PointY="21.5" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_UserEvaluate" Width="1.5" PointX="16.25" PointY="17.875" />
@@ -108,6 +102,14 @@
         <AssociationConnector Association="QMSSystemModel.FK_Q_HisUserEvaluate_Q_User" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_UserEvaluate_NHANVIEN" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_Config" Width="1.5" PointX="14.375" PointY="9.75" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Service" Width="1.5" PointX="0.75" PointY="33.625" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_DailyRequire_Q_Service" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_HisDailyRequire_Q_Service" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_ServiceLimit_Q_Service" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_ServiceShift_Q_Service" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_ServiceStep_Q_Service" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_TVReadSound" Width="1.5" PointX="6.75" PointY="52.375" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_TVReadSound_Q_Counter" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

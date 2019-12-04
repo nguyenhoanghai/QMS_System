@@ -115,5 +115,10 @@ namespace QMS_System.Data.Enum
         public const string TicketTemplate = "TicketTemplate";
         // so liên in phiếu mỗi lần
         public const string NumberOfLinePerTime = "NumberOfLinePerTime";
+        // su dung máy in board
+        public const string UsePrintBoard = "UsePrintBoard";
+        //ten com may in ko su dung board 
+        public const string COM_Print = "COMPrint";
+        public const string TVReadSound = "TVReadSound";
     }
 }

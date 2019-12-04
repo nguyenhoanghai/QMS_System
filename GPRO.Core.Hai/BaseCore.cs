@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity.Core.EntityClient;
 using System.Data.SqlClient;
-using System.IO; 
-using System.Text; 
+using System.IO;
+using System.Text;
 using System.Xml;
 
 namespace GPRO.Core.Hai
@@ -13,7 +13,7 @@ namespace GPRO.Core.Hai
     {
         #region constructor
         static object key = new object();
-        private static volatile BaseCore _Instance;   
+        private static volatile BaseCore _Instance;
         public static BaseCore Instance
         {
             get
@@ -237,7 +237,7 @@ namespace GPRO.Core.Hai
         {
             try
             {
-               // string filename = Application.StartupPath + "\\DATA.XML";
+                // string filename = Application.StartupPath + "\\DATA.XML";
                 if (File.Exists(filename))
                 {
                     XmlDocument xmlDocument = new XmlDocument();
@@ -267,7 +267,7 @@ namespace GPRO.Core.Hai
         {
             try
             {
-               // string filename = Application.StartupPath + "\\DATA.XML";
+                // string filename = Application.StartupPath + "\\DATA.XML";
                 if (File.Exists(filename))
                 {
                     XmlDocument xmlDocument = new XmlDocument();
@@ -301,6 +301,23 @@ namespace GPRO.Core.Hai
                 return "";
             }
         }
-    }
 
+        public string abc2unicode(string vABC)
+        {
+            char[] UNI = { 'À', 'Á', 'Â', 'Ã', 'È', 'É', 'Ê', 'Ì', 'Í', 'Ò', 'Ó', 'Ô', 'Õ', 'Ù', 'Ú', 'Ý', 'à', 'á', 'â', 'ã', 'è', 'é', 'ê', 'ì', 'í', 'ò', 'ó', 'ô', 'õ', 'ù', 'ú', 'ý', 'Ă', 'ă', 'Đ', 'đ', 'Ĩ', 'ĩ', 'Ũ', 'ũ', 'Ơ', 'ơ', 'Ư', 'ư', 'Ạ', 'ạ', 'Ả', 'ả', 'Ấ', 'ấ', 'Ầ', 'ầ', 'Ẩ', 'ẩ', 'Ẫ', 'ẫ', 'Ậ', 'ậ', 'Ắ', 'ắ', 'Ằ', 'ằ', 'Ẳ', 'ẳ', 'Ẵ', 'ẵ', 'Ặ', 'ặ', 'Ẹ', 'ẹ', 'Ẻ', 'ẻ', 'Ẽ', 'ẽ', 'Ế', 'ế', 'Ề', 'ề', 'Ể', 'ể', 'Ễ', 'ễ', 'Ệ', 'ệ', 'Ỉ', 'ỉ', 'Ị', 'ị', 'Ọ', 'ọ', 'Ỏ', 'ỏ', 'Ố', 'ố', 'Ồ', 'ồ', 'Ổ', 'ổ', 'Ỗ', 'ỗ', 'Ộ', 'ộ', 'Ớ', 'ớ', 'Ờ', 'ờ', 'Ở', 'ở', 'Ỡ', 'ỡ', 'Ợ', 'ợ', 'Ụ', 'ụ', 'Ủ', 'ủ', 'Ứ', 'ứ', 'Ừ', 'ừ', 'Ử', 'ử', 'Ữ', 'ữ', 'Ự', 'ự', 'Ỳ', 'ỳ', 'Ỵ', 'ỵ', 'Ỷ', 'ỷ', 'Ỹ', 'ỹ' };
+            char[] TCVN3={ 'µ', '¸', '¢', '·', 'Ì', 'Ð', '£', '×', 'Ý', 'ß', 'ã', '¤', 'â', 'ï', 'ó', 'ý', 'µ', '¸', '©', '·', 'Ì', 'Ð', 'ª', '×', 'Ý', 'ß', 'ã', '«', 'â', 'ï', 'ó', 'ý', '¡', '¨', '§', '®', 'Ü', 'Ü', 'ò', 'ò', '¥', '¬', '¦', '­', '¹', '¹', '¶', '¶', 'Ê', 'Ê', 'Ç', 'Ç', 'È', 'È', 'É', 'É', 'Ë', 'Ë', '¾', '¾', '»', '»', '¼', '¼', '½', '½', 'Æ', 'Æ', 'Ñ', 'Ñ', 'Î', 'Î', 'Ï', 'Ï', 'Õ', 'Õ', 'Ò', 'Ò', 'Ó', 'Ó', 'Ô', 'Ô', 'Ö', 'Ö', 'Ø', 'Ø', 'Þ', 'Þ', 'ä', 'ä', 'á', 'á', 'è', 'è', 'å', 'å', 'æ', 'æ', 'ç', 'ç', 'é', 'é', 'í', 'í', 'ê', 'ê', 'ë', 'ë', 'ì', 'ì', 'î', 'î', 'ô', 'ô', 'ñ', 'ñ', 'ø', 'ø', 'õ', 'õ', 'ö', 'ö', '÷', '÷', 'ù', 'ù', 'ú', 'ú', 'þ', 'þ', 'û', 'û', 'ü', 'ü' };
+            char[] chars = vABC.ToCharArray();
+            //for (int i = 0; i < chars.Length; i++)
+            //{
+
+            //}
+
+
+                for (int i = 0; i < UNI.Length; i++)
+            {
+                vABC = vABC.Replace(UNI[i], TCVN3[i]);
+            }
+            return vABC;
+        }
+    }
 }

@@ -325,6 +325,12 @@
     <Compile Include="frmStatus.Designer.cs">
       <DependentUpon>frmStatus.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmTicketTemplate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmTicketTemplate.Designer.cs">
+      <DependentUpon>frmTicketTemplate.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmUser.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -498,6 +504,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmStatus.resx">
       <DependentUpon>frmStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmTicketTemplate.resx">
+      <DependentUpon>frmTicketTemplate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmUser.resx">
       <DependentUpon>frmUser.cs</DependentUpon>
@@ -912,6 +921,9 @@
     <Content Include="Image\ghepxanh.jpg" />
     <Content Include="Q.ico" />
     <None Include="Resources\server_connect.png" />
+    <None Include="Resources\iconfinder_printer-remote_30279.png" />
+    <None Include="Resources\iconfinder_printer_delete_36361.png" />
+    <None Include="Resources\tk.png" />
     <Content Include="Script DB\goc qms.sql" />
     <Content Include="Script DB\update qms 18_3_2019.sql" />
     <Content Include="Script DB\update qms 12_12_2018.sql" />

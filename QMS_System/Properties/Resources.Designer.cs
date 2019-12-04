@@ -373,6 +373,26 @@ namespace QMS_System.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap iconfinder_printer_delete_36361 {
+            get {
+                object obj = ResourceManager.GetObject("iconfinder_printer_delete_36361", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap iconfinder_printer_remote_30279 {
+            get {
+                object obj = ResourceManager.GetObject("iconfinder_printer-remote_30279", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap if__Direction_1337468 {
             get {
                 object obj = ResourceManager.GetObject("if__Direction_1337468", resourceCulture);
@@ -1006,6 +1026,16 @@ namespace QMS_System.Properties {
         internal static System.Drawing.Bitmap setting1 {
             get {
                 object obj = ResourceManager.GetObject("setting1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap tk {
+            get {
+                object obj = ResourceManager.GetObject("tk", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -23,7 +23,7 @@ namespace QMS_System.IssueTicketScreen
         {
             try
             {
-  string imgPath = BLLConfig.Instance.GetConfigByCode(connect, eConfigCode.Background);
+                string imgPath = BLLConfig.Instance.GetConfigByCode(connect, eConfigCode.Background);
             if (!string.IsNullOrEmpty(imgPath) && File.Exists(imgPath))
             {
                 Image img = new Bitmap(imgPath);

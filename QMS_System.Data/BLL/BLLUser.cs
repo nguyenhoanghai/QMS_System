@@ -259,7 +259,7 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public Q_User Get(string connectString,string username)
+        public Q_User  Get(string connectString,string username)
         {
             using (db = new QMSSystemEntities(connectString)) { return db.Q_User.FirstOrDefault(x => !x.IsDeleted && x.UserName.Trim().Equals(username)); }
         }

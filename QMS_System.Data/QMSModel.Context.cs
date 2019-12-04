@@ -69,10 +69,11 @@ namespace QMS_System.Data
         public DbSet<Q_HisDailyRequire_De> Q_HisDailyRequire_De { get; set; }
         public DbSet<Q_RequestTicket> Q_RequestTicket { get; set; }
         public DbSet<Q_RecieverSMS> Q_RecieverSMS { get; set; }
-        public DbSet<Q_Service> Q_Service { get; set; }
         public DbSet<Q_ServiceLimit> Q_ServiceLimit { get; set; }
         public DbSet<Q_HisUserEvaluate> Q_HisUserEvaluate { get; set; }
         public DbSet<Q_UserEvaluate> Q_UserEvaluate { get; set; }
         public DbSet<Q_Config> Q_Config { get; set; }
+        public DbSet<Q_Service> Q_Service { get; set; }
+        public DbSet<Q_TVReadSound> Q_TVReadSound { get; set; }
     }
 }

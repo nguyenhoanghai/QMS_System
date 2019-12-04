@@ -544,21 +544,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Q_Service">
-      <EntityTypeMapping TypeName="QMSSystemModel.Q_Service">
-        <MappingFragment StoreEntitySet="Q_Service">
-          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-          <ScalarProperty Name="IsActived" ColumnName="IsActived" />
-          <ScalarProperty Name="Note" ColumnName="Note" />
-          <ScalarProperty Name="TimeProcess" ColumnName="TimeProcess" />
-          <ScalarProperty Name="EndNumber" ColumnName="EndNumber" />
-          <ScalarProperty Name="StartNumber" ColumnName="StartNumber" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="Code" ColumnName="Code" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Q_ServiceLimit">
       <EntityTypeMapping TypeName="QMSSystemModel.Q_ServiceLimit">
         <MappingFragment StoreEntitySet="Q_ServiceLimit">
@@ -607,6 +592,35 @@
           <ScalarProperty Name="Note" ColumnName="Note" />
           <ScalarProperty Name="Value" ColumnName="Value" />
           <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Q_Service">
+      <EntityTypeMapping TypeName="QMSSystemModel.Q_Service">
+        <MappingFragment StoreEntitySet="Q_Service">
+          <ScalarProperty Name="showBenhVien" ColumnName="showBenhVien" />
+          <ScalarProperty Name="TimeAutoEnd" ColumnName="TimeAutoEnd" />
+          <ScalarProperty Name="AutoEnd" ColumnName="AutoEnd" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="IsActived" ColumnName="IsActived" />
+          <ScalarProperty Name="Note" ColumnName="Note" />
+          <ScalarProperty Name="TimeProcess" ColumnName="TimeProcess" />
+          <ScalarProperty Name="EndNumber" ColumnName="EndNumber" />
+          <ScalarProperty Name="StartNumber" ColumnName="StartNumber" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Q_TVReadSound">
+      <EntityTypeMapping TypeName="QMSSystemModel.Q_TVReadSound">
+        <MappingFragment StoreEntitySet="Q_TVReadSound">
+          <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+          <ScalarProperty Name="CounterId" ColumnName="CounterId" />
+          <ScalarProperty Name="UsersReaded" ColumnName="UsersReaded" />
+          <ScalarProperty Name="Sounds" ColumnName="Sounds" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>

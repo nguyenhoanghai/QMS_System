@@ -119,7 +119,7 @@ namespace QMS_System.Data.BLL
                 {
                     Index = x.Index,
                     Path = x.Q_Video.FakeName
-                }).ToList();
+                }).OrderBy(x=>x.Index).ToList();
             }
         }
 

@@ -104,6 +104,8 @@
             this.btnDeleteTicket = new DevExpress.XtraBars.BarButtonItem();
             this.btnConnectSQL = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem13 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem14 = new DevExpress.XtraBars.BarButtonItem();
+            this.barbtmauphieu = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPage3 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup16 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -225,10 +227,12 @@
             this.txtDeleteNumber,
             this.btnDeleteTicket,
             this.btnConnectSQL,
-            this.barButtonItem13});
+            this.barButtonItem13,
+            this.barButtonItem14,
+            this.barbtmauphieu});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ribbonControl1.MaxItemId = 78;
+            this.ribbonControl1.MaxItemId = 80;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage3,
@@ -812,6 +816,21 @@
             this.barButtonItem13.Name = "barButtonItem13";
             this.barButtonItem13.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem13_ItemClick);
             // 
+            // barButtonItem14
+            // 
+            this.barButtonItem14.Glyph = global::QMS_System.Properties.Resources.iconfinder_printer_delete_36361;
+            this.barButtonItem14.Id = 78;
+            this.barButtonItem14.Name = "barButtonItem14";
+            // 
+            // barbtmauphieu
+            // 
+            this.barbtmauphieu.Caption = "Mẫu phiếu";
+            this.barbtmauphieu.Glyph = global::QMS_System.Properties.Resources.tk;
+            this.barbtmauphieu.Id = 79;
+            this.barbtmauphieu.LargeGlyph = global::QMS_System.Properties.Resources.tk;
+            this.barbtmauphieu.Name = "barbtmauphieu";
+            this.barbtmauphieu.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barbtmauphieu_ItemClick);
+            // 
             // ribbonPage3
             // 
             this.ribbonPage3.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
@@ -917,6 +936,7 @@
             this.ribbonPageGroup4.ItemLinks.Add(this.btnServiceShift, true);
             this.ribbonPageGroup4.ItemLinks.Add(this.btnMainDirection, true);
             this.ribbonPageGroup4.ItemLinks.Add(this.btnConnectSQL, true);
+            this.ribbonPageGroup4.ItemLinks.Add(this.barbtmauphieu);
             this.ribbonPageGroup4.Name = "ribbonPageGroup4";
             // 
             // ribbonPageGroup5
@@ -1011,6 +1031,7 @@
             // 
             // ribbonStatusBar1
             // 
+            this.ribbonStatusBar1.ItemLinks.Add(this.barButtonItem14, true);
             this.ribbonStatusBar1.ItemLinks.Add(this.barButtonItem8);
             this.ribbonStatusBar1.ItemLinks.Add(this.lbQuet);
             this.ribbonStatusBar1.ItemLinks.Add(this.lbRecieve);
@@ -1222,5 +1243,7 @@
         private DevExpress.XtraBars.BarButtonItem btnDeleteTicket;
         private DevExpress.XtraBars.BarButtonItem btnConnectSQL;
         private DevExpress.XtraBars.BarButtonItem barButtonItem13;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem14;
+        private DevExpress.XtraBars.BarButtonItem barbtmauphieu;
     }
 }

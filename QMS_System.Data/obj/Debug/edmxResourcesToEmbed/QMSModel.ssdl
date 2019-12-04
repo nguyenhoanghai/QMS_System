@@ -393,6 +393,9 @@
     <Property Name="Note" Type="nvarchar" MaxLength="1000" />
     <Property Name="IsActived" Type="bit" Nullable="false" />
     <Property Name="IsDeleted" Type="bit" Nullable="false" />
+    <Property Name="AutoEnd" Type="bit" Nullable="false" />
+    <Property Name="TimeAutoEnd" Type="datetime" />
+    <Property Name="showBenhVien" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="Q_ServiceLimit">
     <Key>
@@ -465,6 +468,16 @@
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
     <Property Name="Note" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="Q_TVReadSound">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Sounds" Type="nvarchar(max)" />
+    <Property Name="UsersReaded" Type="nvarchar" MaxLength="250" />
+    <Property Name="CounterId" Type="int" />
+    <Property Name="CreatedAt" Type="datetime" />
   </EntityType>
   <EntityType Name="Q_User">
     <Key>
@@ -1089,6 +1102,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_Q_TVReadSound_Q_Counter">
+    <End Role="Q_Counter" Type="Self.Q_Counter" Multiplicity="0..1" />
+    <End Role="Q_TVReadSound" Type="Self.Q_TVReadSound" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Counter">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_TVReadSound">
+        <PropertyRef Name="CounterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_Q_UserCommand_Q_ActionParameter">
     <End Role="Q_ActionParameter" Type="Self.Q_ActionParameter" Multiplicity="1" />
     <End Role="Q_UserCmdRegister" Type="Self.Q_UserCmdRegister" Multiplicity="*" />
@@ -1275,6 +1300,7 @@
     <EntitySet Name="Q_Sound" EntityType="Self.Q_Sound" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_Status" EntityType="Self.Q_Status" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_StatusType" EntityType="Self.Q_StatusType" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_TVReadSound" EntityType="Self.Q_TVReadSound" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_User" EntityType="Self.Q_User" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_UserCmdRegister" EntityType="Self.Q_UserCmdRegister" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_UserCommandReadSound" EntityType="Self.Q_UserCommandReadSound" Schema="dbo" store:Type="Tables" />
@@ -1458,6 +1484,10 @@
     <AssociationSet Name="FK_Q_Status_Q_StatusType" Association="Self.FK_Q_Status_Q_StatusType">
       <End Role="Q_StatusType" EntitySet="Q_StatusType" />
       <End Role="Q_Status" EntitySet="Q_Status" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_TVReadSound_Q_Counter" Association="Self.FK_Q_TVReadSound_Q_Counter">
+      <End Role="Q_Counter" EntitySet="Q_Counter" />
+      <End Role="Q_TVReadSound" EntitySet="Q_TVReadSound" />
     </AssociationSet>
     <AssociationSet Name="FK_Q_UserCommand_Q_ActionParameter" Association="Self.FK_Q_UserCommand_Q_ActionParameter">
       <End Role="Q_ActionParameter" EntitySet="Q_ActionParameter" />

@@ -31,6 +31,14 @@ namespace QMS_System.Data.BLL
             }
         }
 
+        public List<ServiceModel> Gets_BenhVien(string connectString)
+        {
+            using (db = new QMSSystemEntities(connectString))
+            {
+                return db.Q_Service.Where(x => !x.IsDeleted && x.showBenhVien).Select(x => new ServiceModel() { Id = x.Id, Name = x.Name, StartNumber = x.StartNumber, EndNumber = x.EndNumber, TimeProcess = x.TimeProcess, Note = x.Note, IsActived = x.IsActived, Code = x.Code }).ToList();
+            }
+        }
+
         public List<ServiceDayModel> GetsForMain(string connectString)
         {
             using (db = new QMSSystemEntities(connectString))

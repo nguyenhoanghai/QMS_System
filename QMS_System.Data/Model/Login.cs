@@ -14,5 +14,6 @@ namespace QMS_System.Data.Model
         public int CounterId { get; set; }
         public string LoginTime { get; set; }
         public string CounterName { get; set; }
+        public List<LoginHistoryModel> Counters { get; set; }
     }
 }
