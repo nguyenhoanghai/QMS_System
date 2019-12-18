@@ -108,7 +108,6 @@ namespace QMS_System
                     int.TryParse(GetConfigByCode(eConfigCode._8cUseFor), out _8cUseFor);
                     int.TryParse(GetConfigByCode(eConfigCode.UsePrintBoard), out UsePrintBoard);
 
-                    var query = @"delete from Q_CounterSoftSound ";
                     if (Settings.Default.Today != DateTime.Now.Day)
                     {
                         try
@@ -118,8 +117,14 @@ namespace QMS_System
                             BLLDailyRequire.Instance.CopyHistory(connectString);
                             Settings.Default.Today = DateTime.Now.Day;
                             Settings.Default.Save();
-                            query += "update q_counter set lastcall = 0 ,isrunning =1 GO";
-                            query += "DELETE FROM [dbo].[Q_RequestTicket] go DELETE FROM [dbo].[Q_TVReadSound]";
+                            //ko su dung GO 
+                            var query = @"   UPDATE [Q_COUNTER] set lastcall = 0 ,isrunning =1 
+                                            DELETE [Q_CounterSoftSound]  
+                                            DBCC CHECKIDENT('Q_CounterSoftSound', RESEED, 1);                                             
+                                            DELETE [dbo].[Q_RequestTicket]  
+                                            DBCC CHECKIDENT('Q_RequestTicket', RESEED, 1); 
+                                            DELETE [dbo].[Q_TVReadSound] 
+                                            DBCC CHECKIDENT('Q_TVReadSound', RESEED, 1); ";
                             BLLSQLBuilder.Instance.Excecute(connectString, query);
                         }
                         catch (Exception ex)
@@ -894,7 +899,7 @@ namespace QMS_System
             string printStr = string.Empty,
                 tenQuay = string.Empty;
             bool err = false;
-            ServiceDayModel serObj;
+            ServiceDayModel serObj = null;
             DateTime now = DateTime.Now;
             switch (printType)
             {
@@ -1056,19 +1061,19 @@ namespace QMS_System
                 }
                 else
                 {
-                    PrintWithNoBorad(newNumber, lastTicket, tenQuay);
+                    PrintWithNoBorad(newNumber, lastTicket, tenQuay, (serObj != null ? serObj.Name : ""));
                 }
             }
             else if (newNumber != 0)
                 if (UsePrintBoard == 0)
-                    PrintWithNoBorad(newNumber, lastTicket, tenQuay);
+                    PrintWithNoBorad(newNumber, lastTicket, tenQuay, (serObj != null ? serObj.Name : ""));
 
             if (AutoCallIfUserFree == 1 && nghiepVu > 0)
             {
                 var freeUser = (int)BLLDailyRequire.Instance.CheckUserFree(connectString, nghiepVu, serviceId, newNumber, autoCallFollowMajorOrder).Data;
                 if (freeUser > 0)
                 {
-                    var counter = freeUser < 10 ? ("0" + freeUser) : freeUser.ToString();
+                    var counter = lib_Users.FirstOrDefault(x => x.UserId == freeUser).EquipCode;// freeUser < 10 ? ("0" + freeUser) : freeUser.ToString();
                     var str = ("AA," + counter + ",8B,00,00");
                     autoCall = true;
                     CounterProcess(str.Split(',').ToArray(), 0);
@@ -1077,7 +1082,7 @@ namespace QMS_System
             return true;
         }
 
-        private void PrintWithNoBorad(int newNum, int oldNum, string tenQuay)
+        private void PrintWithNoBorad(int newNum, int oldNum, string tenQuay, string tendichvu)
         {
             if (COM_Printer.IsOpen)
             {
@@ -1093,6 +1098,7 @@ namespace QMS_System
 
                 template = template.Replace("[STT]", newNum.ToString());
                 template = template.Replace("[ten-quay]", tenQuay);
+                template = template.Replace("[ten-dich-vu]", tendichvu);
                 template = template.Replace("[ngay]", ("ngay: " + now.ToString("dd/MM/yyyy")));
                 template = template.Replace("[gio]", (" gio: " + now.ToString("HH/mm")));
                 template = template.Replace("[dang-goi]", " dang goi " + oldNum);
@@ -1245,6 +1251,7 @@ namespace QMS_System
                                     }
                                     break;
                                 case eActionCode.GoiMoi:
+                                    BLLDailyRequire.Instance.EndAllCallOfUserWithoutThisEquipment(connectString, userId, equipCode);
                                     #region xu ly goi moi
                                     switch (userRight[i].ActionParamName)
                                     {
@@ -1572,7 +1579,6 @@ namespace QMS_System
         private void timerDo_Tick(object sender, EventArgs e)
         {
             timerDo.Enabled = false;
-            var query = @"delete from Q_CounterSoftSound GO delete from Q_TVReadSound ";
             if (Settings.Default.Today != DateTime.Now.Day)
             {
                 try
@@ -1582,7 +1588,14 @@ namespace QMS_System
                     BLLDailyRequire.Instance.CopyHistory(connectString);
                     Settings.Default.Today = DateTime.Now.Day;
                     Settings.Default.Save();
-                    query += "update q_counter set lastcall = 0 ,isrunning =1";
+                    //ko su dung GO 
+                    var query = @"  DELETE from Q_CounterSoftSound  
+                                    DBCC CHECKIDENT('Q_CounterSoftSound', RESEED, 1);
+                                    UPDATE [Q_COUNTER] set lastcall = 0 ,isrunning =1  
+                                    DELETE FROM [dbo].[Q_RequestTicket]  
+                                    DBCC CHECKIDENT('Q_RequestTicket', RESEED, 1); 
+                                    DELETE FROM [dbo].[Q_TVReadSound] 
+                                    DBCC CHECKIDENT('Q_TVReadSound', RESEED, 1); ";
                     BLLSQLBuilder.Instance.Excecute(connectString, query);
                     lib_Users = BLLLoginHistory.Instance.GetsForMain(connectString);
                 }
@@ -1659,6 +1672,23 @@ namespace QMS_System
                                             mainDiric = mainDiric + _mainRequireObj.EquipCode;
                                         dataSendToComport.Add("AA " + id);
                                         dataSendToComport.Add(("AA " + id + " " + arrStr[0] + " " + arrStr[1] + " 0" + _mainRequireObj.EquipCode));
+                                    }
+                                }
+                                break;
+                            case (int)eCounterSoftRequireType.CheckUserFree: // check user free use for autocall
+                                var checkRequireObj = JsonConvert.DeserializeObject<ModelSelectItem>(requires[i].Content);
+                                int nghiepVu = checkRequireObj.Id,
+                                    serviceId = checkRequireObj.Data,
+                                    newNumber = Convert.ToInt32(checkRequireObj.Code);
+                                if (AutoCallIfUserFree == 1 && nghiepVu > 0)
+                                {
+                                    var freeUser = (int)BLLDailyRequire.Instance.CheckUserFree(connectString, nghiepVu, serviceId, newNumber, autoCallFollowMajorOrder).Data;
+                                    if (freeUser > 0)
+                                    {
+                                        var counter = lib_Users.FirstOrDefault(x => x.UserId == freeUser).EquipCode; 
+                                        var str = ("AA," + counter + ",8B,00,00");
+                                        autoCall = true;
+                                        CounterProcess(str.Split(',').ToArray(), 0);
                                     }
                                 }
                                 break;

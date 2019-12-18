@@ -14,5 +14,6 @@ namespace QMS_System.Data.Enum
         CounterEvent = 4,
         SendNextToMainDisplay = 5,
         SendRecallToMainDisplay = 6,
+        CheckUserFree = 7,
     }
 }

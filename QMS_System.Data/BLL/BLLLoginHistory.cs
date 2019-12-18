@@ -92,9 +92,7 @@ namespace QMS_System.Data.BLL
             {
                 try
                 {
-                    var yes = db.Q_Login.Where(x =>
-                                 (x.Date.Year != date.Year || x.Date.Month != date.Month || x.Date.Day != date.Day) &&
-                                 x.StatusId == (int)eStatus.LOGIN).ToList();
+                    var yes = db.Q_Login.Where(x =>  x.StatusId == (int)eStatus.LOGIN).OrderBy(x=>x.UserId).ToList();
                     if (yes.Count > 0)
                     {
                         db.Database.ExecuteSqlCommand("delete Q_Login ");
@@ -133,15 +131,10 @@ namespace QMS_System.Data.BLL
                             //    db.Q_LoginHistory.Add(obj);
                             //}
                         }
-
-
                         db.SaveChanges();
                     }
                 }
-                catch (Exception)
-                {
-                }
-
+                catch (Exception ex) { }
             }
         }
 
@@ -161,7 +154,7 @@ namespace QMS_System.Data.BLL
                     //  Counter = x.Q_Equipment.Q_Counter.Name,
                     LoginTime = x.Date,
                     EquipCode = x.EquipCode
-                }).ToList();
+                }).OrderBy(x=>x.UserId).ToList();
                 if (users.Count > 0)
                 {
                     var codes = users.Select(x => x.EquipCode).Distinct().ToArray();
@@ -176,7 +169,7 @@ namespace QMS_System.Data.BLL
                         var majorIds = usermajors.Where(x => x.UserId == item.UserId).Select(x => x.MajorId).ToList();
                         item.TotalDone = daily.Count(x => x.StatusId == (int)eStatus.HOTAT && x.UserId == item.UserId);
                         item.TotalWating = db.Q_DailyRequire_Detail.Count(x => x.StatusId == (int)eStatus.CHOXL && majorIds.Contains(x.MajorId));
-                        var current = daily.Where(x => x.StatusId == (int)eStatus.DAGXL && x.UserId == item.UserId).OrderBy(x => x.ProcessTime).FirstOrDefault();
+                        var current = daily.Where(x => x.StatusId == (int)eStatus.DAGXL && x.UserId == item.UserId).OrderByDescending(x => x.ProcessTime).FirstOrDefault();
                         if (current != null)
                         {
                             if (useWithThridPattern == 0)

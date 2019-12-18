@@ -55,6 +55,7 @@
             this.btsave = new System.Windows.Forms.Button();
             this.txtContent = new System.Windows.Forms.RichTextBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btTenDichVu = new System.Windows.Forms.Button();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -224,6 +225,7 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.btTenDichVu);
             this.groupBox3.Controls.Add(this.btDangGoi);
             this.groupBox3.Controls.Add(this.btTenQuay);
             this.groupBox3.Controls.Add(this.btSTT);
@@ -386,6 +388,17 @@
             this.panel1.Size = new System.Drawing.Size(714, 700);
             this.panel1.TabIndex = 2;
             // 
+            // btTenDichVu
+            // 
+            this.btTenDichVu.Location = new System.Drawing.Point(224, 96);
+            this.btTenDichVu.Margin = new System.Windows.Forms.Padding(4);
+            this.btTenDichVu.Name = "btTenDichVu";
+            this.btTenDichVu.Size = new System.Drawing.Size(100, 28);
+            this.btTenDichVu.TabIndex = 19;
+            this.btTenDichVu.Text = "Tên dịch vụ";
+            this.btTenDichVu.UseVisualStyleBackColor = true;
+            this.btTenDichVu.Click += new System.EventHandler(this.btTenDichVu_Click);
+            // 
             // frmTicketTemplate
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -435,5 +448,6 @@
         private System.Windows.Forms.Button btsave;
         private System.Windows.Forms.RichTextBox txtContent;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button btTenDichVu;
     }
 }

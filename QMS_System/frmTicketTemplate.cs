@@ -142,6 +142,7 @@ namespace QMS_System
 
             content = content.Replace("[STT]", "1001");
             content = content.Replace("[ten-quay]", "quay 1");
+            content = content.Replace("[ten-dich-vu]", "dich vu 1");
             content = content.Replace("[ngay]", ("ngay: " + now.ToString("dd/MM/yyyy")));
             content = content.Replace("[gio]", (" gio: " + now.ToString("HH/mm")));
             content = content.Replace("[dang-goi]", " dang goi 1000");
@@ -174,6 +175,13 @@ namespace QMS_System
         {
             txtContent.Text = frmMain.ticketTemplate;
             txtsolien.Value = frmMain.solien;
+        }
+
+        private void btTenDichVu_Click(object sender, EventArgs e)
+        {
+            string content = txtContent.Text;
+            content += "[ten-dich-vu]";
+            txtContent.Text = content;
         }
     }
 }

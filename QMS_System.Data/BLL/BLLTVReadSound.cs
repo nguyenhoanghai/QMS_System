@@ -33,7 +33,9 @@ namespace QMS_System.Data.BLL
                 {
                     List<string> returnStr = new List<string>();
                     var _id = ( "," +userId);
-                    var items = db.Q_TVReadSound.Where(x => counterIds.Contains(x.CounterId.Value) && !x.UsersReaded.Contains(_id)).ToList();
+                    var now = DateTime.Now;
+                    now = now.AddMinutes(-2);
+                    var items = db.Q_TVReadSound.Where(x => counterIds.Contains(x.CounterId.Value) && !x.UsersReaded.Contains(_id)&& x.CreatedAt > now).ToList();
                     if (items.Count > 0)
                     {
                         foreach (var x in items)

@@ -1,15 +1,6 @@
 ﻿using GPRO.Core.Hai;
 using QMS_System.Data.BLL;
-using QMS_System.Helper;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace QMS_System
@@ -18,7 +9,7 @@ namespace QMS_System
     {
         frmMain fMain;
         string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
-        public frmHome( frmMain _frmMain)
+        public frmHome(frmMain _frmMain)
         {
             fMain = _frmMain;
             InitializeComponent();
@@ -45,24 +36,33 @@ namespace QMS_System
 
         private void frmHome_Load(object sender, EventArgs e)
         {
-            gridHome.DataSource = null;
-            gridHome.DataSource = BLLLoginHistory.Instance.GetForHome(connect, frmMain.today, fMain.UseWithThirdPattern);
+            loadData();
         }
-
 
         private void gridHome_MouseHover(object sender, EventArgs e)
         {
-            tmCountClose.Enabled = false;
+           // tmCountClose.Enabled = false;
         }
 
         private void gridHome_MouseLeave(object sender, EventArgs e)
         {
-            tmCountClose.Enabled = true;
+           // tmCountClose.Enabled = true;
         }
 
         private void tmCountClose_Tick(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void btnReload_Click(object sender, EventArgs e)
+        {
+            loadData();
+        }
+
+        private void loadData()
+        {
+            gridHome.DataSource = null;
+            gridHome.DataSource = BLLLoginHistory.Instance.GetForHome(connect, frmMain.today, fMain.UseWithThirdPattern);
         }
     }
 }

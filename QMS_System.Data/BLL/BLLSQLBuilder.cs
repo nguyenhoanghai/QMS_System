@@ -36,7 +36,7 @@ namespace QMS_System.Data.BLL
                     db.SaveChanges();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 rs = false;
             }

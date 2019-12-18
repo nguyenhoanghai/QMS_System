@@ -1,10 +1,11 @@
 ﻿using GPRO.Ultilities;
+using Newtonsoft.Json;
 using QMS_System.Data.Enum;
 using QMS_System.Data.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
+using System.Linq; 
 
 namespace QMS_System.Data.BLL
 {
@@ -143,14 +144,14 @@ namespace QMS_System.Data.BLL
                         db.SaveChanges();
                     }
 
-                    var majorIds = db.Q_UserMajor.Where(x => !x.IsDeleted && !x.Q_Major.IsDeleted && !x.Q_User.IsDeleted && x.UserId == userId).OrderBy(x=>x.Index).Select(x => x.MajorId).ToList();
+                    var majorIds = db.Q_UserMajor.Where(x => !x.IsDeleted && !x.Q_Major.IsDeleted && !x.Q_User.IsDeleted && x.UserId == userId).OrderBy(x => x.Index).Select(x => x.MajorId).ToList();
                     if (majorIds.Count > 0)
                     {
                         for (int i = 0; i < majorIds.Count; i++)
                         {
                             int a = majorIds[i];
                             var newTicket = db.Q_DailyRequire_Detail.Where(x => x.MajorId == a && x.StatusId == (int)eStatus.CHOXL).OrderBy(x => x.Q_DailyRequire.PrintTime).FirstOrDefault();
-                           // if (newTicket == null)
+                            // if (newTicket == null)
                             //    newTicket = db.Q_DailyRequire_Detail.Where(x => majorIds.Contains(x.MajorId) && x.StatusId == (int)eStatus.CHOXL).OrderBy(x => x.Q_DailyRequire.PrintTime).FirstOrDefault();
                             if (newTicket != null)
                             {
@@ -172,7 +173,7 @@ namespace QMS_System.Data.BLL
                                 db.SaveChanges();
                                 break;
                             }
-                        }                        
+                        }
                     }
                     return ticket;
                 }
@@ -654,6 +655,36 @@ namespace QMS_System.Data.BLL
         }
 
         /// <summary>
+        /// end all ticket which not End in another equipment
+        /// </summary>
+        /// <param name="connectString"></param>
+        /// <param name="userId"></param>
+        /// <param name="equipCode"></param>
+        public void EndAllCallOfUserWithoutThisEquipment(string connectString, int userId, int equipCode)
+        {
+            using (var db = new QMSSystemEntities(connectString))
+            {
+                try
+                {
+                    var founds = (from x in db.Q_DailyRequire_Detail where x.UserId == userId && x.EquipCode != equipCode && x.StatusId == (int)eStatus.DAGXL select x).ToList();
+                    if (founds.Count > 0)
+                    {
+                        var now = DateTime.Now;
+                        foreach (var item in founds)
+                        {
+                            item.EndProcessTime = now;
+                            item.StatusId = (int)eStatus.HOTAT;
+                        }
+                        db.SaveChanges();
+                    }
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+        }
+
+        /// <summary>
         /// Counter
         /// </summary>
         /// <param name="majorId"></param>
@@ -896,6 +927,11 @@ namespace QMS_System.Data.BLL
                             }
                             obj = new Q_DailyRequire_Detail() { DailyRequireId = dq.Id, MajorId = majorId, StatusId = (int)eStatus.CHOXL };
                             db.Q_DailyRequire_Detail.Add(obj);
+                            // add main to check auto call
+                            var require = new Q_CounterSoftRequire();
+                            require.TypeOfRequire = (int)eCounterSoftRequireType.CheckUserFree;
+                            require.Content = JsonConvert.SerializeObject(new ModelSelectItem() { Id = majorId, Data = dq.ServiceId, Code = dq.TicketNumber.ToString() });
+                            db.Q_CounterSoftRequire.Add(require);
                             db.SaveChanges();
                             return true;
                         }
@@ -1079,6 +1115,7 @@ namespace QMS_System.Data.BLL
                         strServeTimeAllow = "0",
                         GioGiaoDK = "0",
                         TienDoTH = 0,
+                        strTGDK_Khach = "0"
                     }).ToList());
 
                     var objs = db_.Q_DailyRequire_Detail.Where(x => x.StatusId == (int)eStatus.DAGXL).Select(x => new ViewDetailModel()
@@ -1099,17 +1136,19 @@ namespace QMS_System.Data.BLL
                         StartStr = "0",
                         GioGiaoDK = "0",
                         TienDoTH = 0,
-                        ReadServeOverCounter = x.ServeOverCounter
+                        ReadServeOverCounter = x.ServeOverCounter,
+                        strTGDK_Khach = "0"
                     }).ToList();
 
-                    if (dayInfo.Details.Count > 0 && objs.Count > 0)
+                    if (dayInfo.Details.Count > 0)
                     {
                         var equips = db_.Q_Equipment.Where(x => !x.IsDeleted && x.EquipTypeId == (int)eEquipType.Counter);
                         foreach (var item in objs)
-                        {
                             item.TableId = equips.FirstOrDefault(x => x.Code == item.TableId).CounterId;
-                        }
 
+                        var logins = (from x in db_.Q_Login where x.StatusId == (int)eStatus.LOGIN select x).ToList();
+
+                        var registerTicket = (from x in db_.Q_RequestTicket where !x.IsDeleted select x).ToList();
                         foreach (var item in dayInfo.Details)
                         {
                             var find = objs.FirstOrDefault(x => x.TableId == item.TableId);
@@ -1127,6 +1166,7 @@ namespace QMS_System.Data.BLL
                                 item.TicketNumber = find.TicketNumber;
                                 item.Start = find.Start;
                                 item.strServeTimeAllow = (find.ServeTimeAllow.ToString(@"hh\:mm")).Replace(":", "<label class='blue'>:</label>");
+
                                 if (find.Start != null)
                                 {
                                     TimeSpan time = DateTime.Now.Subtract(item.Start.Value);
@@ -1152,12 +1192,24 @@ namespace QMS_System.Data.BLL
                                         tiendo = Math.Ceiling((decimal)(time.TotalSeconds / find.ServeTimeAllow.TotalSeconds) * 100);
                                     item.TienDoTH = (int)(tiendo > 100 ? 100 : tiendo);
                                 }
+
+                            }
+
+                            var foundLogin = logins.OrderBy(x => x.Date).FirstOrDefault(x => x.EquipCode == item.TableId);
+                            if (foundLogin != null && registerTicket.Count > 0)
+                            {
+                                var foundDK = registerTicket.OrderByDescending(x => x.CreatedAt).FirstOrDefault(x => x.UserId == foundLogin.UserId);
+                                if (foundDK != null)
+                                {
+                                    item.TGDK_Khach = foundDK.CreatedAt;
+                                    item.strTGDK_Khach = (foundDK.CreatedAt.ToString(@"hh\:mm\:ss")).Replace(":", "<label class='blue'>:</label>");
+                                }
                             }
                         }
                         db_.SaveChanges();
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                 }
                 return dayInfo;
@@ -1915,13 +1967,13 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public ResponseBaseModel InsertAndCallEmptyTicket(string connectString, int equipCode)
+        public ResponseBaseModel InsertAndCallEmptyTicket(string connectString, int equipCode )
         {
             var rs = new ResponseBaseModel();
             rs.IsSuccess = false;
             using (var db = new QMSSystemEntities(connectString))
             {
-                var login = db.Q_Login.FirstOrDefault(x => x.EquipCode == equipCode);
+                var login = db.Q_Login.OrderByDescending(x=>x.Date ).FirstOrDefault(x => x.EquipCode == equipCode && x.StatusId == (int)eStatus.LOGIN);
                 if (login != null)
                 {
                     var userMajor = db.Q_UserMajor.Where(x => !x.IsDeleted && x.UserId == login.UserId).OrderBy(x => x.Index).FirstOrDefault();

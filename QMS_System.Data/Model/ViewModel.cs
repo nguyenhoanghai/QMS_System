@@ -48,6 +48,8 @@ namespace QMS_System.Data.Model
         public int PhutConLai { get; set; }
         public string GioGiaoDK { get; set; }
         public int ReadServeOverCounter { get; set; }
+        public string strTGDK_Khach { get; set; }
+        public DateTime TGDK_Khach { get; set; }
     }
 
     public class SubModel

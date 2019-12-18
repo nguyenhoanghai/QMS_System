@@ -170,5 +170,10 @@ namespace QMS_System.IssueTicketScreen
         {
             btnSampleButton.Height = int.Parse(UpDownButtonHeight.Value.ToString());
         }
+
+        private void UpDownButtonSpace_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
