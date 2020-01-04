@@ -60,10 +60,9 @@
             this.btnReGrid.Image = global::QMS_System.Properties.Resources.if_view_refresh_15329;
             this.btnReGrid.ImageLocation = DevExpress.XtraEditors.ImageLocation.MiddleLeft;
             this.btnReGrid.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.LeftCenter;
-            this.btnReGrid.Location = new System.Drawing.Point(13, 152);
-            this.btnReGrid.Margin = new System.Windows.Forms.Padding(4);
+            this.btnReGrid.Location = new System.Drawing.Point(10, 124);
             this.btnReGrid.Name = "btnReGrid";
-            this.btnReGrid.Size = new System.Drawing.Size(249, 30);
+            this.btnReGrid.Size = new System.Drawing.Size(187, 24);
             this.btnReGrid.TabIndex = 48;
             this.btnReGrid.Text = "  Làm mới lưới";
             // 
@@ -72,10 +71,9 @@
             this.btnReUser.Image = global::QMS_System.Properties.Resources.if_view_refresh_15329;
             this.btnReUser.ImageLocation = DevExpress.XtraEditors.ImageLocation.MiddleLeft;
             this.btnReUser.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.LeftCenter;
-            this.btnReUser.Location = new System.Drawing.Point(13, 76);
-            this.btnReUser.Margin = new System.Windows.Forms.Padding(4);
+            this.btnReUser.Location = new System.Drawing.Point(10, 62);
             this.btnReUser.Name = "btnReUser";
-            this.btnReUser.Size = new System.Drawing.Size(249, 30);
+            this.btnReUser.Size = new System.Drawing.Size(187, 24);
             this.btnReUser.TabIndex = 47;
             this.btnReUser.Text = "  Làm mới danh sách nhân viên";
             this.btnReUser.Click += new System.EventHandler(this.btnReUser_Click);
@@ -86,10 +84,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupControl1.Controls.Add(this.gridService);
-            this.groupControl1.Location = new System.Drawing.Point(270, 13);
-            this.groupControl1.Margin = new System.Windows.Forms.Padding(4);
+            this.groupControl1.Location = new System.Drawing.Point(202, 11);
             this.groupControl1.Name = "groupControl1";
-            this.groupControl1.Size = new System.Drawing.Size(807, 346);
+            this.groupControl1.Size = new System.Drawing.Size(504, 281);
             this.groupControl1.TabIndex = 49;
             this.groupControl1.Text = "Danh mục giới hạn lấy phiếu theo dịch vụ của nhân viên";
             // 
@@ -97,15 +94,13 @@
             // 
             this.gridService.Cursor = System.Windows.Forms.Cursors.Default;
             this.gridService.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridService.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(4);
-            this.gridService.Location = new System.Drawing.Point(2, 25);
+            this.gridService.Location = new System.Drawing.Point(2, 20);
             this.gridService.MainView = this.gridViewService;
-            this.gridService.Margin = new System.Windows.Forms.Padding(4);
             this.gridService.Name = "gridService";
             this.gridService.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repbtn_deleteService,
             this.repLKService});
-            this.gridService.Size = new System.Drawing.Size(803, 319);
+            this.gridService.Size = new System.Drawing.Size(500, 259);
             this.gridService.TabIndex = 1;
             this.gridService.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewService});
@@ -209,8 +204,7 @@
             // 
             // lkUser
             // 
-            this.lkUser.Location = new System.Drawing.Point(13, 37);
-            this.lkUser.Margin = new System.Windows.Forms.Padding(4);
+            this.lkUser.Location = new System.Drawing.Point(10, 30);
             this.lkUser.Name = "lkUser";
             this.lkUser.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
             this.lkUser.Properties.Appearance.Options.UseFont = true;
@@ -218,7 +212,7 @@
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.lkUser.Properties.NullText = "Chọn nhân viên ...";
             this.lkUser.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.Standard;
-            this.lkUser.Size = new System.Drawing.Size(249, 28);
+            this.lkUser.Size = new System.Drawing.Size(187, 22);
             this.lkUser.TabIndex = 52;
             this.lkUser.EditValueChanged += new System.EventHandler(this.lkUser_EditValueChanged);
             // 
@@ -226,10 +220,9 @@
             // 
             this.labelControl1.Appearance.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelControl1.Appearance.ForeColor = System.Drawing.Color.Blue;
-            this.labelControl1.Location = new System.Drawing.Point(13, 13);
-            this.labelControl1.Margin = new System.Windows.Forms.Padding(4);
+            this.labelControl1.Location = new System.Drawing.Point(10, 11);
             this.labelControl1.Name = "labelControl1";
-            this.labelControl1.Size = new System.Drawing.Size(81, 19);
+            this.labelControl1.Size = new System.Drawing.Size(63, 16);
             this.labelControl1.TabIndex = 50;
             this.labelControl1.Text = "Nhân viên";
             // 
@@ -238,25 +231,25 @@
             this.btnReService.Image = global::QMS_System.Properties.Resources.if_view_refresh_15329;
             this.btnReService.ImageLocation = DevExpress.XtraEditors.ImageLocation.MiddleLeft;
             this.btnReService.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.LeftCenter;
-            this.btnReService.Location = new System.Drawing.Point(13, 114);
-            this.btnReService.Margin = new System.Windows.Forms.Padding(4);
+            this.btnReService.Location = new System.Drawing.Point(10, 93);
             this.btnReService.Name = "btnReService";
-            this.btnReService.Size = new System.Drawing.Size(249, 30);
+            this.btnReService.Size = new System.Drawing.Size(187, 24);
             this.btnReService.TabIndex = 53;
             this.btnReService.Text = "  Làm mới danh sách dịch vụ";
             this.btnReService.Click += new System.EventHandler(this.btnReService_Click);
             // 
             // frmServiceLimit
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1090, 370);
+            this.ClientSize = new System.Drawing.Size(717, 301);
             this.Controls.Add(this.btnReService);
             this.Controls.Add(this.lkUser);
             this.Controls.Add(this.labelControl1);
             this.Controls.Add(this.groupControl1);
             this.Controls.Add(this.btnReGrid);
             this.Controls.Add(this.btnReUser);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "frmServiceLimit";
             this.Text = "Giới hạn lấy phiếu theo dịch vụ";
             this.Load += new System.EventHandler(this.frmServiceLimit_Load);

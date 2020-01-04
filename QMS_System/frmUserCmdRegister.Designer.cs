@@ -104,10 +104,9 @@
             // 
             this.labelControl1.Appearance.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelControl1.Appearance.ForeColor = System.Drawing.Color.Blue;
-            this.labelControl1.Location = new System.Drawing.Point(16, 15);
-            this.labelControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.labelControl1.Location = new System.Drawing.Point(12, 12);
             this.labelControl1.Name = "labelControl1";
-            this.labelControl1.Size = new System.Drawing.Size(81, 19);
+            this.labelControl1.Size = new System.Drawing.Size(63, 16);
             this.labelControl1.TabIndex = 1;
             this.labelControl1.Text = "Nhân viên";
             // 
@@ -115,10 +114,9 @@
             // 
             this.labelControl2.Appearance.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelControl2.Appearance.ForeColor = System.Drawing.Color.Blue;
-            this.labelControl2.Location = new System.Drawing.Point(16, 74);
-            this.labelControl2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.labelControl2.Location = new System.Drawing.Point(12, 60);
             this.labelControl2.Name = "labelControl2";
-            this.labelControl2.Size = new System.Drawing.Size(42, 21);
+            this.labelControl2.Size = new System.Drawing.Size(31, 16);
             this.labelControl2.TabIndex = 3;
             this.labelControl2.Text = "Lệnh";
             // 
@@ -126,10 +124,9 @@
             // 
             this.labelControl3.Appearance.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelControl3.Appearance.ForeColor = System.Drawing.Color.Blue;
-            this.labelControl3.Location = new System.Drawing.Point(16, 133);
-            this.labelControl3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.labelControl3.Location = new System.Drawing.Point(12, 108);
             this.labelControl3.Name = "labelControl3";
-            this.labelControl3.Size = new System.Drawing.Size(114, 21);
+            this.labelControl3.Size = new System.Drawing.Size(84, 16);
             this.labelControl3.TabIndex = 5;
             this.labelControl3.Text = "Tham số lệnh";
             // 
@@ -137,24 +134,22 @@
             // 
             this.labelControl5.Appearance.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelControl5.Appearance.ForeColor = System.Drawing.Color.Blue;
-            this.labelControl5.Location = new System.Drawing.Point(16, 192);
-            this.labelControl5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.labelControl5.Location = new System.Drawing.Point(12, 156);
             this.labelControl5.Name = "labelControl5";
-            this.labelControl5.Size = new System.Drawing.Size(94, 21);
+            this.labelControl5.Size = new System.Drawing.Size(69, 16);
             this.labelControl5.TabIndex = 7;
             this.labelControl5.Text = "Hành động";
             // 
             // btnResetUser
             // 
-            this.btnResetUser.Location = new System.Drawing.Point(291, 39);
-            this.btnResetUser.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnResetUser.Location = new System.Drawing.Point(218, 32);
             this.btnResetUser.Name = "btnResetUser";
             serializableAppearanceObject1.BackColor = System.Drawing.Color.Transparent;
             serializableAppearanceObject1.Options.UseBackColor = true;
             this.btnResetUser.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, true, true, false, DevExpress.XtraEditors.ImageLocation.MiddleCenter, global::QMS_System.Properties.Resources.if_Synchronize_27883, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, "", null, null, true)});
             this.btnResetUser.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.HideTextEditor;
-            this.btnResetUser.Size = new System.Drawing.Size(43, 24);
+            this.btnResetUser.Size = new System.Drawing.Size(32, 22);
             this.btnResetUser.TabIndex = 8;
             this.btnResetUser.ToolTip = "Làm mới danh sách nhân viên";
             this.btnResetUser.EditValueChanged += new System.EventHandler(this.btnResetUser_EditValueChanged);
@@ -162,45 +157,42 @@
             // 
             // btnCmd
             // 
-            this.btnCmd.Location = new System.Drawing.Point(295, 98);
-            this.btnCmd.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnCmd.Location = new System.Drawing.Point(221, 80);
             this.btnCmd.Name = "btnCmd";
             serializableAppearanceObject2.BackColor = System.Drawing.Color.Transparent;
             serializableAppearanceObject2.Options.UseBackColor = true;
             this.btnCmd.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, true, true, false, DevExpress.XtraEditors.ImageLocation.MiddleCenter, global::QMS_System.Properties.Resources.if_Synchronize_27883, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject2, "", null, null, true)});
             this.btnCmd.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.HideTextEditor;
-            this.btnCmd.Size = new System.Drawing.Size(43, 24);
+            this.btnCmd.Size = new System.Drawing.Size(32, 22);
             this.btnCmd.TabIndex = 10;
             this.btnCmd.ToolTip = "Làm mới danh sách lệnh";
             this.btnCmd.Click += new System.EventHandler(this.btnCmd_Click);
             // 
             // btnCmdParam
             // 
-            this.btnCmdParam.Location = new System.Drawing.Point(295, 158);
-            this.btnCmdParam.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnCmdParam.Location = new System.Drawing.Point(221, 128);
             this.btnCmdParam.Name = "btnCmdParam";
             serializableAppearanceObject3.BackColor = System.Drawing.Color.Transparent;
             serializableAppearanceObject3.Options.UseBackColor = true;
             this.btnCmdParam.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, true, true, false, DevExpress.XtraEditors.ImageLocation.MiddleCenter, global::QMS_System.Properties.Resources.if_Synchronize_27883, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject3, "", null, null, true)});
             this.btnCmdParam.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.HideTextEditor;
-            this.btnCmdParam.Size = new System.Drawing.Size(43, 24);
+            this.btnCmdParam.Size = new System.Drawing.Size(32, 22);
             this.btnCmdParam.TabIndex = 11;
             this.btnCmdParam.ToolTip = "Làm mới danh sách tham số lệnh";
             this.btnCmdParam.Click += new System.EventHandler(this.btnCmdParam_Click);
             // 
             // btnResetAction
             // 
-            this.btnResetAction.Location = new System.Drawing.Point(295, 214);
-            this.btnResetAction.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnResetAction.Location = new System.Drawing.Point(221, 174);
             this.btnResetAction.Name = "btnResetAction";
             serializableAppearanceObject4.BackColor = System.Drawing.Color.Transparent;
             serializableAppearanceObject4.Options.UseBackColor = true;
             this.btnResetAction.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, true, true, false, DevExpress.XtraEditors.ImageLocation.MiddleCenter, global::QMS_System.Properties.Resources.if_Synchronize_27883, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject4, "", null, null, true)});
             this.btnResetAction.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.HideTextEditor;
-            this.btnResetAction.Size = new System.Drawing.Size(43, 24);
+            this.btnResetAction.Size = new System.Drawing.Size(32, 22);
             this.btnResetAction.TabIndex = 12;
             this.btnResetAction.ToolTip = "Làm mới danh sách hành động";
             this.btnResetAction.Click += new System.EventHandler(this.btnResetAction_Click);
@@ -209,15 +201,13 @@
             // 
             this.gridRegister.Cursor = System.Windows.Forms.Cursors.Default;
             this.gridRegister.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridRegister.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.gridRegister.Location = new System.Drawing.Point(0, 0);
             this.gridRegister.MainView = this.gridViewRegister;
-            this.gridRegister.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.gridRegister.Name = "gridRegister";
             this.gridRegister.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repbtn_deleteService,
             this.repbtnEdit});
-            this.gridRegister.Size = new System.Drawing.Size(1091, 654);
+            this.gridRegister.Size = new System.Drawing.Size(649, 531);
             this.gridRegister.TabIndex = 14;
             this.gridRegister.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewRegister});
@@ -449,7 +439,6 @@
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -484,15 +473,13 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.gridRegister);
-            this.splitContainer1.Size = new System.Drawing.Size(1464, 654);
-            this.splitContainer1.SplitterDistance = 368;
-            this.splitContainer1.SplitterWidth = 5;
+            this.splitContainer1.Size = new System.Drawing.Size(872, 531);
+            this.splitContainer1.SplitterDistance = 219;
             this.splitContainer1.TabIndex = 19;
             // 
             // lkUser
             // 
-            this.lkUser.Location = new System.Drawing.Point(16, 39);
-            this.lkUser.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.lkUser.Location = new System.Drawing.Point(12, 32);
             this.lkUser.Name = "lkUser";
             this.lkUser.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
             this.lkUser.Properties.Appearance.Options.UseFont = true;
@@ -500,14 +487,13 @@
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.lkUser.Properties.NullText = "Chọn nhân viên ...";
             this.lkUser.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.Standard;
-            this.lkUser.Size = new System.Drawing.Size(267, 28);
+            this.lkUser.Size = new System.Drawing.Size(200, 22);
             this.lkUser.TabIndex = 37;
             this.lkUser.EditValueChanged += new System.EventHandler(this.lkUser_EditValueChanged);
             // 
             // lkActionParam
             // 
-            this.lkActionParam.Location = new System.Drawing.Point(16, 271);
-            this.lkActionParam.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.lkActionParam.Location = new System.Drawing.Point(12, 220);
             this.lkActionParam.Name = "lkActionParam";
             this.lkActionParam.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
             this.lkActionParam.Properties.Appearance.Options.UseFont = true;
@@ -515,14 +501,13 @@
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.lkActionParam.Properties.NullText = "Chọn tham số hành động ...";
             this.lkActionParam.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.Standard;
-            this.lkActionParam.Size = new System.Drawing.Size(267, 28);
+            this.lkActionParam.Size = new System.Drawing.Size(200, 22);
             this.lkActionParam.TabIndex = 36;
             this.lkActionParam.EditValueChanged += new System.EventHandler(this.lkActionParam_EditValueChanged);
             // 
             // lkAction
             // 
-            this.lkAction.Location = new System.Drawing.Point(16, 214);
-            this.lkAction.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.lkAction.Location = new System.Drawing.Point(12, 174);
             this.lkAction.Name = "lkAction";
             this.lkAction.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
             this.lkAction.Properties.Appearance.Options.UseFont = true;
@@ -530,14 +515,13 @@
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.lkAction.Properties.NullText = "Chọn hành động ...";
             this.lkAction.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.Standard;
-            this.lkAction.Size = new System.Drawing.Size(267, 28);
+            this.lkAction.Size = new System.Drawing.Size(200, 22);
             this.lkAction.TabIndex = 35;
             this.lkAction.EditValueChanged += new System.EventHandler(this.lkAction_EditValueChanged);
             // 
             // lkCmdParam
             // 
-            this.lkCmdParam.Location = new System.Drawing.Point(16, 158);
-            this.lkCmdParam.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.lkCmdParam.Location = new System.Drawing.Point(12, 128);
             this.lkCmdParam.Name = "lkCmdParam";
             this.lkCmdParam.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
             this.lkCmdParam.Properties.Appearance.Options.UseFont = true;
@@ -545,14 +529,13 @@
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.lkCmdParam.Properties.NullText = "Chọn tham số lệnh ...";
             this.lkCmdParam.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.Standard;
-            this.lkCmdParam.Size = new System.Drawing.Size(267, 28);
+            this.lkCmdParam.Size = new System.Drawing.Size(200, 22);
             this.lkCmdParam.TabIndex = 34;
             this.lkCmdParam.EditValueChanged += new System.EventHandler(this.lkcmdParam_EditValueChanged);
             // 
             // lkCmd
             // 
-            this.lkCmd.Location = new System.Drawing.Point(16, 98);
-            this.lkCmd.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.lkCmd.Location = new System.Drawing.Point(12, 80);
             this.lkCmd.Name = "lkCmd";
             this.lkCmd.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
             this.lkCmd.Properties.Appearance.Options.UseFont = true;
@@ -560,71 +543,65 @@
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.lkCmd.Properties.NullText = "Chọn lệnh ...";
             this.lkCmd.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.Standard;
-            this.lkCmd.Size = new System.Drawing.Size(267, 28);
+            this.lkCmd.Size = new System.Drawing.Size(200, 22);
             this.lkCmd.TabIndex = 33;
             this.lkCmd.EditValueChanged += new System.EventHandler(this.lkCmd_TextChanged);
             // 
             // txtNote
             // 
-            this.txtNote.Location = new System.Drawing.Point(16, 453);
-            this.txtNote.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtNote.Location = new System.Drawing.Point(12, 368);
             this.txtNote.Name = "txtNote";
             this.txtNote.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
             this.txtNote.Properties.Appearance.Options.UseFont = true;
             this.txtNote.Properties.Appearance.Options.UseTextOptions = true;
             this.txtNote.Properties.Appearance.TextOptions.WordWrap = DevExpress.Utils.WordWrap.Wrap;
-            this.txtNote.Size = new System.Drawing.Size(265, 28);
+            this.txtNote.Size = new System.Drawing.Size(199, 22);
             this.txtNote.TabIndex = 32;
             // 
             // labelControl8
             // 
             this.labelControl8.Appearance.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelControl8.Appearance.ForeColor = System.Drawing.Color.Blue;
-            this.labelControl8.Location = new System.Drawing.Point(16, 426);
-            this.labelControl8.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.labelControl8.Location = new System.Drawing.Point(12, 346);
             this.labelControl8.Name = "labelControl8";
-            this.labelControl8.Size = new System.Drawing.Size(60, 19);
+            this.labelControl8.Size = new System.Drawing.Size(46, 16);
             this.labelControl8.TabIndex = 31;
             this.labelControl8.Text = "Ghi chú";
             // 
             // txtparam
             // 
-            this.txtparam.Location = new System.Drawing.Point(16, 391);
-            this.txtparam.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtparam.Location = new System.Drawing.Point(12, 318);
             this.txtparam.Name = "txtparam";
             this.txtparam.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
             this.txtparam.Properties.Appearance.Options.UseFont = true;
-            this.txtparam.Size = new System.Drawing.Size(265, 28);
+            this.txtparam.Size = new System.Drawing.Size(199, 22);
             this.txtparam.TabIndex = 30;
             // 
             // labelControl7
             // 
             this.labelControl7.Appearance.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelControl7.Appearance.ForeColor = System.Drawing.Color.Blue;
-            this.labelControl7.Location = new System.Drawing.Point(16, 364);
-            this.labelControl7.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.labelControl7.Location = new System.Drawing.Point(12, 296);
             this.labelControl7.Name = "labelControl7";
-            this.labelControl7.Size = new System.Drawing.Size(110, 21);
+            this.labelControl7.Size = new System.Drawing.Size(81, 16);
             this.labelControl7.TabIndex = 29;
             this.labelControl7.Text = "Tham số phụ";
             // 
             // txtStt
             // 
             this.txtStt.Font = new System.Drawing.Font("Tahoma", 10F);
-            this.txtStt.Location = new System.Drawing.Point(16, 332);
-            this.txtStt.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtStt.Location = new System.Drawing.Point(12, 270);
             this.txtStt.Name = "txtStt";
-            this.txtStt.Size = new System.Drawing.Size(60, 28);
+            this.txtStt.Size = new System.Drawing.Size(45, 24);
             this.txtStt.TabIndex = 28;
             // 
             // labelControl6
             // 
             this.labelControl6.Appearance.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelControl6.Appearance.ForeColor = System.Drawing.Color.Blue;
-            this.labelControl6.Location = new System.Drawing.Point(16, 305);
-            this.labelControl6.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.labelControl6.Location = new System.Drawing.Point(12, 248);
             this.labelControl6.Name = "labelControl6";
-            this.labelControl6.Size = new System.Drawing.Size(167, 21);
+            this.labelControl6.Size = new System.Drawing.Size(127, 16);
             this.labelControl6.TabIndex = 27;
             this.labelControl6.Text = "Số thứ tự thực hiện";
             // 
@@ -633,10 +610,9 @@
             this.btnRefreshGrid.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
             this.btnRefreshGrid.Appearance.Options.UseFont = true;
             this.btnRefreshGrid.Image = global::QMS_System.Properties.Resources.if_view_refresh_118801;
-            this.btnRefreshGrid.Location = new System.Drawing.Point(41, 596);
-            this.btnRefreshGrid.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnRefreshGrid.Location = new System.Drawing.Point(31, 484);
             this.btnRefreshGrid.Name = "btnRefreshGrid";
-            this.btnRefreshGrid.Size = new System.Drawing.Size(291, 43);
+            this.btnRefreshGrid.Size = new System.Drawing.Size(218, 35);
             this.btnRefreshGrid.TabIndex = 26;
             this.btnRefreshGrid.Text = "Làm mới danh sách đăng ký";
             this.btnRefreshGrid.Click += new System.EventHandler(this.btnRefreshGrid_Click);
@@ -646,10 +622,9 @@
             this.btnCopy.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
             this.btnCopy.Appearance.Options.UseFont = true;
             this.btnCopy.Image = global::QMS_System.Properties.Resources.if_copy_172587__1_;
-            this.btnCopy.Location = new System.Drawing.Point(191, 545);
-            this.btnCopy.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnCopy.Location = new System.Drawing.Point(143, 443);
             this.btnCopy.Name = "btnCopy";
-            this.btnCopy.Size = new System.Drawing.Size(141, 43);
+            this.btnCopy.Size = new System.Drawing.Size(106, 35);
             this.btnCopy.TabIndex = 25;
             this.btnCopy.Text = "Sao chép";
             this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
@@ -659,10 +634,9 @@
             this.btnCancel.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
             this.btnCancel.Appearance.Options.UseFont = true;
             this.btnCancel.Image = global::QMS_System.Properties.Resources.if_cancel_13487;
-            this.btnCancel.Location = new System.Drawing.Point(41, 545);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnCancel.Location = new System.Drawing.Point(31, 443);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(141, 43);
+            this.btnCancel.Size = new System.Drawing.Size(106, 35);
             this.btnCancel.TabIndex = 24;
             this.btnCancel.Text = "Hủy bỏ";
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -672,10 +646,9 @@
             this.btnSave.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
             this.btnSave.Appearance.Options.UseFont = true;
             this.btnSave.Image = global::QMS_System.Properties.Resources.if_save_173091;
-            this.btnSave.Location = new System.Drawing.Point(191, 495);
-            this.btnSave.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnSave.Location = new System.Drawing.Point(143, 402);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(141, 43);
+            this.btnSave.Size = new System.Drawing.Size(106, 35);
             this.btnSave.TabIndex = 23;
             this.btnSave.Text = "Lưu lại";
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
@@ -685,25 +658,23 @@
             this.btnAdd.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
             this.btnAdd.Appearance.Options.UseFont = true;
             this.btnAdd.Image = global::QMS_System.Properties.Resources.if_plus_sign_173078;
-            this.btnAdd.Location = new System.Drawing.Point(41, 495);
-            this.btnAdd.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnAdd.Location = new System.Drawing.Point(31, 402);
             this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(141, 43);
+            this.btnAdd.Size = new System.Drawing.Size(106, 35);
             this.btnAdd.TabIndex = 22;
             this.btnAdd.Text = "Thêm mới";
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
             // btnResetAcParam
             // 
-            this.btnResetAcParam.Location = new System.Drawing.Point(295, 271);
-            this.btnResetAcParam.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnResetAcParam.Location = new System.Drawing.Point(221, 220);
             this.btnResetAcParam.Name = "btnResetAcParam";
             serializableAppearanceObject7.BackColor = System.Drawing.Color.Transparent;
             serializableAppearanceObject7.Options.UseBackColor = true;
             this.btnResetAcParam.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, true, true, false, DevExpress.XtraEditors.ImageLocation.MiddleCenter, global::QMS_System.Properties.Resources.if_Synchronize_27883, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject7, "", null, null, true)});
             this.btnResetAcParam.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.HideTextEditor;
-            this.btnResetAcParam.Size = new System.Drawing.Size(43, 24);
+            this.btnResetAcParam.Size = new System.Drawing.Size(32, 22);
             this.btnResetAcParam.TabIndex = 20;
             this.btnResetAcParam.ToolTip = "Làm mới danh sách hành động";
             this.btnResetAcParam.Click += new System.EventHandler(this.btnResetAcParam_Click);
@@ -712,20 +683,18 @@
             // 
             this.labelControl4.Appearance.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelControl4.Appearance.ForeColor = System.Drawing.Color.Blue;
-            this.labelControl4.Location = new System.Drawing.Point(16, 249);
-            this.labelControl4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.labelControl4.Location = new System.Drawing.Point(12, 202);
             this.labelControl4.Name = "labelControl4";
-            this.labelControl4.Size = new System.Drawing.Size(169, 21);
+            this.labelControl4.Size = new System.Drawing.Size(125, 16);
             this.labelControl4.TabIndex = 19;
             this.labelControl4.Text = "Tham số hành động";
             // 
             // frmUserCmdRegister
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1464, 654);
+            this.ClientSize = new System.Drawing.Size(872, 531);
             this.Controls.Add(this.splitContainer1);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "frmUserCmdRegister";
             this.Text = "Đăng ký nhân viên lệnh";
             this.Load += new System.EventHandler(this.frmUserCmdRegister_Load);

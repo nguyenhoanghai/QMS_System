@@ -96,7 +96,7 @@ namespace QMS_System.Data.BLL
                     if (yes.Count > 0)
                     {
                         db.Database.ExecuteSqlCommand("delete Q_Login ");
-                        db.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Q_Login', RESEED, 1000); ");
+                        db.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Q_Login', RESEED, 0); ");
                         db.SaveChanges();
                         List<int> code = new List<int>();
                         //Q_LoginHistory obj;

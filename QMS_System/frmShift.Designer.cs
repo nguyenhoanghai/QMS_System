@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmShift));
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject3 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject1 = new DevExpress.Utils.SerializableAppearanceObject();
             this.btnResetShift = new DevExpress.XtraEditors.SimpleButton();
             this.gridShift = new DevExpress.XtraGrid.GridControl();
             this.gridViewShift = new DevExpress.XtraGrid.Views.Grid.GridView();
@@ -75,7 +75,7 @@
             this.repbtn_deleteShift,
             this.repTimeStart,
             this.repTimeEnd});
-            this.gridShift.Size = new System.Drawing.Size(1234, 270);
+            this.gridShift.Size = new System.Drawing.Size(577, 270);
             this.gridShift.TabIndex = 1;
             this.gridShift.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewShift});
@@ -218,7 +218,7 @@
             // 
             this.repbtn_deleteShift.AutoHeight = false;
             this.repbtn_deleteShift.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, true, true, false, DevExpress.XtraEditors.ImageLocation.MiddleCenter, ((System.Drawing.Image)(resources.GetObject("repbtn_deleteShift.Buttons"))), new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject3, "", null, null, true)});
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, true, true, false, DevExpress.XtraEditors.ImageLocation.MiddleCenter, ((System.Drawing.Image)(resources.GetObject("repbtn_deleteShift.Buttons"))), new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, "", null, null, true)});
             this.repbtn_deleteShift.Name = "repbtn_deleteShift";
             this.repbtn_deleteShift.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.HideTextEditor;
             this.repbtn_deleteShift.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.repbtn_deleteShift_ButtonClick);
@@ -231,7 +231,7 @@
             this.groupControl2.Controls.Add(this.gridShift);
             this.groupControl2.Location = new System.Drawing.Point(0, 48);
             this.groupControl2.Name = "groupControl2";
-            this.groupControl2.Size = new System.Drawing.Size(1238, 292);
+            this.groupControl2.Size = new System.Drawing.Size(581, 292);
             this.groupControl2.TabIndex = 16;
             this.groupControl2.Text = "Danh mục ca làm việc";
             // 
@@ -239,7 +239,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1239, 344);
+            this.ClientSize = new System.Drawing.Size(582, 344);
             this.Controls.Add(this.btnResetShift);
             this.Controls.Add(this.groupControl2);
             this.Name = "frmShift";

@@ -175,7 +175,7 @@
             this.gridCommandParameter.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.lookUpCommand,
             this.repbtn_deleteCommandParam});
-            this.gridCommandParameter.Size = new System.Drawing.Size(583, 381);
+            this.gridCommandParameter.Size = new System.Drawing.Size(381, 381);
             this.gridCommandParameter.TabIndex = 1;
             this.gridCommandParameter.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewCommandParameter});
@@ -186,7 +186,7 @@
             this.groupControl2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupControl2.Location = new System.Drawing.Point(0, 0);
             this.groupControl2.Name = "groupControl2";
-            this.groupControl2.Size = new System.Drawing.Size(587, 403);
+            this.groupControl2.Size = new System.Drawing.Size(385, 403);
             this.groupControl2.TabIndex = 3;
             this.groupControl2.Text = "Danh sách tham số lệnh";
             // 
@@ -317,7 +317,7 @@
             this.gridCommand.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repbtn_deleteCommand,
             this.repbtnDetail});
-            this.gridCommand.Size = new System.Drawing.Size(475, 381);
+            this.gridCommand.Size = new System.Drawing.Size(311, 381);
             this.gridCommand.TabIndex = 1;
             this.gridCommand.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewCommand});
@@ -337,8 +337,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.groupControl2);
-            this.splitContainer1.Size = new System.Drawing.Size(1070, 403);
-            this.splitContainer1.SplitterDistance = 479;
+            this.splitContainer1.Size = new System.Drawing.Size(704, 403);
+            this.splitContainer1.SplitterDistance = 315;
             this.splitContainer1.TabIndex = 2;
             // 
             // groupControl1
@@ -348,7 +348,7 @@
             this.groupControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupControl1.Location = new System.Drawing.Point(0, 0);
             this.groupControl1.Name = "groupControl1";
-            this.groupControl1.Size = new System.Drawing.Size(479, 403);
+            this.groupControl1.Size = new System.Drawing.Size(315, 403);
             this.groupControl1.TabIndex = 3;
             this.groupControl1.Text = "Danh sách lệnh";
             // 
@@ -380,7 +380,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1070, 452);
+            this.ClientSize = new System.Drawing.Size(704, 452);
             this.Controls.Add(this.btnResetCommandParam);
             this.Controls.Add(this.btnResetCommand);
             this.Controls.Add(this.splitContainer1);

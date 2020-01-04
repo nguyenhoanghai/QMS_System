@@ -31,6 +31,7 @@ namespace QMS_System.Data
         public bool IsDeleted { get; set; }
         public int LastCall { get; set; }
         public bool IsRunning { get; set; }
+        public int LastCallKetLuan { get; set; }
     
         public virtual ICollection<Q_CounterSound> Q_CounterSound { get; set; }
         public virtual ICollection<Q_Equipment> Q_Equipment { get; set; }

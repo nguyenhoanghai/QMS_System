@@ -300,7 +300,7 @@
             this.lookUpStatus,
             this.dateEditEndTime,
             this.repbtnDeleteEquipment});
-            this.gridEquipment.Size = new System.Drawing.Size(886, 392);
+            this.gridEquipment.Size = new System.Drawing.Size(462, 392);
             this.gridEquipment.TabIndex = 1;
             this.gridEquipment.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewEquipment});
@@ -343,7 +343,7 @@
             this.groupControl2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupControl2.Location = new System.Drawing.Point(0, 0);
             this.groupControl2.Name = "groupControl2";
-            this.groupControl2.Size = new System.Drawing.Size(890, 414);
+            this.groupControl2.Size = new System.Drawing.Size(466, 414);
             this.groupControl2.TabIndex = 1;
             this.groupControl2.Text = "Danh mục thiết bị";
             // 
@@ -484,7 +484,7 @@
             this.splitContainerControl1.Panel1.Text = "Panel1";
             this.splitContainerControl1.Panel2.Controls.Add(this.groupControl2);
             this.splitContainerControl1.Panel2.Text = "Panel2";
-            this.splitContainerControl1.Size = new System.Drawing.Size(1297, 414);
+            this.splitContainerControl1.Size = new System.Drawing.Size(873, 414);
             this.splitContainerControl1.SplitterPosition = 402;
             this.splitContainerControl1.TabIndex = 1;
             this.splitContainerControl1.Text = "splitContainerControl1";
@@ -541,7 +541,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1297, 460);
+            this.ClientSize = new System.Drawing.Size(873, 460);
             this.Controls.Add(this.btnResetStatus);
             this.Controls.Add(this.btnResetCounter);
             this.Controls.Add(this.btnResetEquip);

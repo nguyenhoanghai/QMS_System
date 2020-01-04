@@ -68,7 +68,7 @@
             this.gridSMS.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repbtn_delete,
             this.repChb});
-            this.gridSMS.Size = new System.Drawing.Size(901, 209);
+            this.gridSMS.Size = new System.Drawing.Size(710, 209);
             this.gridSMS.TabIndex = 12;
             this.gridSMS.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewSMS});
@@ -180,7 +180,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(907, 261);
+            this.ClientSize = new System.Drawing.Size(716, 261);
             this.Controls.Add(this.gridSMS);
             this.Controls.Add(this.btnResetGrid);
             this.Name = "frmRecieverSMS";

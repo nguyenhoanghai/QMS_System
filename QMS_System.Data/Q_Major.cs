@@ -26,6 +26,7 @@ namespace QMS_System.Data
         public string Name { get; set; }
         public string Note { get; set; }
         public bool IsDeleted { get; set; }
+        public bool IsShow { get; set; }
     
         public virtual ICollection<Q_ServiceStep> Q_ServiceStep { get; set; }
         public virtual ICollection<Q_UserMajor> Q_UserMajor { get; set; }

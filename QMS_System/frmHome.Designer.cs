@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject3 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject1 = new DevExpress.Utils.SerializableAppearanceObject();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tmCountClose = new System.Windows.Forms.Timer(this.components);
             this.gridHome = new DevExpress.XtraGrid.GridControl();
@@ -69,14 +69,12 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gridHome.Cursor = System.Windows.Forms.Cursors.Default;
-            this.gridHome.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(4);
-            this.gridHome.Location = new System.Drawing.Point(0, 51);
+            this.gridHome.Location = new System.Drawing.Point(0, 41);
             this.gridHome.MainView = this.gridViewHome;
-            this.gridHome.Margin = new System.Windows.Forms.Padding(4);
             this.gridHome.Name = "gridHome";
             this.gridHome.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemButtonEdit1});
-            this.gridHome.Size = new System.Drawing.Size(1372, 409);
+            this.gridHome.Size = new System.Drawing.Size(807, 332);
             this.gridHome.TabIndex = 3;
             this.gridHome.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewHome,
@@ -289,7 +287,7 @@
             // 
             this.repositoryItemButtonEdit1.AutoHeight = false;
             this.repositoryItemButtonEdit1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, true, true, false, DevExpress.XtraEditors.ImageLocation.MiddleCenter, global::QMS_System.Properties.Resources.yellow, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject3, "", null, null, true)});
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, true, true, false, DevExpress.XtraEditors.ImageLocation.MiddleCenter, global::QMS_System.Properties.Resources.yellow, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, "", null, null, true)});
             this.repositoryItemButtonEdit1.Name = "repositoryItemButtonEdit1";
             this.repositoryItemButtonEdit1.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.HideTextEditor;
             // 
@@ -325,8 +323,9 @@
             this.btnReload.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnReload.Image = global::QMS_System.Properties.Resources.if_refresh22_216527;
             this.btnReload.Location = new System.Drawing.Point(0, 2);
+            this.btnReload.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnReload.Name = "btnReload";
-            this.btnReload.Size = new System.Drawing.Size(173, 44);
+            this.btnReload.Size = new System.Drawing.Size(130, 36);
             this.btnReload.TabIndex = 4;
             this.btnReload.Text = "Làm mới lưới";
             this.btnReload.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -336,12 +335,11 @@
             // 
             // frmHome
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1372, 460);
+            this.ClientSize = new System.Drawing.Size(807, 374);
             this.Controls.Add(this.btnReload);
             this.Controls.Add(this.gridHome);
-            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "frmHome";
             this.Text = "Trang chủ";
             this.Load += new System.EventHandler(this.frmHome_Load);

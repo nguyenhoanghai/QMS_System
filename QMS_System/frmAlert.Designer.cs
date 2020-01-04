@@ -65,7 +65,7 @@
             this.groupControl2.Controls.Add(this.gridAlert);
             this.groupControl2.Location = new System.Drawing.Point(-1, 50);
             this.groupControl2.Name = "groupControl2";
-            this.groupControl2.Size = new System.Drawing.Size(1238, 292);
+            this.groupControl2.Size = new System.Drawing.Size(670, 292);
             this.groupControl2.TabIndex = 2;
             this.groupControl2.Text = "Danh mục câu hướng dẫn";
             // 
@@ -81,7 +81,7 @@
             this.lookUpSound,
             this.repTimeStart,
             this.repTimeEnd});
-            this.gridAlert.Size = new System.Drawing.Size(1234, 270);
+            this.gridAlert.Size = new System.Drawing.Size(666, 270);
             this.gridAlert.TabIndex = 1;
             this.gridAlert.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewAlert});
@@ -273,7 +273,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1239, 344);
+            this.ClientSize = new System.Drawing.Size(671, 344);
             this.Controls.Add(this.btnResetAlert);
             this.Controls.Add(this.btnResetSound);
             this.Controls.Add(this.groupControl2);

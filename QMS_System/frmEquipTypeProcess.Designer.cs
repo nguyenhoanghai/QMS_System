@@ -66,7 +66,7 @@
             this.groupControl2.Controls.Add(this.gridEquipTypeProcess);
             this.groupControl2.Location = new System.Drawing.Point(0, 46);
             this.groupControl2.Name = "groupControl2";
-            this.groupControl2.Size = new System.Drawing.Size(893, 313);
+            this.groupControl2.Size = new System.Drawing.Size(763, 313);
             this.groupControl2.TabIndex = 2;
             this.groupControl2.Text = "Danh sách tiến trình loại thiết bị";
             // 
@@ -81,7 +81,7 @@
             this.lookUpEquipType,
             this.lookUpProcess,
             this.repbtn_delete});
-            this.gridEquipTypeProcess.Size = new System.Drawing.Size(889, 291);
+            this.gridEquipTypeProcess.Size = new System.Drawing.Size(759, 291);
             this.gridEquipTypeProcess.TabIndex = 1;
             this.gridEquipTypeProcess.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewEquipTypeProcess});
@@ -296,7 +296,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(893, 359);
+            this.ClientSize = new System.Drawing.Size(763, 359);
             this.Controls.Add(this.btnResetEquipTypeProcess);
             this.Controls.Add(this.btnResetEquipType);
             this.Controls.Add(this.btnResetProcess);

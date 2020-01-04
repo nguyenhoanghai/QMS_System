@@ -96,6 +96,7 @@
     <Property Name="Acreage" Type="nvarchar" MaxLength="50" />
     <Property Name="IsDeleted" Type="bit" Nullable="false" />
     <Property Name="LastCall" Type="int" Nullable="false" />
+    <Property Name="LastCallKetLuan" Type="int" Nullable="false" />
     <Property Name="IsRunning" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="Q_CounterSoftRequire">
@@ -309,6 +310,7 @@
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
     <Property Name="Note" Type="nvarchar(max)" />
+    <Property Name="IsShow" Type="bit" Nullable="false" />
     <Property Name="IsDeleted" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="Q_Policy">
@@ -396,6 +398,7 @@
     <Property Name="AutoEnd" Type="bit" Nullable="false" />
     <Property Name="TimeAutoEnd" Type="datetime" />
     <Property Name="showBenhVien" Type="bit" Nullable="false" />
+    <Property Name="isKetLuan" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="Q_ServiceLimit">
     <Key>

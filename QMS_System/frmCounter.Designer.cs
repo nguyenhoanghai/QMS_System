@@ -92,7 +92,7 @@
             this.repbtn_deleteCounter,
             this.repbtnDetail,
             this.repositoryItemSpinEdit1});
-            this.gridCounter.Size = new System.Drawing.Size(739, 276);
+            this.gridCounter.Size = new System.Drawing.Size(626, 276);
             this.gridCounter.TabIndex = 2;
             this.gridCounter.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewCounter});
@@ -344,8 +344,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.groupControl2);
-            this.splitContainer1.Size = new System.Drawing.Size(1034, 298);
-            this.splitContainer1.SplitterDistance = 743;
+            this.splitContainer1.Size = new System.Drawing.Size(877, 298);
+            this.splitContainer1.SplitterDistance = 630;
             this.splitContainer1.TabIndex = 5;
             // 
             // groupControl1
@@ -354,7 +354,7 @@
             this.groupControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupControl1.Location = new System.Drawing.Point(0, 0);
             this.groupControl1.Name = "groupControl1";
-            this.groupControl1.Size = new System.Drawing.Size(743, 298);
+            this.groupControl1.Size = new System.Drawing.Size(630, 298);
             this.groupControl1.TabIndex = 3;
             this.groupControl1.Text = "Danh sách quầy";
             // 
@@ -364,7 +364,7 @@
             this.groupControl2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupControl2.Location = new System.Drawing.Point(0, 0);
             this.groupControl2.Name = "groupControl2";
-            this.groupControl2.Size = new System.Drawing.Size(287, 298);
+            this.groupControl2.Size = new System.Drawing.Size(243, 298);
             this.groupControl2.TabIndex = 2;
             this.groupControl2.Text = "Cấu hình âm thanh quầy";
             // 
@@ -378,7 +378,7 @@
             this.gridChild.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repbtnDeleteChild,
             this.gridLookUpLanguage});
-            this.gridChild.Size = new System.Drawing.Size(283, 276);
+            this.gridChild.Size = new System.Drawing.Size(239, 276);
             this.gridChild.TabIndex = 1;
             this.gridChild.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewChild});
@@ -507,7 +507,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1041, 351);
+            this.ClientSize = new System.Drawing.Size(884, 351);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.btnResetCounter);
             this.Controls.Add(this.btnResetSound);

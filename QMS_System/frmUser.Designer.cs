@@ -73,7 +73,7 @@
             this.lookUpSex,
             this.repositoryItemTextEdit1,
             this.repcbCounter});
-            this.gridUser.Size = new System.Drawing.Size(1018, 370);
+            this.gridUser.Size = new System.Drawing.Size(815, 370);
             this.gridUser.TabIndex = 1;
             this.gridUser.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewUser});
@@ -371,7 +371,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1028, 424);
+            this.ClientSize = new System.Drawing.Size(825, 424);
             this.Controls.Add(this.simpleButton1);
             this.Controls.Add(this.btnReset);
             this.Controls.Add(this.gridUser);

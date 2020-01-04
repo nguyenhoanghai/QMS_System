@@ -61,3 +61,6 @@ GO
 
 ALTER TABLE [dbo].[Q_TVReadSound] CHECK CONSTRAINT [FK_Q_TVReadSound_Q_Counter]
 GO
+
+alter table Q_service add [isKetLuan] bit default(0) not null
+alter table Q_major add [isshow] bit default(1) not null

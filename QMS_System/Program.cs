@@ -35,10 +35,10 @@ namespace QMS_System
                 Application.SetCompatibleTextRenderingDefault(false);
                 try
                 {
-                    if (BaseCore.Instance.CONNECT_STATUS(Application.StartupPath + "\\DATA.XML"))
+                   // if (BaseCore.Instance.CONNECT_STATUS(Application.StartupPath + "\\DATA.XML"))
                         Application.Run(new frmMain());
-                    else
-                        Application.Run(new FrmSQLConnect());
+                   // else
+                       // Application.Run(new FrmSQLConnect());
                 }
                 catch (Exception ex)
                 {

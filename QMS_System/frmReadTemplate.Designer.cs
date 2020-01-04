@@ -114,8 +114,8 @@
             this.splitContainerControl1.Panel1.Text = "Panel1";
             this.splitContainerControl1.Panel2.Controls.Add(this.groupControl2);
             this.splitContainerControl1.Panel2.Text = "Panel2";
-            this.splitContainerControl1.Size = new System.Drawing.Size(1097, 289);
-            this.splitContainerControl1.SplitterPosition = 593;
+            this.splitContainerControl1.Size = new System.Drawing.Size(783, 289);
+            this.splitContainerControl1.SplitterPosition = 442;
             this.splitContainerControl1.TabIndex = 8;
             this.splitContainerControl1.Text = "splitContainerControl1";
             // 
@@ -125,7 +125,7 @@
             this.groupControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupControl1.Location = new System.Drawing.Point(0, 0);
             this.groupControl1.Name = "groupControl1";
-            this.groupControl1.Size = new System.Drawing.Size(593, 289);
+            this.groupControl1.Size = new System.Drawing.Size(442, 289);
             this.groupControl1.TabIndex = 0;
             this.groupControl1.Text = "Danh sách mẫu đọc âm thanh";
             // 
@@ -140,7 +140,7 @@
             this.repbtnDeleteReadTemp,
             this.repLookUpLanguage,
             this.repbtnEdit});
-            this.gridReadTemplate.Size = new System.Drawing.Size(589, 267);
+            this.gridReadTemplate.Size = new System.Drawing.Size(438, 267);
             this.gridReadTemplate.TabIndex = 1;
             this.gridReadTemplate.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewReadTemplate});
@@ -286,7 +286,7 @@
             this.groupControl2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupControl2.Location = new System.Drawing.Point(0, 0);
             this.groupControl2.Name = "groupControl2";
-            this.groupControl2.Size = new System.Drawing.Size(499, 289);
+            this.groupControl2.Size = new System.Drawing.Size(336, 289);
             this.groupControl2.TabIndex = 1;
             this.groupControl2.Text = "Chi tiết mẫu đọc âm thanh";
             // 
@@ -301,7 +301,7 @@
             this.repLookUpSound,
             this.repbtnDeleteDetail,
             this.repositoryItemTextEdit1});
-            this.gridDetail.Size = new System.Drawing.Size(495, 267);
+            this.gridDetail.Size = new System.Drawing.Size(332, 267);
             this.gridDetail.TabIndex = 1;
             this.gridDetail.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewDetail});
@@ -426,7 +426,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1109, 344);
+            this.ClientSize = new System.Drawing.Size(795, 344);
             this.Controls.Add(this.btnResetGrid);
             this.Controls.Add(this.splitContainerControl1);
             this.Controls.Add(this.btnResetSound);

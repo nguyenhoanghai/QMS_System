@@ -36,8 +36,6 @@
             this.gridViewSound = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.gridColumn2 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn1 = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.lookUpName = new DevExpress.XtraEditors.Repository.RepositoryItemGridLookUpEdit();
-            this.repositoryItemGridLookUpEdit1View = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.gridColumn3 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.lookUpLanguage = new DevExpress.XtraEditors.Repository.RepositoryItemGridLookUpEdit();
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
@@ -45,14 +43,16 @@
             this.gridColumn7 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repbtn_deleteSound = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
             this.gridColumn4 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.lookUpName = new DevExpress.XtraEditors.Repository.RepositoryItemGridLookUpEdit();
+            this.repositoryItemGridLookUpEdit1View = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.btnResetMajor = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.gridSound)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridViewSound)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lookUpName)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemGridLookUpEdit1View)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lookUpLanguage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repbtn_deleteSound)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lookUpName)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemGridLookUpEdit1View)).BeginInit();
             this.SuspendLayout();
             // 
             // imageList1
@@ -75,7 +75,7 @@
             this.repbtn_deleteSound,
             this.lookUpName,
             this.lookUpLanguage});
-            this.gridSound.Size = new System.Drawing.Size(841, 282);
+            this.gridSound.Size = new System.Drawing.Size(717, 282);
             this.gridSound.TabIndex = 1;
             this.gridSound.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewSound});
@@ -125,22 +125,6 @@
             this.gridColumn1.Visible = true;
             this.gridColumn1.VisibleIndex = 1;
             this.gridColumn1.Width = 369;
-            // 
-            // lookUpName
-            // 
-            this.lookUpName.AllowNullInput = DevExpress.Utils.DefaultBoolean.True;
-            this.lookUpName.AutoHeight = false;
-            this.lookUpName.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.lookUpName.Name = "lookUpName";
-            this.lookUpName.View = this.repositoryItemGridLookUpEdit1View;
-            // 
-            // repositoryItemGridLookUpEdit1View
-            // 
-            this.repositoryItemGridLookUpEdit1View.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.RowFocus;
-            this.repositoryItemGridLookUpEdit1View.Name = "repositoryItemGridLookUpEdit1View";
-            this.repositoryItemGridLookUpEdit1View.OptionsSelection.EnableAppearanceFocusedCell = false;
-            this.repositoryItemGridLookUpEdit1View.OptionsView.ShowGroupPanel = false;
             // 
             // gridColumn3
             // 
@@ -234,6 +218,22 @@
             this.gridColumn4.VisibleIndex = 0;
             this.gridColumn4.Width = 130;
             // 
+            // lookUpName
+            // 
+            this.lookUpName.AllowNullInput = DevExpress.Utils.DefaultBoolean.True;
+            this.lookUpName.AutoHeight = false;
+            this.lookUpName.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.lookUpName.Name = "lookUpName";
+            this.lookUpName.View = this.repositoryItemGridLookUpEdit1View;
+            // 
+            // repositoryItemGridLookUpEdit1View
+            // 
+            this.repositoryItemGridLookUpEdit1View.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.RowFocus;
+            this.repositoryItemGridLookUpEdit1View.Name = "repositoryItemGridLookUpEdit1View";
+            this.repositoryItemGridLookUpEdit1View.OptionsSelection.EnableAppearanceFocusedCell = false;
+            this.repositoryItemGridLookUpEdit1View.OptionsView.ShowGroupPanel = false;
+            // 
             // btnResetMajor
             // 
             this.btnResetMajor.Image = global::QMS_System.Properties.Resources.if_refresh22_216527;
@@ -250,7 +250,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(850, 338);
+            this.ClientSize = new System.Drawing.Size(726, 338);
             this.Controls.Add(this.gridSound);
             this.Controls.Add(this.btnResetMajor);
             this.Name = "frmSound";
@@ -258,11 +258,11 @@
             this.Load += new System.EventHandler(this.frmSound_Load);
             ((System.ComponentModel.ISupportInitialize)(this.gridSound)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridViewSound)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lookUpName)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemGridLookUpEdit1View)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lookUpLanguage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repbtn_deleteSound)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lookUpName)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemGridLookUpEdit1View)).EndInit();
             this.ResumeLayout(false);
 
         }

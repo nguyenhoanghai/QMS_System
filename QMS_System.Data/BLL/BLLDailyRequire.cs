@@ -5,7 +5,7 @@ using QMS_System.Data.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq; 
+using System.Linq;
 
 namespace QMS_System.Data.BLL
 {
@@ -150,10 +150,8 @@ namespace QMS_System.Data.BLL
                         for (int i = 0; i < majorIds.Count; i++)
                         {
                             int a = majorIds[i];
-                            var newTicket = db.Q_DailyRequire_Detail.Where(x => x.MajorId == a && x.StatusId == (int)eStatus.CHOXL).OrderBy(x => x.Q_DailyRequire.PrintTime).FirstOrDefault();
-                            // if (newTicket == null)
-                            //    newTicket = db.Q_DailyRequire_Detail.Where(x => majorIds.Contains(x.MajorId) && x.StatusId == (int)eStatus.CHOXL).OrderBy(x => x.Q_DailyRequire.PrintTime).FirstOrDefault();
-                            if (newTicket != null)
+                            var newTicket = db.Q_DailyRequire_Detail.Where(x => x.MajorId == a && x.StatusId == (int)eStatus.CHOXL && !x.Q_DailyRequire.Q_Service.isKetLuan).OrderBy(x => x.Q_DailyRequire.PrintTime).FirstOrDefault();
+                              if (newTicket != null)
                             {
                                 newTicket.UserId = userId;
                                 newTicket.EquipCode = equipCode;
@@ -163,7 +161,17 @@ namespace QMS_System.Data.BLL
                                 if (useWithThirdPattern == 0)
                                     ticket = newTicket.Q_DailyRequire.TicketNumber;
                                 else
-                                    ticket = int.Parse(newTicket.Q_DailyRequire.STT_PhongKham);
+                                {
+                                    try
+                                    {
+
+                                        ticket = int.Parse(newTicket.Q_DailyRequire.STT_PhongKham);
+                                    }
+                                    catch (Exception)
+                                    {
+                                        ticket = newTicket.Q_DailyRequire.TicketNumber;
+                                    }
+                                }
 
                                 var equip = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipCode);
                                 if (equip != null)
@@ -183,6 +191,70 @@ namespace QMS_System.Data.BLL
             return ticket;
         }
 
+        public int Next_KetLuan(string connectString, int userId, int equipCode, DateTime date, int useWithThirdPattern)
+        {
+            int ticket = 0;
+            try
+            {
+                using (db = new QMSSystemEntities(connectString))
+                {
+                    var oldTickets = db.Q_DailyRequire_Detail.Where(x => x.UserId == userId && x.EquipCode == equipCode && x.StatusId == (int)eStatus.DAGXL);
+                    if (oldTickets != null && oldTickets.Count() > 0)
+                    {
+                        foreach (var item in oldTickets)
+                        {
+                            item.StatusId = (int)eStatus.HOTAT;
+                            item.EndProcessTime = DateTime.Now;
+                        }
+                        db.SaveChanges();
+                    }
+
+                    var majorIds = db.Q_UserMajor.Where(x => !x.IsDeleted && !x.Q_Major.IsDeleted && !x.Q_User.IsDeleted && x.UserId == userId).OrderBy(x => x.Index).Select(x => x.MajorId).ToList();
+                    if (majorIds.Count > 0)
+                    {
+                        for (int i = 0; i < majorIds.Count; i++)
+                        {
+                            int a = majorIds[i];
+                            var newTicket = db.Q_DailyRequire_Detail.Where(x => x.MajorId == a && x.StatusId == (int)eStatus.CHOXL && x.Q_DailyRequire.Q_Service.isKetLuan).OrderBy(x => x.Q_DailyRequire.PrintTime).FirstOrDefault();
+                            if (newTicket != null)
+                            {
+                                newTicket.UserId = userId;
+                                newTicket.EquipCode = equipCode;
+                                newTicket.ProcessTime = DateTime.Now;
+                                newTicket.StatusId = (int)eStatus.DAGXL;
+
+                                if (useWithThirdPattern == 0)
+                                    ticket = newTicket.Q_DailyRequire.TicketNumber;
+                                else
+                                {
+                                    try
+                                    {
+                                        ticket = int.Parse(newTicket.Q_DailyRequire.STT_PhongKham);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        ticket = newTicket.Q_DailyRequire.TicketNumber;
+                                    }
+                                }
+                                var equip = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipCode);
+                                if (equip != null)
+                                    db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCallKetLuan=" + ticket + " , isrunning=0 where Id=" + equip.CounterId);
+
+                                db.Database.ExecuteSqlCommand(@"update  Q_RequestTicket  set isdeleted= 1 where userId=" + userId);
+                                db.SaveChanges();
+                                break;
+                            }
+                        }
+                    }
+                    return ticket;
+                }
+            }
+            catch (Exception)
+            { }
+            return ticket;
+        }
+
+
         public int CurrentTicket(string connectString, int userId, int equipCode, DateTime date, int useWithThirdPattern)
         {
             int ticket = 0;
@@ -195,7 +267,16 @@ namespace QMS_System.Data.BLL
                         if (useWithThirdPattern == 0)
                             ticket = last.FirstOrDefault().Q_DailyRequire.TicketNumber;
                         else
-                            ticket = int.Parse(last.FirstOrDefault().Q_DailyRequire.STT_PhongKham);
+                        {
+                            try
+                            {
+                                ticket = int.Parse(last.FirstOrDefault().Q_DailyRequire.STT_PhongKham);
+                            }
+                            catch (Exception)
+                            {
+                                ticket = last.FirstOrDefault().Q_DailyRequire.TicketNumber;
+                            }
+                        }
                 }
             }
             catch (Exception)
@@ -212,14 +293,31 @@ namespace QMS_System.Data.BLL
                     var last = db.Q_DailyRequire_Detail.Where(x => x.Q_DailyRequire.PrintTime.Year == date.Year && x.Q_DailyRequire.PrintTime.Month == date.Month && x.Q_DailyRequire.PrintTime.Day == date.Day && x.UserId == userId && x.EquipCode == equipCode && x.StatusId == (int)eStatus.DAGXL).ToList();
                     if (last.Count > 0)
                     {
+                        int ticket = 0;
                         var first = last.FirstOrDefault();
+                        if (useWithThirdPattern == 0)
+                            ticket = first.Q_DailyRequire.TicketNumber;
+                        else
+                        {
+                            try
+                            {
+
+                                ticket = int.Parse(first.Q_DailyRequire.STT_PhongKham);
+                            }
+                            catch (Exception)
+                            {
+                                ticket = first.Q_DailyRequire.TicketNumber;
+                            }
+                        }
+
+
                         return new TicketInfo()
                         {
                             RequireDetailId = first.Id,
                             RequireId = first.DailyRequireId,
                             StartTime = first.ProcessTime.Value.TimeOfDay,
                             TimeServeAllow = first.Q_DailyRequire.ServeTimeAllow,
-                            TicketNumber = (useWithThirdPattern == 0 ? first.Q_DailyRequire.TicketNumber : int.Parse(first.Q_DailyRequire.STT_PhongKham))
+                            TicketNumber = ticket
                         };
                     }
                 }
@@ -383,7 +481,18 @@ namespace QMS_System.Data.BLL
                             if (UseWithThirdPattern == 0)
                                 num = check.Q_DailyRequire.TicketNumber;
                             else
-                                num = int.Parse(check.Q_DailyRequire.STT_PhongKham);
+                            {
+                                try
+                                {
+
+                                    num = int.Parse(check.Q_DailyRequire.STT_PhongKham);
+                                }
+                                catch (Exception)
+                                {
+                                    num = check.Q_DailyRequire.TicketNumber;
+                                }
+                            }
+
                             var equip = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipCode);
                             if (equip != null)
                                 db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + num + " where Id=" + equip.CounterId);
@@ -492,7 +601,17 @@ namespace QMS_System.Data.BLL
                             if (UseWithThirdPattern == 0)
                                 num = check.Q_DailyRequire.TicketNumber;
                             else
-                                num = int.Parse(check.Q_DailyRequire.STT_PhongKham);
+                            {
+                                try
+                                {
+
+                                    num = int.Parse(check.Q_DailyRequire.STT_PhongKham);
+                                }
+                                catch (Exception)
+                                {
+                                    num = check.Q_DailyRequire.TicketNumber;
+                                }
+                            }
                             var equip = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipCode);
                             if (equip != null)
                                 db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + num + ", isrunning=0 where Id=" + equip.CounterId);
@@ -736,7 +855,18 @@ namespace QMS_System.Data.BLL
                         if (UseWithThirdPattern == 0)
                             num = obj.Q_DailyRequire.TicketNumber;
                         else
-                            num = int.Parse(obj.Q_DailyRequire.STT_PhongKham);
+                        {
+                            try
+                            {
+
+                                num = int.Parse(obj.Q_DailyRequire.STT_PhongKham);
+                            }
+                            catch (Exception)
+                            {
+                                num = obj.Q_DailyRequire.TicketNumber;
+                            }
+                        }
+
                         var equip = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipCode);
                         if (equip != null)
                             db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + num + " , isrunning=0 where Id=" + equip.CounterId);
@@ -762,7 +892,30 @@ namespace QMS_System.Data.BLL
                     }
                 }
                 else
-                    return new TicketInfo()
+                {
+                    int num = 0;
+                    if (UseWithThirdPattern == 0)
+                        num = last.Q_DailyRequire.TicketNumber;
+                    else
+                    {
+                        try
+                        {
+
+                            num = int.Parse(last.Q_DailyRequire.STT_PhongKham);
+                        }
+                        catch (Exception)
+                        {
+                            num = last.Q_DailyRequire.TicketNumber;
+                        }
+                    }
+
+                    var equip = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipCode);
+                    if (equip != null)
+                        db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + num + " , isrunning=0 where Id=" + equip.CounterId);
+
+                    db.Database.ExecuteSqlCommand(@"update  Q_RequestTicket  set isdeleted= 1 where userId=" + userId);
+                    db.SaveChanges();
+                    ticketInfo = new TicketInfo()
                     {
                         RequireDetailId = last.Id,
                         RequireId = last.DailyRequireId,
@@ -770,7 +923,8 @@ namespace QMS_System.Data.BLL
                         TimeServeAllow = last.Q_DailyRequire.ServeTimeAllow,
                         TicketNumber = last.Q_DailyRequire.TicketNumber
                     };
-
+                    return ticketInfo;
+                }
             }
         }
         /// <summary>
@@ -862,7 +1016,17 @@ namespace QMS_System.Data.BLL
                         if (UseWithThirdPattern == 0)
                             num = obj.Q_DailyRequire.TicketNumber;
                         else
-                            num = int.Parse(obj.Q_DailyRequire.STT_PhongKham);
+                        {
+                            try
+                            {
+
+                                num = int.Parse(obj.Q_DailyRequire.STT_PhongKham);
+                            }
+                            catch (Exception)
+                            {
+                                num = obj.Q_DailyRequire.TicketNumber;
+                            }
+                        }
                         var equip = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipId);
                         if (equip != null)
                             db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + num + ", isrunning=0 where Id=" + equip.CounterId);
@@ -1967,13 +2131,13 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public ResponseBaseModel InsertAndCallEmptyTicket(string connectString, int equipCode )
+        public ResponseBaseModel InsertAndCallEmptyTicket(string connectString, int equipCode)
         {
             var rs = new ResponseBaseModel();
             rs.IsSuccess = false;
             using (var db = new QMSSystemEntities(connectString))
             {
-                var login = db.Q_Login.OrderByDescending(x=>x.Date ).FirstOrDefault(x => x.EquipCode == equipCode && x.StatusId == (int)eStatus.LOGIN);
+                var login = db.Q_Login.OrderByDescending(x => x.Date).FirstOrDefault(x => x.EquipCode == equipCode && x.StatusId == (int)eStatus.LOGIN);
                 if (login != null)
                 {
                     var userMajor = db.Q_UserMajor.Where(x => !x.IsDeleted && x.UserId == login.UserId).OrderBy(x => x.Index).FirstOrDefault();

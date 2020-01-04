@@ -35,6 +35,7 @@ namespace QMS_System.Data
         public bool AutoEnd { get; set; }
         public Nullable<System.DateTime> TimeAutoEnd { get; set; }
         public bool showBenhVien { get; set; }
+        public bool isKetLuan { get; set; }
     
         public virtual ICollection<Q_DailyRequire> Q_DailyRequire { get; set; }
         public virtual ICollection<Q_HisDailyRequire> Q_HisDailyRequire { get; set; }

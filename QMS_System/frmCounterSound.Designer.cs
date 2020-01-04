@@ -64,7 +64,7 @@
             this.groupControl2.Controls.Add(this.gridCounterSound);
             this.groupControl2.Location = new System.Drawing.Point(1, 49);
             this.groupControl2.Name = "groupControl2";
-            this.groupControl2.Size = new System.Drawing.Size(1029, 356);
+            this.groupControl2.Size = new System.Drawing.Size(694, 356);
             this.groupControl2.TabIndex = 2;
             this.groupControl2.Text = "Danh mục Âm thanh Quầy";
             // 
@@ -79,7 +79,7 @@
             this.lookUpCounter,
             this.lookUpSound,
             this.repbtn_deleteCounterSound});
-            this.gridCounterSound.Size = new System.Drawing.Size(1025, 334);
+            this.gridCounterSound.Size = new System.Drawing.Size(690, 334);
             this.gridCounterSound.TabIndex = 1;
             this.gridCounterSound.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewCounterSound});
@@ -255,7 +255,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1031, 409);
+            this.ClientSize = new System.Drawing.Size(696, 409);
             this.Controls.Add(this.btnResetSound);
             this.Controls.Add(this.btnResetCounter);
             this.Controls.Add(this.btnResetCounterSound);

@@ -253,6 +253,11 @@
       <End Role="Q_UserEvaluate" EntitySet="Q_UserEvaluate" />
     </AssociationSet>
     <EntitySet Name="Q_Config" EntityType="QMSSystemModel.Q_Config" />
+    <EntitySet Name="Q_TVReadSound" EntityType="QMSSystemModel.Q_TVReadSound" />
+    <AssociationSet Name="FK_Q_TVReadSound_Q_Counter" Association="QMSSystemModel.FK_Q_TVReadSound_Q_Counter">
+      <End Role="Q_Counter" EntitySet="Q_Counter" />
+      <End Role="Q_TVReadSound" EntitySet="Q_TVReadSound" />
+    </AssociationSet>
     <EntitySet Name="Q_Service" EntityType="QMSSystemModel.Q_Service" />
     <AssociationSet Name="FK_Q_DailyRequire_Q_Service" Association="QMSSystemModel.FK_Q_DailyRequire_Q_Service">
       <End Role="Q_Service" EntitySet="Q_Service" />
@@ -273,11 +278,6 @@
     <AssociationSet Name="FK_Q_ServiceStep_Q_Service" Association="QMSSystemModel.FK_Q_ServiceStep_Q_Service">
       <End Role="Q_Service" EntitySet="Q_Service" />
       <End Role="Q_ServiceStep" EntitySet="Q_ServiceStep" />
-    </AssociationSet>
-    <EntitySet Name="Q_TVReadSound" EntityType="QMSSystemModel.Q_TVReadSound" />
-    <AssociationSet Name="FK_Q_TVReadSound_Q_Counter" Association="QMSSystemModel.FK_Q_TVReadSound_Q_Counter">
-      <End Role="Q_Counter" EntitySet="Q_Counter" />
-      <End Role="Q_TVReadSound" EntitySet="Q_TVReadSound" />
     </AssociationSet>
   </EntityContainer>
   <EntityType Name="Q_Action">
@@ -382,6 +382,7 @@
     <NavigationProperty Name="Q_Equipment" Relationship="QMSSystemModel.FK_Q_Equipment_Q_Counter" FromRole="Q_Counter" ToRole="Q_Equipment" />
     <NavigationProperty Name="Q_MaindisplayDirection" Relationship="QMSSystemModel.FK_Q_MaindisplayDirection_Q_Counter" FromRole="Q_Counter" ToRole="Q_MaindisplayDirection" />
     <NavigationProperty Name="Q_TVReadSound" Relationship="QMSSystemModel.FK_Q_TVReadSound_Q_Counter" FromRole="Q_Counter" ToRole="Q_TVReadSound" />
+    <Property Name="LastCallKetLuan" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="Q_CounterSoftRequire">
     <Key>
@@ -583,6 +584,7 @@
     <NavigationProperty Name="Q_UserMajor" Relationship="QMSSystemModel.FK_Q_UserMajor_Q_Major" FromRole="Q_Major" ToRole="Q_UserMajor" />
     <NavigationProperty Name="Q_DailyRequire_Detail" Relationship="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_Major" FromRole="Q_Major" ToRole="Q_DailyRequire_Detail" />
     <NavigationProperty Name="Q_HisDailyRequire_De" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_Major" FromRole="Q_Major" ToRole="Q_HisDailyRequire_De" />
+    <Property Name="IsShow" Type="Boolean" Nullable="false" />
   </EntityType>
   <EntityType Name="Q_Policy">
     <Key>
@@ -1547,6 +1549,29 @@
     <Property Name="IsActived" Type="Boolean" Nullable="false" />
     <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
   </EntityType>
+  <EntityType Name="Q_TVReadSound">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Sounds" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="UsersReaded" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="CounterId" Type="Int32" />
+    <Property Name="CreatedAt" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Q_Counter" Relationship="QMSSystemModel.FK_Q_TVReadSound_Q_Counter" FromRole="Q_TVReadSound" ToRole="Q_Counter" />
+  </EntityType>
+  <Association Name="FK_Q_TVReadSound_Q_Counter">
+    <End Type="QMSSystemModel.Q_Counter" Role="Q_Counter" Multiplicity="0..1" />
+    <End Type="QMSSystemModel.Q_TVReadSound" Role="Q_TVReadSound" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Counter">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_TVReadSound">
+        <PropertyRef Name="CounterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <EntityType Name="Q_Service">
     <Key>
       <PropertyRef Name="Id" />
@@ -1563,6 +1588,7 @@
     <Property Name="AutoEnd" Type="Boolean" Nullable="false" />
     <Property Name="TimeAutoEnd" Type="DateTime" Precision="3" />
     <Property Name="showBenhVien" Type="Boolean" Nullable="false" />
+    <Property Name="isKetLuan" Type="Boolean" Nullable="false" />
     <NavigationProperty Name="Q_DailyRequire" Relationship="QMSSystemModel.FK_Q_DailyRequire_Q_Service" FromRole="Q_Service" ToRole="Q_DailyRequire" />
     <NavigationProperty Name="Q_HisDailyRequire" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_Q_Service" FromRole="Q_Service" ToRole="Q_HisDailyRequire" />
     <NavigationProperty Name="Q_ServiceLimit" Relationship="QMSSystemModel.FK_Q_ServiceLimit_Q_Service" FromRole="Q_Service" ToRole="Q_ServiceLimit" />
@@ -1626,29 +1652,6 @@
       </Principal>
       <Dependent Role="Q_ServiceStep">
         <PropertyRef Name="ServiceId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <EntityType Name="Q_TVReadSound">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="Sounds" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-    <Property Name="UsersReaded" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
-    <Property Name="CounterId" Type="Int32" />
-    <Property Name="CreatedAt" Type="DateTime" Precision="3" />
-    <NavigationProperty Name="Q_Counter" Relationship="QMSSystemModel.FK_Q_TVReadSound_Q_Counter" FromRole="Q_TVReadSound" ToRole="Q_Counter" />
-  </EntityType>
-  <Association Name="FK_Q_TVReadSound_Q_Counter">
-    <End Type="QMSSystemModel.Q_Counter" Role="Q_Counter" Multiplicity="0..1" />
-    <End Type="QMSSystemModel.Q_TVReadSound" Role="Q_TVReadSound" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Q_Counter">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="Q_TVReadSound">
-        <PropertyRef Name="CounterId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>

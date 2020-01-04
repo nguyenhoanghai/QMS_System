@@ -73,7 +73,7 @@ namespace QMS_System.Data
         public DbSet<Q_HisUserEvaluate> Q_HisUserEvaluate { get; set; }
         public DbSet<Q_UserEvaluate> Q_UserEvaluate { get; set; }
         public DbSet<Q_Config> Q_Config { get; set; }
-        public DbSet<Q_Service> Q_Service { get; set; }
         public DbSet<Q_TVReadSound> Q_TVReadSound { get; set; }
+        public DbSet<Q_Service> Q_Service { get; set; }
     }
 }

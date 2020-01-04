@@ -67,7 +67,7 @@
             this.lookUpUser,
             this.lookUpEquip,
             this.lookUpStatus});
-            this.gridLoginHistory.Size = new System.Drawing.Size(1106, 340);
+            this.gridLoginHistory.Size = new System.Drawing.Size(617, 340);
             this.gridLoginHistory.TabIndex = 1;
             this.gridLoginHistory.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewLoginHistory});
@@ -286,7 +286,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1115, 393);
+            this.ClientSize = new System.Drawing.Size(626, 393);
             this.Controls.Add(this.btnResetMajor);
             this.Controls.Add(this.gridLoginHistory);
             this.Name = "frmLoginHistory";

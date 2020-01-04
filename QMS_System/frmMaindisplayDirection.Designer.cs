@@ -67,7 +67,7 @@
             this.repbtnDelete,
             this.toggleSwitchDirection,
             this.gridLookUpEquipment});
-            this.gridMaindisplayDirection.Size = new System.Drawing.Size(950, 340);
+            this.gridMaindisplayDirection.Size = new System.Drawing.Size(760, 340);
             this.gridMaindisplayDirection.TabIndex = 49;
             this.gridMaindisplayDirection.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewMaindisplayDirection});
@@ -261,7 +261,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(959, 393);
+            this.ClientSize = new System.Drawing.Size(769, 393);
             this.Controls.Add(this.gridMaindisplayDirection);
             this.Controls.Add(this.btnResetCounter);
             this.Controls.Add(this.lookUpCounter);

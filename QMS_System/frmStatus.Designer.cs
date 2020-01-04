@@ -79,7 +79,7 @@
             this.splitContainerControl1.Panel1.Text = "Panel1";
             this.splitContainerControl1.Panel2.Controls.Add(this.groupControl2);
             this.splitContainerControl1.Panel2.Text = "Panel2";
-            this.splitContainerControl1.Size = new System.Drawing.Size(1124, 384);
+            this.splitContainerControl1.Size = new System.Drawing.Size(703, 384);
             this.splitContainerControl1.SplitterPosition = 386;
             this.splitContainerControl1.TabIndex = 0;
             this.splitContainerControl1.Text = "splitContainerControl1";
@@ -197,7 +197,7 @@
             this.groupControl2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupControl2.Location = new System.Drawing.Point(0, 0);
             this.groupControl2.Name = "groupControl2";
-            this.groupControl2.Size = new System.Drawing.Size(733, 384);
+            this.groupControl2.Size = new System.Drawing.Size(312, 384);
             this.groupControl2.TabIndex = 1;
             this.groupControl2.Text = "Danh mục trạng thái";
             // 
@@ -211,7 +211,7 @@
             this.gridStatus.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repbtnDeleteStatus,
             this.lookUpType});
-            this.gridStatus.Size = new System.Drawing.Size(729, 362);
+            this.gridStatus.Size = new System.Drawing.Size(308, 362);
             this.gridStatus.TabIndex = 1;
             this.gridStatus.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewStatus});
@@ -337,7 +337,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1124, 433);
+            this.ClientSize = new System.Drawing.Size(703, 433);
             this.Controls.Add(this.simpleButton1);
             this.Controls.Add(this.btnResetBusinessType);
             this.Controls.Add(this.splitContainerControl1);

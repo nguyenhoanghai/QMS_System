@@ -116,9 +116,8 @@
             this.groupControl1.Controls.Add(this.gridService);
             this.groupControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupControl1.Location = new System.Drawing.Point(0, 0);
-            this.groupControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupControl1.Name = "groupControl1";
-            this.groupControl1.Size = new System.Drawing.Size(912, 551);
+            this.groupControl1.Size = new System.Drawing.Size(435, 448);
             this.groupControl1.TabIndex = 0;
             this.groupControl1.Text = "Danh mục dịch vụ";
             // 
@@ -126,10 +125,8 @@
             // 
             this.gridService.Cursor = System.Windows.Forms.Cursors.Default;
             this.gridService.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridService.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.gridService.Location = new System.Drawing.Point(2, 25);
+            this.gridService.Location = new System.Drawing.Point(2, 20);
             this.gridService.MainView = this.gridViewService;
-            this.gridService.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.gridService.Name = "gridService";
             this.gridService.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repbtn_deleteService,
@@ -138,7 +135,7 @@
             this.repbtnTime,
             this.replkStatus,
             this.repositoryItemCheckEdit1});
-            this.gridService.Size = new System.Drawing.Size(908, 524);
+            this.gridService.Size = new System.Drawing.Size(431, 426);
             this.gridService.TabIndex = 1;
             this.gridService.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewService});
@@ -412,9 +409,8 @@
             this.groupControl2.Controls.Add(this.splitContainerControl1);
             this.groupControl2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupControl2.Location = new System.Drawing.Point(0, 0);
-            this.groupControl2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupControl2.Name = "groupControl2";
-            this.groupControl2.Size = new System.Drawing.Size(778, 551);
+            this.groupControl2.Size = new System.Drawing.Size(370, 448);
             this.groupControl2.TabIndex = 1;
             this.groupControl2.Text = "Bước xử lý Dịch vụ";
             // 
@@ -422,15 +418,14 @@
             // 
             this.splitContainerControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainerControl1.Horizontal = false;
-            this.splitContainerControl1.Location = new System.Drawing.Point(2, 25);
-            this.splitContainerControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.splitContainerControl1.Location = new System.Drawing.Point(2, 20);
             this.splitContainerControl1.Name = "splitContainerControl1";
             this.splitContainerControl1.Panel1.AutoScroll = true;
             this.splitContainerControl1.Panel1.Controls.Add(this.gridStep);
             this.splitContainerControl1.Panel1.Text = "Panel1";
             this.splitContainerControl1.Panel2.Controls.Add(this.gridServiceShift);
             this.splitContainerControl1.Panel2.Text = "Panel2";
-            this.splitContainerControl1.Size = new System.Drawing.Size(774, 524);
+            this.splitContainerControl1.Size = new System.Drawing.Size(366, 426);
             this.splitContainerControl1.SplitterPosition = 172;
             this.splitContainerControl1.TabIndex = 0;
             this.splitContainerControl1.Text = "splitContainerControl1";
@@ -439,15 +434,13 @@
             // 
             this.gridStep.Cursor = System.Windows.Forms.Cursors.Default;
             this.gridStep.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridStep.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.gridStep.Location = new System.Drawing.Point(0, 0);
             this.gridStep.MainView = this.gridViewStep;
-            this.gridStep.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.gridStep.Name = "gridStep";
             this.gridStep.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemButtonEdit1,
             this.gridLookUpMajor});
-            this.gridStep.Size = new System.Drawing.Size(774, 229);
+            this.gridStep.Size = new System.Drawing.Size(366, 129);
             this.gridStep.TabIndex = 1;
             this.gridStep.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewStep});
@@ -556,15 +549,13 @@
             // 
             this.gridServiceShift.Cursor = System.Windows.Forms.Cursors.Default;
             this.gridServiceShift.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridServiceShift.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.gridServiceShift.Location = new System.Drawing.Point(0, 0);
             this.gridServiceShift.MainView = this.gridViewServiceShift;
-            this.gridServiceShift.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.gridServiceShift.Name = "gridServiceShift";
             this.gridServiceShift.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repbtnDelete,
             this.gridLookUpShift});
-            this.gridServiceShift.Size = new System.Drawing.Size(774, 289);
+            this.gridServiceShift.Size = new System.Drawing.Size(366, 292);
             this.gridServiceShift.TabIndex = 46;
             this.gridServiceShift.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewServiceShift});
@@ -696,8 +687,7 @@
             this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(1, 43);
-            this.splitContainer1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.splitContainer1.Location = new System.Drawing.Point(1, 35);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -707,9 +697,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.groupControl2);
-            this.splitContainer1.Size = new System.Drawing.Size(1695, 551);
-            this.splitContainer1.SplitterDistance = 912;
-            this.splitContainer1.SplitterWidth = 5;
+            this.splitContainer1.Size = new System.Drawing.Size(809, 448);
+            this.splitContainer1.SplitterDistance = 435;
             this.splitContainer1.TabIndex = 4;
             // 
             // btnReMajor
@@ -717,10 +706,9 @@
             this.btnReMajor.Image = global::QMS_System.Properties.Resources.if_view_refresh_15329;
             this.btnReMajor.ImageLocation = DevExpress.XtraEditors.ImageLocation.MiddleLeft;
             this.btnReMajor.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.LeftCenter;
-            this.btnReMajor.Location = new System.Drawing.Point(261, 6);
-            this.btnReMajor.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnReMajor.Location = new System.Drawing.Point(196, 5);
             this.btnReMajor.Name = "btnReMajor";
-            this.btnReMajor.Size = new System.Drawing.Size(249, 30);
+            this.btnReMajor.Size = new System.Drawing.Size(187, 24);
             this.btnReMajor.TabIndex = 43;
             this.btnReMajor.Text = "  Làm mới danh sách nghiệp vụ";
             this.btnReMajor.Click += new System.EventHandler(this.btnReMajor_Click);
@@ -730,10 +718,9 @@
             this.btnReShift.Image = global::QMS_System.Properties.Resources.if_view_refresh_15329;
             this.btnReShift.ImageLocation = DevExpress.XtraEditors.ImageLocation.MiddleLeft;
             this.btnReShift.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.LeftCenter;
-            this.btnReShift.Location = new System.Drawing.Point(519, 6);
-            this.btnReShift.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnReShift.Location = new System.Drawing.Point(389, 5);
             this.btnReShift.Name = "btnReShift";
-            this.btnReShift.Size = new System.Drawing.Size(249, 30);
+            this.btnReShift.Size = new System.Drawing.Size(187, 24);
             this.btnReShift.TabIndex = 44;
             this.btnReShift.Text = "  Làm mới danh sách ca làm việc";
             this.btnReShift.Click += new System.EventHandler(this.btnReShift_Click);
@@ -743,24 +730,22 @@
             this.btnReGridService.Image = global::QMS_System.Properties.Resources.if_view_refresh_15329;
             this.btnReGridService.ImageLocation = DevExpress.XtraEditors.ImageLocation.MiddleLeft;
             this.btnReGridService.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.LeftCenter;
-            this.btnReGridService.Location = new System.Drawing.Point(4, 6);
-            this.btnReGridService.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnReGridService.Location = new System.Drawing.Point(3, 5);
             this.btnReGridService.Name = "btnReGridService";
-            this.btnReGridService.Size = new System.Drawing.Size(249, 30);
+            this.btnReGridService.Size = new System.Drawing.Size(187, 24);
             this.btnReGridService.TabIndex = 45;
             this.btnReGridService.Text = "  Làm mới lưới dịch vụ";
             this.btnReGridService.Click += new System.EventHandler(this.btnReGridService_Click);
             // 
             // frmService
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1699, 599);
+            this.ClientSize = new System.Drawing.Size(812, 487);
             this.Controls.Add(this.btnReGridService);
             this.Controls.Add(this.btnReShift);
             this.Controls.Add(this.btnReMajor);
             this.Controls.Add(this.splitContainer1);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "frmService";
             this.Text = "Dịch Vụ";
             this.Load += new System.EventHandler(this.frmService_Load);

@@ -59,7 +59,7 @@
             this.gridConfig.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.btn_deleteConfig,
             this.chk_isActive});
-            this.gridConfig.Size = new System.Drawing.Size(972, 311);
+            this.gridConfig.Size = new System.Drawing.Size(809, 311);
             this.gridConfig.TabIndex = 1;
             this.gridConfig.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewConfig,
@@ -213,7 +213,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(976, 360);
+            this.ClientSize = new System.Drawing.Size(813, 360);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnResetMajor);
             this.Controls.Add(this.gridConfig);

@@ -153,9 +153,10 @@ namespace QMS_System
             {
                 for (int i = 0; i < arr.Length; i++)
                 {
-                    //var ss = BaseCore.Instance.abc2unicode(arr[i]);
-                    //frmMain.COM_Printer.Write(ss);
-                    frmMain.COM_Printer.Write(arr[i]);
+                   // var ss = BaseCore.Instance.abc2unicode(arr[i]).ToString();
+                   //   frmMain.COM_Printer.Write(ss);
+                   //frmMain.COM_Printer.Write(arr[i]);
+                    BaseCore.Instance.PrintTicketTCVN3(frmMain.COM_Printer, arr[i]);
                 }
             }
         }
@@ -164,7 +165,11 @@ namespace QMS_System
         {
             if (BLLConfig.Instance.Update(frmMain.connectString, eConfigCode.TicketTemplate, txtContent.Text))
                 if (BLLConfig.Instance.Update(frmMain.connectString, eConfigCode.NumberOfLinePerTime, txtsolien.Value.ToString()))
+                {
+                    frmMain.ticketTemplate = txtContent.Text;
+                    frmMain.solien = (int)txtsolien.Value;
                     MessageBox.Show("Cập nhật thành công.!");
+                }
                 else
                     MessageBox.Show("Cập nhật thất bại");
             else

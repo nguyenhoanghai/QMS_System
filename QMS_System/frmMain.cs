@@ -82,11 +82,12 @@ namespace QMS_System
         }
         private void frmMain_Load(object sender, EventArgs e)
         {
+            //  MessageBox.Show(BaseCore.Instance.abc2unicode("nhận bệnh"));
             try
             {
-                sqlStatus = BaseCore.Instance.CONNECT_STATUS(Application.StartupPath + "\\DATA.XML");
-                if (sqlStatus)
-                {
+             //   sqlStatus = BaseCore.Instance.CONNECT_STATUS(Application.StartupPath + "\\DATA.XML");
+              //  if (sqlStatus)
+              //  {
                     connectString = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
                     configs = BLLConfig.Instance.Gets(connectString, true);
                     soundPath = GetConfigByCode(eConfigCode.SoundPath);
@@ -145,13 +146,13 @@ namespace QMS_System
                     {
                     }
 
-                }
-                else
-                {
-                    errorsms = "Kết nối máy chủ SQL thất bại. Vui lòng kiểm tra lại.";
-                    Form form = new FrmSQLConnect();
-                    form.ShowDialog();
-                }
+                //}
+                //else
+                //{
+                //    errorsms = "Kết nối máy chủ SQL thất bại. Vui lòng kiểm tra lại.";
+                //    Form form = new FrmSQLConnect();
+                //    form.ShowDialog();
+                //}
             }
             catch (Exception)
             {
@@ -179,7 +180,7 @@ namespace QMS_System
                     COM_Printer.WriteTimeout = 1;
                     COM_Printer.Open();
                     barButtonItem14.Glyph = global::QMS_System.Properties.Resources.iconfinder_printer_remote_30279;
-                    //  COM_Printer.DataReceived += new SerialDataReceivedEventHandler(comPort_DataReceived);
+                    //  COM_Printer.DataReceived += new SerialDataReceivedEventHandler(comPort_DataReceived); 
                 }
                 catch (Exception)
                 {
@@ -622,6 +623,383 @@ namespace QMS_System
             }
             else
                 frm.Activate();
+        }
+
+        private void barButtonItem15_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        { 
+            string content = "nguyễn hoàng hải";
+            BaseCore.Instance.PrintTicketTCVN3(COM_Printer, content);
+           /* dynamic newMsg = null;
+            for (int i = 0; i < content.Length; i++)
+            {
+                var kytu = content[i];
+                switch (kytu)
+                {
+                    #region MyRegion 
+                    case 'à':
+                    case 'À':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("B5");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'á':
+                    case 'Á':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("B8");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'ả':
+                    case 'Ả':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("B6");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ã':
+                    case 'ã':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("B7");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ạ':
+                    case 'ạ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("B9");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Â':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("A2");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'â':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("A9");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ấ':
+                    case 'ấ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("CA");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ầ':
+                    case 'ầ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("C7");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ẩ':
+                    case 'ẩ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("C8");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ẫ':
+                    case 'ẫ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("C9");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ậ':
+                    case 'ậ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("CB");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ă':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("A1");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'ă':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("A8");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ắ':
+                    case 'ắ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("BE");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ằ':
+                    case 'ằ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("BB");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ẳ':
+                    case 'ẳ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("BC");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ẵ':
+                    case 'ẵ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("BD");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ặ':
+                    case 'ặ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("C6");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'É':
+                    case 'é':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("D0");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'È':
+                    case 'è':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("CC");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ẻ':
+                    case 'ẻ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("CE");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ẽ':
+                    case 'ẽ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("CF");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ẹ':
+                    case 'ẹ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("D1");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ê':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("A3");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'ê':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("AA");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ế':
+                    case 'ế':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("D5");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ề':
+                    case 'ề':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("D2");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ể':
+                    case 'ể':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("D3");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ễ':
+                    case 'ễ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("D4");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ệ':
+                    case 'ệ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("D6");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+
+                    case 'Ò':
+                    case 'ò':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("DF");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ó':
+                    case 'ó':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("E3");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ỏ':
+                    case 'ỏ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("E1");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Õ':
+                    case 'õ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("E2");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ọ':
+                    case 'ọ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("E4");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ô':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("A4");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'ô':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("AB");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ố':
+                    case 'ố':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("E8");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ồ':
+                    case 'ồ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("E5");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ổ':
+                    case 'ổ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("E6");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ỗ':
+                    case 'ỗ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("E7");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ộ':
+                    case 'ộ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("E9");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ơ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("A5");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'ơ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("AC");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ớ':
+                    case 'ớ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("ED");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ờ':
+                    case 'ờ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("EA");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ở':
+                    case 'ở':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("EB");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ỡ':
+                    case 'ỡ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("EC");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ợ':
+                    case 'ợ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("EE");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Í':
+                    case 'í':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("DD");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ì':
+                    case 'ì':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("D7");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ỉ':
+                    case 'ỉ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("D8");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ĩ':
+                    case 'ĩ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("DC");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ị':
+                    case 'ị':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("DE");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ú':
+                    case 'ú':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("F3");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ù':
+                    case 'ù':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("EF");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ủ':
+                    case 'ủ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("F1");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ũ':
+                    case 'ũ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("F2");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ụ':
+                    case 'ụ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("F4");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ư':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("A6");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'ư':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("AD");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ứ':
+                    case 'ứ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("F8");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ừ':
+                    case 'ừ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("F5");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ử':
+                    case 'ử':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("F6");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ữ':
+                    case 'ữ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("F7");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ự':
+                    case 'ự':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("F9");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ý':
+                    case 'ý':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("FD");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ỳ':
+                    case 'ỳ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("FA");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ỷ':
+                    case 'ỷ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("FB");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ỹ':
+                    case 'ỹ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("FC");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Ỵ':
+                    case 'ỵ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("FE");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'Đ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("A7");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    case 'đ':
+                        newMsg = BaseCore.Instance.HexStringToByteArray("AE");
+                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
+                        break;
+                    default:
+                        frmMain.COM_Printer.Write((content[i]).ToString());
+                        break;
+                        #endregion
+                }
+            }
+            */
         }
 
         private void barButtonItem13_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -1109,7 +1487,8 @@ namespace QMS_System
                 {
                     for (int i = 0; i < arr.Length; i++)
                     {
-                        frmMain.COM_Printer.Write(arr[i]);
+                       // frmMain.COM_Printer.Write(arr[i]);
+                        BaseCore.Instance.PrintTicketTCVN3(COM_Printer, arr[i]);
                     }
                 }
             }
@@ -1246,7 +1625,7 @@ namespace QMS_System
                                             currentTicket = BLLDailyRequire.Instance.DeleteTicket(connectString, int.Parse((hexStr[3] + hexStr[4])), today);
                                             break;
                                         case eActionParam.HITHI:
-                                            currentTicket = BLLDailyRequire.Instance.CurrentTicket(connectString, userId, equipCode, today, (!string.IsNullOrEmpty(userRight[i].Param) ? int.Parse(userRight[i].Param) : 0));
+                                            currentTicket = BLLDailyRequire.Instance.CurrentTicket(connectString, userId, equipCode, today, UseWithThirdPattern);
                                             break;
                                     }
                                     break;
@@ -1259,24 +1638,24 @@ namespace QMS_System
                                             int[] indexs = userMajors.Select(x => x.Index).Distinct().ToArray();
                                             for (int z = 0; z < indexs.Length; z++)
                                             {
-                                                ticketInfo = BLLDailyRequire.Instance.CallNewTicket(connectString, userMajors.Where(x => x.Index == indexs[z]).Select(x => x.MajorId).ToArray(), userId, equipCode, true, DateTime.Now, (!string.IsNullOrEmpty(userRight[i].Param) ? int.Parse(userRight[i].Param) : 0));
+                                                ticketInfo = BLLDailyRequire.Instance.CallNewTicket(connectString, userMajors.Where(x => x.Index == indexs[z]).Select(x => x.MajorId).ToArray(), userId, equipCode, true, DateTime.Now, UseWithThirdPattern);
                                                 if (ticketInfo != null && ticketInfo.TicketNumber != 0)
                                                     break;
                                             }
                                             break;
                                         case eActionParam.GDENQ:
                                         case eActionParam.GLAYP:
-                                            ticketInfo = BLLDailyRequire.Instance.CallNewTicket_GLP_NghiepVu(connectString, userMajors.Select(x => x.MajorId).ToArray(), userId, equipCode, DateTime.Now, (!string.IsNullOrEmpty(userRight[i].Param) ? int.Parse(userRight[i].Param) : 0));
+                                            ticketInfo = BLLDailyRequire.Instance.CallNewTicket_GLP_NghiepVu(connectString, userMajors.Select(x => x.MajorId).ToArray(), userId, equipCode, DateTime.Now, UseWithThirdPattern);
                                             break;
                                         case eActionParam.COUNT: // goi bat ky 
                                             int num = int.Parse((hexStr[3] + "" + hexStr[4]));
-                                            var rs = BLLDailyRequire.Instance.CallAny(connectString, userMajors[0].MajorId, userId, equipCode, num, DateTime.Now, (!string.IsNullOrEmpty(userRight[i].Param) ? int.Parse(userRight[i].Param) : 0));
+                                            var rs = BLLDailyRequire.Instance.CallAny(connectString, userMajors[0].MajorId, userId, equipCode, num, DateTime.Now, UseWithThirdPattern);
                                             if (rs.IsSuccess)
                                                 ticketInfo = new TicketInfo() { TicketNumber = num, StartTime = rs.Data_1, TimeServeAllow = rs.Data };
 
                                             break;
                                         case eActionParam.GNVYC: // goi theo Nghiep vu  
-                                            var found = BLLDailyRequire.Instance.CallByMajor(connectString, int.Parse(userRight[i].Param), userId, equipCode, DateTime.Now, (!string.IsNullOrEmpty(userRight[i].Param) ? int.Parse(userRight[i].Param) : 0));
+                                            var found = BLLDailyRequire.Instance.CallByMajor(connectString, int.Parse(userRight[i].Param), userId, equipCode, DateTime.Now, UseWithThirdPattern);
                                             if (found.IsSuccess)
                                                 ticketInfo = new TicketInfo() { TicketNumber = found.Data, StartTime = found.Data_2, TimeServeAllow = found.Data_1 };
                                             break;
@@ -1287,7 +1666,7 @@ namespace QMS_System
                                                 allowCall = BLLDailyRequire.Instance.ChekCanCallNext(connectString, userMajors[ii].MajorId, userId);
                                                 if (allowCall)
                                                 {
-                                                    var callInfo = BLLDailyRequire.Instance.CallByMajor(connectString, userMajors[ii].MajorId, userId, equipCode, DateTime.Now, (!string.IsNullOrEmpty(userRight[i].Param) ? int.Parse(userRight[i].Param) : 0));
+                                                    var callInfo = BLLDailyRequire.Instance.CallByMajor(connectString, userMajors[ii].MajorId, userId, equipCode, DateTime.Now, UseWithThirdPattern);
                                                     if (callInfo.IsSuccess)
                                                         ticketInfo = new TicketInfo() { TicketNumber = callInfo.Data, StartTime = callInfo.Data_2, TimeServeAllow = callInfo.Data_1 };
 
@@ -1359,7 +1738,7 @@ namespace QMS_System
                                         case eActionParam.GUI_TGIAN_PVU_DKIEN:
                                             num1 = "00";
                                             num2 = "00";
-                                            currentTicketInfo = BLLDailyRequire.Instance.GetCurrentTicketInfo(connectString, userId, equipCode, today, (!string.IsNullOrEmpty(userRight[i].Param) ? int.Parse(userRight[i].Param) : 0));
+                                            currentTicketInfo = BLLDailyRequire.Instance.GetCurrentTicketInfo(connectString, userId, equipCode, today, UseWithThirdPattern);
                                             if (currentTicketInfo != null)
                                             {
                                                 num1 = currentTicketInfo.TimeServeAllow.ToString("hh");
@@ -1370,7 +1749,7 @@ namespace QMS_System
                                         case eActionParam.GUI_TGIAN_KTHUC_DKIEN:
                                             num1 = "00";
                                             num2 = "00";
-                                            currentTicketInfo = BLLDailyRequire.Instance.GetCurrentTicketInfo(connectString, userId, equipCode, today, (!string.IsNullOrEmpty(userRight[i].Param) ? int.Parse(userRight[i].Param) : 0));
+                                            currentTicketInfo = BLLDailyRequire.Instance.GetCurrentTicketInfo(connectString, userId, equipCode, today, UseWithThirdPattern);
                                             if (currentTicketInfo != null)
                                             {
                                                 num1 = currentTicketInfo.StartTime.Add(currentTicketInfo.TimeServeAllow).ToString("hh");
@@ -1685,7 +2064,7 @@ namespace QMS_System
                                     var freeUser = (int)BLLDailyRequire.Instance.CheckUserFree(connectString, nghiepVu, serviceId, newNumber, autoCallFollowMajorOrder).Data;
                                     if (freeUser > 0)
                                     {
-                                        var counter = lib_Users.FirstOrDefault(x => x.UserId == freeUser).EquipCode; 
+                                        var counter = lib_Users.FirstOrDefault(x => x.UserId == freeUser).EquipCode;
                                         var str = ("AA," + counter + ",8B,00,00");
                                         autoCall = true;
                                         CounterProcess(str.Split(',').ToArray(), 0);
@@ -1831,7 +2210,7 @@ namespace QMS_System
                     {
                         ribbonPage5.Visible = true;
                         txtPrint.EditValue = PrintTicketCode + ",1,0";
-                    }
+                   }
                     TmerQuetComport.Enabled = true;
                     TmerQuetComport.Interval = timeQuetComport;
                     timerDo.Enabled = true;
