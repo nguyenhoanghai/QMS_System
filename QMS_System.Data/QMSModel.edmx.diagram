@@ -12,7 +12,6 @@
         <EntityTypeShape EntityType="QMSSystemModel.Q_BusinessType" Width="1.5" PointX="1.5" PointY="40.25" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_Command" Width="1.5" PointX="0.75" PointY="9.125" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_CommandParameter" Width="1.5" PointX="3.75" PointY="3.375" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_Counter" Width="1.5" PointX="4.5" PointY="30.75" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_CounterSoftRequire" Width="1.5" PointX="11.75" PointY="9.75" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_CounterSound" Width="1.5" PointX="11.75" PointY="13.5" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_DailyRequire" Width="1.5" PointX="3.75" PointY="35.875" />
@@ -53,9 +52,6 @@
         <AssociationConnector Association="QMSSystemModel.FK_Q_CommandParameter_Q_Command" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_UserCommandReadSound_Q_Command" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_UserCommand_Q_CommandParameter" />
-        <AssociationConnector Association="QMSSystemModel.FK_Q_CounterSound_Q_Counter" />
-        <AssociationConnector Association="QMSSystemModel.FK_Q_Equipment_Q_Counter" />
-        <AssociationConnector Association="QMSSystemModel.FK_Q_MaindisplayDirection_Q_Counter" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_CounterSound_Q_Sound" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_Equipment_Q_EquipmentType" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_Equipment_Q_Status" />
@@ -103,13 +99,17 @@
         <AssociationConnector Association="QMSSystemModel.FK_Q_UserEvaluate_NHANVIEN" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_Config" Width="1.5" PointX="14.375" PointY="9.75" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_TVReadSound" Width="1.5" PointX="6.75" PointY="52.375" />
-        <AssociationConnector Association="QMSSystemModel.FK_Q_TVReadSound_Q_Counter" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_Service" Width="1.5" PointX="0.75" PointY="33.5" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_DailyRequire_Q_Service" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_HisDailyRequire_Q_Service" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_ServiceLimit_Q_Service" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_ServiceShift_Q_Service" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_ServiceStep_Q_Service" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Counter" Width="1.5" PointX="4.5" PointY="31.125" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_CounterSound_Q_Counter" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_Equipment_Q_Counter" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_MaindisplayDirection_Q_Counter" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_TVReadSound_Q_Counter" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

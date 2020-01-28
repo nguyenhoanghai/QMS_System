@@ -32,7 +32,6 @@ namespace QMS_System.Data
         public DbSet<Q_BusinessType> Q_BusinessType { get; set; }
         public DbSet<Q_Command> Q_Command { get; set; }
         public DbSet<Q_CommandParameter> Q_CommandParameter { get; set; }
-        public DbSet<Q_Counter> Q_Counter { get; set; }
         public DbSet<Q_CounterSoftRequire> Q_CounterSoftRequire { get; set; }
         public DbSet<Q_CounterSound> Q_CounterSound { get; set; }
         public DbSet<Q_DailyRequire> Q_DailyRequire { get; set; }
@@ -75,5 +74,6 @@ namespace QMS_System.Data
         public DbSet<Q_Config> Q_Config { get; set; }
         public DbSet<Q_TVReadSound> Q_TVReadSound { get; set; }
         public DbSet<Q_Service> Q_Service { get; set; }
+        public DbSet<Q_Counter> Q_Counter { get; set; }
     }
 }

@@ -2,6 +2,8 @@
 using QMS_System.Data.Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 
 namespace QMS_System.Data.BLL
@@ -92,7 +94,7 @@ namespace QMS_System.Data.BLL
             {
                 try
                 {
-                    var yes = db.Q_Login.Where(x =>  x.StatusId == (int)eStatus.LOGIN).OrderBy(x=>x.UserId).ToList();
+                    var yes = db.Q_Login.Where(x => x.StatusId == (int)eStatus.LOGIN).OrderBy(x => x.UserId).ToList();
                     if (yes.Count > 0)
                     {
                         db.Database.ExecuteSqlCommand("delete Q_Login ");
@@ -154,7 +156,7 @@ namespace QMS_System.Data.BLL
                     //  Counter = x.Q_Equipment.Q_Counter.Name,
                     LoginTime = x.Date,
                     EquipCode = x.EquipCode
-                }).OrderBy(x=>x.UserId).ToList();
+                }).OrderBy(x => x.UserId).ToList();
                 if (users.Count > 0)
                 {
                     var codes = users.Select(x => x.EquipCode).Distinct().ToArray();
@@ -261,6 +263,86 @@ namespace QMS_System.Data.BLL
                     model.IsLogout = true;
                 return model;
             }
+        }
+
+        public HomeModel GetForHome(SqlConnection sqlConnection, int userId, int equipCode, DateTime date, int useWithThridPattern)
+        {
+            var model = new HomeModel();
+            string query = "Select * from Q_Login where StatusId=" + (int)eStatus.LOGIN + " and UserId=" + userId + " and EquipCode=" + equipCode;
+            var da = new SqlDataAdapter(query, sqlConnection);
+            DataTable dataTable = new DataTable();
+            da.Fill(dataTable);
+            if (dataTable != null && dataTable.Rows.Count > 0)
+            {
+                int intType = 0;
+                dataTable.Clear();
+                List<int> majorIds = new List<int>();
+                query = @"select um.MajorId from Q_UserMajor um, Q_User u, Q_Major m where u.IsDeleted = 0 and um.IsDeleted = 0 and m.IsDeleted = 0 and um.MajorId = m.Id and um.UserId = u.Id and UM.UserId =" + userId;
+                da = new SqlDataAdapter(query, sqlConnection);
+                da.Fill(dataTable);
+                if (dataTable != null && dataTable.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dataTable.Rows)
+                    {
+                        intType = 0;
+                        int.TryParse(row["MajorId"].ToString(), out intType);
+                        majorIds.Add(intType);
+                    }
+                }
+
+                dataTable.Clear();
+                model.TotalDone = 0;
+                query = "select COUNT(Id) as sl from Q_DailyRequire_Detail where StatusId=" + (int)eStatus.HOTAT + " and UserId=" + userId;
+                da = new SqlDataAdapter(query, sqlConnection);
+                da.Fill(dataTable);
+                if (dataTable != null && dataTable.Rows.Count > 0)
+                    model.TotalDone = Convert.ToInt32(dataTable.Rows[0]["sl"].ToString());
+                  
+                dataTable.Clear();
+                model.TotalWating = 0;
+                model.CounterWaitingTickets = "";
+                query = @"select r.TicketNumber as stt, r.STT_PhongKham as stt_pk from Q_DailyRequire_Detail d, Q_DailyRequire r where d.DailyRequireId = r.Id and StatusId =" + (int)eStatus.CHOXL + " and d.MajorId in (" + string.Join(",", majorIds ) + ")";
+                 da = new SqlDataAdapter(query, sqlConnection);
+                da.Fill(dataTable);
+                if (dataTable != null && dataTable.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dataTable.Rows)
+                    {
+                        if (useWithThridPattern == 0)
+                            model.CounterWaitingTickets += row["stt"].ToString() + " ";
+                        else if (!string.IsNullOrEmpty(row["stt_pk"].ToString()))
+                            model.CounterWaitingTickets += row["stt_pk"].ToString() + " ";
+                    }
+                    model.TotalWating = dataTable.Rows.Count;
+                }
+
+                dataTable.Clear(); 
+                query = "select top 1 r.TicketNumber,r.STT_PhongKham,d.ProcessTime  from Q_DailyRequire_Detail d , Q_DailyRequire r where r.Id = d.DailyRequireId and d.UserId = " + userId + " and d.StatusId = " + (int)eStatus.DAGXL + " order by d.ProcessTime";
+                da = new SqlDataAdapter(query, sqlConnection);
+                da.Fill(dataTable);
+                if (dataTable != null && dataTable.Rows.Count > 0)
+                {
+                    intType = 0;
+                    if (useWithThridPattern == 0)
+                        int.TryParse(dataTable.Rows[0]["TicketNumber"].ToString(), out intType);
+                    else if (!string.IsNullOrEmpty(dataTable.Rows[0]["STT_PhongKham"].ToString()))
+                        int.TryParse(dataTable.Rows[0]["STT_PhongKham"].ToString(), out intType);
+                    model.CurrentTicket = intType;
+                    if (!string.IsNullOrEmpty(dataTable.Rows[0]["ProcessTime"].ToString()))
+                        model.CommingTime = DateTime.Parse(dataTable.Rows[0]["ProcessTime"].ToString());
+                }
+
+                dataTable.Clear();
+                model.Counter = "";
+                query = @"select c.Name from Q_Equipment e, Q_Counter c where c.Id = e.CounterId and e.IsDeleted = 0 and c.IsDeleted = 0 and Code =" + equipCode;
+                da = new SqlDataAdapter(query, sqlConnection);
+                da.Fill(dataTable);
+                if (dataTable != null && dataTable.Rows.Count > 0)
+                    model.Counter = dataTable.Rows[0][0].ToString();
+            }
+            else
+                model.IsLogout = true;
+            return model;
         }
 
         public bool Login(string connectString, Q_LoginHistory obj)

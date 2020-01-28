@@ -199,7 +199,7 @@ namespace GPRO.Core.Hai
                     string login = EncryptionHelper.Instance.Decrypt(elementsByTagName.Item(0).ChildNodes[2].InnerText);
                     string password = EncryptionHelper.Instance.Decrypt(elementsByTagName.Item(0).ChildNodes[3].InnerText);
                     string windowAuthen = elementsByTagName.Item(0).ChildNodes[4].InnerText;
-                    if (Boolean.Parse(windowAuthen))
+                    if (!Boolean.Parse(windowAuthen))
                         return string.Concat(new string[]
                         {
                     "Server=",

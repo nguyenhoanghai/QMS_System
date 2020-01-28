@@ -3,6 +3,8 @@ using QMS_System.Data.Enum;
 using QMS_System.Data.Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 
 namespace QMS_System.Data.BLL
@@ -26,7 +28,7 @@ namespace QMS_System.Data.BLL
         private BLLUserEvaluate() { }
         #endregion
 
-        public List<UserEvaluateModel> Gets(string connectString,int userId, DateTime from, DateTime to)
+        public List<UserEvaluateModel> Gets(string connectString, int userId, DateTime from, DateTime to)
         {
             using (var db = new QMSSystemEntities(connectString))
             {
@@ -109,7 +111,7 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public int Insert(string connectString,Q_UserEvaluate obj)
+        public int Insert(string connectString, Q_UserEvaluate obj)
         {
             using (var db = new QMSSystemEntities(connectString))
             {
@@ -130,7 +132,7 @@ namespace QMS_System.Data.BLL
                     int tieuchi = 0;
                     int.TryParse(value.Substring((value.IndexOf('_') + 1)), out tieuchi);
                     var detail = db.Q_EvaluateDetail.FirstOrDefault(x => x.Id == tieuchi);
-                    bool sendSMS = detail!= null? detail.IsSendSMS:false;
+                    bool sendSMS = detail != null ? detail.IsSendSMS : false;
                     var now = DateTime.Now;
                     var system = db.Q_Config.FirstOrDefault(x => x.IsActived && x.Code == eConfigCode.System).Value;
 
@@ -152,15 +154,15 @@ namespace QMS_System.Data.BLL
                                        // YES => danh gia cho thợ sửa cuối cùng ko phai thu ngân
                                        // NO =>  danh gia cho user gui yc
                                        (system == "1" ? x.UserId != user.Id : x.UserId == user.Id)
-                                       select x) ;
+                                       select x);
                             var a = details.ToList();
-                            
+
 
                             var config = db.Q_Config.FirstOrDefault(x => x.Code == eConfigCode.DoneTicketAfterEvaluate);
                             string doneTicketAfterEvaluate = "0";
                             if (config != null)
                                 doneTicketAfterEvaluate = config.Value;
-                              
+
                             foreach (var item in details)
                             {
                                 //ktra so phieu co danh gia chua ?
@@ -310,154 +312,242 @@ namespace QMS_System.Data.BLL
             catch { }
             return rs;
         }
-
-        public List<ReportEvaluateModel> GetDailyReport(string connectString, bool reportForUser, DateTime fromDate, DateTime toDate)
+         
+        public List<ReportEvaluateModel> GetDailyReport(SqlConnection sqlConnection, bool reportForUser, DateTime fromDate, DateTime toDate)
         {
-            using (var db = new QMSSystemEntities(connectString))
+            fromDate = new DateTime(fromDate.Year, fromDate.Month, fromDate.Day, 0, 0, 0);
+            toDate = new DateTime(toDate.Year, toDate.Month, toDate.Day, 23, 59, 0);
+            var now = DateTime.Now;
+            var report = new List<ReportEvaluateModel>();
+            string query = "";
+            if (reportForUser)
+                query = "select Id as ServiceId, name as ServiceName from Q_User where IsDeleted=0";
+            else
+                query = "select Id as ServiceId, name as ServiceName from Q_Service where IsDeleted=0 and IsActived=1";
+            var adap = new SqlDataAdapter(query, sqlConnection);
+            var dt = new DataTable();
+            adap.Fill(dt);
+            if (dt != null && dt.Rows.Count > 0)
             {
-                fromDate = new DateTime(fromDate.Year, fromDate.Month, fromDate.Day, 0, 0, 0);
-                toDate = new DateTime(toDate.Year, toDate.Month, toDate.Day, 23, 59, 0);
-                var now = DateTime.Now;
-                List<ReportEvaluateModel> report = new List<ReportEvaluateModel>();
-                if (reportForUser)
-                    report.AddRange(db.Q_User.Where(x => !x.IsDeleted).Select(x => new ReportEvaluateModel() { ServiceId = x.Id, ServiceName = x.Name }).ToList());
-                else
-                    report.AddRange(db.Q_Service.Where(x => !x.IsDeleted && x.IsActived).Select(x => new ReportEvaluateModel() { ServiceId = x.Id, ServiceName = x.Name }).ToList());
-                if (report.Count > 0)
+                foreach (DataRow row in dt.Rows)
                 {
-                    List<ModelSelectItem> ycDanhGia = db.Q_EvaluateDetail.
-                                                            Where(x => !x.IsDeleted && !x.Q_Evaluate.IsDeleted).
-                                                            OrderBy(x => x.Index).
-                                                            Select(x => new ModelSelectItem() { Code = (x.EvaluateId + "_" + x.Id), Name = x.Name, Id = 0, Data = 0 }).
-                                                           ToList();
-                    ycDanhGia.Add(new ModelSelectItem() { Code = "1000", Name = "Ý kiến khác", Id = 0, Data = 0 });
-
-                    foreach (var r in report)
+                    report.Add(new ReportEvaluateModel()
                     {
-                        var histories = (from x in db.Q_HisUserEvaluate
-                                         where
-                                            !x.IsDeleted &&
-                                            x.Q_HisDailyRequire_De.Q_HisDailyRequire.PrintTime >= fromDate &&
-                                            x.Q_HisDailyRequire_De.Q_HisDailyRequire.PrintTime <= toDate
-                                         select new ReportEvaluateDetailModel()
-                                         {
-                                             UserId = x.UserId,
-                                             UserName = x.Q_User.Name,
-                                             ServiceId = x.Q_HisDailyRequire_De.Q_HisDailyRequire.ServiceId,
-                                             ServiceName = x.Q_HisDailyRequire_De.Q_HisDailyRequire.Q_Service.Name,
-                                             PrintTime = x.Q_HisDailyRequire_De.Q_HisDailyRequire.PrintTime,
-                                             EvaluateTime = x.CreatedDate,
-                                             Score = x.Score,
-                                             Comment = x.Comment,
-                                             Number = x.Q_HisDailyRequire_De.Q_HisDailyRequire.TicketNumber
-                                         }).ToList();
-                        if (DateTime.Now < toDate)
+                        ServiceId = Convert.ToInt32(row["ServiceId"].ToString()),
+                        ServiceName = row["ServiceName"].ToString()
+                    });
+                }
+
+                #region ycDanhGia 
+                var ycDanhGia = new List<ModelSelectItem>();
+                query = "select d.EvaluateId, d.Id,d.Name  from Q_EvaluateDetail d, Q_Evaluate e where e.Id = d.EvaluateId and e.IsDeleted=0 and d.IsDeleted=0 order by d.[Index]";
+                dt.Clear();
+                adap = new SqlDataAdapter(query, sqlConnection);
+                adap.Fill(dt);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        ycDanhGia.Add(new ModelSelectItem()
                         {
-                            var today = (from x in db.Q_UserEvaluate
-                                         where  !x.IsDeleted  
-                                         select new ReportEvaluateDetailModel()
-                                         {
-                                             UserId = x.UserId,
-                                             UserName = x.Q_User.Name,
-                                             ServiceId = x.Q_DailyRequire_Detail.Q_DailyRequire.ServiceId,
-                                             ServiceName = x.Q_DailyRequire_Detail.Q_DailyRequire.Q_Service.Name,
-                                             PrintTime = x.Q_DailyRequire_Detail.Q_DailyRequire.PrintTime,
-                                             EvaluateTime = x.CreatedDate,
-                                             Score = x.Score,
-                                             Comment = x.Comment,
-                                             Number = x.Q_DailyRequire_Detail.Q_DailyRequire.TicketNumber
-                                         }).ToList();
-                            histories.AddRange(today);
-                        } 
-                        foreach (var yc in ycDanhGia)
+                            Code = (row["EvaluateId"].ToString() + "_" + row["Id"].ToString()),
+                            Name = row["Name"].ToString(),
+                            Id = 0,
+                            Data = 0
+                        });
+                    }
+                }
+                ycDanhGia.Add(new ModelSelectItem() { Code = "1000", Name = "Ý kiến khác", Id = 0, Data = 0 });
+                #endregion
+
+                var histories = new List<ReportEvaluateDetailModel>();
+                query = "select ue.UserId,u.Name as UserName, dr.ServiceId, s.Name as ServiceName,dr.PrintTime,ue.CreatedDate,dd.EndProcessTime,ue.Score, ue.Comment,dr.TicketNumber  from Q_HisUserEvaluate ue, Q_HisDailyRequire dr, Q_HisDailyRequire_De dd, Q_User u, Q_Service s where ue.IsDeleted = 0 and ue.HisDailyRequireDeId = dd.Id and dd.HisDailyRequireId = dr.Id and u.IsDeleted = 0 and ue.UserId = u.Id and s.IsDeleted = 0 and s.IsActived =1 and s.Id = dr.ServiceId and dr.PrintTime >= '" + fromDate.ToString("yyyy-MM-dd HH:mm:ss") + "' and dr.PrintTime <= '" + toDate.ToString("yyyy-MM-dd HH:mm:ss") + "'";
+                dt.Clear();
+                adap = new SqlDataAdapter(query, sqlConnection);
+                adap.Fill(dt);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        histories.Add(new ReportEvaluateDetailModel()
                         {
-                            var a = new ModelSelectItem();
-                            Parse.CopyObject(yc, ref a);
-                            if (reportForUser)
-                                a.Id = histories.Where(x => x.Score == yc.Code && x.UserId == r.ServiceId).Count();
-                            else
-                                a.Id = histories.Where(x => x.Score == yc.Code && x.ServiceId == r.ServiceId).Count();
-                            r.Details.Add(a);
+                            UserId = getIntValue(row["UserId"]),
+                            UserName = getStringValue(row["UserName"]),
+                            ServiceId = getIntValue(row["ServiceId"]),
+                            ServiceName = getStringValue(row["ServiceName"]),
+                            PrintTime = getDateValue(row["PrintTime"]),
+                            EvaluateTime = getDateValue(row["CreatedDate"]),
+                            EndProcessTime = getDateValue(row["EndProcessTime"]),
+                            Score = getStringValue(row["Score"]),
+                            Comment = getStringValue(row["Comment"]),
+                            Number = getIntValue(row["TicketNumber"])
+                        });
+                    }
+                }
+                //  var ss = histories.Where(x => !x.PrintTime.HasValue || !x.EvaluateTime.HasValue).ToList();
+                if (DateTime.Now < toDate)
+                {
+                    query = "select ue.UserId,u.Name as UserName, dr.ServiceId, s.Name as ServiceName,dr.PrintTime,ue.CreatedDate,dd.EndProcessTime,ue.Score, ue.Comment,dr.TicketNumber  from Q_UserEvaluate ue, Q_DailyRequire dr, Q_DailyRequire_Detail dd, Q_User u, Q_Service s where ue.IsDeleted = 0 and ue.DailyRequireDeId = dd.Id and dd.DailyRequireId = dr.Id and u.IsDeleted = 0 and ue.UserId = u.Id and s.IsDeleted = 0 and s.IsActived =1 and s.Id = dr.ServiceId";
+                    dt.Clear();
+                    adap = new SqlDataAdapter(query, sqlConnection);
+                    adap.Fill(dt);
+                    if (dt != null && dt.Rows.Count > 0)
+                    {
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            histories.Add(new ReportEvaluateDetailModel()
+                            {
+                                UserId = getIntValue(row["UserId"]),
+                                UserName = getStringValue(row["UserName"]),
+                                ServiceId = getIntValue(row["ServiceId"]),
+                                ServiceName = getStringValue(row["ServiceName"]),
+                                PrintTime = getDateValue(row["PrintTime"]),
+                                EvaluateTime = getDateValue(row["CreatedDate"]),
+                                EndProcessTime = getDateValue(row["EndProcessTime"]),
+                                Score = getStringValue(row["Score"]),
+                                Comment = getStringValue(row["Comment"]),
+                                Number = getIntValue(row["TicketNumber"])
+                            });
                         }
                     }
                 }
-                return report.ToList();
-            }
-        }
 
-        public List<ReportEvaluateModel> GetDailyReport_NotUseQMS(string connectString, bool reportForUser, DateTime fromDate, DateTime toDate)
-        {
-            using (var db = new QMSSystemEntities(connectString))
-            {
-                fromDate = new DateTime(fromDate.Year, fromDate.Month, fromDate.Day, 0, 0, 0);
-                toDate = new DateTime(toDate.Year, toDate.Month, toDate.Day, 23, 59, 0);
-                var report = new List<ReportEvaluateModel>();
-                if (reportForUser)
-                    report.AddRange(db.Q_User.Where(x => !x.IsDeleted).Select(x => new ReportEvaluateModel() { ServiceId = x.Id, ServiceName = x.Name }).ToList());
-                else
-                    report.AddRange(db.Q_Service.Where(x => !x.IsDeleted && x.IsActived).Select(x => new ReportEvaluateModel() { ServiceId = x.Id, ServiceName = x.Name }).ToList());
-                var ycDanhGia = db.Q_EvaluateDetail.
-                                    Where(x => !x.IsDeleted && !x.Q_Evaluate.IsDeleted).
-                                    OrderBy(x => x.Index).
-                                    Select(x => new ModelSelectItem() { Code = (x.EvaluateId + "_" + x.Id), Name = x.Name, Id = 0, Data = 0 }).
-                                    ToList();
-                ycDanhGia.Add(new ModelSelectItem() { Code = "1000", Name = "Ý kiến khác", Id = 0, Data = 0 });
-                if (report.Count > 0)
+                foreach (var r in report)
                 {
-                    var histories = (from x in db.Q_HisUserEvaluate
-                                     where
-                                        !x.IsDeleted &&
-                                        x.CreatedDate >= fromDate &&
-                                        x.CreatedDate <= toDate
-                                     select new ReportEvaluateDetailModel()
-                                     {
-                                         UserId = x.UserId,
-                                         UserName = x.Q_User.Name,
-                                       //  ServiceId = x.Q_HisDailyRequire_De.Q_HisDailyRequire.ServiceId,
-                                       //  ServiceName = x.Q_HisDailyRequire_De.Q_HisDailyRequire.Q_Service.Name,
-                                       //  PrintTime = x.Q_HisDailyRequire_De.Q_HisDailyRequire.PrintTime,
-                                         EvaluateTime = x.CreatedDate,
-                                         Score = x.Score,
-                                         Comment = x.Comment,
-                                      //   Number = x.Q_HisDailyRequire_De.Q_HisDailyRequire.TicketNumber
-                                     }).ToList();
+                    foreach (var yc in ycDanhGia)
+                    {
+                        var a = new ModelSelectItem();
+                        Parse.CopyObject(yc, ref a);
+                        if (reportForUser)
+                            a.Id = histories.Where(x => x.Score == yc.Code && x.UserId == r.ServiceId).Count();
+                        else
+                            a.Id = histories.Where(x => x.Score == yc.Code && x.ServiceId == r.ServiceId).Count();
+                        r.Details.Add(a);
+                    }
+                }
+            }
+            return report.ToList();
+        }
+        public List<ReportEvaluateModel> GetDailyReport_NotUseQMS(SqlConnection sqlConnection, bool reportForUser, DateTime fromDate, DateTime toDate)
+        {
+            fromDate = new DateTime(fromDate.Year, fromDate.Month, fromDate.Day, 0, 0, 0);
+            toDate = new DateTime(toDate.Year, toDate.Month, toDate.Day, 23, 59, 0);
+            var now = DateTime.Now;
+            var report = new List<ReportEvaluateModel>();
+            string query = "select Id as ServiceId, name as ServiceName from Q_User where IsDeleted=0";
+            var adap = new SqlDataAdapter(query, sqlConnection);
+            var dt = new DataTable();
+            adap.Fill(dt);
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                foreach (DataRow row in dt.Rows)
+                {
+                    report.Add(new ReportEvaluateModel()
+                    {
+                        ServiceId = Convert.ToInt32(row["ServiceId"].ToString()),
+                        ServiceName = row["ServiceName"].ToString()
+                    });
+                }
+
+                #region ycDanhGia 
+                var ycDanhGia = new List<ModelSelectItem>();
+                query = "select d.EvaluateId, d.Id,d.Name  from Q_EvaluateDetail d, Q_Evaluate e where e.Id = d.EvaluateId and e.IsDeleted=0 and d.IsDeleted=0 order by d.[Index]";
+                dt.Clear();
+                adap = new SqlDataAdapter(query, sqlConnection);
+                adap.Fill(dt);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        ycDanhGia.Add(new ModelSelectItem()
+                        {
+                            Code = (row["EvaluateId"].ToString() + "_" + row["Id"].ToString()),
+                            Name = row["Name"].ToString(),
+                            Id = 0,
+                            Data = 0
+                        });
+                    }
+                }
+                ycDanhGia.Add(new ModelSelectItem() { Code = "1000", Name = "Ý kiến khác", Id = 0, Data = 0 });
+                #endregion
+
+                var histories = new List<ReportEvaluateDetailModel>();
+                query = "select ue.UserId,u.Name as UserName, ue.CreatedDate, ue.Score, ue.Comment from Q_HisUserEvaluate ue, Q_User u, Q_Service s where ue.IsDeleted = 0  and u.IsDeleted = 0 and ue.UserId = u.Id and s.IsDeleted = 0 and s.IsActived = 1   and ue.CreatedDate >= '" + fromDate.ToString("yyyy-MM-dd HH:mm:ss") + "' and ue.CreatedDate <= '" + toDate.ToString("yyyy-MM-dd HH:mm:ss") + "'";
+                dt.Clear();
+                adap = new SqlDataAdapter(query, sqlConnection);
+                adap.Fill(dt);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        histories.Add(new ReportEvaluateDetailModel()
+                        {
+                            UserId = getIntValue(row["UserId"]),
+                            UserName = getStringValue(row["UserName"]),
+                            EvaluateTime = getDateValue(row["CreatedDate"]),
+                            Score = getStringValue(row["Score"]),
+                            Comment = getStringValue(row["Comment"]),
+                        });
+                    }
+
                     if (DateTime.Now < toDate)
                     {
-                        var today = (from x in db.Q_UserEvaluate
-                                     where  !x.IsDeleted  
-                                     select new ReportEvaluateDetailModel()
-                                     {
-                                         UserId = x.UserId,
-                                         UserName = x.Q_User.Name,
-                                        // ServiceId = x.Q_DailyRequire_Detail.Q_DailyRequire.ServiceId,
-                                        // ServiceName = x.Q_DailyRequire_Detail.Q_DailyRequire.Q_Service.Name,
-                                        // PrintTime = x.Q_DailyRequire_Detail.Q_DailyRequire.PrintTime,
-                                         EvaluateTime = x.CreatedDate,
-                                         Score = x.Score,
-                                         Comment = x.Comment,
-                                        // Number = x.Q_DailyRequire_Detail.Q_DailyRequire.TicketNumber
-                                     }).ToList();
-                        histories.AddRange(today);
-                    }
-
-                     foreach (var r in report)
-                    {
-                        foreach (var yc in ycDanhGia)
+                        query = "select ue.UserId,u.Name as UserName, ue.CreatedDate ,ue.Score, ue.Comment from Q_UserEvaluate ue, Q_User u where ue.IsDeleted = 0 and u.IsDeleted = 0 and ue.UserId = u.Id";
+                        dt.Clear();
+                        adap = new SqlDataAdapter(query, sqlConnection);
+                        adap.Fill(dt);
+                        if (dt != null && dt.Rows.Count > 0)
                         {
-                            var a = new ModelSelectItem();
-                            Parse.CopyObject(yc, ref a);
-                            if (reportForUser)
-                                a.Id = histories.Where(x => x.Score == yc.Code && x.UserId == r.ServiceId).Count();
-                          //  else
-                             //   a.Id = danhgia.Where(x => x.Score == yc.Code && x.Q_DailyRequire_Detail.Q_DailyRequire.ServiceId == r.ServiceId).Count();
-                            r.Details.Add(a);
+                            foreach (DataRow row in dt.Rows)
+                            {
+                                histories.Add(new ReportEvaluateDetailModel()
+                                {
+                                    UserId = getIntValue(row["UserId"]),
+                                    UserName = getStringValue(row["UserName"]),
+                                    EvaluateTime = getDateValue(row["CreatedDate"]),
+                                    Score = getStringValue(row["Score"]),
+                                    Comment = getStringValue(row["Comment"])
+                                });
+                            }
                         }
                     }
                 }
-                return report.ToList();
+
+                foreach (var r in report)
+                {
+                    foreach (var yc in ycDanhGia)
+                    {
+                        var a = new ModelSelectItem();
+                        Parse.CopyObject(yc, ref a);
+                        if (reportForUser)
+                            a.Id = histories.Where(x => x.Score == yc.Code && x.UserId == r.ServiceId).Count();
+                        r.Details.Add(a);
+                    }
+                }
+
             }
+            return report.ToList();
         }
 
+        private int getIntValue(object value)
+        {
+            if (value != null && !string.IsNullOrEmpty(value.ToString()))
+                return Convert.ToInt32(value);
+            return 0;
+        }
+        private string getStringValue(object value)
+        {
+            if (value != null && !string.IsNullOrEmpty(value.ToString()))
+                return value.ToString();
+            return "";
+        }
+        private DateTime? getDateValue(object value)
+        {
+            if (value != null && !string.IsNullOrEmpty(value.ToString()))
+                return DateTime.Parse(value.ToString());
+            return null;
+        }
+         
         public List<ReportEvaluateModel> GetReport(string connectString, int userId, DateTime from, DateTime to)
         {
             using (var db = new QMSSystemEntities(connectString))
@@ -573,55 +663,64 @@ namespace QMS_System.Data.BLL
             }
         }
 
-
-        public List<ReportEvaluateDetailModel> GetDailyReport_Detail(string connectString, DateTime fromDate, DateTime toDate)
+        public List<ReportEvaluateDetailModel> GetDailyReport_Detail(SqlConnection sqlConnection, DateTime fromDate, DateTime toDate)
         {
-            using (var db = new QMSSystemEntities(connectString))
+            fromDate = new DateTime(fromDate.Year, fromDate.Month, fromDate.Day, 0, 0, 0);
+            toDate = new DateTime(toDate.Year, toDate.Month, toDate.Day, 23, 59, 0);
+            var histories = new List<ReportEvaluateDetailModel>();
+            var query = "select ue.UserId,u.Name as UserName, dr.ServiceId, s.Name as ServiceName,dr.PrintTime,ue.CreatedDate,dd.EndProcessTime,ue.Score, ue.Comment,dr.TicketNumber  from Q_HisUserEvaluate ue, Q_HisDailyRequire dr, Q_HisDailyRequire_De dd, Q_User u, Q_Service s where ue.IsDeleted = 0 and ue.HisDailyRequireDeId = dd.Id and dd.HisDailyRequireId = dr.Id and u.IsDeleted = 0 and ue.UserId = u.Id and s.IsDeleted = 0 and s.IsActived =1 and s.Id = dr.ServiceId and dr.PrintTime >= '" + fromDate.ToString("yyyy-MM-dd HH:mm:ss") + "' and dr.PrintTime <= '" + toDate.ToString("yyyy-MM-dd HH:mm:ss") + "'";
+            var dt = new DataTable();
+            var adap = new SqlDataAdapter(query, sqlConnection);
+            adap.Fill(dt);
+            if (dt != null && dt.Rows.Count > 0)
             {
-                fromDate = new DateTime(fromDate.Year, fromDate.Month, fromDate.Day, 0, 0, 0);
-                toDate = new DateTime(toDate.Year, toDate.Month, toDate.Day, 23, 59, 0);
-                var histories = (from x in db.Q_HisUserEvaluate
-                                 where
-                                    !x.IsDeleted &&
-                                    x.Q_HisDailyRequire_De.Q_HisDailyRequire.PrintTime >= fromDate &&
-                                    x.Q_HisDailyRequire_De.Q_HisDailyRequire.PrintTime <= toDate
-                                 select new ReportEvaluateDetailModel()
-                                 {
-                                     UserId = x.UserId,
-                                     UserName = x.Q_User.Name,
-                                     ServiceId = x.Q_HisDailyRequire_De.Q_HisDailyRequire.ServiceId,
-                                     ServiceName = x.Q_HisDailyRequire_De.Q_HisDailyRequire.Q_Service.Name,
-                                     PrintTime = x.Q_HisDailyRequire_De.Q_HisDailyRequire.PrintTime ,
-                                     EvaluateTime = x.CreatedDate ,
-                                     Score = x.Score,
-                                     Comment = x.Comment,
-                                     Number = x.Q_HisDailyRequire_De.Q_HisDailyRequire.TicketNumber
-                                 }).ToList();
-                if (DateTime.Now < toDate)
+                foreach (DataRow row in dt.Rows)
                 {
-                    var today = (from x in db.Q_UserEvaluate
-                                 where
-                                    !x.IsDeleted &&
-                                    x.Q_DailyRequire_Detail.Q_DailyRequire.PrintTime >= fromDate &&
-                                    x.Q_DailyRequire_Detail.Q_DailyRequire.PrintTime <= toDate
-                                 select new ReportEvaluateDetailModel()
-                                 {
-                                     UserId = x.UserId,
-                                     UserName = x.Q_User.Name,
-                                     ServiceId = x.Q_DailyRequire_Detail.Q_DailyRequire.ServiceId,
-                                     ServiceName = x.Q_DailyRequire_Detail.Q_DailyRequire.Q_Service.Name,
-                                     PrintTime = x.Q_DailyRequire_Detail.Q_DailyRequire.PrintTime ,
-                                     EvaluateTime = x.CreatedDate ,
-                                     Score = x.Score,
-                                     Comment = x.Comment,
-                                     Number = x.Q_DailyRequire_Detail.Q_DailyRequire.TicketNumber
-                                 }).ToList();
-                    histories.AddRange(today);
+                    histories.Add(new ReportEvaluateDetailModel()
+                    {
+                        UserId = getIntValue(row["UserId"]),
+                        UserName = getStringValue(row["UserName"]),
+                        ServiceId = getIntValue(row["ServiceId"]),
+                        ServiceName = getStringValue(row["ServiceName"]),
+                        PrintTime = getDateValue(row["PrintTime"]),
+                        EvaluateTime = getDateValue(row["CreatedDate"]),
+                        EndProcessTime = getDateValue(row["EndProcessTime"]),
+                        Score = getStringValue(row["Score"]),
+                        Comment = getStringValue(row["Comment"]),
+                        Number = getIntValue(row["TicketNumber"])
+                    });
                 }
-                return histories.OrderBy(x=>x.PrintTime).ThenBy(x=>x.Number).ToList();                 
+            } 
+            if (DateTime.Now < toDate)
+            {
+                query = "select ue.UserId,u.Name as UserName, dr.ServiceId, s.Name as ServiceName,dr.PrintTime,ue.CreatedDate,dd.EndProcessTime,ue.Score, ue.Comment,dr.TicketNumber  from Q_UserEvaluate ue, Q_DailyRequire dr, Q_DailyRequire_Detail dd, Q_User u, Q_Service s where ue.IsDeleted = 0 and ue.DailyRequireDeId = dd.Id and dd.DailyRequireId = dr.Id and u.IsDeleted = 0 and ue.UserId = u.Id and s.IsDeleted = 0 and s.IsActived =1 and s.Id = dr.ServiceId";
+                dt.Clear();
+                adap = new SqlDataAdapter(query, sqlConnection);
+                adap.Fill(dt);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        histories.Add(new ReportEvaluateDetailModel()
+                        {
+                            UserId = getIntValue(row["UserId"]),
+                            UserName = getStringValue(row["UserName"]),
+                            ServiceId = getIntValue(row["ServiceId"]),
+                            ServiceName = getStringValue(row["ServiceName"]),
+                            PrintTime = getDateValue(row["PrintTime"]),
+                            EvaluateTime = getDateValue(row["CreatedDate"]),
+                            EndProcessTime = getDateValue(row["EndProcessTime"]),
+                            Score = getStringValue(row["Score"]),
+                            Comment = getStringValue(row["Comment"]),
+                            Number = getIntValue(row["TicketNumber"])
+                        });
+                    }
+                }
             }
-        }
 
+            return histories.OrderBy(x => x.PrintTime).ThenBy(x => x.Number).ToList(); 
+        }
+        
         public SendSMSModel GetRequireSendSMS(string connectString)
         {
             using (var db = new QMSSystemEntities(connectString))
@@ -719,8 +818,9 @@ public class ReportEvaluateDetailModel
     public string UserName { get; set; }
     public int ServiceId { get; set; }
     public string ServiceName { get; set; }
-    public DateTime PrintTime { get; set; }
-    public DateTime EvaluateTime { get; set; }
+    public DateTime? PrintTime { get; set; }
+    public DateTime? EvaluateTime { get; set; }
+    public DateTime? EndProcessTime { get; set; }
     public string Score { get; set; }
     public int Number { get; set; }
     public string Comment { get; set; }

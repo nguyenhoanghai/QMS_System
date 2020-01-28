@@ -50,6 +50,9 @@ namespace QMS_System.Data.Model
         public int ReadServeOverCounter { get; set; }
         public string strTGDK_Khach { get; set; }
         public DateTime TGDK_Khach { get; set; }
+        public int EquipCode { get; set; }
+        public int CurrentNumber { get; set; }
+        public int LastCallKetLuan { get; set; } 
     }
 
     public class SubModel

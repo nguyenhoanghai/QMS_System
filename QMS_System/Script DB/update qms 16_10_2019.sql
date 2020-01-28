@@ -64,3 +64,8 @@ GO
 
 alter table Q_service add [isKetLuan] bit default(0) not null
 alter table Q_major add [isshow] bit default(1) not null
+
+alter table Q_major add [LastCallKetLuan] int default(0) not null
+
+-- update 13/1/2020
+alter table q_counter add [CurrentNumber] int default(0) not null

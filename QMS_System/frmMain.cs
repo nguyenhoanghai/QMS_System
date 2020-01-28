@@ -97,8 +97,9 @@ namespace QMS_System
 
                     int.TryParse(GetConfigByCode(eConfigCode.PrintType), out printType);
                     int.TryParse(GetConfigByCode(eConfigCode.PrintTicketReturnCurrentNumberOrServiceCode), out printTicketReturnCurrentNumberOrServiceCode);
+                    int.TryParse(GetConfigByCode(eConfigCode.NumberOfLinePerTime), out solien);
                     int.TryParse(GetConfigByCode(eConfigCode.SilenceTime), out silenceTime);
-                    int.TryParse(GetConfigByCode(eConfigCode.StartNumber), out startNumber);
+                int.TryParse(GetConfigByCode(eConfigCode.StartNumber), out startNumber);
                     int.TryParse(GetConfigByCode(eConfigCode.TimeWaitForRecieveData), out timeQuetComport);
                     int.TryParse(GetConfigByCode(eConfigCode.PrintTicketCode), out PrintTicketCode);
                     int.TryParse(GetConfigByCode(eConfigCode.TimesRepeatReadServeOver), out timesRepeatReadServeOver);
@@ -2225,6 +2226,7 @@ namespace QMS_System
             {
                 //throw ex;
             }
+            DatabaseConnection.Instance.GetConnectionString("");
         }
 
         private void tmerQuetServeOver_Tick(object sender, EventArgs e)

@@ -81,22 +81,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Q_Counter">
-      <EntityTypeMapping TypeName="QMSSystemModel.Q_Counter">
-        <MappingFragment StoreEntitySet="Q_Counter">
-          <ScalarProperty Name="LastCallKetLuan" ColumnName="LastCallKetLuan" />
-          <ScalarProperty Name="IsRunning" ColumnName="IsRunning" />
-          <ScalarProperty Name="LastCall" ColumnName="LastCall" />
-          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-          <ScalarProperty Name="Acreage" ColumnName="Acreage" />
-          <ScalarProperty Name="Position" ColumnName="Position" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="Index" ColumnName="Index" />
-          <ScalarProperty Name="ShortName" ColumnName="ShortName" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Q_CounterSoftRequire">
       <EntityTypeMapping TypeName="QMSSystemModel.Q_CounterSoftRequire">
         <MappingFragment StoreEntitySet="Q_CounterSoftRequire">
@@ -624,6 +608,23 @@
           <ScalarProperty Name="StartNumber" ColumnName="StartNumber" />
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Q_Counter">
+      <EntityTypeMapping TypeName="QMSSystemModel.Q_Counter">
+        <MappingFragment StoreEntitySet="Q_Counter">
+          <ScalarProperty Name="CurrentNumber" ColumnName="CurrentNumber" />
+          <ScalarProperty Name="IsRunning" ColumnName="IsRunning" />
+          <ScalarProperty Name="LastCallKetLuan" ColumnName="LastCallKetLuan" />
+          <ScalarProperty Name="LastCall" ColumnName="LastCall" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="Acreage" ColumnName="Acreage" />
+          <ScalarProperty Name="Position" ColumnName="Position" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Index" ColumnName="Index" />
+          <ScalarProperty Name="ShortName" ColumnName="ShortName" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>

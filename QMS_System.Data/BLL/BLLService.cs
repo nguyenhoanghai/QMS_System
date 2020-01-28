@@ -1,5 +1,8 @@
 ﻿using QMS_System.Data.Model;
+using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 
 namespace QMS_System.Data.BLL
@@ -79,6 +82,43 @@ namespace QMS_System.Data.BLL
                 return services;
 
             }
+        }
+
+        public List<ModelSelectItem> GetLookUp(SqlConnection sqlConnection, bool countWaiting)
+        {
+            var model = new List<ModelSelectItem>();
+            string query = "select Id, Name,TimeProcess from Q_Service where IsDeleted = 0 and IsActived =1";
+            var da = new SqlDataAdapter(query, sqlConnection);
+            DataTable dataTable = new DataTable();
+            da.Fill(dataTable);
+            if (dataTable != null && dataTable.Rows.Count > 0)
+            {
+                ModelSelectItem modelSelectItem;
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    modelSelectItem = new ModelSelectItem()
+                    {
+                        Id = Convert.ToInt32(row["Id"].ToString()),
+                        Name = row["Name"].ToString(),
+                        Data = 0
+                    };
+                    if (!string.IsNullOrEmpty(row["TimeProcess"].ToString())){
+                        var date = DateTime.Parse(row["TimeProcess"].ToString());
+                        modelSelectItem.Code = date.TimeOfDay.ToString();
+                    }
+
+                    query = "select COUNT(d.Id) as number from Q_DailyRequire_Detail d , Q_DailyRequire r where r.Id = d.DailyRequireId and UserId is NULL and r.ServiceId=" + modelSelectItem.Id;
+                    da = new SqlDataAdapter(query, sqlConnection);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    if (dt != null && dt.Rows.Count > 0)
+                    {
+                        modelSelectItem.Data = Convert.ToInt32(dt.Rows[0]["number"].ToString());
+                    }
+                    model.Add(modelSelectItem);
+                }
+            }
+            return model;
         }
 
         public int Insert(string connectString, Q_Service obj)

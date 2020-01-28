@@ -98,6 +98,7 @@
     <Property Name="LastCall" Type="int" Nullable="false" />
     <Property Name="LastCallKetLuan" Type="int" Nullable="false" />
     <Property Name="IsRunning" Type="bit" Nullable="false" />
+    <Property Name="CurrentNumber" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Q_CounterSoftRequire">
     <Key>

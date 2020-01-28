@@ -8,7 +8,6 @@
     <EntitySet Name="Q_BusinessType" EntityType="QMSSystemModel.Q_BusinessType" />
     <EntitySet Name="Q_Command" EntityType="QMSSystemModel.Q_Command" />
     <EntitySet Name="Q_CommandParameter" EntityType="QMSSystemModel.Q_CommandParameter" />
-    <EntitySet Name="Q_Counter" EntityType="QMSSystemModel.Q_Counter" />
     <EntitySet Name="Q_CounterSoftRequire" EntityType="QMSSystemModel.Q_CounterSoftRequire" />
     <EntitySet Name="Q_CounterSound" EntityType="QMSSystemModel.Q_CounterSound" />
     <EntitySet Name="Q_DailyRequire" EntityType="QMSSystemModel.Q_DailyRequire" />
@@ -76,18 +75,6 @@
     <AssociationSet Name="FK_Q_UserCommand_Q_CommandParameter" Association="QMSSystemModel.FK_Q_UserCommand_Q_CommandParameter">
       <End Role="Q_CommandParameter" EntitySet="Q_CommandParameter" />
       <End Role="Q_UserCmdRegister" EntitySet="Q_UserCmdRegister" />
-    </AssociationSet>
-    <AssociationSet Name="FK_Q_CounterSound_Q_Counter" Association="QMSSystemModel.FK_Q_CounterSound_Q_Counter">
-      <End Role="Q_Counter" EntitySet="Q_Counter" />
-      <End Role="Q_CounterSound" EntitySet="Q_CounterSound" />
-    </AssociationSet>
-    <AssociationSet Name="FK_Q_Equipment_Q_Counter" Association="QMSSystemModel.FK_Q_Equipment_Q_Counter">
-      <End Role="Q_Counter" EntitySet="Q_Counter" />
-      <End Role="Q_Equipment" EntitySet="Q_Equipment" />
-    </AssociationSet>
-    <AssociationSet Name="FK_Q_MaindisplayDirection_Q_Counter" Association="QMSSystemModel.FK_Q_MaindisplayDirection_Q_Counter">
-      <End Role="Q_Counter" EntitySet="Q_Counter" />
-      <End Role="Q_MaindisplayDirection" EntitySet="Q_MaindisplayDirection" />
     </AssociationSet>
     <AssociationSet Name="FK_Q_CounterSound_Q_Sound" Association="QMSSystemModel.FK_Q_CounterSound_Q_Sound">
       <End Role="Q_Language" EntitySet="Q_Language" />
@@ -254,10 +241,6 @@
     </AssociationSet>
     <EntitySet Name="Q_Config" EntityType="QMSSystemModel.Q_Config" />
     <EntitySet Name="Q_TVReadSound" EntityType="QMSSystemModel.Q_TVReadSound" />
-    <AssociationSet Name="FK_Q_TVReadSound_Q_Counter" Association="QMSSystemModel.FK_Q_TVReadSound_Q_Counter">
-      <End Role="Q_Counter" EntitySet="Q_Counter" />
-      <End Role="Q_TVReadSound" EntitySet="Q_TVReadSound" />
-    </AssociationSet>
     <EntitySet Name="Q_Service" EntityType="QMSSystemModel.Q_Service" />
     <AssociationSet Name="FK_Q_DailyRequire_Q_Service" Association="QMSSystemModel.FK_Q_DailyRequire_Q_Service">
       <End Role="Q_Service" EntitySet="Q_Service" />
@@ -278,6 +261,23 @@
     <AssociationSet Name="FK_Q_ServiceStep_Q_Service" Association="QMSSystemModel.FK_Q_ServiceStep_Q_Service">
       <End Role="Q_Service" EntitySet="Q_Service" />
       <End Role="Q_ServiceStep" EntitySet="Q_ServiceStep" />
+    </AssociationSet>
+    <EntitySet Name="Q_Counter" EntityType="QMSSystemModel.Q_Counter" />
+    <AssociationSet Name="FK_Q_CounterSound_Q_Counter" Association="QMSSystemModel.FK_Q_CounterSound_Q_Counter">
+      <End Role="Q_Counter" EntitySet="Q_Counter" />
+      <End Role="Q_CounterSound" EntitySet="Q_CounterSound" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_Equipment_Q_Counter" Association="QMSSystemModel.FK_Q_Equipment_Q_Counter">
+      <End Role="Q_Counter" EntitySet="Q_Counter" />
+      <End Role="Q_Equipment" EntitySet="Q_Equipment" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_MaindisplayDirection_Q_Counter" Association="QMSSystemModel.FK_Q_MaindisplayDirection_Q_Counter">
+      <End Role="Q_Counter" EntitySet="Q_Counter" />
+      <End Role="Q_MaindisplayDirection" EntitySet="Q_MaindisplayDirection" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_TVReadSound_Q_Counter" Association="QMSSystemModel.FK_Q_TVReadSound_Q_Counter">
+      <End Role="Q_Counter" EntitySet="Q_Counter" />
+      <End Role="Q_TVReadSound" EntitySet="Q_TVReadSound" />
     </AssociationSet>
   </EntityContainer>
   <EntityType Name="Q_Action">
@@ -365,25 +365,6 @@
     <NavigationProperty Name="Q_Command" Relationship="QMSSystemModel.FK_Q_CommandParameter_Q_Command" FromRole="Q_CommandParameter" ToRole="Q_Command" />
     <NavigationProperty Name="Q_UserCmdRegister" Relationship="QMSSystemModel.FK_Q_UserCommand_Q_CommandParameter" FromRole="Q_CommandParameter" ToRole="Q_UserCmdRegister" />
   </EntityType>
-  <EntityType Name="Q_Counter">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="ShortName" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
-    <Property Name="Index" Type="Int32" Nullable="false" />
-    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="Position" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="Acreage" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-    <Property Name="LastCall" Type="Int32" Nullable="false" />
-    <Property Name="IsRunning" Type="Boolean" Nullable="false" />
-    <NavigationProperty Name="Q_CounterSound" Relationship="QMSSystemModel.FK_Q_CounterSound_Q_Counter" FromRole="Q_Counter" ToRole="Q_CounterSound" />
-    <NavigationProperty Name="Q_Equipment" Relationship="QMSSystemModel.FK_Q_Equipment_Q_Counter" FromRole="Q_Counter" ToRole="Q_Equipment" />
-    <NavigationProperty Name="Q_MaindisplayDirection" Relationship="QMSSystemModel.FK_Q_MaindisplayDirection_Q_Counter" FromRole="Q_Counter" ToRole="Q_MaindisplayDirection" />
-    <NavigationProperty Name="Q_TVReadSound" Relationship="QMSSystemModel.FK_Q_TVReadSound_Q_Counter" FromRole="Q_Counter" ToRole="Q_TVReadSound" />
-    <Property Name="LastCallKetLuan" Type="Int32" Nullable="false" />
-  </EntityType>
   <EntityType Name="Q_CounterSoftRequire">
     <Key>
       <PropertyRef Name="Id" />
@@ -402,8 +383,8 @@
     <Property Name="SoundName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
     <Property Name="Note" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
     <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-    <NavigationProperty Name="Q_Counter" Relationship="QMSSystemModel.FK_Q_CounterSound_Q_Counter" FromRole="Q_CounterSound" ToRole="Q_Counter" />
     <NavigationProperty Name="Q_Language" Relationship="QMSSystemModel.FK_Q_CounterSound_Q_Sound" FromRole="Q_CounterSound" ToRole="Q_Language" />
+    <NavigationProperty Name="Q_Counter" Relationship="QMSSystemModel.FK_Q_CounterSound_Q_Counter" FromRole="Q_CounterSound" ToRole="Q_Counter" />
   </EntityType>
   <EntityType Name="Q_DailyRequire">
     <Key>
@@ -441,11 +422,11 @@
     <Property Name="Note" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
     <Property Name="EndTime" Type="DateTime" Precision="3" />
     <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-    <NavigationProperty Name="Q_Counter" Relationship="QMSSystemModel.FK_Q_Equipment_Q_Counter" FromRole="Q_Equipment" ToRole="Q_Counter" />
     <NavigationProperty Name="Q_EquipmentType" Relationship="QMSSystemModel.FK_Q_Equipment_Q_EquipmentType" FromRole="Q_Equipment" ToRole="Q_EquipmentType" />
     <NavigationProperty Name="Q_Status" Relationship="QMSSystemModel.FK_Q_Equipment_Q_Status" FromRole="Q_Equipment" ToRole="Q_Status" />
     <NavigationProperty Name="Q_MaindisplayDirection" Relationship="QMSSystemModel.FK_Q_MaindisplayDirection_Q_Equipment" FromRole="Q_Equipment" ToRole="Q_MaindisplayDirection" />
     <NavigationProperty Name="Q_RegisterRecieveTicket" Relationship="QMSSystemModel.FK_Q_RegisterRecieveTicket_Q_Equipment" FromRole="Q_Equipment" ToRole="Q_RegisterRecieveTicket" />
+    <NavigationProperty Name="Q_Counter" Relationship="QMSSystemModel.FK_Q_Equipment_Q_Counter" FromRole="Q_Equipment" ToRole="Q_Counter" />
   </EntityType>
   <EntityType Name="Q_EquipmentType">
     <Key>
@@ -569,8 +550,8 @@
     <Property Name="Direction" Type="Boolean" Nullable="false" />
     <Property Name="Note" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
     <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-    <NavigationProperty Name="Q_Counter" Relationship="QMSSystemModel.FK_Q_MaindisplayDirection_Q_Counter" FromRole="Q_MaindisplayDirection" ToRole="Q_Counter" />
     <NavigationProperty Name="Q_Equipment" Relationship="QMSSystemModel.FK_Q_MaindisplayDirection_Q_Equipment" FromRole="Q_MaindisplayDirection" ToRole="Q_Equipment" />
+    <NavigationProperty Name="Q_Counter" Relationship="QMSSystemModel.FK_Q_MaindisplayDirection_Q_Counter" FromRole="Q_MaindisplayDirection" ToRole="Q_Counter" />
   </EntityType>
   <EntityType Name="Q_Major">
     <Key>
@@ -927,42 +908,6 @@
       </Principal>
       <Dependent Role="Q_UserCmdRegister">
         <PropertyRef Name="CmdParamId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_Q_CounterSound_Q_Counter">
-    <End Type="QMSSystemModel.Q_Counter" Role="Q_Counter" Multiplicity="1" />
-    <End Type="QMSSystemModel.Q_CounterSound" Role="Q_CounterSound" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Q_Counter">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="Q_CounterSound">
-        <PropertyRef Name="CounterId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_Q_Equipment_Q_Counter">
-    <End Type="QMSSystemModel.Q_Counter" Role="Q_Counter" Multiplicity="1" />
-    <End Type="QMSSystemModel.Q_Equipment" Role="Q_Equipment" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Q_Counter">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="Q_Equipment">
-        <PropertyRef Name="CounterId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_Q_MaindisplayDirection_Q_Counter">
-    <End Type="QMSSystemModel.Q_Counter" Role="Q_Counter" Multiplicity="1" />
-    <End Type="QMSSystemModel.Q_MaindisplayDirection" Role="Q_MaindisplayDirection" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Q_Counter">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="Q_MaindisplayDirection">
-        <PropertyRef Name="CounterId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -1560,18 +1505,6 @@
     <Property Name="CreatedAt" Type="DateTime" Precision="3" />
     <NavigationProperty Name="Q_Counter" Relationship="QMSSystemModel.FK_Q_TVReadSound_Q_Counter" FromRole="Q_TVReadSound" ToRole="Q_Counter" />
   </EntityType>
-  <Association Name="FK_Q_TVReadSound_Q_Counter">
-    <End Type="QMSSystemModel.Q_Counter" Role="Q_Counter" Multiplicity="0..1" />
-    <End Type="QMSSystemModel.Q_TVReadSound" Role="Q_TVReadSound" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Q_Counter">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="Q_TVReadSound">
-        <PropertyRef Name="CounterId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <EntityType Name="Q_Service">
     <Key>
       <PropertyRef Name="Id" />
@@ -1652,6 +1585,74 @@
       </Principal>
       <Dependent Role="Q_ServiceStep">
         <PropertyRef Name="ServiceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Q_Counter">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ShortName" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+    <Property Name="Index" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Position" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Acreage" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+    <Property Name="LastCall" Type="Int32" Nullable="false" />
+    <Property Name="LastCallKetLuan" Type="Int32" Nullable="false" />
+    <Property Name="IsRunning" Type="Boolean" Nullable="false" />
+    <Property Name="CurrentNumber" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Q_CounterSound" Relationship="QMSSystemModel.FK_Q_CounterSound_Q_Counter" FromRole="Q_Counter" ToRole="Q_CounterSound" />
+    <NavigationProperty Name="Q_Equipment" Relationship="QMSSystemModel.FK_Q_Equipment_Q_Counter" FromRole="Q_Counter" ToRole="Q_Equipment" />
+    <NavigationProperty Name="Q_MaindisplayDirection" Relationship="QMSSystemModel.FK_Q_MaindisplayDirection_Q_Counter" FromRole="Q_Counter" ToRole="Q_MaindisplayDirection" />
+    <NavigationProperty Name="Q_TVReadSound" Relationship="QMSSystemModel.FK_Q_TVReadSound_Q_Counter" FromRole="Q_Counter" ToRole="Q_TVReadSound" />
+  </EntityType>
+  <Association Name="FK_Q_CounterSound_Q_Counter">
+    <End Type="QMSSystemModel.Q_Counter" Role="Q_Counter" Multiplicity="1" />
+    <End Type="QMSSystemModel.Q_CounterSound" Role="Q_CounterSound" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Counter">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_CounterSound">
+        <PropertyRef Name="CounterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_Equipment_Q_Counter">
+    <End Type="QMSSystemModel.Q_Counter" Role="Q_Counter" Multiplicity="1" />
+    <End Type="QMSSystemModel.Q_Equipment" Role="Q_Equipment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Counter">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_Equipment">
+        <PropertyRef Name="CounterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_MaindisplayDirection_Q_Counter">
+    <End Type="QMSSystemModel.Q_Counter" Role="Q_Counter" Multiplicity="1" />
+    <End Type="QMSSystemModel.Q_MaindisplayDirection" Role="Q_MaindisplayDirection" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Counter">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_MaindisplayDirection">
+        <PropertyRef Name="CounterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_TVReadSound_Q_Counter">
+    <End Type="QMSSystemModel.Q_Counter" Role="Q_Counter" Multiplicity="0..1" />
+    <End Type="QMSSystemModel.Q_TVReadSound" Role="Q_TVReadSound" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Counter">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_TVReadSound">
+        <PropertyRef Name="CounterId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>

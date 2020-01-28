@@ -5,6 +5,8 @@ using QMS_System.Data.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 
 namespace QMS_System.Data.BLL
@@ -151,7 +153,7 @@ namespace QMS_System.Data.BLL
                         {
                             int a = majorIds[i];
                             var newTicket = db.Q_DailyRequire_Detail.Where(x => x.MajorId == a && x.StatusId == (int)eStatus.CHOXL && !x.Q_DailyRequire.Q_Service.isKetLuan).OrderBy(x => x.Q_DailyRequire.PrintTime).FirstOrDefault();
-                              if (newTicket != null)
+                            if (newTicket != null)
                             {
                                 newTicket.UserId = userId;
                                 newTicket.EquipCode = equipCode;
@@ -175,7 +177,7 @@ namespace QMS_System.Data.BLL
 
                                 var equip = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipCode);
                                 if (equip != null)
-                                    db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + ticket + " , isrunning=0 where Id=" + equip.CounterId);
+                                    db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + ticket + ",CurrentNumber=" + ticket + ", isrunning=0 where Id=" + equip.CounterId);
 
                                 db.Database.ExecuteSqlCommand(@"update  Q_RequestTicket  set isdeleted= 1 where userId=" + userId);
                                 db.SaveChanges();
@@ -238,7 +240,7 @@ namespace QMS_System.Data.BLL
                                 }
                                 var equip = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipCode);
                                 if (equip != null)
-                                    db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCallKetLuan=" + ticket + " , isrunning=0 where Id=" + equip.CounterId);
+                                    db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCallKetLuan=" + ticket + ",CurrentNumber=" + ticket + "  , isrunning=0 where Id=" + equip.CounterId);
 
                                 db.Database.ExecuteSqlCommand(@"update  Q_RequestTicket  set isdeleted= 1 where userId=" + userId);
                                 db.SaveChanges();
@@ -495,7 +497,7 @@ namespace QMS_System.Data.BLL
 
                             var equip = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipCode);
                             if (equip != null)
-                                db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + num + " where Id=" + equip.CounterId);
+                                db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + num + ",CurrentNumber=" + num + "  where Id=" + equip.CounterId);
 
                             db.Database.ExecuteSqlCommand(@"update  Q_RequestTicket  set isdeleted= 1 where userId=" + userId);
                             db.SaveChanges();
@@ -518,7 +520,7 @@ namespace QMS_System.Data.BLL
 
                                 var equip = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipCode);
                                 if (equip != null)
-                                    db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + ticket + " where Id=" + equip.CounterId);
+                                    db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + ticket + ",CurrentNumber=" + ticket + "  where Id=" + equip.CounterId);
 
                                 db.Database.ExecuteSqlCommand(@"update  Q_RequestTicket  set isdeleted= 1 where userId=" + userId);
                                 db.Q_DailyRequire_Detail.Add(newobj);
@@ -614,7 +616,7 @@ namespace QMS_System.Data.BLL
                             }
                             var equip = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipCode);
                             if (equip != null)
-                                db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + num + ", isrunning=0 where Id=" + equip.CounterId);
+                                db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + num + ",CurrentNumber=" + num + " , isrunning=0 where Id=" + equip.CounterId);
 
                             db.Database.ExecuteSqlCommand(@"update  Q_RequestTicket  set isdeleted= 1 where userId=" + userId);
                             db.SaveChanges();
@@ -869,7 +871,7 @@ namespace QMS_System.Data.BLL
 
                         var equip = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipCode);
                         if (equip != null)
-                            db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + num + " , isrunning=0 where Id=" + equip.CounterId);
+                            db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + num + " ,CurrentNumber=" + num + ",  isrunning=0 where Id=" + equip.CounterId);
 
                         db.Database.ExecuteSqlCommand(@"update  Q_RequestTicket  set isdeleted= 1 where userId=" + userId);
                         db.SaveChanges();
@@ -911,7 +913,7 @@ namespace QMS_System.Data.BLL
 
                     var equip = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipCode);
                     if (equip != null)
-                        db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + num + " , isrunning=0 where Id=" + equip.CounterId);
+                        db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + num + " ,CurrentNumber=" + num + " , isrunning=0 where Id=" + equip.CounterId);
 
                     db.Database.ExecuteSqlCommand(@"update  Q_RequestTicket  set isdeleted= 1 where userId=" + userId);
                     db.SaveChanges();
@@ -956,7 +958,7 @@ namespace QMS_System.Data.BLL
                         var num = obj.Q_DailyRequire.TicketNumber;
                         var equip = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipId);
                         if (equip != null)
-                            db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + num + ", isrunning=0 where Id=" + equip.CounterId);
+                            db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + num + ",CurrentNumber=" + num + " , isrunning=0 where Id=" + equip.CounterId);
                         db.Database.ExecuteSqlCommand(@"update  Q_RequestTicket  set isdeleted= 1 where userId=" + userId);
                         db.SaveChanges();
                         return obj.Q_DailyRequire.TicketNumber;
@@ -1029,7 +1031,7 @@ namespace QMS_System.Data.BLL
                         }
                         var equip = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipId);
                         if (equip != null)
-                            db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + num + ", isrunning=0 where Id=" + equip.CounterId);
+                            db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=" + num + ",CurrentNumber=" + num + ", isrunning=0 where Id=" + equip.CounterId);
                         db.Database.ExecuteSqlCommand(@"update  Q_RequestTicket  set isdeleted= 1 where userId=" + userId);
                         db.SaveChanges();
                         return new TicketInfo()
@@ -1356,7 +1358,6 @@ namespace QMS_System.Data.BLL
                                         tiendo = Math.Ceiling((decimal)(time.TotalSeconds / find.ServeTimeAllow.TotalSeconds) * 100);
                                     item.TienDoTH = (int)(tiendo > 100 ? 100 : tiendo);
                                 }
-
                             }
 
                             var foundLogin = logins.OrderBy(x => x.Date).FirstOrDefault(x => x.EquipCode == item.TableId);
@@ -1410,9 +1411,9 @@ namespace QMS_System.Data.BLL
                         TableName = x.Name,
                         TableCode = x.ShortName,
                         Start = null,
-                        TicketNumber = x.LastCall,
+                        TicketNumber = x.CurrentNumber,
                         TimeProcess = "0",
-                        StartStr = (!x.IsRunning ? ("Mời bệnh nhân " + x.LastCall + " đến phòng : " + x.Name) : "")
+                        StartStr = (!x.IsRunning ? ("Mời bệnh nhân " + x.CurrentNumber + " đến phòng : " + x.Name) : "")
                     }));
                     if (returnModel.Details.Count > 0)
                     {
@@ -1449,19 +1450,39 @@ namespace QMS_System.Data.BLL
                         }
                     }
 
-                    returnModel.Details.AddRange(db_.Q_Counter.Where(x => !x.IsDeleted && counterIds.Contains(x.Id)).OrderBy(x => x.Index).Select(x => new ViewDetailModel()
-                    {
-                        STT = (!x.IsRunning ? 1 : 0),
-                        CarNumber = "0",
-                        TableId = x.Id,
-                        TableName = x.Name,
-                        TableCode = x.ShortName,
-                        Start = null,
-                        TicketNumber = x.LastCall,
-                        TimeProcess = "0",
-                        StartStr = (!x.IsRunning ? ("Mời bệnh nhân " + x.LastCall + " đến phòng : " + x.Name) : "")
-                    }));
+                    var counters = db_.Q_Equipment.Where(x => !x.IsDeleted && !x.Q_Counter.IsDeleted && counterIds.Contains(x.CounterId) && x.EquipTypeId == (int)eEquipType.Counter)
+                        .Select(x => new ViewDetailModel()
+                        {
+                            STT = (!x.Q_Counter.IsRunning ? 1 : 0),
+                            CarNumber = "0",
+                            TableId = x.Q_Counter.Id,
+                            TableName = x.Q_Counter.Name,
+                            TableCode = x.Q_Counter.ShortName,
+                            Start = null,
+                            TicketNumber = x.Q_Counter.CurrentNumber,
+                            TimeProcess = "0",
+                            StartStr = (!x.Q_Counter.IsRunning ? ("Mời bệnh nhân " + x.Q_Counter.CurrentNumber + " đến phòng : " + x.Q_Counter.Name) : ""),
+                            EquipCode = x.Code
+                        }).ToList();
 
+                    var dangXL = db_.Q_DailyRequire_Detail.Where(x => x.StatusId == (int)eStatus.DAGXL).ToList();
+
+                    foreach (var item in counters)
+                    {
+                        var current = dangXL.Where(x => x.StatusId == (int)eStatus.DAGXL && x.EquipCode == item.EquipCode).OrderByDescending(x => x.ProcessTime).FirstOrDefault();
+                        if (current != null)
+                        {
+                            //  if (useWithThridPattern == 0)
+                            item.TicketNumber = current.Q_DailyRequire.TicketNumber;
+                            //  else
+                            //   {
+                            //      if (current.Q_DailyRequire.STT_PhongKham != null)
+                            //            item.CurrentTicket = int.Parse(current.Q_DailyRequire.STT_PhongKham);
+                            //   }
+
+                        }
+                        returnModel.Details.Add(item);
+                    }
                     returnModel.Sounds = BLLTVReadSound.Instance.Gets(connectString, counterIds, userId);
                     if (returnModel.Details.Count > 0)
                     {
@@ -1470,11 +1491,92 @@ namespace QMS_System.Data.BLL
                         db_.SaveChanges();
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 { }
                 return returnModel;
             }
         }
+        /*
+        public ViewModel GetDayInfo(SqlConnection sqlConnection, int[] counterIds, int[] services, int userId)
+        {
+            var returnModel = new ViewModel();
+            string query = "select Id as ServiceId, Name as ServiceName from Q_Service where IsDeleted = 0 and IsActived =1 and id in (" + string.Join(",", services) + ")";
+            if (sqlConnection.State == System.Data.ConnectionState.Closed)
+                sqlConnection.Open();
+            var da = new SqlDataAdapter(query, sqlConnection);
+            DataTable dataTable = new DataTable();
+            DataTable dataTable1 = new DataTable();
+            da.Fill(dataTable);
+            int intType = 0, phieu = 0;
+            if (dataTable != null && dataTable.Rows.Count > 0)
+            {
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    int.TryParse(row["ServiceId"].ToString(), out intType);
+
+                    query = "select top 1 r.TicketNumber, r.ServiceId, d.EndProcessTime from Q_DailyRequire_Detail d, Q_DailyRequire r where d.DailyRequireId = r.Id and d.StatusId = " + (int)eStatus.DAGXL + " and r.ServiceId =" + intType + " order by d.EndProcessTime desc";
+                    da = new SqlDataAdapter(query, sqlConnection);
+                    dataTable1.Clear();
+                    da.Fill(dataTable1);
+                    if (dataTable1 != null && dataTable1.Rows.Count > 0)
+                    {
+                        int.TryParse(row["TicketNumber"].ToString(), out phieu);
+                    }
+                    returnModel.Services.Add(new SubModel()
+                    {
+                        ServiceId = intType,
+                        ServiceName = row["ServiceName"].ToString(),
+                        Ticket = phieu
+                    });
+                    phieu = 0;
+                    intType = 0;
+                }
+            }
+
+            query = "select c.IsRunning, c.Id as TableId, c.Name as TableName, c.ShortName as TableCode, e.Code as equipCode,c.CurrentNumber, c.LastCall, c.LastCallKetLuan from Q_Equipment e, Q_Counter c where c.Id = e.CounterId and c.IsDeleted = 0 and e.IsDeleted=0 and e.EquipTypeId = " + (int)eEquipType.Counter + " and e.CounterId in (" + string.Join(",", counterIds) + ")";
+            da = new SqlDataAdapter(query, sqlConnection);
+            dataTable.Clear();
+            da.Fill(dataTable);
+            if (dataTable != null && dataTable.Rows.Count > 0)
+            {
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    int.TryParse(row["TableId"].ToString(), out intType);
+                    query = "select top 1 r.TicketNumber from Q_DailyRequire_Detail d, Q_DailyRequire r where r.Id = d.DailyRequireId and d.StatusId = 3 and d.EquipCode =21 order by d.ProcessTime desc";
+                    dataTable1.Clear();
+                    da.Fill(dataTable1);
+                    if (dataTable1 != null && dataTable1.Rows.Count > 0)
+                        int.TryParse(dataTable1.Rows[0]["TicketNumber"].ToString(), out phieu);
+                    returnModel.Details.Add(new ViewDetailModel()
+                    {
+                        STT = Convert.ToInt32(row["IsRunning"].ToString()),
+                        CarNumber = "0",
+                        TableId = intType,
+                        TableName = row["TableName"].ToString(),
+                        TableCode = (row["TableCode"] != null ? row["TableCode"].ToString() : ""),
+                        Start = null,
+                        TicketNumber = Convert.ToInt32(row["LastCall"].ToString()),
+                        LastCallKetLuan = Convert.ToInt32(row["LastCallKetLuan"].ToString()),
+                        CurrentNumber = phieu,// Convert.ToInt32(row["CurrentNumber"].ToString()),
+                        TimeProcess = "0",
+                        StartStr = (row["IsRunning"].ToString() == "0" ? ("Mời bệnh nhân " + row["CurrentNumber"].ToString() + " đến phòng : " + row["TableName"].ToString()) : "")
+                    });
+                    intType = 0;
+                    phieu = 0;
+                }
+            }
+
+
+            returnModel.Sounds = BLLTVReadSound.Instance.Gets(connectString, counterIds, userId);
+            if (returnModel.Details.Count > 0)
+            {
+                returnModel.Details[0].RuningText = returnModel.Details.Where(x => x.STT == 1).Select(x => x.StartStr).ToArray();
+                db_.Database.ExecuteSqlCommand("update q_counter set isrunning =1");
+                db_.SaveChanges();
+            }
+            return returnModel;
+        }
+        */
 
         public ModelSelectItem GetCurrentProcess(string connectString, string userName)
         {
