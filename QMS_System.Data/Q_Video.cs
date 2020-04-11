@@ -23,6 +23,7 @@ namespace QMS_System.Data
         public string FileName { get; set; }
         public string FakeName { get; set; }
         public bool IsDeleted { get; set; }
+        public System.TimeSpan Duration { get; set; }
     
         public virtual ICollection<Q_VideoTemplate_De> Q_VideoTemplate_De { get; set; }
     }

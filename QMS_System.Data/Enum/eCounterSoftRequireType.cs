@@ -15,5 +15,6 @@ namespace QMS_System.Data.Enum
         SendNextToMainDisplay = 5,
         SendRecallToMainDisplay = 6,
         CheckUserFree = 7,
+        inPhieu = 8,
     }
 }

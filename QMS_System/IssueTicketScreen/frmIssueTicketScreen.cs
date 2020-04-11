@@ -12,9 +12,9 @@ namespace QMS_System.IssueTicketScreen
 {
     public partial class frmIssueTicketScreen : DevExpress.XtraEditors.XtraForm
     {
-        frmMain frmain;
+        dynamic frmain; 
         string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
-        public frmIssueTicketScreen(frmMain _frmain)
+        public frmIssueTicketScreen(dynamic _frmain)
         {
             InitializeComponent();
             frmain = _frmain;
@@ -162,7 +162,7 @@ namespace QMS_System.IssueTicketScreen
 
         private void ShowMessage(string buttonName)
         {
-            frmain.PrintNewTicket(10, int.Parse(buttonName.Split('_')[1]), 0, true, false, null, null, null, null, null, null, null, null);
+            frmain.PrintNewTicket(10, int.Parse(buttonName.Split('_')[1]), 0, true, false, null, null, null, null, null, null, null, null,null,null);
         }
 
         private void frmIssueTicketScreen_ClientSizeChanged(object sender, EventArgs e)

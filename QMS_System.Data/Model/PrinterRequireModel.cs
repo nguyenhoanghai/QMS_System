@@ -14,5 +14,13 @@ namespace QMS_System.Data.Model
         public string MaPhongKham { get; set; }
         public string SttPhongKham { get; set; }
         public string SoXe { get; set; }
+        public string MaCongViec { get; set; }
+        public string MaLoaiCongViec { get; set; }
+
+        public int newNumber { get; set; }
+        public int oldNumber { get; set; }
+        public string TenQuay { get; set; }
+        public string TenDichVu { get; set; }
+        public int MajorId { get; set; }
     }
 }

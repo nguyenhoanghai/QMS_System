@@ -105,6 +105,23 @@
           <Property Name="IsRunning" Type="bit" Nullable="false" />
           <Property Name="CurrentNumber" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="Q_CounterDayInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CounterId" Type="int" Nullable="false" />
+          <Property Name="STT_QMS" Type="int" Nullable="false" />
+          <Property Name="STT_3" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="STT" Type="int" Nullable="false" />
+          <Property Name="STT_UT" Type="int" Nullable="false" />
+          <Property Name="PrintTime" Type="datetime" />
+          <Property Name="StartTime" Type="datetime" />
+          <Property Name="ServeTime" Type="datetime" />
+          <Property Name="StatusSTT" Type="int" Nullable="false" />
+          <Property Name="StatusSTT_UT" Type="int" Nullable="false" />
+          <Property Name="EquipCode" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Q_CounterSoftRequire">
           <Key>
             <PropertyRef Name="Id" />
@@ -139,7 +156,7 @@
           <Property Name="CustomerName" Type="nvarchar" MaxLength="250" />
           <Property Name="CustomerDOB" Type="int" />
           <Property Name="CustomerAddress" Type="nvarchar(max)" />
-          <Property Name="STT_PhongKham" Type="nvarchar" MaxLength="250" />
+          <Property Name="STT_PhongKham" Type="nvarchar" MaxLength="500" />
           <Property Name="MaBenhNhan" Type="nvarchar" MaxLength="250" />
           <Property Name="MaPhongKham" Type="nvarchar" MaxLength="250" />
         </EntityType>
@@ -158,6 +175,15 @@
           <Property Name="IsSendSMS" Type="bit" Nullable="false" />
           <Property Name="SmsContent" Type="nvarchar" MaxLength="1000" />
           <Property Name="ServeOverCounter" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Q_DailyRequire_WorkDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DailyRequireId" Type="int" Nullable="false" />
+          <Property Name="WorkDetailId" Type="int" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Q_Equipment">
           <Key>
@@ -235,7 +261,7 @@
           <Property Name="CustomerName" Type="nvarchar" MaxLength="250" />
           <Property Name="CustomerDOB" Type="int" />
           <Property Name="CustomerAddress" Type="nvarchar(max)" />
-          <Property Name="STT_PhongKham" Type="nvarchar" MaxLength="250" />
+          <Property Name="STT_PhongKham" Type="nvarchar" MaxLength="500" />
           <Property Name="MaBenhNhan" Type="nvarchar" MaxLength="250" />
           <Property Name="MaPhongKham" Type="nvarchar" MaxLength="250" />
         </EntityType>
@@ -254,6 +280,15 @@
           <Property Name="IsSendSMS" Type="bit" Nullable="false" />
           <Property Name="SmsContent" Type="nvarchar" MaxLength="1000" />
           <Property Name="ServeOverCounter" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Q_HisDailyRequire_WorkDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="HisDailyRequireId" Type="int" Nullable="false" />
+          <Property Name="WorkDetailId" Type="int" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Q_HisUserEvaluate">
           <Key>
@@ -562,6 +597,7 @@
           <Property Name="FileName" Type="nvarchar" MaxLength="500" Nullable="false" />
           <Property Name="FakeName" Type="nvarchar" MaxLength="500" Nullable="false" />
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="Duration" Type="time" Precision="7" Nullable="false" />
         </EntityType>
         <EntityType Name="Q_VideoTemplate">
           <Key>
@@ -581,6 +617,34 @@
           <Property Name="Index" Type="int" Nullable="false" />
           <Property Name="TemplateId" Type="int" Nullable="false" />
           <Property Name="VideoId" Type="int" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Q_WorkDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WorkId" Type="int" Nullable="false" />
+          <Property Name="TimeProcess" Type="datetime" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="WorkTypeId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Q_Works">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Code" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Q_WorkType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Code" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
         </EntityType>
         <Association Name="FK_Q_ActionParameter_Q_Action">
@@ -628,6 +692,18 @@
             </Principal>
             <Dependent Role="Q_CommandParameter">
               <PropertyRef Name="CommandId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Q_CounterDayInfo_Q_Counter">
+          <End Role="Q_Counter" Type="Self.Q_Counter" Multiplicity="1" />
+          <End Role="Q_CounterDayInfo" Type="Self.Q_CounterDayInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_Counter">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_CounterDayInfo">
+              <PropertyRef Name="CounterId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -724,6 +800,30 @@
             </Principal>
             <Dependent Role="Q_DailyRequire">
               <PropertyRef Name="ServiceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Q_DailyRequire_WorkDetail_Q_DailyRequire">
+          <End Role="Q_DailyRequire" Type="Self.Q_DailyRequire" Multiplicity="1" />
+          <End Role="Q_DailyRequire_WorkDetail" Type="Self.Q_DailyRequire_WorkDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_DailyRequire">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_DailyRequire_WorkDetail">
+              <PropertyRef Name="DailyRequireId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Q_DailyRequire_WorkDetail_Q_WorkDetail">
+          <End Role="Q_WorkDetail" Type="Self.Q_WorkDetail" Multiplicity="1" />
+          <End Role="Q_DailyRequire_WorkDetail" Type="Self.Q_DailyRequire_WorkDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_WorkDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_DailyRequire_WorkDetail">
+              <PropertyRef Name="WorkDetailId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -868,6 +968,30 @@
             </Principal>
             <Dependent Role="Q_HisDailyRequire">
               <PropertyRef Name="ServiceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Q_HisDailyRequire_WorkDetail_Q_HisDailyRequire">
+          <End Role="Q_HisDailyRequire" Type="Self.Q_HisDailyRequire" Multiplicity="1" />
+          <End Role="Q_HisDailyRequire_WorkDetail" Type="Self.Q_HisDailyRequire_WorkDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_HisDailyRequire">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_HisDailyRequire_WorkDetail">
+              <PropertyRef Name="HisDailyRequireId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Q_HisDailyRequire_WorkDetail_Q_WorkDetail">
+          <End Role="Q_WorkDetail" Type="Self.Q_WorkDetail" Multiplicity="1" />
+          <End Role="Q_HisDailyRequire_WorkDetail" Type="Self.Q_HisDailyRequire_WorkDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_WorkDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_HisDailyRequire_WorkDetail">
+              <PropertyRef Name="WorkDetailId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1267,6 +1391,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Q_WorkDetail_Q_Works">
+          <End Role="Q_Works" Type="Self.Q_Works" Multiplicity="1" />
+          <End Role="Q_WorkDetail" Type="Self.Q_WorkDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_Works">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_WorkDetail">
+              <PropertyRef Name="WorkId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Q_WorkDetail_Q_WorkType">
+          <End Role="Q_WorkType" Type="Self.Q_WorkType" Multiplicity="1" />
+          <End Role="Q_WorkDetail" Type="Self.Q_WorkDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_WorkType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_WorkDetail">
+              <PropertyRef Name="WorkTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="QMSSystemModelStoreContainer">
           <EntitySet Name="Q_Action" EntityType="Self.Q_Action" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_ActionParameter" EntityType="Self.Q_ActionParameter" Schema="dbo" store:Type="Tables" />
@@ -1277,10 +1425,12 @@
           <EntitySet Name="Q_CommandParameter" EntityType="Self.Q_CommandParameter" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_Config" EntityType="Self.Q_Config" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_Counter" EntityType="Self.Q_Counter" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Q_CounterDayInfo" EntityType="Self.Q_CounterDayInfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_CounterSoftRequire" EntityType="Self.Q_CounterSoftRequire" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_CounterSound" EntityType="Self.Q_CounterSound" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_DailyRequire" EntityType="Self.Q_DailyRequire" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_DailyRequire_Detail" EntityType="Self.Q_DailyRequire_Detail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Q_DailyRequire_WorkDetail" EntityType="Self.Q_DailyRequire_WorkDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_Equipment" EntityType="Self.Q_Equipment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_EquipmentType" EntityType="Self.Q_EquipmentType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_EquipTypeProcess" EntityType="Self.Q_EquipTypeProcess" Schema="dbo" store:Type="Tables" />
@@ -1288,6 +1438,7 @@
           <EntitySet Name="Q_EvaluateDetail" EntityType="Self.Q_EvaluateDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_HisDailyRequire" EntityType="Self.Q_HisDailyRequire" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_HisDailyRequire_De" EntityType="Self.Q_HisDailyRequire_De" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Q_HisDailyRequire_WorkDetail" EntityType="Self.Q_HisDailyRequire_WorkDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_HisUserEvaluate" EntityType="Self.Q_HisUserEvaluate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_Language" EntityType="Self.Q_Language" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_Login" EntityType="Self.Q_Login" Schema="dbo" store:Type="Tables" />
@@ -1318,6 +1469,9 @@
           <EntitySet Name="Q_Video" EntityType="Self.Q_Video" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_VideoTemplate" EntityType="Self.Q_VideoTemplate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_VideoTemplate_De" EntityType="Self.Q_VideoTemplate_De" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Q_WorkDetail" EntityType="Self.Q_WorkDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Q_Works" EntityType="Self.Q_Works" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Q_WorkType" EntityType="Self.Q_WorkType" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Q_ActionParameter_Q_Action" Association="Self.FK_Q_ActionParameter_Q_Action">
             <End Role="Q_Action" EntitySet="Q_Action" />
             <End Role="Q_ActionParameter" EntitySet="Q_ActionParameter" />
@@ -1333,6 +1487,10 @@
           <AssociationSet Name="FK_Q_CommandParameter_Q_Command" Association="Self.FK_Q_CommandParameter_Q_Command">
             <End Role="Q_Command" EntitySet="Q_Command" />
             <End Role="Q_CommandParameter" EntitySet="Q_CommandParameter" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Q_CounterDayInfo_Q_Counter" Association="Self.FK_Q_CounterDayInfo_Q_Counter">
+            <End Role="Q_Counter" EntitySet="Q_Counter" />
+            <End Role="Q_CounterDayInfo" EntitySet="Q_CounterDayInfo" />
           </AssociationSet>
           <AssociationSet Name="FK_Q_CounterSound_Q_Counter" Association="Self.FK_Q_CounterSound_Q_Counter">
             <End Role="Q_Counter" EntitySet="Q_Counter" />
@@ -1365,6 +1523,14 @@
           <AssociationSet Name="FK_Q_DailyRequire_Q_Service" Association="Self.FK_Q_DailyRequire_Q_Service">
             <End Role="Q_Service" EntitySet="Q_Service" />
             <End Role="Q_DailyRequire" EntitySet="Q_DailyRequire" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Q_DailyRequire_WorkDetail_Q_DailyRequire" Association="Self.FK_Q_DailyRequire_WorkDetail_Q_DailyRequire">
+            <End Role="Q_DailyRequire" EntitySet="Q_DailyRequire" />
+            <End Role="Q_DailyRequire_WorkDetail" EntitySet="Q_DailyRequire_WorkDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Q_DailyRequire_WorkDetail_Q_WorkDetail" Association="Self.FK_Q_DailyRequire_WorkDetail_Q_WorkDetail">
+            <End Role="Q_WorkDetail" EntitySet="Q_WorkDetail" />
+            <End Role="Q_DailyRequire_WorkDetail" EntitySet="Q_DailyRequire_WorkDetail" />
           </AssociationSet>
           <AssociationSet Name="FK_Q_Equipment_Q_Counter" Association="Self.FK_Q_Equipment_Q_Counter">
             <End Role="Q_Counter" EntitySet="Q_Counter" />
@@ -1413,6 +1579,14 @@
           <AssociationSet Name="FK_Q_HisDailyRequire_Q_Service" Association="Self.FK_Q_HisDailyRequire_Q_Service">
             <End Role="Q_Service" EntitySet="Q_Service" />
             <End Role="Q_HisDailyRequire" EntitySet="Q_HisDailyRequire" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Q_HisDailyRequire_WorkDetail_Q_HisDailyRequire" Association="Self.FK_Q_HisDailyRequire_WorkDetail_Q_HisDailyRequire">
+            <End Role="Q_HisDailyRequire" EntitySet="Q_HisDailyRequire" />
+            <End Role="Q_HisDailyRequire_WorkDetail" EntitySet="Q_HisDailyRequire_WorkDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Q_HisDailyRequire_WorkDetail_Q_WorkDetail" Association="Self.FK_Q_HisDailyRequire_WorkDetail_Q_WorkDetail">
+            <End Role="Q_WorkDetail" EntitySet="Q_WorkDetail" />
+            <End Role="Q_HisDailyRequire_WorkDetail" EntitySet="Q_HisDailyRequire_WorkDetail" />
           </AssociationSet>
           <AssociationSet Name="FK_Q_HisUserEvaluate_Q_HisDailyRequire_De" Association="Self.FK_Q_HisUserEvaluate_Q_HisDailyRequire_De">
             <End Role="Q_HisDailyRequire_De" EntitySet="Q_HisDailyRequire_De" />
@@ -1546,6 +1720,14 @@
             <End Role="Q_VideoTemplate" EntitySet="Q_VideoTemplate" />
             <End Role="Q_VideoTemplate_De" EntitySet="Q_VideoTemplate_De" />
           </AssociationSet>
+          <AssociationSet Name="FK_Q_WorkDetail_Q_Works" Association="Self.FK_Q_WorkDetail_Q_Works">
+            <End Role="Q_Works" EntitySet="Q_Works" />
+            <End Role="Q_WorkDetail" EntitySet="Q_WorkDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Q_WorkDetail_Q_WorkType" Association="Self.FK_Q_WorkDetail_Q_WorkType">
+            <End Role="Q_WorkType" EntitySet="Q_WorkType" />
+            <End Role="Q_WorkDetail" EntitySet="Q_WorkDetail" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -1588,7 +1770,6 @@
           <EntitySet Name="Q_UserCmdRegister" EntityType="QMSSystemModel.Q_UserCmdRegister" />
           <EntitySet Name="Q_UserCommandReadSound" EntityType="QMSSystemModel.Q_UserCommandReadSound" />
           <EntitySet Name="Q_UserMajor" EntityType="QMSSystemModel.Q_UserMajor" />
-          <EntitySet Name="Q_Video" EntityType="QMSSystemModel.Q_Video" />
           <EntitySet Name="Q_VideoTemplate" EntityType="QMSSystemModel.Q_VideoTemplate" />
           <EntitySet Name="Q_VideoTemplate_De" EntityType="QMSSystemModel.Q_VideoTemplate_De" />
           <AssociationSet Name="FK_Q_ActionParameter_Q_Action" Association="QMSSystemModel.FK_Q_ActionParameter_Q_Action">
@@ -1723,10 +1904,6 @@
             <End Role="Q_User" EntitySet="Q_User" />
             <End Role="Q_UserMajor" EntitySet="Q_UserMajor" />
           </AssociationSet>
-          <AssociationSet Name="FK_Q_VideoTemplate_De_Q_Video" Association="QMSSystemModel.FK_Q_VideoTemplate_De_Q_Video">
-            <End Role="Q_Video" EntitySet="Q_Video" />
-            <End Role="Q_VideoTemplate_De" EntitySet="Q_VideoTemplate_De" />
-          </AssociationSet>
           <AssociationSet Name="FK_Q_VideoTemplate_De_Q_VideoTemplate" Association="QMSSystemModel.FK_Q_VideoTemplate_De_Q_VideoTemplate">
             <End Role="Q_VideoTemplate" EntitySet="Q_VideoTemplate" />
             <End Role="Q_VideoTemplate_De" EntitySet="Q_VideoTemplate_De" />
@@ -1829,6 +2006,45 @@
           <AssociationSet Name="FK_Q_TVReadSound_Q_Counter" Association="QMSSystemModel.FK_Q_TVReadSound_Q_Counter">
             <End Role="Q_Counter" EntitySet="Q_Counter" />
             <End Role="Q_TVReadSound" EntitySet="Q_TVReadSound" />
+          </AssociationSet>
+          <EntitySet Name="Q_Video" EntityType="QMSSystemModel.Q_Video" />
+          <AssociationSet Name="FK_Q_VideoTemplate_De_Q_Video" Association="QMSSystemModel.FK_Q_VideoTemplate_De_Q_Video">
+            <End Role="Q_Video" EntitySet="Q_Video" />
+            <End Role="Q_VideoTemplate_De" EntitySet="Q_VideoTemplate_De" />
+          </AssociationSet>
+          <EntitySet Name="Q_CounterDayInfo" EntityType="QMSSystemModel.Q_CounterDayInfo" />
+          <AssociationSet Name="FK_Q_CounterDayInfo_Q_Counter" Association="QMSSystemModel.FK_Q_CounterDayInfo_Q_Counter">
+            <End Role="Q_Counter" EntitySet="Q_Counter" />
+            <End Role="Q_CounterDayInfo" EntitySet="Q_CounterDayInfo" />
+          </AssociationSet>
+          <EntitySet Name="Q_WorkDetail" EntityType="QMSSystemModel.Q_WorkDetail" />
+          <EntitySet Name="Q_Works" EntityType="QMSSystemModel.Q_Works" />
+          <AssociationSet Name="FK_Q_WorkDetail_Q_Works" Association="QMSSystemModel.FK_Q_WorkDetail_Q_Works">
+            <End Role="Q_Works" EntitySet="Q_Works" />
+            <End Role="Q_WorkDetail" EntitySet="Q_WorkDetail" />
+          </AssociationSet>
+          <EntitySet Name="Q_WorkType" EntityType="QMSSystemModel.Q_WorkType" />
+          <AssociationSet Name="FK_Q_WorkDetail_Q_WorkType" Association="QMSSystemModel.FK_Q_WorkDetail_Q_WorkType">
+            <End Role="Q_WorkType" EntitySet="Q_WorkType" />
+            <End Role="Q_WorkDetail" EntitySet="Q_WorkDetail" />
+          </AssociationSet>
+          <EntitySet Name="Q_DailyRequire_WorkDetail" EntityType="QMSSystemModel.Q_DailyRequire_WorkDetail" />
+          <EntitySet Name="Q_HisDailyRequire_WorkDetail" EntityType="QMSSystemModel.Q_HisDailyRequire_WorkDetail" />
+          <AssociationSet Name="FK_Q_DailyRequire_WorkDetail_Q_DailyRequire" Association="QMSSystemModel.FK_Q_DailyRequire_WorkDetail_Q_DailyRequire">
+            <End Role="Q_DailyRequire" EntitySet="Q_DailyRequire" />
+            <End Role="Q_DailyRequire_WorkDetail" EntitySet="Q_DailyRequire_WorkDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Q_DailyRequire_WorkDetail_Q_WorkDetail" Association="QMSSystemModel.FK_Q_DailyRequire_WorkDetail_Q_WorkDetail">
+            <End Role="Q_WorkDetail" EntitySet="Q_WorkDetail" />
+            <End Role="Q_DailyRequire_WorkDetail" EntitySet="Q_DailyRequire_WorkDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Q_HisDailyRequire_WorkDetail_Q_HisDailyRequire" Association="QMSSystemModel.FK_Q_HisDailyRequire_WorkDetail_Q_HisDailyRequire">
+            <End Role="Q_HisDailyRequire" EntitySet="Q_HisDailyRequire" />
+            <End Role="Q_HisDailyRequire_WorkDetail" EntitySet="Q_HisDailyRequire_WorkDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Q_HisDailyRequire_WorkDetail_Q_WorkDetail" Association="QMSSystemModel.FK_Q_HisDailyRequire_WorkDetail_Q_WorkDetail">
+            <End Role="Q_WorkDetail" EntitySet="Q_WorkDetail" />
+            <End Role="Q_HisDailyRequire_WorkDetail" EntitySet="Q_HisDailyRequire_WorkDetail" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="Q_Action">
@@ -1952,12 +2168,13 @@
           <Property Name="CustomerName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="CustomerDOB" Type="Int32" />
           <Property Name="CustomerAddress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="STT_PhongKham" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="STT_PhongKham" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="MaBenhNhan" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="MaPhongKham" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Q_Business" Relationship="QMSSystemModel.FK_Q_DailyRequire_Q_Business" FromRole="Q_DailyRequire" ToRole="Q_Business" />
           <NavigationProperty Name="Q_DailyRequire_Detail" Relationship="QMSSystemModel.FK_Q_DailyRequire_Detail_Q_DailyRequire" FromRole="Q_DailyRequire" ToRole="Q_DailyRequire_Detail" />
           <NavigationProperty Name="Q_Service" Relationship="QMSSystemModel.FK_Q_DailyRequire_Q_Service" FromRole="Q_DailyRequire" ToRole="Q_Service" />
+          <NavigationProperty Name="Q_DailyRequire_WorkDetail" Relationship="QMSSystemModel.FK_Q_DailyRequire_WorkDetail_Q_DailyRequire" FromRole="Q_DailyRequire" ToRole="Q_DailyRequire_WorkDetail" />
         </EntityType>
         <EntityType Name="Q_Equipment">
           <Key>
@@ -2046,12 +2263,13 @@
           <Property Name="CustomerName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="CustomerDOB" Type="Int32" />
           <Property Name="CustomerAddress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="STT_PhongKham" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="STT_PhongKham" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="MaBenhNhan" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="MaPhongKham" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Q_Business" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_Q_Business" FromRole="Q_HisDailyRequire" ToRole="Q_Business" />
           <NavigationProperty Name="Q_HisDailyRequire_De" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_HisDailyRequire" FromRole="Q_HisDailyRequire" ToRole="Q_HisDailyRequire_De" />
           <NavigationProperty Name="Q_Service" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_Q_Service" FromRole="Q_HisDailyRequire" ToRole="Q_Service" />
+          <NavigationProperty Name="Q_HisDailyRequire_WorkDetail" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_WorkDetail_Q_HisDailyRequire" FromRole="Q_HisDailyRequire" ToRole="Q_HisDailyRequire_WorkDetail" />
         </EntityType>
         <EntityType Name="Q_Language">
           <Key>
@@ -2321,16 +2539,6 @@
           <NavigationProperty Name="Q_Major" Relationship="QMSSystemModel.FK_Q_UserMajor_Q_Major" FromRole="Q_UserMajor" ToRole="Q_Major" />
           <NavigationProperty Name="Q_User" Relationship="QMSSystemModel.FK_Q_UserMajor_Q_User" FromRole="Q_UserMajor" ToRole="Q_User" />
         </EntityType>
-        <EntityType Name="Q_Video">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FileName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="FakeName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Q_VideoTemplate_De" Relationship="QMSSystemModel.FK_Q_VideoTemplate_De_Q_Video" FromRole="Q_Video" ToRole="Q_VideoTemplate_De" />
-        </EntityType>
         <EntityType Name="Q_VideoTemplate">
           <Key>
             <PropertyRef Name="Id" />
@@ -2351,8 +2559,8 @@
           <Property Name="TemplateId" Type="Int32" Nullable="false" />
           <Property Name="VideoId" Type="Int32" Nullable="false" />
           <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Q_Video" Relationship="QMSSystemModel.FK_Q_VideoTemplate_De_Q_Video" FromRole="Q_VideoTemplate_De" ToRole="Q_Video" />
           <NavigationProperty Name="Q_VideoTemplate" Relationship="QMSSystemModel.FK_Q_VideoTemplate_De_Q_VideoTemplate" FromRole="Q_VideoTemplate_De" ToRole="Q_VideoTemplate" />
+          <NavigationProperty Name="Q_Video" Relationship="QMSSystemModel.FK_Q_VideoTemplate_De_Q_Video" FromRole="Q_VideoTemplate_De" ToRole="Q_Video" />
         </EntityType>
         <Association Name="FK_Q_ActionParameter_Q_Action">
           <End Type="QMSSystemModel.Q_Action" Role="Q_Action" Multiplicity="1" />
@@ -2747,18 +2955,6 @@
             </Principal>
             <Dependent Role="Q_UserMajor">
               <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Q_VideoTemplate_De_Q_Video">
-          <End Type="QMSSystemModel.Q_Video" Role="Q_Video" Multiplicity="1" />
-          <End Type="QMSSystemModel.Q_VideoTemplate_De" Role="Q_VideoTemplate_De" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Q_Video">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Q_VideoTemplate_De">
-              <PropertyRef Name="VideoId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3158,6 +3354,7 @@
           <NavigationProperty Name="Q_Equipment" Relationship="QMSSystemModel.FK_Q_Equipment_Q_Counter" FromRole="Q_Counter" ToRole="Q_Equipment" />
           <NavigationProperty Name="Q_MaindisplayDirection" Relationship="QMSSystemModel.FK_Q_MaindisplayDirection_Q_Counter" FromRole="Q_Counter" ToRole="Q_MaindisplayDirection" />
           <NavigationProperty Name="Q_TVReadSound" Relationship="QMSSystemModel.FK_Q_TVReadSound_Q_Counter" FromRole="Q_Counter" ToRole="Q_TVReadSound" />
+          <NavigationProperty Name="Q_CounterDayInfo" Relationship="QMSSystemModel.FK_Q_CounterDayInfo_Q_Counter" FromRole="Q_Counter" ToRole="Q_CounterDayInfo" />
         </EntityType>
         <Association Name="FK_Q_CounterSound_Q_Counter">
           <End Type="QMSSystemModel.Q_Counter" Role="Q_Counter" Multiplicity="1" />
@@ -3204,6 +3401,187 @@
             </Principal>
             <Dependent Role="Q_TVReadSound">
               <PropertyRef Name="CounterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Q_Video">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FileName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="FakeName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="Duration" Type="Time" Nullable="false" Precision="7" />
+          <NavigationProperty Name="Q_VideoTemplate_De" Relationship="QMSSystemModel.FK_Q_VideoTemplate_De_Q_Video" FromRole="Q_Video" ToRole="Q_VideoTemplate_De" />
+        </EntityType>
+        <Association Name="FK_Q_VideoTemplate_De_Q_Video">
+          <End Type="QMSSystemModel.Q_Video" Role="Q_Video" Multiplicity="1" />
+          <End Type="QMSSystemModel.Q_VideoTemplate_De" Role="Q_VideoTemplate_De" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_Video">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_VideoTemplate_De">
+              <PropertyRef Name="VideoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Q_CounterDayInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CounterId" Type="Int32" Nullable="false" />
+          <Property Name="STT_QMS" Type="Int32" Nullable="false" />
+          <Property Name="STT_3" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="STT" Type="Int32" Nullable="false" />
+          <Property Name="STT_UT" Type="Int32" Nullable="false" />
+          <Property Name="PrintTime" Type="DateTime" Precision="3" />
+          <Property Name="StartTime" Type="DateTime" Precision="3" />
+          <Property Name="ServeTime" Type="DateTime" Precision="3" />
+          <Property Name="StatusSTT" Type="Int32" Nullable="false" />
+          <Property Name="StatusSTT_UT" Type="Int32" Nullable="false" />
+          <Property Name="EquipCode" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Q_Counter" Relationship="QMSSystemModel.FK_Q_CounterDayInfo_Q_Counter" FromRole="Q_CounterDayInfo" ToRole="Q_Counter" />
+        </EntityType>
+        <Association Name="FK_Q_CounterDayInfo_Q_Counter">
+          <End Type="QMSSystemModel.Q_Counter" Role="Q_Counter" Multiplicity="1" />
+          <End Type="QMSSystemModel.Q_CounterDayInfo" Role="Q_CounterDayInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_Counter">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_CounterDayInfo">
+              <PropertyRef Name="CounterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Q_WorkDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WorkId" Type="Int32" Nullable="false" />
+          <Property Name="TimeProcess" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="WorkTypeId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Q_Works" Relationship="QMSSystemModel.FK_Q_WorkDetail_Q_Works" FromRole="Q_WorkDetail" ToRole="Q_Works" />
+          <NavigationProperty Name="Q_WorkType" Relationship="QMSSystemModel.FK_Q_WorkDetail_Q_WorkType" FromRole="Q_WorkDetail" ToRole="Q_WorkType" />
+          <NavigationProperty Name="Q_DailyRequire_WorkDetail" Relationship="QMSSystemModel.FK_Q_DailyRequire_WorkDetail_Q_WorkDetail" FromRole="Q_WorkDetail" ToRole="Q_DailyRequire_WorkDetail" />
+          <NavigationProperty Name="Q_HisDailyRequire_WorkDetail" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_WorkDetail_Q_WorkDetail" FromRole="Q_WorkDetail" ToRole="Q_HisDailyRequire_WorkDetail" />
+        </EntityType>
+        <EntityType Name="Q_Works">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Code" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Q_WorkDetail" Relationship="QMSSystemModel.FK_Q_WorkDetail_Q_Works" FromRole="Q_Works" ToRole="Q_WorkDetail" />
+        </EntityType>
+        <Association Name="FK_Q_WorkDetail_Q_Works">
+          <End Type="QMSSystemModel.Q_Works" Role="Q_Works" Multiplicity="1" />
+          <End Type="QMSSystemModel.Q_WorkDetail" Role="Q_WorkDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_Works">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_WorkDetail">
+              <PropertyRef Name="WorkId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Q_WorkType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Code" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Q_WorkDetail" Relationship="QMSSystemModel.FK_Q_WorkDetail_Q_WorkType" FromRole="Q_WorkType" ToRole="Q_WorkDetail" />
+        </EntityType>
+        <Association Name="FK_Q_WorkDetail_Q_WorkType">
+          <End Type="QMSSystemModel.Q_WorkType" Role="Q_WorkType" Multiplicity="1" />
+          <End Type="QMSSystemModel.Q_WorkDetail" Role="Q_WorkDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_WorkType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_WorkDetail">
+              <PropertyRef Name="WorkTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Q_DailyRequire_WorkDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DailyRequireId" Type="Int32" Nullable="false" />
+          <Property Name="WorkDetailId" Type="Int32" Nullable="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Q_DailyRequire" Relationship="QMSSystemModel.FK_Q_DailyRequire_WorkDetail_Q_DailyRequire" FromRole="Q_DailyRequire_WorkDetail" ToRole="Q_DailyRequire" />
+          <NavigationProperty Name="Q_WorkDetail" Relationship="QMSSystemModel.FK_Q_DailyRequire_WorkDetail_Q_WorkDetail" FromRole="Q_DailyRequire_WorkDetail" ToRole="Q_WorkDetail" />
+        </EntityType>
+        <EntityType Name="Q_HisDailyRequire_WorkDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="HisDailyRequireId" Type="Int32" Nullable="false" />
+          <Property Name="WorkDetailId" Type="Int32" Nullable="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Q_HisDailyRequire" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_WorkDetail_Q_HisDailyRequire" FromRole="Q_HisDailyRequire_WorkDetail" ToRole="Q_HisDailyRequire" />
+          <NavigationProperty Name="Q_WorkDetail" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_WorkDetail_Q_WorkDetail" FromRole="Q_HisDailyRequire_WorkDetail" ToRole="Q_WorkDetail" />
+        </EntityType>
+        <Association Name="FK_Q_DailyRequire_WorkDetail_Q_DailyRequire">
+          <End Type="QMSSystemModel.Q_DailyRequire" Role="Q_DailyRequire" Multiplicity="1" />
+          <End Type="QMSSystemModel.Q_DailyRequire_WorkDetail" Role="Q_DailyRequire_WorkDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_DailyRequire">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_DailyRequire_WorkDetail">
+              <PropertyRef Name="DailyRequireId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Q_DailyRequire_WorkDetail_Q_WorkDetail">
+          <End Type="QMSSystemModel.Q_WorkDetail" Role="Q_WorkDetail" Multiplicity="1" />
+          <End Type="QMSSystemModel.Q_DailyRequire_WorkDetail" Role="Q_DailyRequire_WorkDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_WorkDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_DailyRequire_WorkDetail">
+              <PropertyRef Name="WorkDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Q_HisDailyRequire_WorkDetail_Q_HisDailyRequire">
+          <End Type="QMSSystemModel.Q_HisDailyRequire" Role="Q_HisDailyRequire" Multiplicity="1" />
+          <End Type="QMSSystemModel.Q_HisDailyRequire_WorkDetail" Role="Q_HisDailyRequire_WorkDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_HisDailyRequire">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_HisDailyRequire_WorkDetail">
+              <PropertyRef Name="HisDailyRequireId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Q_HisDailyRequire_WorkDetail_Q_WorkDetail">
+          <End Type="QMSSystemModel.Q_WorkDetail" Role="Q_WorkDetail" Multiplicity="1" />
+          <End Type="QMSSystemModel.Q_HisDailyRequire_WorkDetail" Role="Q_HisDailyRequire_WorkDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_WorkDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_HisDailyRequire_WorkDetail">
+              <PropertyRef Name="WorkDetailId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3655,16 +4033,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Q_Video">
-            <EntityTypeMapping TypeName="QMSSystemModel.Q_Video">
-              <MappingFragment StoreEntitySet="Q_Video">
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="FakeName" ColumnName="FakeName" />
-                <ScalarProperty Name="FileName" ColumnName="FileName" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Q_VideoTemplate">
             <EntityTypeMapping TypeName="QMSSystemModel.Q_VideoTemplate">
               <MappingFragment StoreEntitySet="Q_VideoTemplate">
@@ -3837,6 +4205,86 @@
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Index" ColumnName="Index" />
                 <ScalarProperty Name="ShortName" ColumnName="ShortName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Q_Video">
+            <EntityTypeMapping TypeName="QMSSystemModel.Q_Video">
+              <MappingFragment StoreEntitySet="Q_Video">
+                <ScalarProperty Name="Duration" ColumnName="Duration" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="FakeName" ColumnName="FakeName" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Q_CounterDayInfo">
+            <EntityTypeMapping TypeName="QMSSystemModel.Q_CounterDayInfo">
+              <MappingFragment StoreEntitySet="Q_CounterDayInfo">
+                <ScalarProperty Name="EquipCode" ColumnName="EquipCode" />
+                <ScalarProperty Name="StatusSTT_UT" ColumnName="StatusSTT_UT" />
+                <ScalarProperty Name="StatusSTT" ColumnName="StatusSTT" />
+                <ScalarProperty Name="ServeTime" ColumnName="ServeTime" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="PrintTime" ColumnName="PrintTime" />
+                <ScalarProperty Name="STT_UT" ColumnName="STT_UT" />
+                <ScalarProperty Name="STT" ColumnName="STT" />
+                <ScalarProperty Name="STT_3" ColumnName="STT_3" />
+                <ScalarProperty Name="STT_QMS" ColumnName="STT_QMS" />
+                <ScalarProperty Name="CounterId" ColumnName="CounterId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Q_WorkDetail">
+            <EntityTypeMapping TypeName="QMSSystemModel.Q_WorkDetail">
+              <MappingFragment StoreEntitySet="Q_WorkDetail">
+                <ScalarProperty Name="WorkTypeId" ColumnName="WorkTypeId" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="TimeProcess" ColumnName="TimeProcess" />
+                <ScalarProperty Name="WorkId" ColumnName="WorkId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Q_Works">
+            <EntityTypeMapping TypeName="QMSSystemModel.Q_Works">
+              <MappingFragment StoreEntitySet="Q_Works">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Q_WorkType">
+            <EntityTypeMapping TypeName="QMSSystemModel.Q_WorkType">
+              <MappingFragment StoreEntitySet="Q_WorkType">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Q_DailyRequire_WorkDetail">
+            <EntityTypeMapping TypeName="QMSSystemModel.Q_DailyRequire_WorkDetail">
+              <MappingFragment StoreEntitySet="Q_DailyRequire_WorkDetail">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="WorkDetailId" ColumnName="WorkDetailId" />
+                <ScalarProperty Name="DailyRequireId" ColumnName="DailyRequireId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Q_HisDailyRequire_WorkDetail">
+            <EntityTypeMapping TypeName="QMSSystemModel.Q_HisDailyRequire_WorkDetail">
+              <MappingFragment StoreEntitySet="Q_HisDailyRequire_WorkDetail">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="WorkDetailId" ColumnName="WorkDetailId" />
+                <ScalarProperty Name="HisDailyRequireId" ColumnName="HisDailyRequireId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

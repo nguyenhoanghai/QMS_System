@@ -9,6 +9,8 @@ namespace QMS_System.Data.Model
    public class VideoPlaylist
     {
         public int Index { get; set; }
+        public TimeSpan Duration { get; set; }
+        public double _Duration { get; set; }
         public string Path { get; set; }
     }
 }

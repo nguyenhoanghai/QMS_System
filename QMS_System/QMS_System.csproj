@@ -157,6 +157,12 @@
     <Compile Include="frmCommand.Designer.cs">
       <DependentUpon>frmCommand.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmCOMSetting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmCOMSetting.Designer.cs">
+      <DependentUpon>frmCOMSetting.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmConfig.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -210,6 +216,12 @@
     </Compile>
     <Compile Include="frmLoginHistory.Designer.cs">
       <DependentUpon>frmLoginHistory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmMain_ver3.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmMain_ver3.Designer.cs">
+      <DependentUpon>frmMain_ver3.cs</DependentUpon>
     </Compile>
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
@@ -367,6 +379,12 @@
     <Compile Include="frmVideoTemplate.Designer.cs">
       <DependentUpon>frmVideoTemplate.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmWork.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmWork.Designer.cs">
+      <DependentUpon>frmWork.cs</DependentUpon>
+    </Compile>
     <Compile Include="Helper\SoundInfo.cs" />
     <Compile Include="IssueTicketScreen\FormState.cs" />
     <Compile Include="IssueTicketScreen\frmButtonStyle.cs">
@@ -401,6 +419,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="QMSAppInfo.cs" />
     <Compile Include="Report\R_DetailInDayByUser.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -420,6 +439,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmCommand.resx">
       <DependentUpon>frmCommand.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmCOMSetting.resx">
+      <DependentUpon>frmCOMSetting.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmConfig.resx">
       <DependentUpon>frmConfig.cs</DependentUpon>
@@ -447,6 +469,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmLoginHistory.resx">
       <DependentUpon>frmLoginHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmMain_ver3.resx">
+      <DependentUpon>frmMain_ver3.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
@@ -525,6 +550,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmVideoTemplate.resx">
       <DependentUpon>frmVideoTemplate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmWork.resx">
+      <DependentUpon>frmWork.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="IssueTicketScreen\frmButtonStyle.resx">
       <DependentUpon>frmButtonStyle.cs</DependentUpon>
@@ -924,11 +952,16 @@
     <None Include="Resources\iconfinder_printer-remote_30279.png" />
     <None Include="Resources\iconfinder_printer_delete_36361.png" />
     <None Include="Resources\tk.png" />
+    <None Include="Resources\iconfinder_package_utilities_3557.png" />
+    <None Include="Resources\iconfinder_survey_49353.png" />
+    <None Include="Resources\stop.png" />
+    <None Include="Resources\refresh.png" />
     <Content Include="Script DB\goc qms.sql" />
     <Content Include="Script DB\update qms 18_3_2019.sql" />
     <Content Include="Script DB\update qms 12_12_2018.sql" />
     <Content Include="Script DB\update qms 17_12_2018.sql" />
     <Content Include="Script DB\update qms 16_10_2019.sql" />
+    <Content Include="Script DB\update qms 2020.sql" />
     <Content Include="Script DB\update qms 6_8_2019.sql" />
     <None Include="Resources\list.png" />
     <None Include="Resources\add.png" />
@@ -959,7 +992,17 @@
     <None Include="Resources\Issue-Ticket-screen1.png" />
     <None Include="Resources\Issue-Ticket-screen.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <COMReference Include="WMPLib">
+      <Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>if exist "$(TargetPath).locked" del "$(TargetPath).locked"

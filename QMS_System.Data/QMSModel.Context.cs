@@ -61,7 +61,6 @@ namespace QMS_System.Data
         public DbSet<Q_UserCmdRegister> Q_UserCmdRegister { get; set; }
         public DbSet<Q_UserCommandReadSound> Q_UserCommandReadSound { get; set; }
         public DbSet<Q_UserMajor> Q_UserMajor { get; set; }
-        public DbSet<Q_Video> Q_Video { get; set; }
         public DbSet<Q_VideoTemplate> Q_VideoTemplate { get; set; }
         public DbSet<Q_VideoTemplate_De> Q_VideoTemplate_De { get; set; }
         public DbSet<Q_DailyRequire_Detail> Q_DailyRequire_Detail { get; set; }
@@ -75,5 +74,12 @@ namespace QMS_System.Data
         public DbSet<Q_TVReadSound> Q_TVReadSound { get; set; }
         public DbSet<Q_Service> Q_Service { get; set; }
         public DbSet<Q_Counter> Q_Counter { get; set; }
+        public DbSet<Q_Video> Q_Video { get; set; }
+        public DbSet<Q_CounterDayInfo> Q_CounterDayInfo { get; set; }
+        public DbSet<Q_WorkDetail> Q_WorkDetail { get; set; }
+        public DbSet<Q_Works> Q_Works { get; set; }
+        public DbSet<Q_WorkType> Q_WorkType { get; set; }
+        public DbSet<Q_DailyRequire_WorkDetail> Q_DailyRequire_WorkDetail { get; set; }
+        public DbSet<Q_HisDailyRequire_WorkDetail> Q_HisDailyRequire_WorkDetail { get; set; }
     }
 }

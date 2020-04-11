@@ -5,6 +5,7 @@ using System;
 using System.Configuration;
 using System.IO;
 using System.Windows.Forms;
+using WMPLib;
 
 namespace QMS_System
 {
@@ -49,8 +50,12 @@ namespace QMS_System
                         Directory.CreateDirectory(savePath);
 
                     string fakeName = (DateTime.Now.ToString("ddMMyyyyyHHmmss") + "" + openFileDialog1.FileName.Substring(openFileDialog1.FileName.LastIndexOf('.')));
-                    File.Copy(path, (savePath+ fakeName),true );
-                    BLLVideo.Instance.AddFile(connect,new Data.Q_Video() { FileName = openFileDialog1.SafeFileName, FakeName = fakeName });
+                    File.Copy(path, (savePath+ fakeName),true ); 
+                    var player = new WindowsMediaPlayer();
+                    var clip = player.newMedia(path);
+                    var time = TimeSpan.FromSeconds(clip.duration);
+                    
+                    BLLVideo.Instance.AddFile(connect,new Data.Q_Video() { FileName = openFileDialog1.SafeFileName, FakeName = fakeName ,Duration = time});
                     LoadData();
                 }
                 catch (Exception ex)

@@ -24,7 +24,7 @@ namespace QMS_System.Data.BLL
         private BLLVideoTemplate() { }
         #endregion
 
-        public List<VideoTemplateModel> Gets(string connectString )
+        public List<VideoTemplateModel> Gets(string connectString)
         {
             using (var db = new QMSSystemEntities(connectString))
             {
@@ -38,7 +38,7 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public List<ModelSelectItem> GetLookUp(string connectString  )
+        public List<ModelSelectItem> GetLookUp(string connectString)
         {
             using (var db = new QMSSystemEntities(connectString))
             {
@@ -46,7 +46,7 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public ResponseBase InsertOrUpdate(string connectString,Q_VideoTemplate model )
+        public ResponseBase InsertOrUpdate(string connectString, Q_VideoTemplate model)
         {
             var rs = new ResponseBase();
             using (var db = new QMSSystemEntities(connectString))
@@ -92,7 +92,7 @@ namespace QMS_System.Data.BLL
             return db.Q_VideoTemplate.FirstOrDefault(x => !x.IsDeleted && x.Id != model.Id && x.TemplateName.Equals(model.TemplateName));
         }
 
-        public bool Delete(string connectString,int Id )
+        public bool Delete(string connectString, int Id)
         {
             using (var db = new QMSSystemEntities(connectString))
             {
@@ -111,15 +111,20 @@ namespace QMS_System.Data.BLL
         {
             using (var db = new QMSSystemEntities(connectString))
             {
-                return db.Q_VideoTemplate_De.Where(x => !x.IsDeleted &&
+                var objs = db.Q_VideoTemplate_De.Where(x => !x.IsDeleted &&
                         !x.Q_VideoTemplate.IsDeleted &&
                         !x.Q_Video.IsDeleted &&
                         x.Q_VideoTemplate.IsActive)
                 .Select(x => new VideoPlaylist()
                 {
                     Index = x.Index,
-                    Path = x.Q_Video.FakeName
-                }).OrderBy(x=>x.Index).ToList();
+                    Path = x.Q_Video.FakeName,
+                    Duration = x.Q_Video.Duration
+                }).OrderBy(x => x.Index).ToList();
+                for (int i = 0; i < objs.Count; i++)
+                    objs[i]._Duration = objs[i].Duration.TotalMilliseconds;
+
+                return objs;
             }
         }
 
@@ -144,7 +149,7 @@ namespace QMS_System.Data.BLL
         private BLLVideoTemplate_De() { }
         #endregion
 
-        public List<VideoTemplate_DeModel> Gets(string connectString,int templateId )
+        public List<VideoTemplate_DeModel> Gets(string connectString, int templateId)
         {
             using (var db = new QMSSystemEntities(connectString))
             {
@@ -158,7 +163,7 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public ResponseBase InsertOrUpdate(string connectString,Q_VideoTemplate_De model )
+        public ResponseBase InsertOrUpdate(string connectString, Q_VideoTemplate_De model)
         {
             var rs = new ResponseBase();
             using (var db = new QMSSystemEntities(connectString))
@@ -191,7 +196,7 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Delete(string connectString,int Id )
+        public bool Delete(string connectString, int Id)
         {
             using (var db = new QMSSystemEntities(connectString))
             {

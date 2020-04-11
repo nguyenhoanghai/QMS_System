@@ -6,6 +6,8 @@ namespace QMS_System.Data.Enum
 {
     public enum eStatus
     {
+        PHATSINH=-1,
+        TRONG= 0,
         CHOXL = 1,
         DAGXL = 3,
         HOTAT = 2  ,

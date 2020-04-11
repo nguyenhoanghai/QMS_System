@@ -40,7 +40,7 @@ namespace QMS_System
             _8cUseFor = 1,
             UsePrintBoard = 1;
 
-        public int UseWithThirdPattern = 0,
+        public static int UseWithThirdPattern = 0,
             AutoCallIfUserFree = 0;
 
         string soundPath = "",
@@ -74,7 +74,9 @@ namespace QMS_System
         public string lbSendrequest, lbSendData, lbPrinRequire;
         public static string ticketTemplate = string.Empty,
             connectString;
-        public static int solien = 1;
+        public static int
+            solien = 1,
+            appVersion = 1;
 
         public frmMain()
         {
@@ -82,13 +84,14 @@ namespace QMS_System
         }
         private void frmMain_Load(object sender, EventArgs e)
         {
-            //  MessageBox.Show(BaseCore.Instance.abc2unicode("nhận bệnh"));
             try
             {
-             //   sqlStatus = BaseCore.Instance.CONNECT_STATUS(Application.StartupPath + "\\DATA.XML");
-              //  if (sqlStatus)
-              //  {
+                sqlStatus = BaseCore.Instance.CONNECT_STATUS(Application.StartupPath + "\\DATA.XML");
+                if (sqlStatus)
+                {
                     connectString = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
+                    QMSAppInfo.ConnectString = connectString;
+                    QMSAppInfo.sqlConnection = DatabaseConnection.Instance.Connect(Application.StartupPath + "\\DATA.XML");
                     configs = BLLConfig.Instance.Gets(connectString, true);
                     soundPath = GetConfigByCode(eConfigCode.SoundPath);
                     ticketTemplate = GetConfigByCode(eConfigCode.TicketTemplate);
@@ -99,7 +102,7 @@ namespace QMS_System
                     int.TryParse(GetConfigByCode(eConfigCode.PrintTicketReturnCurrentNumberOrServiceCode), out printTicketReturnCurrentNumberOrServiceCode);
                     int.TryParse(GetConfigByCode(eConfigCode.NumberOfLinePerTime), out solien);
                     int.TryParse(GetConfigByCode(eConfigCode.SilenceTime), out silenceTime);
-                int.TryParse(GetConfigByCode(eConfigCode.StartNumber), out startNumber);
+                    int.TryParse(GetConfigByCode(eConfigCode.StartNumber), out startNumber);
                     int.TryParse(GetConfigByCode(eConfigCode.TimeWaitForRecieveData), out timeQuetComport);
                     int.TryParse(GetConfigByCode(eConfigCode.PrintTicketCode), out PrintTicketCode);
                     int.TryParse(GetConfigByCode(eConfigCode.TimesRepeatReadServeOver), out timesRepeatReadServeOver);
@@ -116,23 +119,20 @@ namespace QMS_System
                         {
                             errorsms = "sang ngày mới " + DateTime.Now.Day;
                             BLLLoginHistory.Instance.ResetDailyLoginInfor(connectString, today, GetConfigByCode(eConfigCode.AutoSetLoginFromYesterday));
-                            BLLDailyRequire.Instance.CopyHistory(connectString);
+                            BLLDailyRequire.Instance.CopyHistory(connectString, false);
                             Settings.Default.Today = DateTime.Now.Day;
                             Settings.Default.Save();
                             //ko su dung GO 
-                            var query = @"   UPDATE [Q_COUNTER] set lastcall = 0 ,isrunning =1 
+                            var query = @"  UPDATE [Q_COUNTER] set lastcall = 0 ,isrunning =1 
                                             DELETE [Q_CounterSoftSound]  
                                             DBCC CHECKIDENT('Q_CounterSoftSound', RESEED, 1);                                             
                                             DELETE [dbo].[Q_RequestTicket]  
                                             DBCC CHECKIDENT('Q_RequestTicket', RESEED, 1); 
                                             DELETE [dbo].[Q_TVReadSound] 
-                                            DBCC CHECKIDENT('Q_TVReadSound', RESEED, 1); ";
+                                            DBCC CHECKIDENT('Q_TVReadSound', RESEED, 1);   ";
                             BLLSQLBuilder.Instance.Excecute(connectString, query);
                         }
-                        catch (Exception ex)
-                        {
-                            //   MessageBox.Show(ex.ToString(), "New day");
-                        }
+                        catch (Exception ex) { }
                     }
                     else
                         errorsms = "";
@@ -143,17 +143,14 @@ namespace QMS_System
                         if (!string.IsNullOrEmpty(autoLogin))
                             BLLLoginHistory.Instance.AutoLogin(connectString, autoLogin);
                     }
-                    catch (Exception)
-                    {
-                    }
-
-                //}
-                //else
-                //{
-                //    errorsms = "Kết nối máy chủ SQL thất bại. Vui lòng kiểm tra lại.";
-                //    Form form = new FrmSQLConnect();
-                //    form.ShowDialog();
-                //}
+                    catch (Exception) { }
+                }
+                else
+                {
+                    errorsms = "Kết nối máy chủ SQL thất bại. Vui lòng kiểm tra lại.";
+                    Form form = new FrmSQLConnect();
+                    form.ShowDialog();
+                }
             }
             catch (Exception)
             {
@@ -490,7 +487,9 @@ namespace QMS_System
                 if (!BLLDailyRequire.Instance.DeleteAllTicketInDay(connectString, today))
                     MessageBox.Show("Lỗi thực thi yêu cầu Xóa vé đã cấp trong ngày. Vui lòng kiểm tra lại.", "Lỗi thực thi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 else
+                {
                     IsDatabaseChange = true;
+                }
         }
 
         private void btnExit_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -627,380 +626,9 @@ namespace QMS_System
         }
 
         private void barButtonItem15_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        { 
+        {
             string content = "nguyễn hoàng hải";
             BaseCore.Instance.PrintTicketTCVN3(COM_Printer, content);
-           /* dynamic newMsg = null;
-            for (int i = 0; i < content.Length; i++)
-            {
-                var kytu = content[i];
-                switch (kytu)
-                {
-                    #region MyRegion 
-                    case 'à':
-                    case 'À':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("B5");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'á':
-                    case 'Á':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("B8");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'ả':
-                    case 'Ả':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("B6");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ã':
-                    case 'ã':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("B7");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ạ':
-                    case 'ạ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("B9");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Â':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("A2");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'â':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("A9");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ấ':
-                    case 'ấ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("CA");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ầ':
-                    case 'ầ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("C7");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ẩ':
-                    case 'ẩ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("C8");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ẫ':
-                    case 'ẫ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("C9");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ậ':
-                    case 'ậ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("CB");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ă':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("A1");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'ă':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("A8");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ắ':
-                    case 'ắ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("BE");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ằ':
-                    case 'ằ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("BB");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ẳ':
-                    case 'ẳ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("BC");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ẵ':
-                    case 'ẵ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("BD");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ặ':
-                    case 'ặ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("C6");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'É':
-                    case 'é':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("D0");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'È':
-                    case 'è':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("CC");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ẻ':
-                    case 'ẻ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("CE");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ẽ':
-                    case 'ẽ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("CF");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ẹ':
-                    case 'ẹ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("D1");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ê':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("A3");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'ê':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("AA");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ế':
-                    case 'ế':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("D5");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ề':
-                    case 'ề':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("D2");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ể':
-                    case 'ể':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("D3");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ễ':
-                    case 'ễ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("D4");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ệ':
-                    case 'ệ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("D6");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-
-                    case 'Ò':
-                    case 'ò':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("DF");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ó':
-                    case 'ó':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("E3");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ỏ':
-                    case 'ỏ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("E1");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Õ':
-                    case 'õ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("E2");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ọ':
-                    case 'ọ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("E4");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ô':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("A4");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'ô':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("AB");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ố':
-                    case 'ố':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("E8");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ồ':
-                    case 'ồ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("E5");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ổ':
-                    case 'ổ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("E6");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ỗ':
-                    case 'ỗ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("E7");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ộ':
-                    case 'ộ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("E9");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ơ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("A5");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'ơ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("AC");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ớ':
-                    case 'ớ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("ED");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ờ':
-                    case 'ờ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("EA");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ở':
-                    case 'ở':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("EB");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ỡ':
-                    case 'ỡ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("EC");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ợ':
-                    case 'ợ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("EE");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Í':
-                    case 'í':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("DD");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ì':
-                    case 'ì':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("D7");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ỉ':
-                    case 'ỉ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("D8");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ĩ':
-                    case 'ĩ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("DC");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ị':
-                    case 'ị':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("DE");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ú':
-                    case 'ú':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("F3");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ù':
-                    case 'ù':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("EF");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ủ':
-                    case 'ủ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("F1");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ũ':
-                    case 'ũ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("F2");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ụ':
-                    case 'ụ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("F4");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ư':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("A6");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'ư':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("AD");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ứ':
-                    case 'ứ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("F8");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ừ':
-                    case 'ừ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("F5");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ử':
-                    case 'ử':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("F6");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ữ':
-                    case 'ữ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("F7");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ự':
-                    case 'ự':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("F9");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ý':
-                    case 'ý':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("FD");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ỳ':
-                    case 'ỳ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("FA");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ỷ':
-                    case 'ỷ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("FB");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ỹ':
-                    case 'ỹ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("FC");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Ỵ':
-                    case 'ỵ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("FE");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'Đ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("A7");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    case 'đ':
-                        newMsg = BaseCore.Instance.HexStringToByteArray("AE");
-                        frmMain.COM_Printer.Write(newMsg, 0, newMsg.Length);
-                        break;
-                    default:
-                        frmMain.COM_Printer.Write((content[i]).ToString());
-                        break;
-                        #endregion
-                }
-            }
-            */
         }
 
         private void barButtonItem13_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -1136,31 +764,15 @@ namespace QMS_System
         {
             try
             {
-                comPort.PortName = GetConfigByCode(eConfigCode.ComportName);
-                comPort.BaudRate = Convert.ToInt32(GetConfigByCode(eConfigCode.BaudRate));
-                comPort.DataBits = Convert.ToInt32(GetConfigByCode(eConfigCode.DataBits));
-                int parity = int.Parse(GetConfigByCode(eConfigCode.Parity));
-                switch (parity)
-                {
-                    case 0: frmMain.comPort.Parity = Parity.None; break;
-                    case 1: frmMain.comPort.Parity = Parity.Odd; break;
-                    case 2: frmMain.comPort.Parity = Parity.Even; break;
-                    case 3: frmMain.comPort.Parity = Parity.Mark; break;
-                    case 4: frmMain.comPort.Parity = Parity.Space; break;
-                }
-
-                int stopbit = int.Parse(GetConfigByCode(eConfigCode.StopBits));
-                switch (stopbit)
-                {
-                    case 0: frmMain.comPort.StopBits = StopBits.None; break;
-                    case 1: frmMain.comPort.StopBits = StopBits.One; break;
-                    case 2: frmMain.comPort.StopBits = StopBits.Two; break;
-                    case 3: frmMain.comPort.StopBits = StopBits.OnePointFive; break;
-                }
+                frmMain.comPort.PortName = GetConfigByCode(eConfigCode.ComportName);
+                frmMain.comPort.BaudRate = 9600;
+                frmMain.comPort.DataBits = 8;
+                frmMain.comPort.Parity = Parity.None;
+                frmMain.comPort.StopBits = StopBits.One;
                 try
                 {
-                    //  frmMain.comPort.ReadTimeout = 1;
-                    //  frmMain.comPort.WriteTimeout = 1;
+                    frmMain.comPort.ReadTimeout = 1;
+                    frmMain.comPort.WriteTimeout = 1;
                     frmMain.comPort.Open();
                     barButtonItem8.Glyph = global::QMS_System.Properties.Resources.if_port_64533;
                     frmMain.comPort.DataReceived += new SerialDataReceivedEventHandler(comPort_DataReceived);
@@ -1185,9 +797,9 @@ namespace QMS_System
         {
             try
             {
-                int length = comPort.BytesToRead;
+                int length = frmMain.comPort.BytesToRead;
                 byte[] buf = new byte[length];
-                comPort.Read(buf, 0, length);
+                frmMain.comPort.Read(buf, 0, length);
                 //  MessageBox.Show(BitConverter.ToString(buf));
 
                 var hexStr = BitConverter.ToString(buf).Split('-').ToArray();
@@ -1247,7 +859,7 @@ namespace QMS_System
                             {
                                 isErorr = false;
                                 errorsms = "";
-                                PrintNewTicket(int.Parse(hexStr[1]), (hexStr[2] == "0A" ? 10 : int.Parse(hexStr[2])), 0, false, false, null, null, null, null, null, null, null, null);
+                                PrintNewTicket(int.Parse(hexStr[1]), (hexStr[2] == "0A" ? 10 : int.Parse(hexStr[2])), 0, false, false, null, null, null, null, null, null, null, null, null, null);
                             }
                             break;
                     }
@@ -1268,7 +880,9 @@ namespace QMS_System
              string MaBenhNhan,
             string MaPhongKham,
             string SttPhongKham,
-            string SoXe
+            string SoXe,
+            string MaCongViec,
+            string MaLoaiCongViec
             )
         {
             IsDatabaseChange = true;
@@ -1293,7 +907,7 @@ namespace QMS_System
                             temp.Add(SoundLockPrintTicket);
                         else
                         {
-                            var rs = BLLDailyRequire.Instance.PrintNewTicket(connectString, serviceId, serObj.StartNumber, businessId, now, printType, (timeServeAllow != null ? timeServeAllow.Value : serObj.TimeProcess.TimeOfDay), Name, Address, DOB, MaBenhNhan, MaPhongKham, SttPhongKham, SoXe);
+                            var rs = BLLDailyRequire.Instance.PrintNewTicket(connectString, serviceId, serObj.StartNumber, businessId, now, printType, (timeServeAllow != null ? timeServeAllow.Value : serObj.TimeProcess.TimeOfDay), Name, Address, DOB, MaBenhNhan, MaPhongKham, SttPhongKham, SoXe, MaCongViec, MaLoaiCongViec);
                             if (rs.IsSuccess)
                             {
                                 if (!isProgrammer)
@@ -1335,7 +949,7 @@ namespace QMS_System
                             temp.Add(SoundLockPrintTicket);
                         else
                         {
-                            var rs = BLLDailyRequire.Instance.PrintNewTicket(connectString, serviceId, startNumber, businessId, now, printType, (timeServeAllow != null ? timeServeAllow.Value : serObj.TimeProcess.TimeOfDay), Name, Address, DOB, MaBenhNhan, MaPhongKham, SttPhongKham, SoXe);
+                            var rs = BLLDailyRequire.Instance.PrintNewTicket(connectString, serviceId, startNumber, businessId, now, printType, (timeServeAllow != null ? timeServeAllow.Value : serObj.TimeProcess.TimeOfDay), Name, Address, DOB, MaBenhNhan, MaPhongKham, SttPhongKham, SoXe, MaCongViec, MaLoaiCongViec);
                             if (rs.IsSuccess)
                             {
                                 if (!isProgrammer)
@@ -1399,7 +1013,7 @@ namespace QMS_System
                         }
                         if (!err)
                         {
-                            var rs = BLLDailyRequire.Instance.Insert(connectString, lastTicket, serviceId, businessId, now);
+                            var rs = BLLDailyRequire.Instance.Insert(connectString, lastTicket, serviceId, businessId, now, MaCongViec, MaLoaiCongViec);
                             if (rs.IsSuccess)
                             {
                                 newNumber = rs.Data;
@@ -1440,12 +1054,12 @@ namespace QMS_System
                 }
                 else
                 {
-                    PrintWithNoBorad(newNumber, lastTicket, tenQuay, (serObj != null ? serObj.Name : ""));
+                    PrintWithNoBorad(newNumber, lastTicket, tenQuay, (serObj != null ? serObj.Name : ""), (serObj != null ? serObj.Note : ""));
                 }
             }
             else if (newNumber != 0)
                 if (UsePrintBoard == 0)
-                    PrintWithNoBorad(newNumber, lastTicket, tenQuay, (serObj != null ? serObj.Name : ""));
+                    PrintWithNoBorad(newNumber, lastTicket, tenQuay, (serObj != null ? serObj.Name : ""), (serObj != null ? serObj.Note : ""));
 
             if (AutoCallIfUserFree == 1 && nghiepVu > 0)
             {
@@ -1453,7 +1067,7 @@ namespace QMS_System
                 if (freeUser > 0)
                 {
                     var counter = lib_Users.FirstOrDefault(x => x.UserId == freeUser).EquipCode;// freeUser < 10 ? ("0" + freeUser) : freeUser.ToString();
-                    var str = ("AA," + counter + ",8B,00,00");
+                    var str = ("AA," + BaseCore.Instance.ConvertIntToStringWith0Number(counter) + ",8B,00,00");
                     autoCall = true;
                     CounterProcess(str.Split(',').ToArray(), 0);
                 }
@@ -1461,7 +1075,7 @@ namespace QMS_System
             return true;
         }
 
-        private void PrintWithNoBorad(int newNum, int oldNum, string tenQuay, string tendichvu)
+        private void PrintWithNoBorad(int newNum, int oldNum, string tenQuay, string tendichvu, string noteDichVu)
         {
             if (COM_Printer.IsOpen)
             {
@@ -1478,6 +1092,7 @@ namespace QMS_System
                 template = template.Replace("[STT]", newNum.ToString());
                 template = template.Replace("[ten-quay]", tenQuay);
                 template = template.Replace("[ten-dich-vu]", tendichvu);
+                template = template.Replace("[ghi-chu-dich-vu]", noteDichVu);
                 template = template.Replace("[ngay]", ("ngay: " + now.ToString("dd/MM/yyyy")));
                 template = template.Replace("[gio]", (" gio: " + now.ToString("HH/mm")));
                 template = template.Replace("[dang-goi]", " dang goi " + oldNum);
@@ -1488,7 +1103,6 @@ namespace QMS_System
                 {
                     for (int i = 0; i < arr.Length; i++)
                     {
-                       // frmMain.COM_Printer.Write(arr[i]);
                         BaseCore.Instance.PrintTicketTCVN3(COM_Printer, arr[i]);
                     }
                 }
@@ -1558,9 +1172,14 @@ namespace QMS_System
         {
             try
             {
-                byte[] newMsg = BaseCore.Instance.HexStringToByteArray(value);
-                comPort.Write(newMsg, 0, newMsg.Length);
-                Thread.Sleep(20);
+                if (frmMain.comPort.IsOpen)
+                {
+                    byte[] newMsg = BaseCore.Instance.HexStringToByteArray(value);
+                    frmMain.comPort.Write(newMsg, 0, newMsg.Length);
+                    Thread.Sleep(20);
+                }
+                // else
+                //comPort.Open();
             }
             catch
             { }
@@ -1652,13 +1271,13 @@ namespace QMS_System
                                             int num = int.Parse((hexStr[3] + "" + hexStr[4]));
                                             var rs = BLLDailyRequire.Instance.CallAny(connectString, userMajors[0].MajorId, userId, equipCode, num, DateTime.Now, UseWithThirdPattern);
                                             if (rs.IsSuccess)
-                                                ticketInfo = new TicketInfo() { TicketNumber = num, StartTime = rs.Data_1, TimeServeAllow = rs.Data };
+                                                ticketInfo = rs.Data_3;// new TicketInfo() { TicketNumber = num, TicketNumber_3 = rs.Data_2, StartTime = rs.Data_1, TimeServeAllow = rs.Data };
 
                                             break;
                                         case eActionParam.GNVYC: // goi theo Nghiep vu  
                                             var found = BLLDailyRequire.Instance.CallByMajor(connectString, int.Parse(userRight[i].Param), userId, equipCode, DateTime.Now, UseWithThirdPattern);
                                             if (found.IsSuccess)
-                                                ticketInfo = new TicketInfo() { TicketNumber = found.Data, StartTime = found.Data_2, TimeServeAllow = found.Data_1 };
+                                                ticketInfo = found.Data_3;// new TicketInfo() { TicketNumber = found.Data, StartTime = found.Data_2, TimeServeAllow = found.Data_1 };
                                             break;
                                         case eActionParam.PHANDIEUNHANVIEN: // goi phan dieu Nghiep vu cho nhan vien
                                             var allowCall = false;
@@ -1669,7 +1288,7 @@ namespace QMS_System
                                                 {
                                                     var callInfo = BLLDailyRequire.Instance.CallByMajor(connectString, userMajors[ii].MajorId, userId, equipCode, DateTime.Now, UseWithThirdPattern);
                                                     if (callInfo.IsSuccess)
-                                                        ticketInfo = new TicketInfo() { TicketNumber = callInfo.Data, StartTime = callInfo.Data_2, TimeServeAllow = callInfo.Data_1 };
+                                                        ticketInfo = callInfo.Data_3;// new TicketInfo() { TicketNumber = callInfo.Data, StartTime = callInfo.Data_2, TimeServeAllow = callInfo.Data_1 };
 
                                                     break;
                                                 }
@@ -1678,7 +1297,7 @@ namespace QMS_System
                                         case eActionParam.GOI_PHIEU_TRONG: // goi phieu trống số phiếu =-1
                                             var c = BLLDailyRequire.Instance.InsertAndCallEmptyTicket(connectString, equipCode);
                                             if (c.IsSuccess)
-                                                ticketInfo = new TicketInfo() { TicketNumber = c.Data, StartTime = c.Data_2, TimeServeAllow = c.Data_1 };
+                                                ticketInfo = c.Data_3;// new TicketInfo() { TicketNumber = c.Data, StartTime = c.Data_2, TimeServeAllow = c.Data_1 };
                                             break;
                                     }
                                     #endregion
@@ -1845,7 +1464,7 @@ namespace QMS_System
 
                                             if (BLLDailyRequire.Instance.TranferTicket(connectString, equipCode, int.Parse(userRight[i].Param), currentTicket, today, false))
                                             {
-                                                if (comPort.IsOpen)
+                                                if (frmMain.comPort.IsOpen)
                                                     dataSendToComport.Add(("AA " + hexStr[1] + " 00 00"));
                                                 currentTicket = 0;
                                             }
@@ -1859,28 +1478,16 @@ namespace QMS_System
                                         case eActionParam.DANHGIA:
                                             if (BLLUserEvaluate.Instance.DanhGia_BP(connectString, equipCode, userRight[i].Param, system).IsSuccess)
                                             {
-                                                if (comPort.IsOpen)
+                                                if (frmMain.comPort.IsOpen)
                                                     dataSendToComport.Add(("AA " + hexStr[1] + " 00 00"));
                                                 currentTicket = 0;
                                             }
                                             break;
                                     }
                                     break;
-                                    //case eActionCode.LoginLogOut:
-                                    //    switch (userRight[i].ActionParamName)
-                                    //    {
-                                    //        case eActionParam.LOGIO:
-                                    //            if (BLLLoginHistory.Instance.CounterLoginLogOut(int.Parse((hexStr[3] == "FF" ? "00" : hexStr[3]) + "" + hexStr[4]), int.Parse(hexStr[1]), DateTime.Now))
-                                    //                dataSendToComport.Add(("AA " + hexStr[1] + " 00 00"));
-                                    //            lib_Users = BLLLoginHistory.Instance.Gets_();
-                                    //            IsDatabaseChange = true;
-                                    //            break; 
-                                    //    }
-                                    //    break;
                             }
                         }
-                        End:
-                        { }
+                        End: { }
                     }
                 }
                 else
@@ -1890,7 +1497,7 @@ namespace QMS_System
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi hàm CounterProcess => " + ex.Message);
+                //MessageBox.Show("Lỗi hàm CounterProcess => " + ex.Message);
             }
             if (requireId != 0)
                 BLLCounterSoftRequire.Instance.Delete(requireId, connectString);
@@ -1942,7 +1549,7 @@ namespace QMS_System
             Form frm = IsActive(typeof(frmHome));
             if (frm == null)
             {
-                var f = new frmHome(this);
+                var f = new frmHome();
                 f.MdiParent = this;
                 f.Show();
             }
@@ -1965,7 +1572,7 @@ namespace QMS_System
                 {
                     errorsms = "sang ngày mới " + DateTime.Now.Day;
                     BLLLoginHistory.Instance.ResetDailyLoginInfor(connectString, today, GetConfigByCode(eConfigCode.AutoSetLoginFromYesterday));
-                    BLLDailyRequire.Instance.CopyHistory(connectString);
+                    BLLDailyRequire.Instance.CopyHistory(connectString, false);
                     Settings.Default.Today = DateTime.Now.Day;
                     Settings.Default.Save();
                     //ko su dung GO 
@@ -1994,18 +1601,35 @@ namespace QMS_System
                 {
                     IsDatabaseChange = true;
                     bool hasSound = false;
-                    List<MaindisplayDirectionModel> mains;
+                    List<MaindisplayDirectionModel> mains; 
+                    PrinterRequireModel requireObj = null;
                     for (int i = 0; i < requires.Count; i++)
                     {
                         switch (requires[i].Type)
                         {
+                            case (int)eCounterSoftRequireType.inPhieu:
+                                requireObj = JsonConvert.DeserializeObject<PrinterRequireModel>(requires[i].Content);
+                                PrintWithNoBorad(requireObj.newNumber, requireObj.oldNumber, requireObj.TenQuay, requireObj.TenDichVu,"");
+                                if (AutoCallIfUserFree == 1 && requireObj.MajorId > 0)
+                                {
+                                    var freeUser = (int)BLLDailyRequire.Instance.CheckUserFree(connectString, requireObj.MajorId, requireObj.ServiceId, requireObj.newNumber, autoCallFollowMajorOrder).Data;
+                                    if (freeUser > 0)
+                                    {
+                                        var counter = lib_Users.FirstOrDefault(x => x.UserId == freeUser).EquipCode;
+                                        var str = ("AA," + BaseCore.Instance.ConvertIntToStringWith0Number(counter) + ",8B,00,00");
+                                        autoCall = true;
+                                        CounterProcess(str.Split(',').ToArray(), 0);
+                                    }
+                                }
+                                BLLCounterSoftRequire.Instance.Delete(requires[i].Id, connectString);
+                                break;
                             case (int)eCounterSoftRequireType.ReadSound:
                                 temp.AddRange(requires[i].Content.Split('|').ToList());
                                 hasSound = true;
                                 break;
                             case (int)eCounterSoftRequireType.PrintTicket:
-                                var requireObj = JsonConvert.DeserializeObject<PrinterRequireModel>(requires[i].Content);
-                                var result = PrintNewTicket(requireObj.PrinterId, requireObj.ServiceId, 0, true, false, requireObj.ServeTime.TimeOfDay, requireObj.Name, requireObj.Address, requireObj.DOB, requireObj.MaBenhNhan, requireObj.MaPhongKham, requireObj.SttPhongKham, requireObj.SoXe);
+                                  requireObj = JsonConvert.DeserializeObject<PrinterRequireModel>(requires[i].Content);
+                                var result = PrintNewTicket(requireObj.PrinterId, requireObj.ServiceId, 0, true, false, requireObj.ServeTime.TimeOfDay, requireObj.Name, requireObj.Address, requireObj.DOB, requireObj.MaBenhNhan, requireObj.MaPhongKham, requireObj.SttPhongKham, requireObj.SoXe, requireObj.MaCongViec, requireObj.MaLoaiCongViec);
                                 if (result)
                                     BLLCounterSoftRequire.Instance.Delete(requires[i].Id, connectString);
                                 break;
@@ -2066,7 +1690,7 @@ namespace QMS_System
                                     if (freeUser > 0)
                                     {
                                         var counter = lib_Users.FirstOrDefault(x => x.UserId == freeUser).EquipCode;
-                                        var str = ("AA," + counter + ",8B,00,00");
+                                        var str = ("AA," + BaseCore.Instance.ConvertIntToStringWith0Number(counter) + ",8B,00,00");
                                         autoCall = true;
                                         CounterProcess(str.Split(',').ToArray(), 0);
                                     }
@@ -2097,7 +1721,7 @@ namespace QMS_System
             {
                 var str = txtPrint.EditValue.ToString().Split(',').Select(x => Convert.ToInt32(x)).ToArray();
                 if (str.Length > 2)
-                    PrintNewTicket(str[0], str[1], 0, false, true, null, null, null, null, null, null, null, null);
+                    PrintNewTicket(str[0], str[1], 0, false, true, null, null, null, null, null, null, null, null, "cv1", null);
             }
         }
 
@@ -2172,8 +1796,8 @@ namespace QMS_System
                     isRunning = false;
                     btRunProcess.Caption = "Chạy tiến trình";
                     btRunProcess.LargeGlyph = global::QMS_System.Properties.Resources.if_our_process_2_45123;
-                    comPort.Close();
-                    comPort.Dispose();
+                    frmMain.comPort.Close();
+                    frmMain.comPort.Dispose();
                     COM_Printer.Close();
                     COM_Printer.Dispose();
                     timerDo.Enabled = false;
@@ -2211,7 +1835,7 @@ namespace QMS_System
                     {
                         ribbonPage5.Visible = true;
                         txtPrint.EditValue = PrintTicketCode + ",1,0";
-                   }
+                    }
                     TmerQuetComport.Enabled = true;
                     TmerQuetComport.Interval = timeQuetComport;
                     timerDo.Enabled = true;
@@ -2258,8 +1882,8 @@ namespace QMS_System
 
         private void frmMain_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (comPort.IsOpen)
-                comPort.Close();
+            if (frmMain.comPort.IsOpen)
+                frmMain.comPort.Close();
             if (COM_Printer.IsOpen)
                 COM_Printer.Close();
         }

@@ -46,7 +46,7 @@ namespace QMS_System.Data.BLL
         {
             using (db = new QMSSystemEntities(connectString))
             {
-                var sers = db.Q_Service.Where(x => !x.IsDeleted && x.IsActived).Select(x => new ServiceDayModel() { Id = x.Id, Name = x.Name, StartNumber = x.StartNumber, EndNumber = x.EndNumber, TimeProcess = x.TimeProcess }).ToList();
+                var sers = db.Q_Service.Where(x => !x.IsDeleted && x.IsActived).Select(x => new ServiceDayModel() { Id = x.Id, Name = x.Name, StartNumber = x.StartNumber, EndNumber = x.EndNumber, TimeProcess = x.TimeProcess, Note = x.Note }).ToList();
                 var serShifts = db.Q_ServiceShift.Where(x => !x.IsDeleted && !x.Q_Service.IsDeleted && !x.Q_Shift.IsDeleted).Select(x => new ServiceShiftModel() { Id = x.Id, ServiceId = x.ServiceId, ShiftId = x.ShiftId, Index = x.Index, Start = x.Q_Shift.Start, End = x.Q_Shift.End }).ToList();
                 if (sers.Count > 0)
                     foreach (var item in sers)
@@ -60,6 +60,14 @@ namespace QMS_System.Data.BLL
             using (db = new QMSSystemEntities(connectString))
             {
                 var obj = db.Q_Service.Where(x => !x.IsDeleted && x.Id == serviceId).FirstOrDefault();
+                return obj;
+            }
+        }
+        public Q_Service Get(string connectString, string code)
+        {
+            using (db = new QMSSystemEntities(connectString))
+            {
+                var obj = db.Q_Service.Where(x => !x.IsDeleted && x.Code.Trim().ToUpper().Equals(code.Trim().ToUpper())  ).FirstOrDefault();
                 return obj;
             }
         }

@@ -17,6 +17,7 @@ namespace QMS_System.Data
         public Q_DailyRequire()
         {
             this.Q_DailyRequire_Detail = new HashSet<Q_DailyRequire_Detail>();
+            this.Q_DailyRequire_WorkDetail = new HashSet<Q_DailyRequire_WorkDetail>();
         }
     
         public int Id { get; set; }
@@ -37,5 +38,6 @@ namespace QMS_System.Data
         public virtual Q_Business Q_Business { get; set; }
         public virtual ICollection<Q_DailyRequire_Detail> Q_DailyRequire_Detail { get; set; }
         public virtual Q_Service Q_Service { get; set; }
+        public virtual ICollection<Q_DailyRequire_WorkDetail> Q_DailyRequire_WorkDetail { get; set; }
     }
 }

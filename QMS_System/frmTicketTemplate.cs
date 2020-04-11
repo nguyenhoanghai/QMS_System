@@ -14,7 +14,19 @@ namespace QMS_System
         {
             InitializeComponent();
         }
-
+        #region event
+        private void btNoteDichVu_Click(object sender, EventArgs e)
+        {
+            string content = txtContent.Text;
+            content += "[ghi-chu-dich-vu]";
+            txtContent.Text = content;
+        }
+        private void btTenDichVu_Click(object sender, EventArgs e)
+        {
+            string content = txtContent.Text;
+            content += "[ten-dich-vu]";
+            txtContent.Text = content;
+        }
         private void btThemVB_Click(object sender, EventArgs e)
         {
             string content = txtContent.Text;
@@ -127,6 +139,7 @@ namespace QMS_System
             txtContent.Text = content;
         }
 
+        #endregion
 
         private void btTest_Click(object sender, EventArgs e)
         {
@@ -143,6 +156,7 @@ namespace QMS_System
             content = content.Replace("[STT]", "1001");
             content = content.Replace("[ten-quay]", "quay 1");
             content = content.Replace("[ten-dich-vu]", "dich vu 1");
+            content = content.Replace("[ghi-chu-dich-vu]", "ghi chú dich vu 1");
             content = content.Replace("[ngay]", ("ngay: " + now.ToString("dd/MM/yyyy")));
             content = content.Replace("[gio]", (" gio: " + now.ToString("HH/mm")));
             content = content.Replace("[dang-goi]", " dang goi 1000");
@@ -153,21 +167,33 @@ namespace QMS_System
             {
                 for (int i = 0; i < arr.Length; i++)
                 {
-                   // var ss = BaseCore.Instance.abc2unicode(arr[i]).ToString();
-                   //   frmMain.COM_Printer.Write(ss);
-                   //frmMain.COM_Printer.Write(arr[i]);
-                    BaseCore.Instance.PrintTicketTCVN3(frmMain.COM_Printer, arr[i]);
+                    switch (QMSAppInfo.Version)
+                    {
+                        case 1:
+                            BaseCore.Instance.PrintTicketTCVN3(frmMain.COM_Printer, arr[i]); break;
+                        case 3:
+                            BaseCore.Instance.PrintTicketTCVN3(frmMain_ver3.COM_Printer, arr[i]); break;
+                    }
                 }
             }
         }
 
         private void btsave_Click(object sender, EventArgs e)
         {
-            if (BLLConfig.Instance.Update(frmMain.connectString, eConfigCode.TicketTemplate, txtContent.Text))
-                if (BLLConfig.Instance.Update(frmMain.connectString, eConfigCode.NumberOfLinePerTime, txtsolien.Value.ToString()))
+            if (BLLConfig.Instance.Update(QMSAppInfo.ConnectString, eConfigCode.TicketTemplate, txtContent.Text))
+                if (BLLConfig.Instance.Update(QMSAppInfo.ConnectString, eConfigCode.NumberOfLinePerTime, txtsolien.Value.ToString()))
                 {
-                    frmMain.ticketTemplate = txtContent.Text;
-                    frmMain.solien = (int)txtsolien.Value;
+                    switch (QMSAppInfo.Version)
+                    {
+                        case 1:
+                            frmMain.ticketTemplate = txtContent.Text;
+                            frmMain.solien = (int)txtsolien.Value;
+                            break;
+                        case 3:
+                            frmMain_ver3.ticketTemplate = txtContent.Text;
+                            frmMain_ver3.solien = (int)txtsolien.Value;
+                            break;
+                    }
                     MessageBox.Show("Cập nhật thành công.!");
                 }
                 else
@@ -178,15 +204,20 @@ namespace QMS_System
 
         private void frmTicketTemplate_Load(object sender, EventArgs e)
         {
-            txtContent.Text = frmMain.ticketTemplate;
-            txtsolien.Value = frmMain.solien;
+            switch (QMSAppInfo.Version)
+            {
+                case 1:
+                    txtContent.Text = frmMain.ticketTemplate;
+                    txtsolien.Value = frmMain.solien;
+                    break;
+                case 3:
+                    txtContent.Text = frmMain_ver3.ticketTemplate;
+                    txtsolien.Value = frmMain_ver3.solien;
+                    break;
+            }
+
         }
 
-        private void btTenDichVu_Click(object sender, EventArgs e)
-        {
-            string content = txtContent.Text;
-            content += "[ten-dich-vu]";
-            txtContent.Text = content;
-        }
+       
     }
 }

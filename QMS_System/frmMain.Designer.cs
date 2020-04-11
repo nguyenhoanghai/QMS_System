@@ -92,7 +92,6 @@
             this.richedit = new DevExpress.XtraBars.BarEditItem();
             this.repositoryItemRichTextEdit4 = new DevExpress.XtraEditors.Repository.RepositoryItemRichTextEdit();
             this.btRunProcess = new DevExpress.XtraBars.BarButtonItem();
-            this.barButtonItem9 = new DevExpress.XtraBars.BarButtonItem();
             this.btnSound2 = new DevExpress.XtraBars.BarButtonItem();
             this.btnVideo = new DevExpress.XtraBars.BarButtonItem();
             this.btnVideoTemplate = new DevExpress.XtraBars.BarButtonItem();
@@ -218,7 +217,6 @@
             this.btnMainDirection,
             this.richedit,
             this.btRunProcess,
-            this.barButtonItem9,
             this.btnSound2,
             this.btnVideo,
             this.btnVideoTemplate,
@@ -234,7 +232,7 @@
             this.barButtonItem15});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ribbonControl1.MaxItemId = 81;
+            this.ribbonControl1.MaxItemId = 92;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage3,
@@ -259,7 +257,7 @@
             this.repositoryItemRichTextEdit4,
             this.repositoryItemTextEdit7});
             this.ribbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.Office2013;
-            this.ribbonControl1.Size = new System.Drawing.Size(774, 168);
+            this.ribbonControl1.Size = new System.Drawing.Size(1413, 168);
             this.ribbonControl1.StatusBar = this.ribbonStatusBar1;
             this.ribbonControl1.ToolbarLocation = DevExpress.XtraBars.Ribbon.RibbonQuickAccessToolbarLocation.Above;
             // 
@@ -731,12 +729,6 @@
             this.btRunProcess.Name = "btRunProcess";
             this.btRunProcess.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btRunProcess_ItemClick);
             // 
-            // barButtonItem9
-            // 
-            this.barButtonItem9.Caption = "barButtonItem9";
-            this.barButtonItem9.Id = 66;
-            this.barButtonItem9.Name = "barButtonItem9";
-            // 
             // btnSound2
             // 
             this.btnSound2.Caption = "Âm thanh";
@@ -907,7 +899,6 @@
             // 
             this.ribbonPageGroup6.ItemLinks.Add(this.barButtonItem1);
             this.ribbonPageGroup6.ItemLinks.Add(this.btnStatus, true);
-            this.ribbonPageGroup6.ItemLinks.Add(this.barButtonItem9);
             this.ribbonPageGroup6.Name = "ribbonPageGroup6";
             // 
             // r
@@ -921,7 +912,7 @@
             // ribbonPageGroup13
             // 
             this.ribbonPageGroup13.ItemLinks.Add(this.btnSound2);
-            this.ribbonPageGroup13.ItemLinks.Add(this.btnVideo);
+            this.ribbonPageGroup13.ItemLinks.Add(this.btnVideo, true);
             this.ribbonPageGroup13.Name = "ribbonPageGroup13";
             // 
             // ribbonPageGroup14
@@ -946,7 +937,7 @@
             this.ribbonPageGroup4.ItemLinks.Add(this.btnServiceShift, true);
             this.ribbonPageGroup4.ItemLinks.Add(this.btnMainDirection, true);
             this.ribbonPageGroup4.ItemLinks.Add(this.btnConnectSQL, true);
-            this.ribbonPageGroup4.ItemLinks.Add(this.barbtmauphieu);
+            this.ribbonPageGroup4.ItemLinks.Add(this.barbtmauphieu, true);
             this.ribbonPageGroup4.Name = "ribbonPageGroup4";
             // 
             // ribbonPageGroup5
@@ -1050,7 +1041,7 @@
             this.ribbonStatusBar1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ribbonStatusBar1.Name = "ribbonStatusBar1";
             this.ribbonStatusBar1.Ribbon = this.ribbonControl1;
-            this.ribbonStatusBar1.Size = new System.Drawing.Size(774, 36);
+            this.ribbonStatusBar1.Size = new System.Drawing.Size(1413, 36);
             // 
             // xtraTabbedMdiManager1
             // 
@@ -1107,7 +1098,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(774, 550);
+            this.ClientSize = new System.Drawing.Size(1413, 550);
             this.Controls.Add(this.ribbonStatusBar1);
             this.Controls.Add(this.ribbonControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1116,7 +1107,7 @@
             this.Name = "frmMain";
             this.Ribbon = this.ribbonControl1;
             this.StatusBar = this.ribbonStatusBar1;
-            this.Text = "Hệ thống xếp hàng GPRO";
+            this.Text = "Hệ thống xếp hàng GPRO Ver1";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMain_FormClosed);
             this.Load += new System.EventHandler(this.frmMain_Load);
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).EndInit();
@@ -1235,7 +1226,6 @@
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup12;
         private DevExpress.XtraBars.BarButtonItem btRunProcess;
         private System.Windows.Forms.Timer tmerQuetServeOver;
-        private DevExpress.XtraBars.BarButtonItem barButtonItem9;
         private DevExpress.XtraBars.BarButtonItem btnSound2;
         private DevExpress.XtraBars.BarButtonItem btnVideo;
         private DevExpress.XtraBars.Ribbon.RibbonPage r;

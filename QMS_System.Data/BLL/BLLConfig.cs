@@ -34,7 +34,13 @@ namespace QMS_System.Data.BLL
                     if (getall)
                         return db.Q_Config.Where(x => !x.IsDeleted).Select(x => new ConfigModel() { Id = x.Id, Code = x.Code, Value = x.Value, Note = x.Note, IsActived = x.IsActived }).ToList();
                     else
-                        return db.Q_Config.Where(x => !x.IsDeleted && x.Code != eConfigCode.TicketTemplate).Select(x => new ConfigModel() { Id = x.Id, Code = x.Code, Value = x.Value, Note = x.Note, IsActived = x.IsActived }).ToList();
+                        return db.Q_Config.Where(x => !x.IsDeleted &&
+                        x.Code != eConfigCode.TicketTemplate &&
+                        x.Code != eConfigCode.ComportName &&
+                        x.Code != eConfigCode.ComName_Printer &&
+                        x.Code != eConfigCode.COM_Print
+                        )
+                        .Select(x => new ConfigModel() { Id = x.Id, Code = x.Code, Value = x.Value, Note = x.Note, IsActived = x.IsActived }).ToList();
                 }
             }
             catch (Exception ex)
@@ -117,11 +123,12 @@ namespace QMS_System.Data.BLL
                 return obj != null ? obj.Value : string.Empty;
             }
         }
+
         public bool UpdateConfigValueFromInterface(string connectString, Q_Config model)
         {
             using (db = new QMSSystemEntities(connectString))
             {
-                var obj = db.Q_Config.FirstOrDefault(x => !x.IsDeleted && x.Id == model.Id);
+                var obj = db.Q_Config.FirstOrDefault(x => !x.IsDeleted && x.Code == model.Code);
                 if (obj != null)
                 {
                     //obj.Code = obj.Code;

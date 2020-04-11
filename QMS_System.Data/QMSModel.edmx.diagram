@@ -110,6 +110,21 @@
         <AssociationConnector Association="QMSSystemModel.FK_Q_Equipment_Q_Counter" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_MaindisplayDirection_Q_Counter" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_TVReadSound_Q_Counter" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Video" Width="1.5" PointX="5.75" PointY="0.75" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_VideoTemplate_De_Q_Video" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_CounterDayInfo" Width="1.5" PointX="6.75" PointY="55.375" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_CounterDayInfo_Q_Counter" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_WorkDetail" Width="1.5" PointX="16.625" PointY="13.125" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Works" Width="1.5" PointX="14.375" PointY="13" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_WorkDetail_Q_Works" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_WorkType" Width="1.5" PointX="15.375" PointY="0.875" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_WorkDetail_Q_WorkType" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_DailyRequire_WorkDetail" Width="1.5" PointX="18.875" PointY="26.625" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_HisDailyRequire_WorkDetail" Width="1.5" PointX="18.875" PointY="22.75" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_DailyRequire_WorkDetail_Q_DailyRequire" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_DailyRequire_WorkDetail_Q_WorkDetail" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_HisDailyRequire_WorkDetail_Q_HisDailyRequire" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_HisDailyRequire_WorkDetail_Q_WorkDetail" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

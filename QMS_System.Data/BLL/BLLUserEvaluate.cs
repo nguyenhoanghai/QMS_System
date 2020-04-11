@@ -192,6 +192,24 @@ namespace QMS_System.Data.BLL
                                     db.Entry<Q_DailyRequire_Detail>(item).State = System.Data.Entity.EntityState.Modified;
                                 }
                             }
+
+                            //neu he thong xe may & end phieu sau khi danh gia thi di tim dòng của thu ngân sau đó end cho thu ngân
+                            if (system == "1" && doneTicketAfterEvaluate == "1")
+                            {
+                                details = (from x in db.Q_DailyRequire_Detail
+                                           where
+                                           x.DailyRequireId == firstObj.DailyRequireId &&
+                                           (x.StatusId == (int)eStatus.DANHGIA || x.StatusId == (int)eStatus.DAGXL)
+                                            && x.UserId == user.Id
+                                           select x);
+                                foreach (var item in details)
+                                {
+                                    item.StatusId = (int)eStatus.HOTAT;
+                                    item.EndProcessTime = now;
+                                    db.Entry<Q_DailyRequire_Detail>(item).State = System.Data.Entity.EntityState.Modified;
+                                }
+                            }
+
                             db.SaveChanges();
                             rs.IsSuccess = true;
                         }
@@ -312,7 +330,7 @@ namespace QMS_System.Data.BLL
             catch { }
             return rs;
         }
-         
+
         public List<ReportEvaluateModel> GetDailyReport(SqlConnection sqlConnection, bool reportForUser, DateTime fromDate, DateTime toDate)
         {
             fromDate = new DateTime(fromDate.Year, fromDate.Month, fromDate.Day, 0, 0, 0);
@@ -547,7 +565,7 @@ namespace QMS_System.Data.BLL
                 return DateTime.Parse(value.ToString());
             return null;
         }
-         
+
         public List<ReportEvaluateModel> GetReport(string connectString, int userId, DateTime from, DateTime to)
         {
             using (var db = new QMSSystemEntities(connectString))
@@ -690,7 +708,7 @@ namespace QMS_System.Data.BLL
                         Number = getIntValue(row["TicketNumber"])
                     });
                 }
-            } 
+            }
             if (DateTime.Now < toDate)
             {
                 query = "select ue.UserId,u.Name as UserName, dr.ServiceId, s.Name as ServiceName,dr.PrintTime,ue.CreatedDate,dd.EndProcessTime,ue.Score, ue.Comment,dr.TicketNumber  from Q_UserEvaluate ue, Q_DailyRequire dr, Q_DailyRequire_Detail dd, Q_User u, Q_Service s where ue.IsDeleted = 0 and ue.DailyRequireDeId = dd.Id and dd.DailyRequireId = dr.Id and u.IsDeleted = 0 and ue.UserId = u.Id and s.IsDeleted = 0 and s.IsActived =1 and s.Id = dr.ServiceId";
@@ -718,9 +736,9 @@ namespace QMS_System.Data.BLL
                 }
             }
 
-            return histories.OrderBy(x => x.PrintTime).ThenBy(x => x.Number).ToList(); 
+            return histories.OrderBy(x => x.PrintTime).ThenBy(x => x.Number).ToList();
         }
-        
+
         public SendSMSModel GetRequireSendSMS(string connectString)
         {
             using (var db = new QMSSystemEntities(connectString))

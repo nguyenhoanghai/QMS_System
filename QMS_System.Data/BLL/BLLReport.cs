@@ -201,51 +201,53 @@ namespace QMS_System.Data.BLL
                 }
 
                 //today
-                var todays = new List<ReportModel>();
-                query = "select dr.TicketNumber, s.Name as ServiceName , s.Id as ServiceId, dr.Id, dr.PrintTime from Q_DailyRequire dr,Q_Service s where s.IsDeleted=0 and dr.PrintTime >='" + from.ToString("yyyy-MM-dd HH:mm:ss") + "' and dr.PrintTime <='" + to.ToString("yyyy-MM-dd HH:mm:ss") + "' order by dr.TicketNumber";
-                adap = new SqlDataAdapter(query, sqlConnection);
-                dt.Clear();
-                adap.Fill(dt);
-                if (dt != null && dt.Rows.Count > 0)
+                if (to >= DateTime.Now)
                 {
-                    foreach (DataRow row in dt.Rows)
-                    {
-                        todays.Add(new ReportModel()
-                        {
-                            Id = getIntValue(row["Id"]),
-                            Number = getIntValue(row["TicketNumber"]),
-                            ServiceName = getStringValue(row["ServiceName"]),
-                            PrintTime = getDateValue(row["PrintTime"]).Value,
-                            ServiceId = getIntValue(row["ServiceId"])
-                        });
-                    }
-
-                    var tddetais = new List<ModelSelectItem>();
-                    query = "select dd.DailyRequireId, dd.StatusId from Q_DailyRequire dr, Q_DailyRequire_Detail dd where dr.Id = dd.DailyRequireId and dr.PrintTime >= '" + from.ToString("yyyy-MM-dd HH:mm:ss") + "' and dr.PrintTime <='" + to.ToString("yyyy-MM-dd HH:mm:ss") + "'";
+                    var todays = new List<ReportModel>();
+                    query = "select dr.TicketNumber, s.Name as ServiceName , s.Id as ServiceId, dr.Id, dr.PrintTime from Q_DailyRequire dr,Q_Service s where s.IsDeleted=0 and dr.PrintTime >='" + from.ToString("yyyy-MM-dd HH:mm:ss") + "' and dr.PrintTime <='" + to.ToString("yyyy-MM-dd HH:mm:ss") + "' order by dr.TicketNumber";
                     adap = new SqlDataAdapter(query, sqlConnection);
                     dt.Clear();
                     adap.Fill(dt);
-
                     if (dt != null && dt.Rows.Count > 0)
                     {
                         foreach (DataRow row in dt.Rows)
                         {
-                            tddetais.Add(new ModelSelectItem()
+                            todays.Add(new ReportModel()
                             {
-                                Id = getIntValue(row["HisDailyRequireId"]),
-                                Data = getIntValue(row["StatusId"])
+                                Id = getIntValue(row["Id"]),
+                                Number = getIntValue(row["TicketNumber"]),
+                                ServiceName = getStringValue(row["ServiceName"]),
+                                PrintTime = getDateValue(row["PrintTime"]).Value,
+                                ServiceId = getIntValue(row["ServiceId"])
                             });
                         }
-                    }
-                    for (int i = 0; i < todays.Count; i++)
-                    {
-                        todays[i].stt = (i + 1);
-                        var obj = tddetais.FirstOrDefault(x => x.Id == todays[i].Id && x.Data == (int)eStatus.CHOXL);
-                        todays[i].StatusName = (obj != null ? "Đang xử lý" : "Hoàn tất");
-                    }
-                    list.AddRange(todays);
-                }
 
+                        var tddetais = new List<ModelSelectItem>();
+                        query = "select dd.DailyRequireId, dd.StatusId from Q_DailyRequire dr, Q_DailyRequire_Detail dd where dr.Id = dd.DailyRequireId and dr.PrintTime >= '" + from.ToString("yyyy-MM-dd HH:mm:ss") + "' and dr.PrintTime <='" + to.ToString("yyyy-MM-dd HH:mm:ss") + "'";
+                        adap = new SqlDataAdapter(query, sqlConnection);
+                        dt.Clear();
+                        adap.Fill(dt);
+
+                        if (dt != null && dt.Rows.Count > 0)
+                        {
+                            foreach (DataRow row in dt.Rows)
+                            {
+                                tddetais.Add(new ModelSelectItem()
+                                {
+                                    Id = getIntValue(row["HisDailyRequireId"]),
+                                    Data = getIntValue(row["StatusId"])
+                                });
+                            }
+                        }
+                        for (int i = 0; i < todays.Count; i++)
+                        {
+                            todays[i].stt = (i + 1);
+                            var obj = tddetais.FirstOrDefault(x => x.Id == todays[i].Id && x.Data == (int)eStatus.CHOXL);
+                            todays[i].StatusName = (obj != null ? "Đang xử lý" : "Hoàn tất");
+                        }
+                        list.AddRange(todays);
+                    }
+                }
                 if (list.Count > 0)
                 {
                     if (objId > 0)
@@ -330,7 +332,6 @@ namespace QMS_System.Data.BLL
             }
             return list;
         }
-
 
         public List<R_GeneralInDayModel> GeneralReport(string connectString, int objId, int typeOfSearch, DateTime from, DateTime to)
         {
@@ -428,7 +429,6 @@ namespace QMS_System.Data.BLL
             }
         }
 
-
         /// <summary>
         /// Thong ke tong hop tien thu
         /// </summary>
@@ -446,6 +446,7 @@ namespace QMS_System.Data.BLL
                 List<R_GeneralInDayModel> temps = new List<R_GeneralInDayModel>();
                 try
                 {
+
                     #region history
                     objs = db.Q_HisDailyRequire_De.Where(x => !x.Q_User.IsDeleted &&
                         !x.Q_Major.IsDeleted &&
@@ -690,6 +691,233 @@ namespace QMS_System.Data.BLL
             }
         }
 
+        public List<R_GeneralInDayModel> GeneralReport_DichVuTienThu(SqlConnection sqlConnection, int objId, int thuNganId, DateTime from, DateTime to)
+        {
+            List<R_GeneralInDayModel>
+                objs = new List<R_GeneralInDayModel>(),
+            ThuNganObjs = new List<R_GeneralInDayModel>(),
+            todayObjs = new List<R_GeneralInDayModel>(),
+            temps = new List<R_GeneralInDayModel>();
+            TimeSpan time = new TimeSpan(0, 0, 0);
+            string query = string.Empty;
+            SqlDataAdapter adap = null;
+            DataTable dt = null;
+            try
+            {
+                #region Histories
+                query = "select dr.Id as DailyRequireId,dr.ServiceId,dd.ProcessTime as Start,dd.EndProcessTime as [End],s.Name as ServiceName,dd.UserId,dr.PrintTime,dr.TicketNumber from Q_HisDailyRequire dr,Q_HisDailyRequire_De dd,Q_Major m,Q_Service s where m.IsDeleted = 0 and dd.MajorId = m.Id and s.IsDeleted = 0 and dr.ServiceId = s.Id and dr.Id = dd.HisDailyRequireId  and dd.StatusId=" + (int)eStatus.HOTAT + " and dr.PrintTime >= '" + from.ToString("yyyy-MM-dd HH:mm:ss") + "' and dr.PrintTime<='" + to.ToString("yyyy-MM-dd HH:mm:ss") + "'";
+                adap = new SqlDataAdapter(query, sqlConnection);
+                dt = new DataTable();
+                adap.Fill(dt);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    R_GeneralInDayModel newItem;
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        newItem = new R_GeneralInDayModel()
+                        {
+                            Id = getIntValue(row["DailyRequireId"]),
+                            ObjectId = getIntValue(row["ServiceId"]),
+                            Start = getDateValue(row["Start"]),
+                            End = getDateValue(row["End"]),
+                            Name = getStringValue(row["ServiceName"]),
+                            TotalTransaction = 0,
+                            TotalTransTime = 0,
+                            AverageTimePerTrans = 0,
+                            AverageTimeWaitingAfterPerTrans = 0,
+                            AverageTimeWaitingBeforePerTrans = 0,
+                            PrintTime = getDateValue(row["PrintTime"]).Value,
+                            Index = getIntValue(row["TicketNumber"]),
+                            UserId = getIntValue(row["UserId"]),
+                        };
+                        if (newItem.UserId.HasValue && newItem.UserId.Value == thuNganId)
+                            ThuNganObjs.Add(newItem);
+                        else
+                            objs.Add(newItem);
+                    }
+
+                    if (objId > 0)
+                        objs = objs.Where(x => x.ObjectId == objId).ToList();
+                    temps.AddRange(objs);
+
+                    objs = objs.GroupBy(x => x.ObjectId).Select(t => new R_GeneralInDayModel()
+                    {
+                        ObjectId = t.Key,
+                        //check lai
+                        TotalTransaction = t.Select(x => x.Id).Distinct().Count(),
+                        TotalTransTime = t.Sum(p => p.End.Value.Subtract(p.Start.Value).TotalMinutes),
+                        Name = t.FirstOrDefault().Name
+                    }).ToList();
+
+                    for (int i = 0; i < objs.Count; i++)
+                    {
+                        objs[i].Index = i + 1;
+
+                        //luot giao dich
+                        var phieus = temps.Where(x => x.ObjectId == objs[i].ObjectId && x.UserId != null && x.UserId != thuNganId && x.End.HasValue).ToList();
+                        var ids = phieus.Select(x => x.Id).Distinct().ToArray();
+                        objs[i].TotalTransaction = ids.Length;
+                        objs[i].TotalTransTime = Math.Round(phieus.Sum(p => (p.End.Value.Subtract(p.Start.Value)).TotalMinutes), 0, MidpointRounding.AwayFromZero);
+
+                        objs[i].AverageTimePerTrans = ((objs[i].TotalTransTime > 0 && objs[i].TotalTransaction > 0) ? Math.Round((double)(objs[i].TotalTransTime / objs[i].TotalTransaction), 2, MidpointRounding.AwayFromZero) : 0);
+
+                        // thoi gian cho truoc xu ly
+                        int TNGoi = 0;
+                        for (int z = 0; z < ids.Length; z++)
+                        {
+                            var newObj = phieus.Where(x => x.Id == ids[z]).OrderBy(x => x.Start).FirstOrDefault();
+                            var choTruocSC = newObj.Start.Value.Subtract(newObj.PrintTime);
+
+                            objs[i].AverageTimeWaitingBeforePerTrans += choTruocSC.TotalMinutes;
+
+                            newObj = phieus.Where(x => x.Id == ids[z]).OrderByDescending(x => x.End).FirstOrDefault();
+                            var thunganObj = ThuNganObjs.Where(x => x.Id == ids[z]).OrderByDescending(x => x.Start).FirstOrDefault();
+                            var thunganObjss = ThuNganObjs.Where(x => x.Id == ids[z]).OrderByDescending(x => x.Start).ToList();
+                            if (thunganObj != null && thunganObj.End.HasValue)
+                            {
+                                TNGoi++;
+                                double choSauSC = 0;
+                                if (thunganObj.Start.Value > newObj.End.Value)
+                                    choSauSC = thunganObj.Start.Value.Subtract(newObj.End.Value).TotalMinutes;
+                                else
+                                    choSauSC = newObj.End.Value.Subtract(thunganObj.Start.Value).TotalMinutes;
+
+                                if (choSauSC > 0)
+                                    objs[i].AverageTimeWaitingAfterPerTrans += choSauSC;
+                            }
+
+                        }
+                        if (objs[i].AverageTimeWaitingBeforePerTrans > 0)
+                            //  objs[i].AverageTimeWaitingBeforePerTrans = Math.Round((double)(objs[i].AverageTimeWaitingBeforePerTrans / objs[i].TotalTransaction), 2, MidpointRounding.AwayFromZero);
+                            objs[i].AverageTimeWaitingBeforePerTrans = Math.Round((double)(objs[i].AverageTimeWaitingBeforePerTrans / ids.Length), 2, MidpointRounding.AwayFromZero);
+                        if (objs[i].AverageTimeWaitingAfterPerTrans > 0)
+                            objs[i].AverageTimeWaitingAfterPerTrans = Math.Round((double)(objs[i].AverageTimeWaitingAfterPerTrans / TNGoi), 2, MidpointRounding.AwayFromZero);
+
+                        if (objs[i].AverageTimeWaitingBeforePerTrans < 0)
+                            objs[i].AverageTimeWaitingBeforePerTrans = 0;
+                        if (objs[i].AverageTimeWaitingAfterPerTrans < 0)
+                            objs[i].AverageTimeWaitingAfterPerTrans = 0;
+
+                    }
+                }
+                #endregion
+
+                temps.Clear();
+                if (to >= DateTime.Now)
+                {
+                    #region today
+                    query = "select dr.Id as DailyRequireId,dr.ServiceId,dd.ProcessTime as Start,dd.EndProcessTime as [End],s.Name as ServiceName,dd.UserId,dr.PrintTime,dr.TicketNumber from Q_DailyRequire dr,Q_DailyRequire_Detail dd,Q_Major m,Q_Service s where m.IsDeleted = 0 and dd.MajorId = m.Id and s.IsDeleted = 0 and dr.ServiceId = s.Id and dr.Id = dd.DailyRequireId and dd.StatusId=" + (int)eStatus.HOTAT;
+                    adap = new SqlDataAdapter(query, sqlConnection);
+                    dt = new DataTable();
+                    adap.Fill(dt);
+                    if (dt != null && dt.Rows.Count > 0)
+                    {
+                        R_GeneralInDayModel newItem;
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            newItem = new R_GeneralInDayModel()
+                            {
+                                Id = getIntValue(row["DailyRequireId"]),
+                                ObjectId = getIntValue(row["ServiceId"]),
+                                Start = getDateValue(row["Start"]),
+                                End = getDateValue(row["End"]),
+                                Name = getStringValue(row["ServiceName"]),
+                                TotalTransaction = 0,
+                                TotalTransTime = 0,
+                                AverageTimePerTrans = 0,
+                                AverageTimeWaitingAfterPerTrans = 0,
+                                AverageTimeWaitingBeforePerTrans = 0,
+                                PrintTime = getDateValue(row["PrintTime"]).Value,
+                                Index = getIntValue(row["TicketNumber"]),
+                                UserId = getIntValue(row["UserId"]),
+                            };
+                            if (newItem.UserId.HasValue && newItem.UserId.Value == thuNganId)
+                                ThuNganObjs.Add(newItem);
+                            else
+                                todayObjs.Add(newItem);
+                        }
+                        if (objId > 0)
+                            todayObjs = todayObjs.Where(x => x.ObjectId == objId).ToList();
+
+                        temps.AddRange(todayObjs);
+                        todayObjs = todayObjs.GroupBy(x => x.ObjectId).Select(t => new R_GeneralInDayModel()
+                        {
+                            ObjectId = t.Key,
+                            //check lai
+                            TotalTransaction = t.Select(x => x.Id).Distinct().Count(),
+                            // TotalTransTime = t.Sum(p => p.End.Value.Minute + (p.End.Value.Hour - p.Start.Value.Hour) * 60 - p.Start.Value.Minute),
+                            TotalTransTime = t.Sum(p => p.End.Value.Subtract(p.Start.Value).TotalMinutes),
+                            Name = t.FirstOrDefault().Name
+                        }).ToList();
+
+                        for (int i = 0; i < todayObjs.Count; i++)
+                        {
+                            todayObjs[i].Index = i + 1;
+
+                            //luot giao dich
+                            //  var phieus = temps.Where(x => x.ObjectId == todayObjs[i].ObjectId && x.UserId != null && x.UserId != thuNganId).ToList();
+                            var phieus = temps.Where(x => x.ObjectId == todayObjs[i].ObjectId && x.UserId != thuNganId).ToList();
+                            var ids = phieus.Select(x => x.Id).Distinct().ToArray();
+                            todayObjs[i].TotalTransaction = ids.Length;
+                            //todayObjs[i].TotalTransTime = phieus.Sum(p => p.End.Value.Minute + (p.End.Value.Hour - p.Start.Value.Hour) * 60 - p.Start.Value.Minute);
+                            todayObjs[i].TotalTransTime = phieus.Sum(p => p.End.Value.Subtract(p.Start.Value).TotalMinutes);
+                            todayObjs[i].AverageTimePerTrans = ((todayObjs[i].TotalTransTime > 0 && todayObjs[i].TotalTransaction > 0) ? Math.Round((double)(todayObjs[i].TotalTransTime / todayObjs[i].TotalTransaction), 2, MidpointRounding.AwayFromZero) : 0);
+
+                            // thoi gian cho truoc xu ly
+                            int TNGoi = 0;
+
+                            for (int z = 0; z < ids.Length; z++)
+                            {
+                                var newObj = phieus.Where(x => x.Id == ids[z]).OrderBy(x => x.Start).FirstOrDefault();
+                                // todayObjs[i].AverageTimeWaitingBeforePerTrans += (newObj.Start.Value.Minute + (newObj.Start.Value.Hour - newObj.PrintTime.Hour) * 60 - newObj.PrintTime.Minute);
+                                double choTruocSC = newObj.Start.Value.Subtract(newObj.PrintTime).TotalMinutes;
+                                todayObjs[i].AverageTimeWaitingBeforePerTrans += choTruocSC;
+
+                                newObj = phieus.Where(x => x.Id == ids[z]).OrderByDescending(x => x.End).FirstOrDefault();
+                                var thunganObj = ThuNganObjs.Where(x => x.Id == ids[z]).OrderByDescending(x => x.End).FirstOrDefault();
+                                if (thunganObj != null)
+                                {
+                                    TNGoi++;
+                                    double choSauSC = (thunganObj.Start.Value.Subtract(newObj.End.Value).TotalMinutes);
+                                    if (choSauSC > 0)
+                                        todayObjs[i].AverageTimeWaitingAfterPerTrans += choSauSC;
+                                }
+                            }
+                            if (todayObjs[i].AverageTimeWaitingBeforePerTrans > 0)
+                                // todayObjs[i].AverageTimeWaitingBeforePerTrans = Math.Round((double)(todayObjs[i].AverageTimeWaitingBeforePerTrans / todayObjs[i].TotalTransaction), 2, MidpointRounding.AwayFromZero);
+                                todayObjs[i].AverageTimeWaitingBeforePerTrans = Math.Round((double)(todayObjs[i].AverageTimeWaitingBeforePerTrans / ids.Length), 2, MidpointRounding.AwayFromZero);
+                            if (todayObjs[i].AverageTimeWaitingAfterPerTrans > 0)
+                                todayObjs[i].AverageTimeWaitingAfterPerTrans = Math.Round((double)(todayObjs[i].AverageTimeWaitingAfterPerTrans / TNGoi), 2, MidpointRounding.AwayFromZero);
+
+                            if (todayObjs[i].AverageTimeWaitingBeforePerTrans < 0)
+                                todayObjs[i].AverageTimeWaitingBeforePerTrans = 0;
+                            if (todayObjs[i].AverageTimeWaitingAfterPerTrans < 0)
+                                todayObjs[i].AverageTimeWaitingAfterPerTrans = 0;
+                        }
+                        objs.AddRange(todayObjs);
+                    }
+
+                    #endregion
+                }
+                objs = objs.GroupBy(x => x.ObjectId).Select(t => new R_GeneralInDayModel()
+                {
+                    ObjectId = t.Key,
+                    TotalTransaction = t.Sum(p => p.TotalTransaction),
+                    TotalTransTime = t.Sum(p => p.TotalTransTime),
+                    Name = t.FirstOrDefault().Name,
+                    AverageTimePerTrans = (t.Sum(p => p.AverageTimePerTrans) > 0 ? t.Sum(p => p.AverageTimePerTrans) / t.Count() : 0),
+                    AverageTimeWaitingAfterPerTrans = t.Sum(p => p.AverageTimeWaitingAfterPerTrans),
+                    AverageTimeWaitingBeforePerTrans = (t.Sum(p => p.AverageTimeWaitingBeforePerTrans) > 0 ? t.Sum(p => p.AverageTimeWaitingBeforePerTrans) / t.Count() : 0),
+
+                }).OrderBy(x => x.ObjectId).ToList();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return objs;
+
+        }
 
         /// <summary>
         /// Lấy báo cáo chi tiết ngày theo mẫu TienThu 
@@ -903,15 +1131,16 @@ namespace QMS_System.Data.BLL
 
         public List<ReportModel> DetailReport_DichVuTienThu(SqlConnection sqlConnection, int objId, int ThuNganId, DateTime from, DateTime to)
         {
-            List<ReportModel> yesList = new List<ReportModel>(),
+            List<ReportModel>
+                yesList = new List<ReportModel>(),
                 hisThuNgans = new List<ReportModel>(),
                             todayList = new List<ReportModel>(),
                             todayThuNgans = new List<ReportModel>(),
                             returnList = new List<ReportModel>();
-
+            ReportModel newItem;
             #region Yesterday
             TimeSpan time = new TimeSpan(0, 0, 0);
-            string query = "select dr.Id, dr.TicketNumber,dr.PrintTime,s.Name as ServiceName, s.Id as ServiceId, dd.ProcessTime, dd.EndProcessTime, dd.StatusId from Q_HisDailyRequire dr, Q_HisDailyRequire_De dd, Q_User u, Q_Service s where dr.Id = dd.HisDailyRequireId and dd.UserId = u.Id and dr.ServiceId = s.Id and u.IsDeleted = 0 and s.IsDeleted = 0 and s.IsActived = 1 and dd.ProcessTime is not null and dd.UserId is not null and dd.StatusId=" + (int)eStatus.HOTAT + " and dr.PrintTime >= '" + from.ToString("yyyy-MM-dd HH:mm:ss") + "' and dr.PrintTime<='" + to.ToString("yyyy-MM-dd HH:mm:ss") + "' and dd.UserId !=" + ThuNganId;
+            string query = "select dr.Id, dr.TicketNumber,dr.PrintTime,s.Name as ServiceName, s.Id as ServiceId, dd.ProcessTime, dd.EndProcessTime, dd.StatusId, dd.UserId from Q_HisDailyRequire dr, Q_HisDailyRequire_De dd,  Q_Service s where dr.Id = dd.HisDailyRequireId  and dr.ServiceId = s.Id  and s.IsDeleted = 0 and s.IsActived = 1 and dd.ProcessTime is not null  and dd.StatusId=" + (int)eStatus.HOTAT + " and dr.PrintTime >= '" + from.ToString("yyyy-MM-dd HH:mm:ss") + "' and dr.PrintTime<='" + to.ToString("yyyy-MM-dd HH:mm:ss") + "' ";
             var adap = new SqlDataAdapter(query, sqlConnection);
             var dt = new DataTable();
             adap.Fill(dt);
@@ -919,7 +1148,7 @@ namespace QMS_System.Data.BLL
             {
                 foreach (DataRow row in dt.Rows)
                 {
-                    yesList.Add(new ReportModel()
+                    newItem = new ReportModel()
                     {
                         Id = getIntValue(row["Id"]),
                         Number = getIntValue(row["TicketNumber"]),
@@ -928,34 +1157,18 @@ namespace QMS_System.Data.BLL
                         ServiceId = getIntValue(row["ServiceId"]),
                         Start = getDateValue(row["ProcessTime"]),
                         End = getDateValue(row["EndProcessTime"]),
-                        StatusName = (getIntValue(row["StatusId"]) == (int)eStatus.CHOXL ? "Đang xử lý" : "Hoàn tất")
-                    });
+                        StatusName = (getIntValue(row["StatusId"]) == (int)eStatus.CHOXL ? "Đang xử lý" : "Hoàn tất"),
+                        UserId = getIntValue(row["UserId"])
+                    };
+                    if (newItem.UserId.HasValue && newItem.UserId.Value == ThuNganId)
+                        hisThuNgans.Add(newItem);
+                    else
+                        yesList.Add(newItem);
                 }
             }
             if (yesList.Count > 0 && objId != 0)
                 yesList = yesList.Where(x => x.ServiceId == objId).ToList();
 
-            query = "select dr.Id, dr.TicketNumber,dr.PrintTime,s.Name as ServiceName, s.Id as ServiceId, dd.ProcessTime, dd.EndProcessTime, dd.StatusId from Q_HisDailyRequire dr, Q_HisDailyRequire_De dd, Q_User u, Q_Service s where dr.Id = dd.HisDailyRequireId and dd.UserId = u.Id and dr.ServiceId = s.Id and u.IsDeleted = 0 and s.IsDeleted = 0 and s.IsActived = 1 and dd.ProcessTime is not null and dd.UserId is not null and dd.StatusId=" + (int)eStatus.HOTAT + " and dr.PrintTime >= '" + from.ToString("yyyy-MM-dd HH:mm:ss") + "' and dr.PrintTime<='" + to.ToString("yyyy-MM-dd HH:mm:ss") + "' and dd.UserId =" + ThuNganId;
-            adap = new SqlDataAdapter(query, sqlConnection);
-            dt.Clear();
-            adap.Fill(dt);
-            if (dt != null && dt.Rows.Count > 0)
-            {
-                foreach (DataRow row in dt.Rows)
-                {
-                    hisThuNgans.Add(new ReportModel()
-                    {
-                        Id = getIntValue(row["Id"]),
-                        Number = getIntValue(row["TicketNumber"]),
-                        ServiceName = getStringValue(row["ServiceName"]),
-                        PrintTime = getDateValue(row["PrintTime"]).Value,
-                        ServiceId = getIntValue(row["ServiceId"]),
-                        Start = getDateValue(row["ProcessTime"]),
-                        End = getDateValue(row["EndProcessTime"]),
-                        StatusName = (getIntValue(row["StatusId"]) == (int)eStatus.CHOXL ? "Đang xử lý" : "Hoàn tất")
-                    });
-                }
-            }
 
             if (yesList.Count > 0)
             {
@@ -1008,93 +1221,80 @@ namespace QMS_System.Data.BLL
             #endregion
 
             #region Today
-            query = "select dr.Id, dr.TicketNumber,dr.PrintTime,s.Name as ServiceName, s.Id as ServiceId, dd.ProcessTime, dd.EndProcessTime, dd.StatusId from Q_DailyRequire dr, Q_DailyRequire_Detail dd, Q_User u, Q_Service s where dr.Id = dd.DailyRequireId and dd.UserId = u.Id and dr.ServiceId = s.Id and u.IsDeleted = 0 and s.IsDeleted = 0 and s.IsActived = 1 and dd.ProcessTime is not null and dd.UserId is not null and dd.StatusId=" + (int)eStatus.HOTAT + " and dr.PrintTime >= '" + from.ToString("yyyy-MM-dd HH:mm:ss") + "' and dr.PrintTime<='" + to.ToString("yyyy-MM-dd HH:mm:ss") + "' and dd.UserId !=" + ThuNganId;
-            adap = new SqlDataAdapter(query, sqlConnection);
-            dt.Clear();
-            adap.Fill(dt);
-            if (dt != null && dt.Rows.Count > 0)
+            if (to >= DateTime.Now)
             {
-                foreach (DataRow row in dt.Rows)
+                query = "select dr.Id, dr.TicketNumber,dr.PrintTime,s.Name as ServiceName, s.Id as ServiceId, dd.ProcessTime, dd.EndProcessTime, dd.StatusId, dd.UserId from Q_DailyRequire dr, Q_DailyRequire_Detail dd,   Q_Service s where dr.Id = dd.DailyRequireId  and dr.ServiceId = s.Id   and s.IsDeleted = 0 and s.IsActived = 1 and dd.ProcessTime is not null and dd.StatusId=" + (int)eStatus.HOTAT + " and dr.PrintTime >= '" + from.ToString("yyyy-MM-dd HH:mm:ss") + "' and dr.PrintTime<='" + to.ToString("yyyy-MM-dd HH:mm:ss") + "' ";
+                adap = new SqlDataAdapter(query, sqlConnection);
+                dt.Clear();
+                adap.Fill(dt);
+                if (dt != null && dt.Rows.Count > 0)
                 {
-                    todayList.Add(new ReportModel()
+                    foreach (DataRow row in dt.Rows)
                     {
-                        Id = getIntValue(row["Id"]),
-                        Number = getIntValue(row["TicketNumber"]),
-                        ServiceName = getStringValue(row["ServiceName"]),
-                        PrintTime = getDateValue(row["PrintTime"]).Value,
-                        ServiceId = getIntValue(row["ServiceId"]),
-                        Start = getDateValue(row["ProcessTime"]),
-                        End = getDateValue(row["EndProcessTime"]),
-                        StatusName = (getIntValue(row["StatusId"]) == (int)eStatus.CHOXL ? "Đang xử lý" : "Hoàn tất")
-                    });
-                }
-            }
-
-            query = "select dr.Id, dr.TicketNumber,dr.PrintTime,s.Name as ServiceName, s.Id as ServiceId, dd.ProcessTime, dd.EndProcessTime, dd.StatusId from Q_DailyRequire dr, Q_DailyRequire_Detail dd, Q_User u, Q_Service s where dr.Id = dd.DailyRequireId and dd.UserId = u.Id and dr.ServiceId = s.Id and u.IsDeleted = 0 and s.IsDeleted = 0 and s.IsActived = 1 and dd.ProcessTime is not null and dd.UserId is not null and dd.StatusId=" + (int)eStatus.HOTAT + " and dr.PrintTime >= '" + from.ToString("yyyy-MM-dd HH:mm:ss") + "' and dr.PrintTime<='" + to.ToString("yyyy-MM-dd HH:mm:ss") + "' and dd.UserId =" + ThuNganId;
-            adap = new SqlDataAdapter(query, sqlConnection);
-            dt.Clear();
-            adap.Fill(dt);
-            if (dt != null && dt.Rows.Count > 0)
-            {
-                foreach (DataRow row in dt.Rows)
-                {
-                    todayThuNgans.Add(new ReportModel()
-                    {
-                        Id = getIntValue(row["Id"]),
-                        Number = getIntValue(row["TicketNumber"]),
-                        ServiceName = getStringValue(row["ServiceName"]),
-                        PrintTime = getDateValue(row["PrintTime"]).Value,
-                        ServiceId = getIntValue(row["ServiceId"]),
-                        Start = getDateValue(row["ProcessTime"]),
-                        End = getDateValue(row["EndProcessTime"]),
-                        StatusName = (getIntValue(row["StatusId"]) == (int)eStatus.CHOXL ? "Đang xử lý" : "Hoàn tất")
-                    });
-                }
-            }
-
-            if (todayList.Count > 0)
-            {
-                var ids = todayList.Select(x => x.Id).Distinct().ToArray();
-                for (int i = 0; i < ids.Length; i++)
-                {
-                    var phieus = todayList.Where(x => x.Id == ids[i]).OrderBy(x => x.Start).ToList();
-                    if (phieus.Count > 0)
-                    {
-                        var fakePrintTime = phieus[0].PrintTime;
-                        for (int ii = 0; ii < phieus.Count; ii++)
+                        newItem = new ReportModel()
                         {
-                            if (phieus[ii].Start.HasValue)
-                                phieus[ii].str_Start = phieus[ii].Start.Value.ToString("dd/MM/yyyy HH:mm");
-                            if (phieus[ii].End.HasValue)
-                                phieus[ii].str_End = phieus[ii].End.Value.ToString("dd/MM/yyyy HH:mm");
-                            //thoi gian giao dich tai ban nang
-                            if (phieus[ii].Start.HasValue && phieus[ii].End.HasValue)
-                                phieus[ii].ProcessTime = phieus[ii].End.Value.Subtract(phieus[ii].Start.Value).ToString("hh\\:mm\\:ss");
-                            //thoi gian cho truoc khi len ban nang sua chua
-                            if (phieus[ii].Start.HasValue && fakePrintTime != null)
-                                phieus[ii].WaitingTime = phieus[ii].Start.Value.Subtract(fakePrintTime).ToString("hh\\:mm\\:ss");
+                            Id = getIntValue(row["Id"]),
+                            Number = getIntValue(row["TicketNumber"]),
+                            ServiceName = getStringValue(row["ServiceName"]),
+                            PrintTime = getDateValue(row["PrintTime"]).Value,
+                            ServiceId = getIntValue(row["ServiceId"]),
+                            UserId = getIntValue(row["UserId"]),
+                            Start = getDateValue(row["ProcessTime"]),
+                            End = getDateValue(row["EndProcessTime"]),
+                            StatusName = (getIntValue(row["StatusId"]) == (int)eStatus.CHOXL ? "Đang xử lý" : "Hoàn tất")
+                        };
 
-                            if (ii == phieus.Count - 1)
-                            {
-                                //thoi gian thu ngan bat dau goi
-                                var nowTN = todayThuNgans.Where(x => x.Id == phieus[ii].Id && x.Start.HasValue).OrderByDescending(x => x.Start).FirstOrDefault();
-                                if (nowTN != null)
-                                {
-                                    phieus[ii].StartTN = nowTN.Start;
-                                    phieus[ii].str_StartTN = nowTN.Start.Value.ToString("dd/MM/yyyy HH:mm");
-
-                                    //khoang thoi gian chờ tu luc ket thuc sua chua cho toi khi thu ngan goi
-                                    if (phieus[ii].End.HasValue && phieus[ii].StartTN.HasValue)
-                                        phieus[ii].WaitingTimeTN = phieus[ii].StartTN.Value.Subtract(phieus[ii].End.Value).ToString("hh\\:mm\\:ss");
-                                }
-                            }
-                            returnList.Add(phieus[ii]);
-                            if (phieus[ii].End.HasValue)
-                                fakePrintTime = phieus[ii].End.Value;
-                        }
+                        if (newItem.UserId.HasValue && newItem.UserId.Value == ThuNganId)
+                            todayThuNgans.Add(newItem);
+                        else
+                            todayList.Add(newItem);
                     }
+                }
+
+                if (todayList.Count > 0)
+                {
+                    var ids = todayList.Select(x => x.Id).Distinct().ToArray();
+                    for (int i = 0; i < ids.Length; i++)
+                    {
+                        var phieus = todayList.Where(x => x.Id == ids[i]).OrderBy(x => x.Start).ToList();
+                        if (phieus.Count > 0)
+                        {
+                            var fakePrintTime = phieus[0].PrintTime;
+                            for (int ii = 0; ii < phieus.Count; ii++)
+                            {
+                                if (phieus[ii].Start.HasValue)
+                                    phieus[ii].str_Start = phieus[ii].Start.Value.ToString("dd/MM/yyyy HH:mm");
+                                if (phieus[ii].End.HasValue)
+                                    phieus[ii].str_End = phieus[ii].End.Value.ToString("dd/MM/yyyy HH:mm");
+                                //thoi gian giao dich tai ban nang
+                                if (phieus[ii].Start.HasValue && phieus[ii].End.HasValue)
+                                    phieus[ii].ProcessTime = phieus[ii].End.Value.Subtract(phieus[ii].Start.Value).ToString("hh\\:mm\\:ss");
+                                //thoi gian cho truoc khi len ban nang sua chua
+                                if (phieus[ii].Start.HasValue && fakePrintTime != null)
+                                    phieus[ii].WaitingTime = phieus[ii].Start.Value.Subtract(fakePrintTime).ToString("hh\\:mm\\:ss");
+
+                                if (ii == phieus.Count - 1)
+                                {
+                                    //thoi gian thu ngan bat dau goi
+                                    var nowTN = todayThuNgans.Where(x => x.Id == phieus[ii].Id && x.Start.HasValue).OrderByDescending(x => x.Start).FirstOrDefault();
+                                    if (nowTN != null)
+                                    {
+                                        phieus[ii].StartTN = nowTN.Start;
+                                        phieus[ii].str_StartTN = nowTN.Start.Value.ToString("dd/MM/yyyy HH:mm");
+
+                                        //khoang thoi gian chờ tu luc ket thuc sua chua cho toi khi thu ngan goi
+                                        if (phieus[ii].End.HasValue && phieus[ii].StartTN.HasValue)
+                                            phieus[ii].WaitingTimeTN = phieus[ii].StartTN.Value.Subtract(phieus[ii].End.Value).ToString("hh\\:mm\\:ss");
+                                    }
+                                }
+                                returnList.Add(phieus[ii]);
+                                if (phieus[ii].End.HasValue)
+                                    fakePrintTime = phieus[ii].End.Value;
+                            }
+                        }
 
 
+                    }
                 }
             }
             #endregion
@@ -1128,5 +1328,361 @@ namespace QMS_System.Data.BLL
                 return DateTime.Parse(value.ToString());
             return null;
         }
+
+        #region version 3
+        public List<ReportModel> BaoCaoNangSuatDichVuVaThoiGianTrungBinh_TheoNV(SqlConnection sqlConnection, DateTime startDate, DateTime endDate, int thuNganId)
+        {
+            List<ReportModel> report = new List<ReportModel>(),
+                queryResult = new List<ReportModel>();
+            try
+            {
+                var today = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+                var emptyDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
+                TimeSpan time = new TimeSpan(0, 0, 0);
+                string query = "";
+                SqlDataAdapter sqlDataAdapter;
+                DataTable dataTable;
+
+                query = "select Id, Name from Q_User where IsDeleted = 0 and id !=" + thuNganId;
+                sqlDataAdapter = new SqlDataAdapter(query, sqlConnection);
+                dataTable = new DataTable();
+                sqlDataAdapter.Fill(dataTable);
+                if (dataTable != null && dataTable.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dataTable.Rows)
+                    {
+                        report.Add(new ReportModel()
+                        {
+                            UserId = getIntValue(row["Id"]),
+                            UserName = getStringValue(row["Name"]),
+                            Number = 0,//sl cuoc goi
+                            TongTGChoTB = emptyDate,//tong tg cho trung binh
+                            TGChoTruocSC = emptyDate,//tg cho truoc sua chua
+                            TGChoSauSC = emptyDate //tg cho sau sua chua
+                        });
+                    }
+                }
+
+                if (startDate < today)
+                {
+                    query = "select UserId, u.Name, ProcessTime, EndProcessTime ,dr.PrintTime, TicketNumber from Q_HisDailyRequire_De dd,Q_HisDailyRequire dr, Q_User u where dd.HisDailyRequireId = dr.Id and u.Id = dd.UserId and dd.StatusId=" + (int)eStatus.HOTAT + " and dr.PrintTime >= '" + startDate.ToString("yyyy-MM-dd HH:mm:ss") + "' and dr.PrintTime<='" + endDate.ToString("yyyy-MM-dd HH:mm:ss") + "'";
+                    sqlDataAdapter = new SqlDataAdapter(query, sqlConnection);
+                    dataTable = new DataTable();
+                    sqlDataAdapter.Fill(dataTable);
+                    if (dataTable != null && dataTable.Rows.Count > 0)
+                    {
+                        foreach (DataRow row in dataTable.Rows)
+                        {
+                            queryResult.Add(new ReportModel()
+                            {
+                                UserId = getIntValue(row["UserId"]),
+                                UserName = getStringValue(row["Name"]),
+                                PrintTime = getDateValue(row["PrintTime"]).Value,
+                                Start = getDateValue(row["ProcessTime"]),
+                                End = getDateValue(row["EndProcessTime"]),
+                                Number = getIntValue(row["TicketNumber"])
+                            });
+                        }
+                    }
+                }
+
+                if (endDate >= today)
+                {
+                    query = "select UserId, u.Name, ProcessTime, EndProcessTime ,dr.PrintTime,TicketNumber from Q_DailyRequire_Detail dd,Q_DailyRequire dr, Q_User u where dd.DailyRequireId = dr.Id and u.Id = dd.UserId and dd.StatusId=" + (int)eStatus.HOTAT;
+                    sqlDataAdapter = new SqlDataAdapter(query, sqlConnection);
+                    dataTable = new DataTable();
+                    sqlDataAdapter.Fill(dataTable);
+                    if (dataTable != null && dataTable.Rows.Count > 0)
+                    {
+                        foreach (DataRow row in dataTable.Rows)
+                        {
+                            queryResult.Add(new ReportModel()
+                            {
+                                UserId = getIntValue(row["UserId"]),
+                                UserName = getStringValue(row["Name"]),
+                                PrintTime = getDateValue(row["PrintTime"]).Value,
+                                Start = getDateValue(row["ProcessTime"]),
+                                End = getDateValue(row["EndProcessTime"]),
+                                Number = getIntValue(row["TicketNumber"])
+                            });
+                        }
+                    }
+                }
+
+                if (queryResult.Count > 0 && report.Count > 0)
+                {
+
+                    for (int i = 0; i < report.Count; i++)
+                    {
+                        report[i].Number = 0;//sl cuoc goi
+                        report[i].TongTGChoTB = emptyDate;//tong tg cho trung binh
+                        report[i].TGChoTruocSC = emptyDate;//tg cho truoc sua chua
+                        report[i].TGChoSauSC = emptyDate;//tg cho sau sua chua
+
+                        var founds = queryResult.Where(x => x.UserId == report[i].UserId);
+                        if (founds.Count() > 0)
+                        {
+                            report[i].Number = founds.Count(); // so luong cuoc goi
+                            foreach (var item in founds)
+                            {
+                                if (item.Start.HasValue)
+                                {
+                                    //TG chờ truoc sửa chữa
+                                    report[i].TGChoTruocSC = report[i].TGChoTruocSC.Value.Add(item.Start.Value.Subtract(item.PrintTime));
+
+                                    //TG cho sau sủa chữa
+                                    if (item.End.HasValue)
+                                    {
+                                        var thunganGoi = queryResult.FirstOrDefault(x => x.Number == item.Number && x.PrintTime == item.PrintTime && x.UserId == thuNganId);
+                                        if (thunganGoi != null)
+                                            report[i].TGChoSauSC = report[i].TGChoSauSC.Value.Add(thunganGoi.Start.Value.Subtract(item.End.Value));
+                                    }
+                                }
+                            }
+
+                            double seconds = report[i].TGChoTruocSC.Value.TimeOfDay.TotalSeconds + report[i].TGChoSauSC.Value.TimeOfDay.TotalSeconds;
+                            var ss = emptyDate.AddSeconds(seconds / 2);
+                            report[i].TongTGChoTB = report[i].TongTGChoTB.Value.Add(ss.TimeOfDay);
+                        }
+                        else
+                            report[i].Number = 0;
+                    }
+                }
+            }
+            catch (Exception ex) { }
+            return report;
+        }
+
+        public List<ReportModel> BaoCaoNangSuatDichVuVaThoiGianTrungBinh_TheoDV(SqlConnection sqlConnection, DateTime startDate, DateTime endDate, int thuNganId)
+        {
+            List<ReportModel> report = new List<ReportModel>(),
+                queryResult = new List<ReportModel>();
+            try
+            {
+                var today = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+                var emptyDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
+                TimeSpan time = new TimeSpan(0, 0, 0);
+                string query = "";
+                SqlDataAdapter sqlDataAdapter;
+                DataTable dataTable;
+
+                query = "select Id, Name from Q_Service where IsDeleted = 0 and IsActived =1";
+                sqlDataAdapter = new SqlDataAdapter(query, sqlConnection);
+                dataTable = new DataTable();
+                sqlDataAdapter.Fill(dataTable);
+                if (dataTable != null && dataTable.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dataTable.Rows)
+                    {
+                        report.Add(new ReportModel()
+                        {
+                            ServiceId = getIntValue(row["Id"]),
+                            ServiceName = getStringValue(row["Name"]),
+                            Number = 0,//sl cuoc goi
+                            TongTGChoTB = emptyDate,//tong tg cho trung binh
+                            TGChoTruocSC = emptyDate,//tg cho truoc sua chua
+                            TGChoSauSC = emptyDate //tg cho sau sua chua
+                        });
+                    }
+                }
+
+                if (startDate < today)
+                {
+                    query = "select UserId, u.Name, ProcessTime, EndProcessTime ,dr.PrintTime, TicketNumber,ServiceId from Q_HisDailyRequire_De dd,Q_HisDailyRequire dr, Q_User u where dd.HisDailyRequireId = dr.Id and u.Id = dd.UserId and dd.StatusId=" + (int)eStatus.HOTAT + " and dr.PrintTime >= '" + startDate.ToString("yyyy-MM-dd HH:mm:ss") + "' and dr.PrintTime<='" + endDate.ToString("yyyy-MM-dd HH:mm:ss") + "'";
+                    sqlDataAdapter = new SqlDataAdapter(query, sqlConnection);
+                    dataTable = new DataTable();
+                    sqlDataAdapter.Fill(dataTable);
+                    if (dataTable != null && dataTable.Rows.Count > 0)
+                    {
+                        foreach (DataRow row in dataTable.Rows)
+                        {
+                            queryResult.Add(new ReportModel()
+                            {
+                                UserId = getIntValue(row["UserId"]),
+                                UserName = getStringValue(row["Name"]),
+                                PrintTime = getDateValue(row["PrintTime"]).Value,
+                                Start = getDateValue(row["ProcessTime"]),
+                                End = getDateValue(row["EndProcessTime"]),
+                                Number = getIntValue(row["TicketNumber"]),
+                                ServiceId = getIntValue(row["ServiceId"])
+                            });
+                        }
+                    }
+                }
+
+                if (endDate >= today)
+                {
+                    query = "select UserId, u.Name, ProcessTime, EndProcessTime ,dr.PrintTime,TicketNumber,ServiceId from Q_DailyRequire_Detail dd,Q_DailyRequire dr, Q_User u where dd.DailyRequireId = dr.Id and u.Id = dd.UserId and dd.StatusId=" + (int)eStatus.HOTAT;
+                    sqlDataAdapter = new SqlDataAdapter(query, sqlConnection);
+                    dataTable = new DataTable();
+                    sqlDataAdapter.Fill(dataTable);
+                    if (dataTable != null && dataTable.Rows.Count > 0)
+                    {
+                        foreach (DataRow row in dataTable.Rows)
+                        {
+                            queryResult.Add(new ReportModel()
+                            {
+                                UserId = getIntValue(row["UserId"]),
+                                UserName = getStringValue(row["Name"]),
+                                PrintTime = getDateValue(row["PrintTime"]).Value,
+                                Start = getDateValue(row["ProcessTime"]),
+                                End = getDateValue(row["EndProcessTime"]),
+                                Number = getIntValue(row["TicketNumber"]),
+                                ServiceId = getIntValue(row["ServiceId"])
+                            });
+                        }
+                    }
+                }
+
+                if (queryResult.Count > 0 && report.Count > 0)
+                {
+
+                    for (int i = 0; i < report.Count; i++)
+                    {
+                        report[i].Number = 0;//sl cuoc goi
+                        report[i].TongTGChoTB = emptyDate;//tong tg cho trung binh
+                        report[i].TGChoTruocSC = emptyDate;//tg cho truoc sua chua
+                        report[i].TGChoSauSC = emptyDate;//tg cho sau sua chua
+
+                        var founds = queryResult.Where(x => x.ServiceId == report[i].ServiceId && x.UserId != thuNganId);
+                        if (founds.Count() > 0)
+                        {
+                            report[i].Number = founds.Count(); // so luong cuoc goi
+                            foreach (var item in founds)
+                            {
+                                if (item.Start.HasValue)
+                                {
+                                    //TG chờ truoc sửa chữa
+                                    report[i].TGChoTruocSC = report[i].TGChoTruocSC.Value.Add(item.Start.Value.Subtract(item.PrintTime));
+
+                                    //TG cho sau sủa chữa
+                                    if (item.End.HasValue)
+                                    {
+                                        var thunganGoi = queryResult.FirstOrDefault(x => x.Number == item.Number && x.PrintTime == item.PrintTime && x.UserId == thuNganId);
+                                        if (thunganGoi != null)
+                                            report[i].TGChoSauSC = report[i].TGChoSauSC.Value.Add(thunganGoi.Start.Value.Subtract(item.End.Value));
+                                    }
+                                }
+                            }
+
+                            double seconds = report[i].TGChoTruocSC.Value.TimeOfDay.TotalSeconds + report[i].TGChoSauSC.Value.TimeOfDay.TotalSeconds;
+                            var ss = emptyDate.AddSeconds(seconds / 2);
+                            report[i].TongTGChoTB = report[i].TongTGChoTB.Value.Add(ss.TimeOfDay);
+                        }
+                        else
+                            report[i].Number = 0;
+                    }
+                }
+            }
+            catch (Exception ex) { }
+            return report;
+        }
+
+        public List<ReportModel> BaoCaoNangSuatDichVuChiTietTheoPhieu(SqlConnection sqlConnection, DateTime startDate, DateTime endDate, int thuNganId)
+        {
+            List<ReportModel> report = new List<ReportModel>(),
+                queryResult = new List<ReportModel>();
+            try
+            {
+                var today = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+                TimeSpan time = new TimeSpan(0, 0, 0);
+                string query = "";
+                SqlDataAdapter sqlDataAdapter;
+                DataTable dataTable;
+
+                if (startDate < today)
+                {
+                    query = "select dr.STT_PhongKham, TicketNumber, ServiceId , s.Name as ServiceName , UserId, u.Name as UserName, ProcessTime, EndProcessTime ,dr.PrintTime,dr.ServeTimeAllow from Q_HisDailyRequire_De dd,Q_HisDailyRequire dr, Q_User u , Q_Service s where dd.HisDailyRequireId = dr.Id and u.Id = dd.UserId and s.Id = dr.ServiceId and dd.StatusId=" + (int)eStatus.HOTAT + " and dr.PrintTime >= '" + startDate.ToString("yyyy-MM-dd HH:mm:ss") + "' and dr.PrintTime<='" + endDate.ToString("yyyy-MM-dd HH:mm:ss") + "'";
+                    sqlDataAdapter = new SqlDataAdapter(query, sqlConnection);
+                    dataTable = new DataTable();
+                    sqlDataAdapter.Fill(dataTable);
+                    if (dataTable != null && dataTable.Rows.Count > 0)
+                    {
+                        foreach (DataRow row in dataTable.Rows)
+                        {
+                            queryResult.Add(new ReportModel()
+                            {
+                                STT_PhongKham = getStringValue(row["STT_PhongKham"]),
+                                Number = getIntValue(row["TicketNumber"]),
+                                ServiceId = getIntValue(row["ServiceId"]),
+                                ServiceName = getStringValue(row["ServiceName"]),
+                                UserId = getIntValue(row["UserId"]),
+                                UserName = getStringValue(row["UserName"]),
+                                PrintTime = getDateValue(row["PrintTime"]).Value,
+                                Start = getDateValue(row["ProcessTime"]),
+                                End = getDateValue(row["EndProcessTime"]),
+                                ServeTime = getDateValue(row["ServeTimeAllow"]) ?? DateTime.Now
+                            });
+                        }
+                    }
+                }
+
+                if (endDate >= today)
+                {
+                    query = "select dr.STT_PhongKham, TicketNumber, ServiceId , s.Name as ServiceName , UserId, u.Name as UserName, ProcessTime, EndProcessTime ,dr.PrintTime,dr.ServeTimeAllow from Q_DailyRequire_Detail dd,Q_DailyRequire dr, Q_User u ,Q_Service s where dd.DailyRequireId = dr.Id and u.Id = dd.UserId and s.Id = dr.ServiceId and dd.StatusId=" + (int)eStatus.HOTAT;
+                    sqlDataAdapter = new SqlDataAdapter(query, sqlConnection);
+                    dataTable = new DataTable();
+                    sqlDataAdapter.Fill(dataTable);
+                    if (dataTable != null && dataTable.Rows.Count > 0)
+                    {
+                        foreach (DataRow row in dataTable.Rows)
+                        {
+                            queryResult.Add(new ReportModel()
+                            {
+                                STT_PhongKham = getStringValue(row["STT_PhongKham"]),
+                                Number = getIntValue(row["TicketNumber"]),
+                                ServiceId = getIntValue(row["ServiceId"]),
+                                ServiceName = getStringValue(row["ServiceName"]),
+                                UserId = getIntValue(row["UserId"]),
+                                UserName = getStringValue(row["UserName"]),
+                                PrintTime = getDateValue(row["PrintTime"]).Value,
+                                Start = getDateValue(row["ProcessTime"]),
+                                End = getDateValue(row["EndProcessTime"]),
+                                ServeTime = getDateValue(row["ServeTimeAllow"]) ?? DateTime.Now
+                            });
+                        }
+                    }
+                }
+
+                if (queryResult.Count > 0)
+                {
+                    ReportModel newObj = null;
+                    var emptyDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
+                    var distincePrinTimes = queryResult.Select(x => x.PrintTime).Distinct().ToList();
+                    for (int i = 0; i < distincePrinTimes.Count; i++)
+                    {
+                        var founds = queryResult.Where(x => x.PrintTime == distincePrinTimes[i]).OrderBy(x => x.Start.Value).ToList();
+                        if (founds.Count > 0)
+                        {
+                            newObj = new ReportModel();
+                            newObj.STT_PhongKham = founds[0].STT_PhongKham;
+                            newObj.Number = founds[0].Number;
+                            newObj.ServiceName = founds[0].ServiceName;
+                            newObj.UserName = founds[0].UserName;
+                            newObj.PrintTime = founds[0].PrintTime;
+                            newObj.ServeTime = founds[0].ServeTime;
+                            newObj.Start = founds[0].Start;
+                            newObj.TGChoTruocSC = emptyDate.Add(founds[0].Start.Value.Subtract(founds[0].PrintTime));
+                            newObj.TGXuLyTT = emptyDate.Add(founds[0].End.Value.Subtract(founds[0].Start.Value));
+                            newObj.PhatSinh = (newObj.ServeTime.TimeOfDay.TotalSeconds >= newObj.TGXuLyTT.TimeOfDay.TotalSeconds ? false : true);
+
+                            //TG cho sau sủa chữa
+                            var thunganGoi = queryResult.FirstOrDefault(x => x.Number == founds[0].Number && x.PrintTime == founds[0].PrintTime && x.UserId == thuNganId);
+                            if (thunganGoi != null)
+                                newObj.TGChoSauSC = emptyDate.Add(thunganGoi.Start.Value.Subtract(founds[0].End.Value));
+                            else
+                                newObj.TGChoSauSC = emptyDate;
+                            //tong tg chờ
+                            newObj.TongTGChoTB = newObj.TGChoTruocSC.Value.Add(newObj.TGChoSauSC.Value.TimeOfDay);
+                            report.Add(newObj);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex) { }
+            return report;
+        }
+
+        #endregion
     }
 }

@@ -20,6 +20,7 @@ namespace QMS_System.Data.Model
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Note { get; set; }
         public int StartNumber { get; set; }
         public int EndNumber { get; set; }
         public DateTime TimeProcess { get; set; } 

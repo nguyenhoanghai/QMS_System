@@ -43,6 +43,7 @@
             this.btCenter = new System.Windows.Forms.Button();
             this.txtVB = new System.Windows.Forms.TextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.btTenDichVu = new System.Windows.Forms.Button();
             this.btDangGoi = new System.Windows.Forms.Button();
             this.btTenQuay = new System.Windows.Forms.Button();
             this.btSTT = new System.Windows.Forms.Button();
@@ -55,7 +56,7 @@
             this.btsave = new System.Windows.Forms.Button();
             this.txtContent = new System.Windows.Forms.RichTextBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.btTenDichVu = new System.Windows.Forms.Button();
+            this.btNoteDichVu = new System.Windows.Forms.Button();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -225,6 +226,7 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.btNoteDichVu);
             this.groupBox3.Controls.Add(this.btTenDichVu);
             this.groupBox3.Controls.Add(this.btDangGoi);
             this.groupBox3.Controls.Add(this.btTenQuay);
@@ -243,6 +245,17 @@
             this.groupBox3.TabIndex = 11;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Khác";
+            // 
+            // btTenDichVu
+            // 
+            this.btTenDichVu.Location = new System.Drawing.Point(224, 62);
+            this.btTenDichVu.Margin = new System.Windows.Forms.Padding(4);
+            this.btTenDichVu.Name = "btTenDichVu";
+            this.btTenDichVu.Size = new System.Drawing.Size(100, 28);
+            this.btTenDichVu.TabIndex = 19;
+            this.btTenDichVu.Text = "Tên dịch vụ";
+            this.btTenDichVu.UseVisualStyleBackColor = true;
+            this.btTenDichVu.Click += new System.EventHandler(this.btTenDichVu_Click);
             // 
             // btDangGoi
             // 
@@ -388,16 +401,16 @@
             this.panel1.Size = new System.Drawing.Size(714, 700);
             this.panel1.TabIndex = 2;
             // 
-            // btTenDichVu
+            // btNoteDichVu
             // 
-            this.btTenDichVu.Location = new System.Drawing.Point(224, 96);
-            this.btTenDichVu.Margin = new System.Windows.Forms.Padding(4);
-            this.btTenDichVu.Name = "btTenDichVu";
-            this.btTenDichVu.Size = new System.Drawing.Size(100, 28);
-            this.btTenDichVu.TabIndex = 19;
-            this.btTenDichVu.Text = "Tên dịch vụ";
-            this.btTenDichVu.UseVisualStyleBackColor = true;
-            this.btTenDichVu.Click += new System.EventHandler(this.btTenDichVu_Click);
+            this.btNoteDichVu.Location = new System.Drawing.Point(224, 96);
+            this.btNoteDichVu.Margin = new System.Windows.Forms.Padding(4);
+            this.btNoteDichVu.Name = "btNoteDichVu";
+            this.btNoteDichVu.Size = new System.Drawing.Size(100, 59);
+            this.btNoteDichVu.TabIndex = 20;
+            this.btNoteDichVu.Text = "Ghi chú dịch vụ";
+            this.btNoteDichVu.UseVisualStyleBackColor = true;
+            this.btNoteDichVu.Click += new System.EventHandler(this.btNoteDichVu_Click);
             // 
             // frmTicketTemplate
             // 
@@ -406,7 +419,7 @@
             this.ClientSize = new System.Drawing.Size(714, 700);
             this.Controls.Add(this.panel1);
             this.Name = "frmTicketTemplate";
-            this.Text = "FrmTicketTemplate";
+            this.Text = "Mẫu phiếu";
             this.Load += new System.EventHandler(this.frmTicketTemplate_Load);
             this.groupBox2.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
@@ -449,5 +462,6 @@
         private System.Windows.Forms.RichTextBox txtContent;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btTenDichVu;
+        private System.Windows.Forms.Button btNoteDichVu;
     }
 }

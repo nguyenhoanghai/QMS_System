@@ -1,17 +1,13 @@
-﻿using GPRO.Core.Hai;
-using QMS_System.Data.BLL;
+﻿using QMS_System.Data.BLL;
 using System;
 using System.Windows.Forms;
 
 namespace QMS_System
 {
     public partial class frmHome : Form
-    {
-        frmMain fMain;
-        string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
-        public frmHome(frmMain _frmMain)
-        {
-            fMain = _frmMain;
+    { 
+        public frmHome( )
+        { 
             InitializeComponent();
         }
 
@@ -25,8 +21,7 @@ namespace QMS_System
         {
             try
             {
-                gridHome.DataSource = null;
-                gridHome.DataSource = BLLLoginHistory.Instance.GetForHome(connect, frmMain.today, fMain.UseWithThirdPattern);
+                loadData();
                 frmMain.IsDatabaseChange = false;
             }
             catch (Exception)
@@ -41,12 +36,12 @@ namespace QMS_System
 
         private void gridHome_MouseHover(object sender, EventArgs e)
         {
-           // tmCountClose.Enabled = false;
+            // tmCountClose.Enabled = false;
         }
 
         private void gridHome_MouseLeave(object sender, EventArgs e)
         {
-           // tmCountClose.Enabled = true;
+            // tmCountClose.Enabled = true;
         }
 
         private void tmCountClose_Tick(object sender, EventArgs e)
@@ -61,8 +56,12 @@ namespace QMS_System
 
         private void loadData()
         {
-            gridHome.DataSource = null;
-            gridHome.DataSource = BLLLoginHistory.Instance.GetForHome(connect, frmMain.today, fMain.UseWithThirdPattern);
+            gridHome.DataSource = null; 
+            switch (QMSAppInfo.Version)
+            {
+                case 1: gridHome.DataSource = BLLLoginHistory.Instance.GetForHome(frmMain.connectString, frmMain.today, frmMain.UseWithThirdPattern); break;
+                case 3: gridHome.DataSource = BLLLoginHistory.Instance.GetForHome_ver3(frmMain_ver3.connectString, frmMain_ver3.today, frmMain_ver3.UseWithThirdPattern); break;
+            }
         }
     }
 }

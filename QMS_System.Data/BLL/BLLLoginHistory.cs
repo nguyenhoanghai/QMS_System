@@ -42,13 +42,21 @@ namespace QMS_System.Data.BLL
                     StatusId = x.StatusId,
                     LogoutTime = x.LogoutTime
                 }).ToList();
-                var equips = from x in db.Q_Equipment where !x.IsDeleted select x;
+                var equips = (from x in db.Q_Equipment where !x.IsDeleted select x).ToList();
                 foreach (var item in logins)
                 {
                     var found = equips.FirstOrDefault(x => x.Code == item.EquipCode);
-                    if (found != null)
+                    try
                     {
-                        item.CounterName = found.Q_Counter.Name;
+                        if (found != null && found.Q_Counter != null)
+                        {
+                            item.CounterName = found.Q_Counter.Name;
+                            item.CounterCode = found.CounterId;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        item.CounterName = "";
                         item.CounterCode = found.CounterId;
                     }
                 }
@@ -196,6 +204,82 @@ namespace QMS_System.Data.BLL
         }
 
         /// <summary>
+        /// Get infomation for home form
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public List<HomeModel> GetForHome_ver3(string connectString, DateTime date, int useWithThridPattern)
+        {
+            using (db = new QMSSystemEntities(connectString))
+            {
+                var users = (from x in db.Q_Login
+                             where !x.Q_User.IsDeleted && x.StatusId == (int)eStatus.LOGIN
+                             orderby x.UserId
+                             select new HomeModel()
+                             {
+                                 UserId = x.UserId,
+                                 User = x.Q_User.UserName,
+                                 LoginTime = x.Date,
+                                 EquipCode = x.EquipCode
+                             }).ToList();
+                if (users.Count > 0)
+                {
+                    var daily = (from x in db.Q_CounterDayInfo
+                                 select new
+                                 {
+                                     CounterId = x.CounterId,
+                                     CounterName = x.Q_Counter.Name,
+                                     STT = x.STT,
+                                     Starttime = x.StartTime,
+                                     EquipCode = x.EquipCode
+                                 }).ToList();
+
+                    var usermajors = (from x in db.Q_UserMajor
+                                      where !x.IsDeleted && !x.Q_Major.IsDeleted && !x.Q_User.IsDeleted
+                                      select new
+                                      {
+                                          UserId = x.UserId,
+                                          MajorId = x.MajorId
+                                      }).ToList();
+                    var dayDetails = (from x in db.Q_DailyRequire_Detail
+                                      select new
+                                      {
+                                          StatusId = x.StatusId,
+                                          UserId = x.UserId,
+                                          MajorId = x.MajorId,
+                                          ProcessTime = x.ProcessTime
+                                      }).ToList();
+                    var registers = (from x in db.Q_RequestTicket
+                                     where !x.IsDeleted
+                                     select new
+                                     {
+                                         UserId = x.UserId,
+                                         CreatedAt = x.CreatedAt
+                                     }).ToList();
+                    foreach (var item in users)
+                    {
+                        var majorIds = usermajors.Where(x => x.UserId == item.UserId).Select(x => x.MajorId).ToList();
+                        item.TotalDone = dayDetails.Count(x => x.StatusId == (int)eStatus.HOTAT && x.UserId == item.UserId);
+                        item.TotalWating = dayDetails.Count(x => x.StatusId == (int)eStatus.CHOXL && majorIds.Contains(x.MajorId));
+
+                        var findCounter = daily.FirstOrDefault(x => x.EquipCode == item.EquipCode);
+                        if (findCounter != null)
+                        {
+                            item.Counter = findCounter.CounterName;
+                            item.CurrentTicket = findCounter.STT;
+                            item.CommingTime = findCounter.Starttime;
+                        }
+                        var found = registers.Where(x => x.UserId == item.UserId).OrderByDescending(x => x.CreatedAt).FirstOrDefault();
+                        if (found != null)
+                            item.TimeRegister = found.CreatedAt;
+                    }
+                }
+                return users.OrderBy(x => x.UserId).ToList();
+            }
+        }
+
+
+        /// <summary>
         /// counter soft
         /// </summary>
         /// <param name="userId"></param>
@@ -297,12 +381,12 @@ namespace QMS_System.Data.BLL
                 da.Fill(dataTable);
                 if (dataTable != null && dataTable.Rows.Count > 0)
                     model.TotalDone = Convert.ToInt32(dataTable.Rows[0]["sl"].ToString());
-                  
+
                 dataTable.Clear();
                 model.TotalWating = 0;
                 model.CounterWaitingTickets = "";
-                query = @"select r.TicketNumber as stt, r.STT_PhongKham as stt_pk from Q_DailyRequire_Detail d, Q_DailyRequire r where d.DailyRequireId = r.Id and StatusId =" + (int)eStatus.CHOXL + " and d.MajorId in (" + string.Join(",", majorIds ) + ")";
-                 da = new SqlDataAdapter(query, sqlConnection);
+                query = @"select r.TicketNumber as stt, r.STT_PhongKham as stt_pk from Q_DailyRequire_Detail d, Q_DailyRequire r where d.DailyRequireId = r.Id and StatusId =" + (int)eStatus.CHOXL + " and d.MajorId in (" + string.Join(",", majorIds) + ")";
+                da = new SqlDataAdapter(query, sqlConnection);
                 da.Fill(dataTable);
                 if (dataTable != null && dataTable.Rows.Count > 0)
                 {
@@ -316,7 +400,7 @@ namespace QMS_System.Data.BLL
                     model.TotalWating = dataTable.Rows.Count;
                 }
 
-                dataTable.Clear(); 
+                dataTable.Clear();
                 query = "select top 1 r.TicketNumber,r.STT_PhongKham,d.ProcessTime  from Q_DailyRequire_Detail d , Q_DailyRequire r where r.Id = d.DailyRequireId and d.UserId = " + userId + " and d.StatusId = " + (int)eStatus.DAGXL + " order by d.ProcessTime";
                 da = new SqlDataAdapter(query, sqlConnection);
                 da.Fill(dataTable);

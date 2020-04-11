@@ -30,7 +30,7 @@ namespace QMS_System.Data.BLL
                 return db.Q_Video.Where(x => !x.IsDeleted).Select(x => new VideoModel()
                 {
                     Id = x.Id,
-                    FileName = x.FileName,
+                    FileName = x.FileName 
                 }).ToList();
             }
         }

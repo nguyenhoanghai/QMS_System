@@ -679,5 +679,15 @@ namespace GPRO.Core.Hai
                 }
             }
         }
+        
+        /// <summary>
+        /// from 1 => 01
+        /// </summary>
+        /// <param name="so"></param>
+        /// <returns></returns>
+        public string  ConvertIntToStringWith0Number(int so)
+        {
+            return so < 10 ? ("0" + so) : so.ToString();
+        }
     }
 }

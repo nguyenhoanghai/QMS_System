@@ -591,3 +591,8 @@ E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.exe
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.pdb
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\Newtonsoft.Json.dll
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\Newtonsoft.Json.xml
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\Interop.WMPLib.dll
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.csproj.ResolveComReference.cache
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmMain_ver3.resources
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmWork.resources
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmCOMSetting.resources

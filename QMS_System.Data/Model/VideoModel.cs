@@ -10,5 +10,6 @@ namespace QMS_System.Data.Model
     {
         public int Id { get; set; }
         public string FileName { get; set; }
+        public double Duration { get; set; }
     }
 }
