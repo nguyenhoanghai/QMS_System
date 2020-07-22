@@ -125,9 +125,10 @@
             this.btnExportToExcel.Image = global::QMS_System.Properties.Resources.excel2_icon_20;
             this.btnExportToExcel.ImageLocation = DevExpress.XtraEditors.ImageLocation.MiddleLeft;
             this.btnExportToExcel.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.LeftCenter;
-            this.btnExportToExcel.Location = new System.Drawing.Point(558, 29);
+            this.btnExportToExcel.Location = new System.Drawing.Point(744, 36);
+            this.btnExportToExcel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnExportToExcel.Name = "btnExportToExcel";
-            this.btnExportToExcel.Size = new System.Drawing.Size(139, 30);
+            this.btnExportToExcel.Size = new System.Drawing.Size(185, 37);
             this.btnExportToExcel.TabIndex = 13;
             this.btnExportToExcel.Text = " Xuất File Excel";
             this.btnExportToExcel.Click += new System.EventHandler(this.btnExportToExcel_Click);
@@ -140,16 +141,18 @@
             this.btnSearch.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.btnSearch.Image = global::QMS_System.Properties.Resources.search_icon_20;
             this.btnSearch.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.LeftCenter;
-            this.btnSearch.Location = new System.Drawing.Point(465, 29);
+            this.btnSearch.Location = new System.Drawing.Point(620, 36);
+            this.btnSearch.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(87, 30);
+            this.btnSearch.Size = new System.Drawing.Size(116, 37);
             this.btnSearch.TabIndex = 12;
             this.btnSearch.Text = " Tìm";
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
             // radioGroup1
             // 
-            this.radioGroup1.Location = new System.Drawing.Point(5, 30);
+            this.radioGroup1.Location = new System.Drawing.Point(7, 37);
+            this.radioGroup1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.radioGroup1.Name = "radioGroup1";
             this.radioGroup1.Properties.Appearance.BackColor = System.Drawing.SystemColors.Control;
             this.radioGroup1.Properties.Appearance.Options.UseBackColor = true;
@@ -158,7 +161,7 @@
             new DevExpress.XtraEditors.Controls.RadioGroupItem(((short)(1)), "Nhân viên"),
             new DevExpress.XtraEditors.Controls.RadioGroupItem(((short)(2)), "Nghiệp vụ"),
             new DevExpress.XtraEditors.Controls.RadioGroupItem(((short)(3)), "Dịch vụ")});
-            this.radioGroup1.Size = new System.Drawing.Size(261, 27);
+            this.radioGroup1.Size = new System.Drawing.Size(348, 33);
             this.radioGroup1.TabIndex = 17;
             this.radioGroup1.SelectedIndexChanged += new System.EventHandler(this.radioGroup1_SelectedIndexChanged);
             // 
@@ -170,15 +173,17 @@
             this.groupControl2.Controls.Add(this.btnExportToExcel);
             this.groupControl2.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupControl2.Location = new System.Drawing.Point(0, 0);
+            this.groupControl2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupControl2.Name = "groupControl2";
-            this.groupControl2.Size = new System.Drawing.Size(1218, 70);
+            this.groupControl2.Size = new System.Drawing.Size(1624, 86);
             this.groupControl2.TabIndex = 4;
             this.groupControl2.Text = "Tìm kiếm theo";
             // 
             // lookUpSelect
             // 
             this.lookUpSelect.EditValue = "";
-            this.lookUpSelect.Location = new System.Drawing.Point(272, 33);
+            this.lookUpSelect.Location = new System.Drawing.Point(363, 41);
+            this.lookUpSelect.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.lookUpSelect.Name = "lookUpSelect";
             this.lookUpSelect.Properties.Appearance.Font = new System.Drawing.Font("Arial", 9F);
             this.lookUpSelect.Properties.Appearance.Options.UseFont = true;
@@ -186,7 +191,7 @@
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.lookUpSelect.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.Standard;
             this.lookUpSelect.Properties.View = this.gridLookUpEdit1View;
-            this.lookUpSelect.Size = new System.Drawing.Size(187, 22);
+            this.lookUpSelect.Size = new System.Drawing.Size(249, 24);
             this.lookUpSelect.TabIndex = 11;
             // 
             // gridLookUpEdit1View
@@ -200,34 +205,38 @@
             // 
             this.lblCurrentDate.AutoSize = true;
             this.lblCurrentDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCurrentDate.Location = new System.Drawing.Point(14, 80);
+            this.lblCurrentDate.Location = new System.Drawing.Point(19, 98);
+            this.lblCurrentDate.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblCurrentDate.Name = "lblCurrentDate";
-            this.lblCurrentDate.Size = new System.Drawing.Size(0, 13);
+            this.lblCurrentDate.Size = new System.Drawing.Size(0, 17);
             this.lblCurrentDate.TabIndex = 4;
             // 
             // lblTotalTransaction
             // 
             this.lblTotalTransaction.AutoSize = true;
             this.lblTotalTransaction.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTotalTransaction.Location = new System.Drawing.Point(915, 83);
+            this.lblTotalTransaction.Location = new System.Drawing.Point(1220, 102);
+            this.lblTotalTransaction.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTotalTransaction.Name = "lblTotalTransaction";
-            this.lblTotalTransaction.Size = new System.Drawing.Size(0, 13);
+            this.lblTotalTransaction.Size = new System.Drawing.Size(0, 17);
             this.lblTotalTransaction.TabIndex = 15;
             // 
             // gridNghiepVu
             // 
             this.gridNghiepVu.Cursor = System.Windows.Forms.Cursors.Default;
+            this.gridNghiepVu.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             gridLevelNode1.RelationName = "Level1";
             this.gridNghiepVu.LevelTree.Nodes.AddRange(new DevExpress.XtraGrid.GridLevelNode[] {
             gridLevelNode1});
-            this.gridNghiepVu.Location = new System.Drawing.Point(17, 355);
+            this.gridNghiepVu.Location = new System.Drawing.Point(23, 437);
             this.gridNghiepVu.MainView = this.gridViewNghiepVu;
+            this.gridNghiepVu.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.gridNghiepVu.Name = "gridNghiepVu";
             this.gridNghiepVu.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemButtonEdit1,
             this.repositoryItemGridLookUpEdit1,
             this.repositoryItemCheckedComboBoxEdit1});
-            this.gridNghiepVu.Size = new System.Drawing.Size(1102, 187);
+            this.gridNghiepVu.Size = new System.Drawing.Size(1469, 230);
             this.gridNghiepVu.TabIndex = 17;
             this.gridNghiepVu.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewNghiepVu,
@@ -546,14 +555,16 @@
             // gridNV
             // 
             this.gridNV.Cursor = System.Windows.Forms.Cursors.Default;
-            this.gridNV.Location = new System.Drawing.Point(5, 80);
+            this.gridNV.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gridNV.Location = new System.Drawing.Point(7, 98);
             this.gridNV.MainView = this.gridViewNV;
+            this.gridNV.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.gridNV.Name = "gridNV";
             this.gridNV.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repbtn_deleteCounter,
             this.lookUpSound,
             this.repCheckedComboBoxSound});
-            this.gridNV.Size = new System.Drawing.Size(950, 142);
+            this.gridNV.Size = new System.Drawing.Size(1267, 175);
             this.gridNV.TabIndex = 16;
             this.gridNV.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewNV,
@@ -781,14 +792,16 @@
             // gridDV
             // 
             this.gridDV.Cursor = System.Windows.Forms.Cursors.Default;
-            this.gridDV.Location = new System.Drawing.Point(5, 228);
+            this.gridDV.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gridDV.Location = new System.Drawing.Point(7, 281);
             this.gridDV.MainView = this.gridViewDV;
+            this.gridDV.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.gridDV.Name = "gridDV";
             this.gridDV.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemButtonEdit2,
             this.repositoryItemGridLookUpEdit2,
             this.repositoryItemCheckedComboBoxEdit2});
-            this.gridDV.Size = new System.Drawing.Size(950, 121);
+            this.gridDV.Size = new System.Drawing.Size(1267, 149);
             this.gridDV.TabIndex = 18;
             this.gridDV.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewDV,
@@ -959,15 +972,16 @@
             // 
             // frmR_DetailInDay
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1218, 522);
+            this.ClientSize = new System.Drawing.Size(1624, 642);
             this.Controls.Add(this.gridDV);
             this.Controls.Add(this.gridNghiepVu);
             this.Controls.Add(this.gridNV);
             this.Controls.Add(this.lblTotalTransaction);
             this.Controls.Add(this.lblCurrentDate);
             this.Controls.Add(this.groupControl2);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "frmR_DetailInDay";
             this.Text = "Báo cáo chi tiết trong ngày";
             this.Load += new System.EventHandler(this.frmR_DetailInDay_Load);

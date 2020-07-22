@@ -18,6 +18,7 @@ namespace QMS_System.Data.Model
         public int TotalDone { get; set; }
         public int TotalWating { get; set; }
         public string CounterWaitingTickets { get; set; }
+        public string CounterWaitingTickets_qualuot { get; set; }
         public string AllWaitingTickets { get; set; }
         public int EquipCode { get; set; }
         public int CountWaitAtCounter { get; set; }

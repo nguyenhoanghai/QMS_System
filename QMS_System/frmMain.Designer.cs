@@ -106,6 +106,9 @@
             this.barButtonItem14 = new DevExpress.XtraBars.BarButtonItem();
             this.barbtmauphieu = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem15 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonCOMSetup = new DevExpress.XtraBars.BarButtonItem();
+            this.ấu = new DevExpress.XtraBars.BarButtonItem();
+            this.btReloadApp = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPage3 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup16 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -142,6 +145,8 @@
             this.barButtonItem3 = new DevExpress.XtraBars.BarButtonItem();
             this.tmerQuetServeOver = new System.Windows.Forms.Timer(this.components);
             this.barButtonItem11 = new DevExpress.XtraBars.BarButtonItem();
+            this.tmerCheckSendMail = new System.Windows.Forms.Timer(this.components);
+            this.lbsendmailStatus = new DevExpress.XtraBars.BarStaticItem();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemRichTextEdit2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemRichTextEdit3)).BeginInit();
@@ -229,10 +234,14 @@
             this.barButtonItem13,
             this.barButtonItem14,
             this.barbtmauphieu,
-            this.barButtonItem15});
+            this.barButtonItem15,
+            this.barButtonCOMSetup,
+            this.ấu,
+            this.btReloadApp,
+            this.lbsendmailStatus});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ribbonControl1.MaxItemId = 92;
+            this.ribbonControl1.MaxItemId = 96;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage3,
@@ -832,6 +841,27 @@
             this.barButtonItem15.Name = "barButtonItem15";
             this.barButtonItem15.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem15_ItemClick);
             // 
+            // barButtonCOMSetup
+            // 
+            this.barButtonCOMSetup.Caption = "Cấu hình COM";
+            this.barButtonCOMSetup.Id = 94;
+            this.barButtonCOMSetup.LargeGlyph = global::QMS_System.Properties.Resources.if_port_64533;
+            this.barButtonCOMSetup.Name = "barButtonCOMSetup";
+            this.barButtonCOMSetup.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonCOMSetup_ItemClick);
+            // 
+            // ấu
+            // 
+            this.ấu.Id = 93;
+            this.ấu.Name = "ấu";
+            // 
+            // btReloadApp
+            // 
+            this.btReloadApp.Caption = "Làm mới ứng dụng";
+            this.btReloadApp.Id = 94;
+            this.btReloadApp.LargeGlyph = global::QMS_System.Properties.Resources.if_view_refresh_118801;
+            this.btReloadApp.Name = "btReloadApp";
+            this.btReloadApp.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btReloadApp_ItemClick);
+            // 
             // ribbonPage3
             // 
             this.ribbonPage3.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
@@ -848,6 +878,8 @@
             this.ribbonPageGroup2.ItemLinks.Add(this.btnPrinterWindow, true);
             this.ribbonPageGroup2.ItemLinks.Add(this.btnDeleteTicketInDay, true);
             this.ribbonPageGroup2.ItemLinks.Add(this.btnExit, true);
+            this.ribbonPageGroup2.ItemLinks.Add(this.barButtonCOMSetup, true);
+            this.ribbonPageGroup2.ItemLinks.Add(this.btReloadApp);
             this.ribbonPageGroup2.Name = "ribbonPageGroup2";
             // 
             // ribbonPageGroup16
@@ -1037,6 +1069,7 @@
             this.ribbonStatusBar1.ItemLinks.Add(this.lbQuet);
             this.ribbonStatusBar1.ItemLinks.Add(this.lbRecieve);
             this.ribbonStatusBar1.ItemLinks.Add(this.lbErrorsms);
+            this.ribbonStatusBar1.ItemLinks.Add(this.lbsendmailStatus);
             this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 514);
             this.ribbonStatusBar1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ribbonStatusBar1.Name = "ribbonStatusBar1";
@@ -1093,6 +1126,17 @@
             this.barButtonItem11.Id = 2;
             this.barButtonItem11.LargeGlyph = global::QMS_System.Properties.Resources.Music_icon;
             this.barButtonItem11.Name = "barButtonItem11";
+            // 
+            // tmerCheckSendMail
+            // 
+            this.tmerCheckSendMail.Interval = 3000;
+            this.tmerCheckSendMail.Tick += new System.EventHandler(this.tmerCheckSendMail_Tick);
+            // 
+            // lbsendmailStatus
+            // 
+            this.lbsendmailStatus.Id = 95;
+            this.lbsendmailStatus.Name = "lbsendmailStatus";
+            this.lbsendmailStatus.TextAlignment = System.Drawing.StringAlignment.Near;
             // 
             // frmMain
             // 
@@ -1246,5 +1290,10 @@
         private DevExpress.XtraBars.BarButtonItem barButtonItem14;
         private DevExpress.XtraBars.BarButtonItem barbtmauphieu;
         private DevExpress.XtraBars.BarButtonItem barButtonItem15;
+        private DevExpress.XtraBars.BarButtonItem ấu;
+        private DevExpress.XtraBars.BarButtonItem barButtonCOMSetup;
+        private DevExpress.XtraBars.BarButtonItem btReloadApp;
+        private System.Windows.Forms.Timer tmerCheckSendMail;
+        private DevExpress.XtraBars.BarStaticItem lbsendmailStatus;
     }
 }

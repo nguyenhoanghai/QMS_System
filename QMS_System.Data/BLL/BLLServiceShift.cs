@@ -84,5 +84,20 @@ namespace QMS_System.Data.BLL
             var obj = db.Q_ServiceShift.FirstOrDefault(x => !x.IsDeleted && x.Id != model.Id && x.ServiceId == model.ServiceId && x.ShiftId == model.ShiftId);
             return obj != null ? true : false;
         }
+
+        public bool CheckTime(string connectString, int serviceId,DateTime now)
+        {
+            using (db = new QMSSystemEntities(connectString))
+            {
+                var founds= (from x in db.Q_ServiceShift
+                            where !x.IsDeleted && !x.Q_Service.IsDeleted && !x.Q_Shift.IsDeleted && x.ServiceId == serviceId   
+                            select new { start = x.Q_Shift.Start, end = x.Q_Shift.End}).ToList();
+                if(founds.Count > 0)
+                {
+                    founds = founds.Where(x=> now.TimeOfDay >= x.start.TimeOfDay && now.TimeOfDay <= x.end.TimeOfDay).ToList();
+                }
+                return (founds == null || founds.Count == 0);
+            }
+        }
     }
 }

@@ -2976,4 +2976,7 @@
   <metadata name="tmerQuetServeOver.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>803, 16</value>
   </metadata>
+  <metadata name="tmerCheckSendMail.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>995, 16</value>
+  </metadata>
 </root>

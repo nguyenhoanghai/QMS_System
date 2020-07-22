@@ -16,5 +16,6 @@ namespace QMS_System.Data.Enum
         SendRecallToMainDisplay = 6,
         CheckUserFree = 7,
         inPhieu = 8,
+        PrintTicket_VietThaiQuan = 9,
     }
 }

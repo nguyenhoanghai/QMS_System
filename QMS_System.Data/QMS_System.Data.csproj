@@ -120,13 +120,16 @@
     <Compile Include="BLL\BLLUserMajor.cs" />
     <Compile Include="BLL\BLLVideo.cs" />
     <Compile Include="BLL\BLLVideoTemplate.cs" />
+    <Compile Include="BLL\HuuNghi\BLLHuuNghi.cs" />
     <Compile Include="BLL\IssueTicketScreen\BLLSetupInterface.cs" />
+    <Compile Include="BLL\VietThaiQuan\BLLVietThaiQuan.cs" />
     <Compile Include="Enum\eCounterSoftRequireType.cs" />
     <Compile Include="Model\A_CurrentInfoModel.cs" />
     <Compile Include="Model\ButtonStyleModel.cs" />
     <Compile Include="Model\CounterDayInfoModel.cs" />
     <Compile Include="Model\CounterSoftRequireModel.cs" />
     <Compile Include="Model\CountServeOverTimeModel.cs" />
+    <Compile Include="Model\HuuNghi\Model.cs" />
     <Compile Include="Model\PrinterRequireModel.cs" />
     <Compile Include="Model\RecieverSMSModel.cs" />
     <Compile Include="Model\RequireMainDisplay.cs" />

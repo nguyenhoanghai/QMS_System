@@ -120,5 +120,15 @@ namespace QMS_System.Data.Enum
         //ten com may in ko su dung board 
         public const string COM_Print = "COMPrint";
         public const string TVReadSound = "TVReadSound";
+
+        public const string SendMail = "SendMail";
+        public const string TimeSendMail = "TimeSendMail";
+        public const string MailFrom = "MailFrom";
+        public const string MailFromPass = "MailFromPass";
+        public const string MailTo = "MailTo";
+        public const string MailSubject = "MailSubject";
+
+        public const string HUUNGHI_JSON = "HUUNGHI_JSON"; 
+
     }
 }

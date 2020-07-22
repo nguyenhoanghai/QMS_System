@@ -1,6 +1,8 @@
 ﻿using GPRO.Core.Hai;
+using Microsoft.Reporting.WinForms;
 using Newtonsoft.Json;
 using QMS_System.Data.BLL;
+using QMS_System.Data.BLL.VietThaiQuan;
 using QMS_System.Data.Enum;
 using QMS_System.Data.Model;
 using QMS_System.Helper;
@@ -10,10 +12,14 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Drawing.Printing;
 using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Media;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -97,7 +103,7 @@ namespace QMS_System
                 Settings.Default.Today = DateTime.Now.Day;
                 Settings.Default.Save();
                 //ko su dung GO 
-                var query = @"  UPDATE [Q_COUNTER] set lastcall = 0 ,isrunning =1 
+                var query = @"  UPDATE [Q_COUNTER] set lastcall = 0 ,isrunning =1 , CurrentNumber=0 , LastCallKetLuan= 0 
                                         DELETE [Q_CounterSoftSound]  
                                         DBCC CHECKIDENT('Q_CounterSoftSound', RESEED, 1);                                             
                                         DELETE [dbo].[Q_RequestTicket]  
@@ -176,6 +182,25 @@ namespace QMS_System
                 //tao cong viec mau cho viet thai quan
                 // string path = (Application.StartupPath + "\\dinh muc thoi gian.xlsx");    
                 //  BLLWork.Instance.taoCongViec(path,connectString);
+
+
+
+                //string json = "[{'PhongBan_Id':787,'MaPhongBan':'KHN1','TenPhongBan':'Khám hội nghị 1','TenKhongDau':'Kham hoi nghi 1','TenPhongBan_En':null,'Cap':1,'CapTren_Id':0,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':788,'MaPhongBan':'KHN2','TenPhongBan':'Khám hội nghị 2','TenKhongDau':'Kham hoi nghi 2','TenPhongBan_En':null,'Cap':1,'CapTren_Id':0,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':800,'MaPhongBan':'KHN3','TenPhongBan':'Khám Quốc Hội - Hội Nghị ','TenKhongDau':'Kham Quoc Hoi - Hoi Nghi ','TenPhongBan_En':null,'Cap':1,'CapTren_Id':0,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':432,'MaPhongBan':'KA','TenPhongBan':'Khoa khám bệnh A','TenKhongDau':'Khoa kham benh A','TenPhongBan_En':'K01.2','Cap':1,'CapTren_Id':0,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':433,'MaPhongBan':'KB','TenPhongBan':'Khoa Khám bệnh B','TenKhongDau':'Khoa Kham benh B','TenPhongBan_En':'K01.1','Cap':1,'CapTren_Id':0,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':425,'MaPhongBan':'VLTL-PHCN','TenPhongBan':'Khoa Phục hồi chức năng','TenKhongDau':'Khoa Phuc hoi chuc nang','TenPhongBan_En':'K31','Cap':1,'CapTren_Id':0,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':430,'MaPhongBan':'RMH','TenPhongBan':'Khoa Răng hàm mặt','TenKhongDau':'Khoa Rang ham mat','TenPhongBan_En':'RMH','Cap':1,'CapTren_Id':0,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':676,'MaPhongBan':'BVSKTWII','TenPhongBan':'Phòng Bảo vệ sức khoẻ TW2','TenKhongDau':'Phong Bao ve suc khoe TW2','TenPhongBan_En':'K01.3','Cap':1,'CapTren_Id':0,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':677,'MaPhongBan':'BVSKTWIII','TenPhongBan':'Phòng Bảo vệ sức khoẻ TW3','TenKhongDau':'Phong Bao ve suc khoe TW3','TenPhongBan_En':'K01.4','Cap':1,'CapTren_Id':0,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':678,'MaPhongBan':'BVSKTWV','TenPhongBan':'Phòng Bảo vệ sức khoẻ TW5','TenKhongDau':'Phong Bao ve suc khoe TW5','TenPhongBan_En':'K01.5','Cap':1,'CapTren_Id':0,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':668,'MaPhongBan':'PBVSKCB','TenPhongBan':'Phòng khám bảo vệ sức khoẻ cán bộ','TenKhongDau':'Phong kham bao ve suc khoe can bo','TenPhongBan_En':null,'Cap':1,'CapTren_Id':0,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':742,'MaPhongBan':'PKQH','TenPhongBan':'Phòng khám phục vụ quốc hội','TenKhongDau':'Phong kham phuc vu quoc hoi','TenPhongBan_En':null,'Cap':1,'CapTren_Id':0,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':743,'MaPhongBan':'QHHC','TenPhongBan':'Phòng khám quốc hội (điểm hoàng cầu)','TenKhongDau':'Phong kham quoc hoi (diem hoang cau)','TenPhongBan_En':null,'Cap':1,'CapTren_Id':0,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':744,'MaPhongBan':'QHLT','TenPhongBan':'Phòng khám quốc hội (điểm la thành)','TenKhongDau':'Phong kham quoc hoi (diem la thanh)','TenPhongBan_En':null,'Cap':1,'CapTren_Id':0,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':738,'MaPhongBan':'ytcq','TenPhongBan':'Y tế cơ quan','TenKhongDau':'Y te co quan','TenPhongBan_En':null,'Cap':1,'CapTren_Id':0,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':227,'MaPhongBan':'CDHA','TenPhongBan':'Khoa Cdha','TenKhongDau':'Khoa Cdha','TenPhongBan_En':'K39','Cap':1,'CapTren_Id':0,'LoaiPhongBan':'KhoaCLS'},{'PhongBan_Id':656,'MaPhongBan':'GPBL','TenPhongBan':'Khoa Giải phẫu bệnh','TenKhongDau':'Khoa Giai phau benh','TenPhongBan_En':'K42','Cap':1,'CapTren_Id':0,'LoaiPhongBan':'KhoaCLS'},{'PhongBan_Id':419,'MaPhongBan':'SH','TenPhongBan':'Khoa Hóa sinh','TenKhongDau':'Khoa Hoa sinh','TenPhongBan_En':'K37','Cap':1,'CapTren_Id':0,'LoaiPhongBan':'KhoaCLS'},{'PhongBan_Id':422,'MaPhongBan':'VS','TenPhongBan':'Khoa Vi sinh','TenKhongDau':'Khoa Vi sinh','TenPhongBan_En':'K38','Cap':1,'CapTren_Id':0,'LoaiPhongBan':'KhoaCLS'},{'PhongBan_Id':905,'MaPhongBan':'VTC256','TenPhongBan':'Phòng chụp vct256','TenKhongDau':'Phong chup vct256','TenPhongBan_En':'VTC256','Cap':1,'CapTren_Id':0,'LoaiPhongBan':'KhoaCLS'},{'PhongBan_Id':728,'MaPhongBan':'VCT64','TenPhongBan':'Phòng chụp VCT64 (tầng 1 - nhà 7)','TenKhongDau':'Phong chup VCT64 (tang 1 - nha 7)','TenPhongBan_En':'VCT64','Cap':1,'CapTren_Id':0,'LoaiPhongBan':'KhoaCLS'},{'PhongBan_Id':736,'MaPhongBan':'SCT64','TenPhongBan':'Phòng Soi  VCT64 (tầng 1 - nhà 7)','TenKhongDau':'Phong Soi  VCT64 (tang 1 - nha 7)','TenPhongBan_En':null,'Cap':1,'CapTren_Id':0,'LoaiPhongBan':'KhoaCLS'},{'PhongBan_Id':577,'MaPhongBan':'KB_KB_CKTM11','TenPhongBan':'11B - CK Tim Mạch ','TenKhongDau':'11B - CK Tim Mach ','TenPhongBan_En':'11','Cap':2,'CapTren_Id':409,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':683,'MaPhongBan':'KB_VLTL_PTK11','TenPhongBan':'11VLTL BS Đạt','TenKhongDau':'11VLTL BS dat','TenPhongBan_En':'11VL','Cap':2,'CapTren_Id':425,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':574,'MaPhongBan':'KB_KB_CKTK13','TenPhongBan':'13B - CK Thần kinh ','TenKhongDau':'13B - CK Than kinh ','TenPhongBan_En':'13','Cap':2,'CapTren_Id':411,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':778,'MaPhongBan':'KB_KB_CKHH','TenPhongBan':'18 Huyết Học','TenKhongDau':'18 Huyet Hoc','TenPhongBan_En':'18','Cap':2,'CapTren_Id':420,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':780,'MaPhongBan':'KB_KB_CKLM','TenPhongBan':'18 Lọc Máu','TenKhongDau':'18 Loc Mau','TenPhongBan_En':'18','Cap':2,'CapTren_Id':424,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':540,'MaPhongBan':'KB_KB_NOI18','TenPhongBan':'18B - Khám Nội','TenKhongDau':'18B - Kham Noi','TenPhongBan_En':'18','Cap':2,'CapTren_Id':433,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':549,'MaPhongBan':'KB_KB_NOI7','TenPhongBan':'201 - Khám Nội BS. Loan','TenKhongDau':'7B - Kham Noi BS.Loan','TenPhongBan_En':'201','Cap':2,'CapTren_Id':433,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':578,'MaPhongBan':'KB_KB_NOI5','TenPhongBan':'202 - Khám Nội BS. Hưng','TenKhongDau':'5B - Kham Noi BS.Hung','TenPhongBan_En':'202','Cap':2,'CapTren_Id':433,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':879,'MaPhongBan':'KB_KB_NOI17','TenPhongBan':'203 - Khám Nội BS. Ngọc','TenKhongDau':'17B - Kham Noi BS.Ngoc','TenPhongBan_En':'203','Cap':2,'CapTren_Id':433,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':576,'MaPhongBan':'KB_KB_NOI8','TenPhongBan':'204 - Khám Nội BS. Hồng','TenKhongDau':'8B - Kham Noi BS Hong','TenPhongBan_En':'204','Cap':2,'CapTren_Id':433,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':551,'MaPhongBan':'KB_KB_NOI6','TenPhongBan':'207 - Khám Da Liễu BS. Hương','TenKhongDau':'6B - Kham Da Lieu BS.Huong','TenPhongBan_En':'207','Cap':2,'CapTren_Id':433,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':775,'MaPhongBan':'KB_KB_CKN','TenPhongBan':'208 - Khám Ngoại','TenKhongDau':'15B - Ngoai','TenPhongBan_En':'208','Cap':2,'CapTren_Id':417,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':550,'MaPhongBan':'KB_KB_NOI10','TenPhongBan':'209 - Khám Nội BS.Hằng','TenKhongDau':'209 - Kham Noi BS.Hang','TenPhongBan_En':'209','Cap':2,'CapTren_Id':433,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':575,'MaPhongBan':'KB_KB_NOI4','TenPhongBan':'210 - Khám nội BS. Hằng','TenKhongDau':'207 - Kham no BS. Hang','TenPhongBan_En':'210','Cap':2,'CapTren_Id':433,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':580,'MaPhongBan':'KB_KB_NOI12','TenPhongBan':'211 - Khám Nội BS. Chung','TenKhongDau':'12B - Kham Noi','TenPhongBan_En':'211','Cap':2,'CapTren_Id':433,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':779,'MaPhongBan':'KB_KB_CKMV','TenPhongBan':'212 - Khám Mạch vành','TenKhongDau':'211 - Kham Mach vanh','TenPhongBan_En':'212','Cap':2,'CapTren_Id':726,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':746,'MaPhongBan':'KB_KB_NOI212','TenPhongBan':'212 - Khám Nội','TenKhongDau':'212 - Kham Noi','TenPhongBan_En':'212B','Cap':2,'CapTren_Id':433,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':889,'MaPhongBan':'T4_TTN','TenPhongBan':'212 - Khám Thận tiết niệu','TenKhongDau':'Kham Than Tiet Nieu','TenPhongBan_En':'212','Cap':2,'CapTren_Id':413,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':908,'MaPhongBan':'KB_KB_NOI_KD','TenPhongBan':'213 - Khám Da Liễu BS.Trang','TenKhongDau':'213 - Kham Da Lieu BS.Trang','TenPhongBan_En':'213','Cap':2,'CapTren_Id':433,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':799,'MaPhongBan':'KB_KB_NOI213','TenPhongBan':'213 - Khám Nội Tổ','TenKhongDau':'213 - Kham Noi To','TenPhongBan_En':'213','Cap':2,'CapTren_Id':433,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':595,'MaPhongBan':'KB_KB_CKTT','TenPhongBan':'213 - Khám Tâm thần','TenKhongDau':'18B - Tam Than','TenPhongBan_En':'213','Cap':2,'CapTren_Id':433,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':567,'MaPhongBan':'KB_KB_PK3','TenPhongBan':'215 - Khám Phụ khoa','TenKhongDau':'16B - Kham  Phu khoa','TenPhongBan_En':'215','Cap':2,'CapTren_Id':433,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':680,'MaPhongBan':'KB_VLTL_PK2','TenPhongBan':'2VLTL BS. Dần','TenKhongDau':'2VLTL BS. Dan','TenPhongBan_En':'K31','Cap':2,'CapTren_Id':425,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':708,'MaPhongBan':'KB_RHM_Ð','TenPhongBan':'301 - BS Phương','TenKhongDau':'301 - BS Phuong','TenPhongBan_En':'301','Cap':2,'CapTren_Id':430,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':705,'MaPhongBan':'KB_RHM_C','TenPhongBan':'302 - BS Hiếu','TenKhongDau':'C Bs Hieu','TenPhongBan_En':'302','Cap':2,'CapTren_Id':430,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':709,'MaPhongBan':'KB_RHM_E','TenPhongBan':'303 - BS Anh','TenKhongDau':'303 - BS Anh','TenPhongBan_En':'303','Cap':2,'CapTren_Id':430,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':710,'MaPhongBan':'KB_RHM_G','TenPhongBan':'304 - BS Liên','TenKhongDau':'304 - BS Lien','TenPhongBan_En':'304','Cap':2,'CapTren_Id':430,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':711,'MaPhongBan':'KB_RHM_H','TenPhongBan':'305 - BS Yến','TenKhongDau':'H Bs Yen','TenPhongBan_En':'305','Cap':2,'CapTren_Id':430,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':679,'MaPhongBan':'KB_VLTL_DTCA3','TenPhongBan':'3VLTL BS Hiền','TenKhongDau':'3VLTL BS Hien','TenPhongBan_En':'3VL','Cap':2,'CapTren_Id':425,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':703,'MaPhongBan':'KB_RHM_A','TenPhongBan':'401 - BS Hội','TenKhongDau':'401 - BS Hoi','TenPhongBan_En':'401','Cap':2,'CapTren_Id':430,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':704,'MaPhongBan':'KB_RHM_B','TenPhongBan':'402 - BS Khuê','TenKhongDau':'B Bs Khue','TenPhongBan_En':'402','Cap':2,'CapTren_Id':430,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':693,'MaPhongBan':'KB_TMH_D','TenPhongBan':'410 - TMH BS Hằng','TenKhongDau':'DTMH BS Hang','TenPhongBan_En':'410','Cap':2,'CapTren_Id':426,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':896,'MaPhongBan':'KNSTMH','TenPhongBan':'412 - TMH Bs Phương','TenKhongDau':'412 - TMH Bs Phuong','TenPhongBan_En':'412','Cap':2,'CapTren_Id':426,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':691,'MaPhongBan':'KB_TMH_E','TenPhongBan':'413 - TMH BS Minh','TenKhongDau':'413 - TMH BS Minh','TenPhongBan_En':'413','Cap':2,'CapTren_Id':426,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':892,'MaPhongBan':'KB_TMH_H','TenPhongBan':'414 - TMH BS Chi','TenKhongDau':'HTMHBS Chi','TenPhongBan_En':'414','Cap':2,'CapTren_Id':426,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':688,'MaPhongBan':'KB_TMH_B','TenPhongBan':'415 - TMH Bs Hà','TenKhongDau':'BTMH Bs Ha','TenPhongBan_En':'415','Cap':2,'CapTren_Id':426,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':690,'MaPhongBan':'KB_TMH_A','TenPhongBan':'416 - TMH BS Kiên','TenKhongDau':'ATMHBS Kien','TenPhongBan_En':'416','Cap':2,'CapTren_Id':426,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':685,'MaPhongBan':'KB_VLTL_PK6','TenPhongBan':'6VLTL BS Linh','TenKhongDau':'6VLTL BS Linh','TenPhongBan_En':'K31','Cap':2,'CapTren_Id':425,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':682,'MaPhongBan':'KB_VLTL_TD8','TenPhongBan':'8VLTL','TenKhongDau':'8VLTL','TenPhongBan_En':'8VL','Cap':2,'CapTren_Id':425,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':782,'MaPhongBan':'T4 - DU','TenPhongBan':'9B - Hô Hấp Dị Ứng','TenKhongDau':'9B - Ho Hap Di ung','TenPhongBan_En':'9','Cap':2,'CapTren_Id':408,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':894,'MaPhongBan':'KB_KB_NOI9','TenPhongBan':'9B - Khám Nội','TenKhongDau':'9B - Kham Noi','TenPhongBan_En':'9','Cap':2,'CapTren_Id':433,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':538,'MaPhongBan':'KB_KA_CKDY','TenPhongBan':'ADY - Đông Y BS. Lý','TenKhongDau':'ADY - dong Y BS. Ly','TenPhongBan_En':'ADY','Cap':2,'CapTren_Id':414,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':564,'MaPhongBan':'KB_KA_NOI1','TenPhongBan':'AN1 - Khám Nội 1 ','TenKhongDau':'AN1 - Kham Noi 1 ','TenPhongBan_En':'Nội1','Cap':2,'CapTren_Id':432,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':539,'MaPhongBan':'KB_KA_NOI2','TenPhongBan':'AN2 - Khám Nội 2 ','TenKhongDau':'AN2 - Kham Noi 2 ','TenPhongBan_En':'Nội2','Cap':2,'CapTren_Id':432,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':563,'MaPhongBan':'KB_KA_NOI3','TenPhongBan':'AN3 - Khám Nội 3','TenKhongDau':'AN3 - Kham Noi 3','TenPhongBan_En':'Nội3','Cap':2,'CapTren_Id':432,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':875,'MaPhongBan':'KB_KA_NOI4','TenPhongBan':'AN4 - Ra Viện','TenKhongDau':'AN4 - Ra Vien','TenPhongBan_En':'AN4','Cap':2,'CapTren_Id':432,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':594,'MaPhongBan':'KB_KB_CKTH15','TenPhongBan':'CK Tiêu Hóa ','TenKhongDau':'CK Tieu Hoa ','TenPhongBan_En':'TH','Cap':2,'CapTren_Id':412,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':781,'MaPhongBan':'T4 - CXK','TenPhongBan':'Cơ Xương Khớp','TenKhongDau':'Co Xuong Khop','TenPhongBan_En':'CXK','Cap':2,'CapTren_Id':410,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':707,'MaPhongBan':'KB_RHM_D','TenPhongBan':'D','TenKhongDau':'D','TenPhongBan_En':'D','Cap':2,'CapTren_Id':430,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':776,'MaPhongBan':'KB_KB_CKDY ','TenPhongBan':'Đông Y 1','TenKhongDau':'dong Y 1','TenPhongBan_En':'ĐY1','Cap':2,'CapTren_Id':414,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':878,'MaPhongBan':'KB_KB_CKDY 2','TenPhongBan':'Đông Y 2','TenKhongDau':'dong Y 2','TenPhongBan_En':'ĐY2','Cap':2,'CapTren_Id':414,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':910,'MaPhongBan':'KB_KB_CKDY 3','TenPhongBan':'Đông Y 3','TenKhongDau':'dong Y 3','TenPhongBan_En':'DY3','Cap':2,'CapTren_Id':414,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':786,'MaPhongBan':'KB_NTDTD1','TenPhongBan':'ĐTĐ - Đái Tháo Đường 1','TenKhongDau':'dTd - dai Thao duong 1','TenPhongBan_En':'ĐĐ1','Cap':2,'CapTren_Id':774,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':891,'MaPhongBan':'KB_NTDTD2','TenPhongBan':'ĐTĐ2 Đái Tháo Đường 2','TenKhongDau':'dTd2 dai Thao duong 2','TenPhongBan_En':'ĐĐ2','Cap':2,'CapTren_Id':774,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':700,'MaPhongBan':'KB_TMH_DTL-NL','TenPhongBan':'DTLNL - TMH Đo Thị Lực ,Nhị Lượng','TenKhongDau':'DTLNL - TMH do Thi Luc ,Nhi Luong','TenPhongBan_En':'K28','Cap':2,'CapTren_Id':426,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':712,'MaPhongBan':'KB_RHM_F','TenPhongBan':'F','TenKhongDau':'F','TenPhongBan_En':'F','Cap':2,'CapTren_Id':430,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':699,'MaPhongBan':'KB_TMH_KD','TenPhongBan':'KD - TMH Khí Dung','TenKhongDau':'KD - TMH Khi Dung','TenPhongBan_En':'K28','Cap':2,'CapTren_Id':426,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':911,'MaPhongBan':'KB_CC_CKCC','TenPhongBan':'Khám dịch vụ cấp cứu','TenKhongDau':'Kham dich vu cap cuu','TenPhongBan_En':'CC','Cap':2,'CapTren_Id':429,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':871,'MaPhongBan':'KB_DVNA','TenPhongBan':'Khám Dịch Vụ Nội A','TenKhongDau':'Kham Dich Vu Noi A','TenPhongBan_En':'DVNA','Cap':2,'CapTren_Id':432,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':777,'MaPhongBan':'KB_KB_CKB2','TenPhongBan':'Khám Nhiệt đới T1','TenKhongDau':'Kham Nhiet doi T1','TenPhongBan_En':'211','Cap':2,'CapTren_Id':233,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':785,'MaPhongBan':'KBTYC_NGOAI4','TenPhongBan':'Khoa KBYC - Khám Ngoại 4','TenKhongDau':'Khoa KBYC - Kham Ngoai 4','TenPhongBan_En':'K01.9','Cap':2,'CapTren_Id':416,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':658,'MaPhongBan':'KBTYC_NOI1','TenPhongBan':'Khoa KBYC - Khám Nội 1 - BS. Cứu','TenKhongDau':'Khoa KBYC - Kham Noi 1 - BS. Cuu','TenPhongBan_En':'K01.9','Cap':2,'CapTren_Id':416,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':659,'MaPhongBan':'KBTYC_NOI2','TenPhongBan':'Khoa KBYC - Khám Nội 2 ','TenKhongDau':'Khoa KBYC - Kham Noi 2 ','TenPhongBan_En':'KYC2','Cap':2,'CapTren_Id':416,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':660,'MaPhongBan':'KBTYC_NOI3','TenPhongBan':'Khoa KBYC - Khám Nội 3 ','TenKhongDau':'Khoa KBYC - Kham Noi 3 ','TenPhongBan_En':'YC3','Cap':2,'CapTren_Id':416,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':661,'MaPhongBan':'KBTYC_RHM','TenPhongBan':'Khoa KBYC - Khám Răng Hàm Mặt','TenKhongDau':'Khoa KBYC - Kham Rang Ham Mat','TenPhongBan_En':'K01.9','Cap':2,'CapTren_Id':416,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':531,'MaPhongBan':'KBTYC_TD','TenPhongBan':'Khoa KBYC - Phòng tiếp đón','TenKhongDau':'Khoa KBYC - Phong tiep don','TenPhongBan_En':'K01.9','Cap':2,'CapTren_Id':416,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':870,'MaPhongBan':'KB_DL1','TenPhongBan':'Nội Đại Lải 1','TenKhongDau':'Noi dai Lai 1','TenPhongBan_En':'DL1','Cap':2,'CapTren_Id':432,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':694,'MaPhongBan':'KB_TMH_NS','TenPhongBan':'NS - TMH Nội Soi','TenKhongDau':'NS - TMH Noi Soi','TenPhongBan_En':'K28','Cap':2,'CapTren_Id':426,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':729,'MaPhongBan':'RHM_TD','TenPhongBan':'P 306 - Tiếp đón','TenKhongDau':'Phong Tiep don(Khoa RHM)','TenPhongBan_En':'K29','Cap':2,'CapTren_Id':430,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':714,'MaPhongBan':'KB_KM_PK9T','TenPhongBan':'P 308 - BS Cường','TenKhongDau':'P 308 - BS Cuong','TenPhongBan_En':'308','Cap':2,'CapTren_Id':415,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':689,'MaPhongBan':'KB_KM_TD2','TenPhongBan':'P 309 - Tiếp đón mắt','TenKhongDau':'P 309 - Tiep don mat','TenPhongBan_En':'309','Cap':2,'CapTren_Id':415,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':692,'MaPhongBan':'KB_KM_TK5','TenPhongBan':'P 310 - BS Hà','TenKhongDau':'P 310 - BS Ha','TenPhongBan_En':'310','Cap':2,'CapTren_Id':415,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':695,'MaPhongBan':'KB_KM_PK7L','TenPhongBan':'P 311 - BS Lan','TenKhongDau':'P 311 - BS Lan','TenPhongBan_En':'311','Cap':2,'CapTren_Id':415,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':713,'MaPhongBan':'KB_KM_PK7H','TenPhongBan':'P 314 - BS Hiền','TenKhongDau':'P 314 - BS Hien','TenPhongBan_En':'314','Cap':2,'CapTren_Id':415,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':702,'MaPhongBan':'KB_KM_9PKN','TenPhongBan':'P 315 - BS Nguyệt','TenKhongDau':'P 315 - BS Nguyet','TenPhongBan_En':'315','Cap':2,'CapTren_Id':415,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':725,'MaPhongBan':'PB','TenPhongBan':'PB - Phòng Băng - Khoa Ngoại','TenKhongDau':'PB - Phong Bang - Khoa Ngoai','TenPhongBan_En':'K19','Cap':2,'CapTren_Id':417,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':906,'MaPhongBan':'VCT1','TenPhongBan':'Phòng Chụp VCT 256','TenKhongDau':'Phong Chup VCT 256','TenPhongBan_En':'VCT1','Cap':2,'CapTren_Id':905,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':895,'MaPhongBan':'VCT','TenPhongBan':'Phòng Chụp VCT 64','TenKhongDau':'Phong Chup VCT 64','TenPhongBan_En':'VCT','Cap':2,'CapTren_Id':728,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':684,'MaPhongBan':'KB_TMH_HC','TenPhongBan':'Phòng Hành Chính (TMH)','TenKhongDau':'Phong Hanh Chinh (TMH)','TenPhongBan_En':'K28','Cap':2,'CapTren_Id':426,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':257,'MaPhongBan':'YC1','TenPhongBan':'Phòng khám bệnh theo yêu cầu - Ngoại Trú','TenKhongDau':'Phong kham benh theo yeu cau - Ngoai Tru','TenPhongBan_En':'K01.9','Cap':2,'CapTren_Id':416,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':750,'MaPhongBan':'PKHNT2','TenPhongBan':'Phòng Khám Hội Nghị Tổ 2','TenKhongDau':'Phong Kham Hoi Nghi To 2','TenPhongBan_En':'K01.3','Cap':2,'CapTren_Id':676,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':751,'MaPhongBan':'PKHNT3','TenPhongBan':'Phòng Khám Hội Nghị Tổ 3','TenKhongDau':'Phong Kham Hoi Nghi To 3','TenPhongBan_En':'K01.4','Cap':2,'CapTren_Id':677,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':752,'MaPhongBan':'PKHNT5','TenPhongBan':'Phòng Khám Hội Nghị Tổ 5','TenKhongDau':'Phong Kham Hoi Nghi To 5','TenPhongBan_En':'K01.5','Cap':2,'CapTren_Id':678,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':745,'MaPhongBan':'QHTW2','TenPhongBan':'Phòng Khám Quốc Hội TW2','TenKhongDau':'Phong Kham Quoc Hoi TW2','TenPhongBan_En':'K01.3','Cap':2,'CapTren_Id':676,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':753,'MaPhongBan':'QHTW3','TenPhongBan':'Phòng Khám Quốc Hội TW3','TenKhongDau':'Phong Kham Quoc Hoi TW3','TenPhongBan_En':'K01.4','Cap':2,'CapTren_Id':677,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':754,'MaPhongBan':'QHTW5','TenPhongBan':'Phòng Khám Quốc Hội TW5','TenKhongDau':'Phong Kham Quoc Hoi TW5','TenPhongBan_En':'K01.5','Cap':2,'CapTren_Id':678,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':913,'MaPhongBan':'KSKCB_KBTYC','TenPhongBan':'Phòng khám sức khỏe cán bộ CNVC ','TenKhongDau':'Phong kham suc khoe can bo CNVC ','TenPhongBan_En':'YC5','Cap':2,'CapTren_Id':416,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':718,'MaPhongBan':'KB_KA_TD','TenPhongBan':'Phòng tiếp đón (Khám A)','TenKhongDau':'Phong tiep don (Kham A)','TenPhongBan_En':'K01.2','Cap':2,'CapTren_Id':432,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':681,'MaPhongBan':'KB_TMH_TD','TenPhongBan':'Phòng Tiếp Đón (Khoa TMH)','TenKhongDau':'Phong Tiep don (Khoa TMH)','TenPhongBan_En':'K28','Cap':2,'CapTren_Id':426,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':674,'MaPhongBan':'KB_KB_TD','TenPhongBan':'Phòng Tiếp Đón(Khám B)','TenKhongDau':'Phong Tiep don(Kham B)','TenPhongBan_En':'K01.1','Cap':2,'CapTren_Id':433,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':662,'MaPhongBan':'VLTL_PK01','TenPhongBan':'Phòng Tiếp Đón(Khoa VLTL)','TenKhongDau':'Phong Tiep don(Khoa VLTL)','TenPhongBan_En':'K31','Cap':2,'CapTren_Id':425,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':797,'MaPhongBan':'YTCQ_1','TenPhongBan':'Phòng Y tế Cơ quan','TenKhongDau':'Phong Y te Co quan','TenPhongBan_En':null,'Cap':2,'CapTren_Id':738,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':760,'MaPhongBan':'PKCTDT2','TenPhongBan':'PK Công Tác Đoàn TW2','TenKhongDau':'PK Cong Tac doan TW2','TenPhongBan_En':'K01.3','Cap':2,'CapTren_Id':676,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':759,'MaPhongBan':'DHDTW5','TenPhongBan':'PK Đại Hội Đảng TW5','TenKhongDau':'PK dai Hoi dang TW5','TenPhongBan_En':'K01.5','Cap':2,'CapTren_Id':678,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':724,'MaPhongBan':'PX','TenPhongBan':'PX - Phòng xương - Khoa Ngoại','TenKhongDau':'PX - Phong xuong - Khoa Ngoai','TenPhongBan_En':'K19','Cap':2,'CapTren_Id':417,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':795,'MaPhongBan':'SATYC','TenPhongBan':'Siêu âm (KCBTYC)','TenKhongDau':'Sieu am (KCBTYC)','TenPhongBan_En':'K01.9','Cap':2,'CapTren_Id':416,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':719,'MaPhongBan':'BVSKTW2','TenPhongBan':'T2- Phòng Khám BVSKTW2','TenKhongDau':'T2- Phong Kham BVSKTW2','TenPhongBan_En':'K01.3','Cap':2,'CapTren_Id':676,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':720,'MaPhongBan':'PBVSKTW3','TenPhongBan':'T3- Phòng Khám BVSKTW3','TenKhongDau':'T3- Phong Kham BVSKTW3','TenPhongBan_En':'K01.4','Cap':2,'CapTren_Id':677,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':721,'MaPhongBan':'PBVSKTW5','TenPhongBan':'T5- Phòng Khám BVSKTW5','TenKhongDau':'T5- Phong Kham BVSKTW5','TenPhongBan_En':'K01.5','Cap':2,'CapTren_Id':678,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':696,'MaPhongBan':'KB_TMH_TK','TenPhongBan':'TK - TMH Trưởng Khoa','TenKhongDau':'TK - TMH Truong Khoa','TenPhongBan_En':'K28','Cap':2,'CapTren_Id':426,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':747,'MaPhongBan':'KB_KB_CXK_DU','TenPhongBan':'Ung Bướu','TenKhongDau':'Ung Buou','TenPhongBan_En':'UB','Cap':2,'CapTren_Id':771,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':903,'MaPhongBan':'T6UB','TenPhongBan':'Ung Bướu Tầng 6','TenKhongDau':'Ung Buou Tang 6','TenPhongBan_En':'T6UB','Cap':2,'CapTren_Id':771,'LoaiPhongBan':'KhamBenh'},{'PhongBan_Id':880,'MaPhongBan':'CHT','TenPhongBan':'Phòng Chụp Cộng hưởng từ (Tầng 2 - Nhà số 10)','TenKhongDau':'Phong Chup Cong huong tu (Tang 2 - Nha so 10)','TenPhongBan_En':'K39','Cap':2,'CapTren_Id':227,'LoaiPhongBan':'KhoaCLS'},{'PhongBan_Id':792,'MaPhongBan':'X_Q','TenPhongBan':'Phòng chụp X Quang (Tầng 2 - Nhà số 10)','TenKhongDau':'Phong chup X Quang (Tang 2 - Nha so 10)','TenPhongBan_En':'K39','Cap':2,'CapTren_Id':227,'LoaiPhongBan':'KhoaCLS'},{'PhongBan_Id':717,'MaPhongBan':'DLX','TenPhongBan':'Phòng đo độ loãng xương (Tầng 2 - Nhà 10)','TenKhongDau':'Phong do do loang xuong (Tang 2 - Nha 10)','TenPhongBan_En':'K06','Cap':2,'CapTren_Id':410,'LoaiPhongBan':'KhoaCLS'},{'PhongBan_Id':737,'MaPhongBan':'LAS','TenPhongBan':'Phòng Laser - Khoa khám bệnh B','TenKhongDau':'Phong Laser - Khoa kham benh B','TenPhongBan_En':'K01.1','Cap':2,'CapTren_Id':433,'LoaiPhongBan':'KhoaCLS'},{'PhongBan_Id':881,'MaPhongBan':'PLM','TenPhongBan':'Phòng lấy máu (Tầng 1 - Nhà số 7)','TenKhongDau':'Phong lay mau (Tang 1 - Nha so 7)','TenPhongBan_En':'K37','Cap':2,'CapTren_Id':419,'LoaiPhongBan':'KhoaCLS'},{'PhongBan_Id':912,'MaPhongBan':'PSDU','TenPhongBan':'Phòng nội soi hô hấp dị ứng','TenKhongDau':'Phong noi soi ho hap di ung','TenPhongBan_En':'K09.2','Cap':2,'CapTren_Id':408,'LoaiPhongBan':'KhoaCLS'},{'PhongBan_Id':885,'MaPhongBan':'PSA','TenPhongBan':'Phòng nội soi Nội A','TenKhongDau':'Phong noi soi Noi A','TenPhongBan_En':'K03.1','Cap':2,'CapTren_Id':431,'LoaiPhongBan':'KhoaCLS'},{'PhongBan_Id':794,'MaPhongBan':'NSTMH','TenPhongBan':'Phòng nội soi tai mũi họng','TenKhongDau':'Phong noi soi tai mui hong','TenPhongBan_En':'K28','Cap':2,'CapTren_Id':426,'LoaiPhongBan':'KhoaCLS'},{'PhongBan_Id':727,'MaPhongBan':'PS','TenPhongBan':'Phòng nội soi tiêu hóa','TenKhongDau':'Phong noi soi tieu hoa','TenPhongBan_En':'K05','Cap':2,'CapTren_Id':412,'LoaiPhongBan':'KhoaCLS'},{'PhongBan_Id':791,'MaPhongBan':'SANGT','TenPhongBan':'Phòng Siêu âm ngoại trú (Tầng 2 - Nhà số 10) ','TenKhongDau':'Phong Sieu am ngoai tru (Tang 2 - Nha so 10) ','TenPhongBan_En':'K39','Cap':2,'CapTren_Id':227,'LoaiPhongBan':'KhoaCLS'},{'PhongBan_Id':898,'MaPhongBan':'SANA','TenPhongBan':'Phòng siêu âm Nội A','TenKhongDau':'Phong sieu am Noi A','TenPhongBan_En':'K03.1','Cap':2,'CapTren_Id':431,'LoaiPhongBan':'KhoaCLS'},{'PhongBan_Id':790,'MaPhongBan':'SANT','TenPhongBan':'Phòng Siêu âm Nội trú (Tầng 2 - Nhà số 10)','TenKhongDau':'Phong Sieu am Noi tru (Tang 2 - Nha so 10)','TenPhongBan_En':'K39','Cap':2,'CapTren_Id':227,'LoaiPhongBan':'KhoaCLS'},{'PhongBan_Id':715,'MaPhongBan':'SAM','TenPhongBan':'Sieu am mat','TenKhongDau':'Sieu am mat','TenPhongBan_En':'K30','Cap':2,'CapTren_Id':415,'LoaiPhongBan':'KhoaCLS'},{'PhongBan_Id':716,'MaPhongBan':'XQR','TenPhongBan':'XQ Rang','TenKhongDau':'XQ Rang','TenPhongBan_En':'K29','Cap':2,'CapTren_Id':430,'LoaiPhongBan':'KhoaCLS'}]";
+                //List<newObj> newObjs = JsonConvert.DeserializeObject<List<newObj>>(json);
+                //newObjs = newObjs.Where(x => x.LoaiPhongBan == "KhamBenh").OrderBy(x => x.PhongBan_Id).ToList();
+                //string query = "";
+                //foreach (var item in newObjs)
+                //{
+                //    query += " INSERT [dbo].[Q_Major] (  [Name], [Note], [IsDeleted], [IsShow]) VALUES (  N'"+item.TenPhongBan+"', N'', 0, 0)";
+                //    query += " INSERT [dbo].[Q_Service] (  [Name], [StartNumber], [EndNumber], [TimeProcess], [Note], [IsDeleted], [IsActived], [Code], [showBenhVien], [autoend], [TimeAutoEnd], [isKetLuan]) VALUES (  N'"+item.TenPhongBan+"', 1000, 1999, CAST(0x0000A8AA00041EB0 AS DateTime), N' ', 0, 1, N'"+item.MaPhongBan+"', 0, 0, NULL, 0)";
+                //}
+
+                //foreach (var item in newObjs)
+                //{
+                //    query += " INSERT [dbo].[Q_Major] (  [Name], [Note], [IsDeleted], [IsShow]) VALUES (  N'" + item.TenPhongBan + "-KL', N'', 0, 0)";
+                //    query += " INSERT [dbo].[Q_Service] (  [Name], [StartNumber], [EndNumber], [TimeProcess], [Note], [IsDeleted], [IsActived], [Code], [showBenhVien], [autoend], [TimeAutoEnd], [isKetLuan]) VALUES ( N'" + item.TenPhongBan + "', 1000, 1999, CAST(0x0000A8AA00041EB0 AS DateTime), N' ', 0, 1, N'" + item.MaPhongBan + "', 0, 0, NULL, 1)";
+                //}
+                //   BLLSQLBuilder.Instance.Excecute(connectString, query);
             }
             catch (Exception ex)
             {
@@ -500,7 +525,7 @@ namespace QMS_System
         }
         private void btnPrinterWindow_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            frmIssueTicketScreen frm = new frmIssueTicketScreen(this);
+            frmIssueTicketScreen frm = new frmIssueTicketScreen(null, this);
             frm.StartPosition = FormStartPosition.CenterScreen;
             // frm.TopMost = true;
             frm.Show();
@@ -516,7 +541,7 @@ namespace QMS_System
                 {
                     IsDatabaseChange = true;
                     //ko su dung GO 
-                    var query = @"  UPDATE [Q_COUNTER] set lastcall = 0 ,isrunning =1 
+                    var query = @"  UPDATE [Q_COUNTER] set lastcall = 0 ,isrunning =1, CurrentNumber=0 , LastCallKetLuan= 0  
                                         DELETE [Q_CounterSoftSound]  
                                         DBCC CHECKIDENT('Q_CounterSoftSound', RESEED, 1);                                             
                                         DELETE [dbo].[Q_RequestTicket]  
@@ -1238,12 +1263,109 @@ namespace QMS_System
             return true;
         }
 
+        public bool PrintNewTicket_VietThaiQuan(int serviceId,
+          bool isTouchScreen,
+          bool isProgrammer,
+          TimeSpan? timeServeAllow,
+          string Name,
+          string Address,
+          int? DOB,
+           string MaBenhNhan,
+          string MaPhongKham,
+          string SttPhongKham,
+          string SoXe,
+          string MaCongViec,
+          string MaLoaiCongViec,
+          int stt,
+          int printerId
+          )
+        {
+            IsDatabaseChange = true;
+            int lastTicket = 0,
+                newNumber = 0,
+            nghiepVu = 0;
+            string printStr = string.Empty,
+                tenQuay = string.Empty;
+            bool err = false;
+            ServiceDayModel serObj = null;
+            DateTime now = DateTime.Now;
+            serObj = lib_Services.FirstOrDefault(x => x.Id == serviceId);
+            if (serObj == null)
+                errorsms = "Dịch vụ số " + serviceId + " không tồn tại. Xin quý khách vui lòng chọn dịch vụ khác.";
+            else
+            {
+                if (CheckTimeBeforePrintTicket == "1" && serObj.Shifts.FirstOrDefault(x => now.TimeOfDay >= x.Start.TimeOfDay && now.TimeOfDay <= x.End.TimeOfDay) == null)
+                    temp.Add(SoundLockPrintTicket);
+                else
+                {
+                    var rs = BLLVietThaiQuan.Instance.ThemPhieu(connectString, stt, serviceId, SttPhongKham, MaCongViec, MaLoaiCongViec, (timeServeAllow != null ? timeServeAllow.Value : serObj.TimeProcess.TimeOfDay), now);
+                    if (rs.IsSuccess)
+                    {
+                        if (!isProgrammer)
+                        {
+                            var soArr = BaseCore.Instance.ChangeNumber(((int)rs.Data + 1));
+                            printStr = (soArr[0] + " " + soArr[1] + " ");
+                            if (printTicketReturnCurrentNumberOrServiceCode == 1)
+                            {
+                                soArr = BaseCore.Instance.ChangeNumber((int)rs.Records);
+                            }
+                            else
+                            {
+                                soArr = BaseCore.Instance.ChangeNumber(serviceId);
+                            }
+                            printStr += (soArr[0] + " " + soArr[1] + " " + now.ToString("dd") + " " + now.ToString("MM") + " " + now.ToString("yy") + " " + now.ToString("HH") + " " + now.ToString("mm"));
+                        }
+                        else if (isProgrammer)
+                            lbRecieve.Caption = printerId + "," + serviceId + "," + ((int)rs.Data + 1);
+                        nghiepVu = rs.Data_1;
+                        newNumber = ((int)rs.Data + 1);
+                        tenQuay = rs.Data_2;
+                    }
+                    else
+                        errorsms = rs.Errors[0].Message;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(printStr))
+            {
+                errorsms = printStr.ToString();
+                if (UsePrintBoard == 1)
+                {
+                    if (isTouchScreen)
+                        dataSendToComport.Add("AA " + BaseCore.Instance.ConvertIntToStringWith0Number(printerId));
+                    dataSendToComport.Add(printStr);
+                }
+                else
+                {
+                    PrintWithNoBorad(newNumber, lastTicket, tenQuay, (serObj != null ? serObj.Name : ""), (serObj != null ? serObj.Note : ""));
+                }
+            }
+            else if (newNumber != 0)
+                if (UsePrintBoard == 0)
+                    PrintWithNoBorad(newNumber, lastTicket, tenQuay, (serObj != null ? serObj.Name : ""), (serObj != null ? serObj.Note : ""));
+
+            if (AutoCallIfUserFree == 1 && nghiepVu > 0)
+            {
+                var freeUser = (int)BLLDailyRequire.Instance.CheckUserFree(connectString, nghiepVu, serviceId, newNumber, autoCallFollowMajorOrder).Data;
+                if (freeUser > 0)
+                {
+                    var counter = lib_Users.FirstOrDefault(x => x.UserId == freeUser).EquipCode;
+                    var str = ("AA," + BaseCore.Instance.ConvertIntToStringWith0Number(counter) + ",8B,00,00");
+                    autoCall = true;
+                    CounterProcess(str.Split(',').ToArray(), 0);
+                }
+            }
+            return true;
+        }
+
         private void PrintWithNoBorad(int newNum, int oldNum, string tenQuay, string tendichvu, string noteDichVu)
         {
+            var now = DateTime.Now;
+            //in theo driver
+            // InPhieu(newNum, oldNum, tenQuay, tendichvu, ("   Ngày: " + now.ToString("dd/MM/yyyy") + ("     Giờ: " + now.ToString("HH/mm"))), "VIỆT THÁI QUÂN 3");
             if (COM_Printer.IsOpen)
             {
                 var template = ticketTemplate;
-                var now = DateTime.Now;
                 template = template.Replace("[canh-giua]", "\x1b\x61\x01|+|");
                 template = template.Replace("[canh-trai]", "\x1b\x61\x00|+|");
                 template = template.Replace("[1x1]", "\x1d\x21\x00|+|");
@@ -1268,6 +1390,8 @@ namespace QMS_System
                     {
                         // frmMain.COM_Printer.Write(arr[i]);
                         BaseCore.Instance.PrintTicketTCVN3(COM_Printer, arr[i]);
+                        //sleep
+                        Thread.Sleep(50);
                     }
                 }
             }
@@ -1293,6 +1417,8 @@ namespace QMS_System
                         {
                             SendRequest(dataSendToComport[q]);
                             lbQuet.Caption = dataSendToComport[q].ToString().Replace(' ', ',');
+                            //sleep
+                            Thread.Sleep(100);
                         }
                         else
                         {
@@ -1900,6 +2026,13 @@ namespace QMS_System
                                     }
                                 }
                                 break;
+                            case (int)eCounterSoftRequireType.PrintTicket_VietThaiQuan:
+                                requireObj = JsonConvert.DeserializeObject<PrinterRequireModel>(requires[i].Content);
+                                var printResult = PrintNewTicket_VietThaiQuan(requireObj.ServiceId, false, false, requireObj.ServeTime.TimeOfDay, requireObj.Name, requireObj.Address, requireObj.DOB, requireObj.MaBenhNhan, requireObj.MaPhongKham, requireObj.SttPhongKham, requireObj.SoXe, requireObj.MaCongViec, requireObj.MaLoaiCongViec, requireObj.newNumber, requireObj.PrinterId);
+                                if (printResult)
+                                    BLLCounterSoftRequire.Instance.Delete(requires[i].Id, connectString);
+                                break;
+
                         }
                     }
 
@@ -2091,5 +2224,137 @@ namespace QMS_System
         }
 
 
+
+        #region Printer
+        private void InPhieu(int newNum, int oldNum, string tenquay, string tendichvu, string hoten, string tieude)
+        {
+            LocalReport localReport = new LocalReport();
+            try
+            {
+                //link cài report viewer cho máy client
+                //https://www.microsoft.com/en-us/download/details.aspx?id=6442
+
+                string fullPath = Application.StartupPath + "\\RDLC_Template\\Mau1.rdlc";
+                // MessageBox.Show(fullPath);
+                localReport.ReportPath = fullPath;
+                ReportParameter[] reportParameters = new ReportParameter[4];
+                reportParameters[0] = new ReportParameter("TenDV", tenquay.ToUpper());
+                reportParameters[1] = new ReportParameter("TenBN", hoten.ToUpper());
+                reportParameters[2] = new ReportParameter("Stt", newNum.ToString());
+                reportParameters[3] = new ReportParameter("TieuDe", tieude.ToUpper());
+
+                localReport.SetParameters(reportParameters);
+                for (int i = 0; i < frmMain_ver3.solien; i++)
+                {
+                    PrintToPrinter(localReport);
+                }
+            }
+            catch (Exception ex)
+            {
+                localReport.Dispose();
+                throw ex;
+            }
+        }
+
+        private static List<Stream> m_streams;
+        private static int m_currentPageIndex = 0;
+        public static void PrintToPrinter(LocalReport report)
+        {
+            Export(report);
+        }
+
+        public static void Export(LocalReport report, bool print = true)
+        {
+            string deviceInfo =
+             @"<DeviceInfo>
+                <OutputFormat>EMF</OutputFormat>
+                <PageWidth>8.5in</PageWidth>
+                <PageHeight>18.3in</PageHeight>
+                <MarginTop>0in</MarginTop>
+                <MarginLeft>0in</MarginLeft>
+                <MarginRight>0in</MarginRight>
+                <MarginBottom>5in</MarginBottom>
+            </DeviceInfo>";
+            Warning[] warnings;
+            m_streams = new List<Stream>();
+            report.Render("Image", deviceInfo, CreateStream, out warnings);
+            foreach (Stream stream in m_streams)
+                stream.Position = 0;
+
+            if (print)
+            {
+                Print();
+            }
+        }
+
+        public static void Print()
+        {
+            if (m_streams == null || m_streams.Count == 0)
+                throw new Exception("Error: no stream to print.");
+            PrintDocument printDoc = new PrintDocument();
+            if (!printDoc.PrinterSettings.IsValid)
+            {
+                throw new Exception("Error: cannot find the default printer.");
+            }
+            else
+            {
+                printDoc.PrintPage += new PrintPageEventHandler(PrintPage);
+                m_currentPageIndex = 0;
+                printDoc.Print();
+            }
+        }
+
+        public static Stream CreateStream(string name, string fileNameExtension, Encoding encoding, string mimeType, bool willSeek)
+        {
+            Stream stream = new MemoryStream();
+            m_streams.Add(stream);
+            return stream;
+        }
+
+        public static void PrintPage(object sender, PrintPageEventArgs ev)
+        {
+            Metafile pageImage = new
+               Metafile(m_streams[m_currentPageIndex]);
+
+            // Adjust rectangular area with printer margins.
+            Rectangle adjustedRect = new Rectangle(
+                ev.PageBounds.Left - (int)ev.PageSettings.HardMarginX,
+                ev.PageBounds.Top - (int)ev.PageSettings.HardMarginY,
+                ev.PageBounds.Width,
+                ev.PageBounds.Height);
+
+            // Draw a white background for the report
+            ev.Graphics.FillRectangle(Brushes.White, adjustedRect);
+
+            // Draw the report content
+            ev.Graphics.DrawImage(pageImage, adjustedRect);
+
+            // Prepare for the next page. Make sure we haven't hit the end.
+            m_currentPageIndex++;
+            ev.HasMorePages = (m_currentPageIndex < m_streams.Count);
+        }
+
+        public static void DisposePrint()
+        {
+            if (m_streams != null)
+            {
+                foreach (Stream stream in m_streams)
+                    stream.Close();
+                m_streams = null;
+            }
+        }
+        #endregion
+    }
+
+    public class newObj
+    {
+        public int PhongBan_Id { get; set; }
+        public string MaPhongBan { get; set; }
+        public string TenPhongBan { get; set; }
+        public string TenKhongDau { get; set; }
+        public string TenPhongBan_En { get; set; }
+        public int Cap { get; set; }
+        public int CapTren_Id { get; set; }
+        public string LoaiPhongBan { get; set; }
     }
 }

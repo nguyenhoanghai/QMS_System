@@ -63,7 +63,8 @@ namespace QMS_System
             }
             catch (Exception ex)
             {
-                MessageBox.Show("lỗi khác");
+                MessageBox.Show("lỗi khác" + ex.Message);
+                throw ex;
             }
         }
     }

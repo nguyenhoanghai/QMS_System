@@ -16,6 +16,7 @@ using System.Linq;
 using System.Media;
 using System.Threading;
 using System.Windows.Forms;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace QMS_System
 {
@@ -28,7 +29,7 @@ namespace QMS_System
 
         List<ConfigModel> configs;
         int q = -1,
-            printType = 1,
+
             startNumber = 0,
             timeQuetComport = 50,
          PrintTicketCode = 50,
@@ -40,11 +41,13 @@ namespace QMS_System
             _8cUseFor = 1,
             UsePrintBoard = 1;
 
-        public static int UseWithThirdPattern = 0,
+        public static int
+            UseWithThirdPattern = 0,
+            printType = 1,
             AutoCallIfUserFree = 0;
 
         string soundPath = "",
-            errorsms = "",
+
             SoundLockPrintTicket = "khoa.wav",
 
             CheckTimeBeforePrintTicket = "0";
@@ -72,11 +75,23 @@ namespace QMS_System
             comPort = new SerialPort(),
             COM_Printer = new SerialPort();
         public string lbSendrequest, lbSendData, lbPrinRequire;
-        public static string ticketTemplate = string.Empty,
+        public static string
+            ticketTemplate = string.Empty,
+             errorsms = "",
             connectString;
         public static int
             solien = 1,
             appVersion = 1;
+
+
+        Thread sendMailThread;
+        string mailSend = "gpro.alert2016@gmail.com",
+            password = "A123456!@#b",
+            mailRecieve = "trivodai@yahoo.com,gpro.alert2016@gmail.com",
+            tieuDeMail = "GPRO - QMS";
+        TimeSpan? TimeSendMail = TimeSpan.Parse("15:10:00");
+        bool mailSending = false,
+            useSendMail = false;
 
         public frmMain()
         {
@@ -84,8 +99,15 @@ namespace QMS_System
         }
         private void frmMain_Load(object sender, EventArgs e)
         {
+            getSystemConfig();
+        }
+
+        public void getSystemConfig()
+        {
             try
             {
+                if (isRunning)
+                    btRunProcess.PerformClick();
                 sqlStatus = BaseCore.Instance.CONNECT_STATUS(Application.StartupPath + "\\DATA.XML");
                 if (sqlStatus)
                 {
@@ -123,7 +145,7 @@ namespace QMS_System
                             Settings.Default.Today = DateTime.Now.Day;
                             Settings.Default.Save();
                             //ko su dung GO 
-                            var query = @"  UPDATE [Q_COUNTER] set lastcall = 0 ,isrunning =1 
+                            var query = @"  UPDATE [Q_COUNTER] set lastcall = 0 ,isrunning =1, CurrentNumber=0, LastCallKetLuan= 0    
                                             DELETE [Q_CounterSoftSound]  
                                             DBCC CHECKIDENT('Q_CounterSoftSound', RESEED, 1);                                             
                                             DELETE [dbo].[Q_RequestTicket]  
@@ -157,6 +179,7 @@ namespace QMS_System
                 Form form = new FrmSQLConnect();
                 form.ShowDialog();
             }
+
         }
 
         /// <summary>
@@ -474,7 +497,7 @@ namespace QMS_System
         }
         private void btnPrinterWindow_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            frmIssueTicketScreen frm = new frmIssueTicketScreen(this);
+            frmIssueTicketScreen frm = new frmIssueTicketScreen(this, null);
             frm.StartPosition = FormStartPosition.CenterScreen;
             // frm.TopMost = true;
             frm.Show();
@@ -625,6 +648,24 @@ namespace QMS_System
                 frm.Activate();
         }
 
+        private void barButtonCOMSetup_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            Form frm = IsActive(typeof(frmCOMSetting));
+            if (frm == null)
+            {
+                var forms = new frmCOMSetting();
+                forms.MdiParent = this;
+                forms.Show();
+            }
+            else
+                frm.Activate();
+        }
+
+        private void btReloadApp_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            getSystemConfig();
+        }
+
         private void barButtonItem15_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             string content = "nguyễn hoàng hải";
@@ -675,24 +716,35 @@ namespace QMS_System
                 {
                     try
                     {
-                        if (File.Exists(soundPath + temp[0]))
+                      //  MessageBox.Show(temp.Count.ToString());
+                       // MessageBox.Show(temp[0]);
+                        var _path = soundPath + temp[0];
+                        if (File.Exists(_path))
                         {
-                            player.SoundLocation = (soundPath + temp[0]);
+                          //  MessageBox.Show(_path + " _ Exists");
+                            player.SoundLocation = (_path);
 
                             // MessageBox.Show(SoundInfo.GetSoundLength(player.SoundLocation.Trim()).ToString());
                             int iTime = SoundInfo.GetSoundLength(player.SoundLocation.Trim()) + silenceTime;
                             player.Play();
                             Thread.Sleep(iTime);
-                            temp.Remove(temp[0]);
+                            if (temp.Count > 0)
+                                temp.Remove(temp[0]);
                         }
                         else
                         {
-                            temp.Remove(temp[0]);
-                            errorsms = "Không tìm được tệp âm thanh " + temp[0] + " ngưng cấp phiếu dịch vụ. Vui lòng kiểm tra lại đường dẫn thư mục âm thanh hoặc tệp âm thanh không tồn tại.";
+                           // MessageBox.Show(_path + " _ not Exists");
+                            if (temp.Count > 0)
+                            {
+                                temp.Remove(temp[0]);
+                                errorsms = "Không tìm được tệp âm thanh " + temp[0] + " ngưng cấp phiếu dịch vụ. Vui lòng kiểm tra lại đường dẫn thư mục âm thanh hoặc tệp âm thanh không tồn tại.";
+                            }
                         }
                     }
-                    catch (Exception)
-                    { }
+                    catch (Exception ex)
+                    {
+                      //  MessageBox.Show(ex.Message);
+                    }
                 }
             }
             isFinishRead = true;
@@ -930,6 +982,7 @@ namespace QMS_System
                                 nghiepVu = rs.Data_1;
                                 newNumber = ((int)rs.Data + 1);
                                 tenQuay = rs.Data_2;
+                                lastTicket = (int)rs.Records;
                             }
                             else
                                 errorsms = rs.Errors[0].Message;
@@ -971,6 +1024,7 @@ namespace QMS_System
                                 nghiepVu = rs.Data_1;
                                 newNumber = ((int)rs.Data + 1);
                                 tenQuay = rs.Data_2;
+                                lastTicket = (int)rs.Records;
                             }
                             else
                                 errorsms = rs.Errors[0].Message;
@@ -1578,7 +1632,7 @@ namespace QMS_System
                     //ko su dung GO 
                     var query = @"  DELETE from Q_CounterSoftSound  
                                     DBCC CHECKIDENT('Q_CounterSoftSound', RESEED, 1);
-                                    UPDATE [Q_COUNTER] set lastcall = 0 ,isrunning =1  
+                                    UPDATE [Q_COUNTER] set lastcall = 0 ,isrunning =1, CurrentNumber=0 , LastCallKetLuan= 0  
                                     DELETE FROM [dbo].[Q_RequestTicket]  
                                     DBCC CHECKIDENT('Q_RequestTicket', RESEED, 1); 
                                     DELETE FROM [dbo].[Q_TVReadSound] 
@@ -1601,7 +1655,7 @@ namespace QMS_System
                 {
                     IsDatabaseChange = true;
                     bool hasSound = false;
-                    List<MaindisplayDirectionModel> mains; 
+                    List<MaindisplayDirectionModel> mains;
                     PrinterRequireModel requireObj = null;
                     for (int i = 0; i < requires.Count; i++)
                     {
@@ -1609,7 +1663,7 @@ namespace QMS_System
                         {
                             case (int)eCounterSoftRequireType.inPhieu:
                                 requireObj = JsonConvert.DeserializeObject<PrinterRequireModel>(requires[i].Content);
-                                PrintWithNoBorad(requireObj.newNumber, requireObj.oldNumber, requireObj.TenQuay, requireObj.TenDichVu,"");
+                                PrintWithNoBorad(requireObj.newNumber, requireObj.oldNumber, requireObj.TenQuay, requireObj.TenDichVu, "");
                                 if (AutoCallIfUserFree == 1 && requireObj.MajorId > 0)
                                 {
                                     var freeUser = (int)BLLDailyRequire.Instance.CheckUserFree(connectString, requireObj.MajorId, requireObj.ServiceId, requireObj.newNumber, autoCallFollowMajorOrder).Data;
@@ -1625,10 +1679,11 @@ namespace QMS_System
                                 break;
                             case (int)eCounterSoftRequireType.ReadSound:
                                 temp.AddRange(requires[i].Content.Split('|').ToList());
+
                                 hasSound = true;
                                 break;
                             case (int)eCounterSoftRequireType.PrintTicket:
-                                  requireObj = JsonConvert.DeserializeObject<PrinterRequireModel>(requires[i].Content);
+                                requireObj = JsonConvert.DeserializeObject<PrinterRequireModel>(requires[i].Content);
                                 var result = PrintNewTicket(requireObj.PrinterId, requireObj.ServiceId, 0, true, false, requireObj.ServeTime.TimeOfDay, requireObj.Name, requireObj.Address, requireObj.DOB, requireObj.MaBenhNhan, requireObj.MaPhongKham, requireObj.SttPhongKham, requireObj.SoXe, requireObj.MaCongViec, requireObj.MaLoaiCongViec);
                                 if (result)
                                     BLLCounterSoftRequire.Instance.Delete(requires[i].Id, connectString);
@@ -1802,6 +1857,7 @@ namespace QMS_System
                     COM_Printer.Dispose();
                     timerDo.Enabled = false;
                     tmerQuetServeOver.Enabled = false;
+                    tmerCheckSendMail.Enabled = false;
                 }
                 else
                 {
@@ -1823,7 +1879,7 @@ namespace QMS_System
                     lib_CounterSound = BLLCounterSound.Instance.Gets(connectString);
                     lib_Services = BLLService.Instance.GetsForMain(connectString);
 
-                    int time = 1000;
+                    int time = 1000, _int = 0;
                     int.TryParse(GetConfigByCode(eConfigCode.TimerQuetServeOverTime), out time);
                     InitComPort();
                     if (UsePrintBoard == 0)
@@ -1843,6 +1899,19 @@ namespace QMS_System
                     if (GetConfigByCode(eConfigCode.CheckServeOverTime) == "1")
                         tmerQuetServeOver.Enabled = true;
                     btRunProcess.Enabled = true;
+
+
+
+                    int.TryParse(GetConfigByCode(eConfigCode.SendMail), out _int);
+                    if (_int == 1)
+                    {
+                        tmerCheckSendMail.Enabled = true;
+                        mailSend = GetConfigByCode(eConfigCode.MailFrom);
+                        password = GetConfigByCode(eConfigCode.MailFromPass);
+                        mailRecieve = GetConfigByCode(eConfigCode.MailTo);
+                        TimeSendMail = TimeSpan.Parse(GetConfigByCode(eConfigCode.TimeSendMail));
+                        tieuDeMail = GetConfigByCode(eConfigCode.MailSubject);
+                    }
                 }
                 lbRecieve.Caption = "";
             }
@@ -1887,5 +1956,259 @@ namespace QMS_System
             if (COM_Printer.IsOpen)
                 COM_Printer.Close();
         }
+
+
+        #region Send mail 12/11/2018 
+        private void tmerCheckSendMail_Tick(object sender, EventArgs e)
+        {
+            //try
+            //{
+            //    TimeSendMail = Settings.Default.TimeSend.TimeOfDay;
+            //}
+            //catch (Exception ex)
+            //{
+            //    TimeSendMail = null;
+            //    MessageBox.Show("Không thể cài đặt được thời gian gửi thư điện tử. Vui lòng kiểm tra lại cấu hình.");
+            //}
+            if (TimeSendMail.HasValue && !mailSending)
+            {
+                TimeSendMail = TimeSpan.Parse("16:55:00");
+                // mailSending = false;
+
+                TimeSpan dateTimeNow = DateTime.Now.TimeOfDay;
+                TimeSpan timeNow = TimeSpan.Parse(dateTimeNow.Hours.ToString() + ":" + dateTimeNow.Minutes.ToString() + ":00");
+                if (timeNow == TimeSendMail.Value)
+                {
+                    this.lbsendmailStatus.Caption = "bắt đầu gửi mail.";
+
+                    sendMailThread = new Thread(this.SendMails);
+                    sendMailThread.IsBackground = true;
+                    sendMailThread.Start();
+                }
+            }
+        }
+
+        private void SendMails()
+        {
+            mailSending = true;
+            this.Invoke((MethodInvoker)delegate
+            {
+                this.tmerCheckSendMail.Enabled = false;
+            });
+            try
+            {
+                clsMail mail = new clsMail();
+                mail.Type = "Google";
+                mail.Host = "smtp.gmail.com  ";
+                mail.Port = 587;
+                mail.From = mailSend;
+                mail.DisplayName = "";
+                mail.Password = password;
+                mail.To = mailRecieve;
+                mail.Subject = "GPRO - QMS";
+                mail.Body = tieuDeMail;
+
+                // bao cao ngay
+                string fileCT = BaoCaoChiTietNgay();
+                if (!string.IsNullOrEmpty(fileCT))
+                    mail.AddAttachment(fileCT);
+
+                string fileTH = BaoCaoTongHopNgay();
+                if (!string.IsNullOrEmpty(fileTH))
+                    mail.AddAttachment(fileTH);
+
+                mail.SendMail();
+
+                if (!string.IsNullOrEmpty(fileCT) && File.Exists(fileCT))
+                    File.Delete(fileCT);
+
+                if (!string.IsNullOrEmpty(fileTH) && File.Exists(fileTH))
+                    File.Delete(fileTH);
+            }
+            catch (Exception ex)
+            {
+                // threadSendMail.Abort();
+                MessageBox.Show("Lỗi gửi mail: " + ex.Message);
+            }
+            Thread.Sleep(60000);
+            this.Invoke((MethodInvoker)delegate
+            {
+                this.tmerCheckSendMail.Enabled = true;
+                mailSending = false;
+                this.lbsendmailStatus.Caption = "kết thúc gửi mail.";
+            });
+            sendMailThread.Abort();
+        }
+
+        public void releaseObject(object obj)
+        {
+            try
+            {
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
+                obj = null;
+            }
+            catch (Exception ex)
+            {
+                obj = null;
+                throw new Exception("Exception Occured while releasing object " + ex.ToString());
+            }
+            finally
+            {
+                GC.Collect();
+            }
+        }
+
+        private string BaoCaoTongHopNgay()
+        {
+            string templatePath = System.Windows.Forms.Application.StartupPath + @"\ReportTemplate\inDayNhanVien_th.xlsx";
+            Excel.Application xlApp;
+            Excel.Worksheet xlSheet;
+            Excel.Workbook xlBook;
+            Excel.Range oRng;
+            //doi tuong Trống để thêm  vào xlApp sau đó lưu lại sau
+            object missValue = System.Reflection.Missing.Value;
+            //khoi tao doi tuong Com Excel moi
+            xlApp = new Excel.Application();
+            xlBook = xlApp.Workbooks.Open(templatePath, 0, true, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
+            xlBook.CheckCompatibility = false;
+            xlBook.DoNotPromptForConvert = true;
+            //su dung Sheet dau tien de thao tac
+            xlSheet = (Excel.Worksheet)xlBook.Worksheets.get_Item(1);
+            //không cho hiện ứng dụng Excel lên để tránh gây đơ máy
+            xlApp.Visible = false;
+            try
+            {
+                //  var models = BLLReport.Instance.DetailReport(connectString, -1, 3, new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day), DateTime.Now);
+                var models = BLLReport.Instance.GeneralReport(connectString, 0, 1, new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day), DateTime.Now);
+                if (models != null)
+                {
+                    xlSheet.Cells[2, 2] = string.Format("Ngày {0} Tổng số lượt khách giao dịch: {1}", DateTime.Now.ToString("dd/MM/yyyy"), models.Count.ToString());
+
+                    int row = 4;
+                    int cell = 2;
+                    for (int i = 0; i < models.Count; i++)
+                    {
+                        for (int j = 0; j < 5; j++)
+                        {
+                            switch (j)
+                            {
+                                case 0: xlSheet.Cells[row, cell] = (i + 1); break; // "=\"" + DateTime.ParseExact(models[i].Date, "dd/MM/yyyy", CultureInfo.CurrentCulture).ToString("dd/MM/yyyy") + "\"";   break;
+                                case 1: xlSheet.Cells[row, cell] = models[i].Name; break;
+                                case 2: xlSheet.Cells[row, cell] = models[i].TotalTransaction; break;
+                                case 3: xlSheet.Cells[row, cell] = models[i].TotalTransTime; break;
+                                case 4: xlSheet.Cells[row, cell] = models[i].AverageTimePerTrans; break;
+                            }
+                            cell++;
+                        }
+                        cell = 2;
+                        row++;
+                    }
+                }
+
+                //save file
+                if (Directory.Exists(Application.StartupPath + @"\Export"))
+                    Directory.CreateDirectory(Application.StartupPath + @"\Export");
+                xlBook.SaveAs(Application.StartupPath + @"\Export\BaocaoTH_" + DateTime.Now.ToString("dd_MM_yyyy_HH_mm") + ".xlsx", Excel.XlFileFormat.xlWorkbookDefault, missValue, missValue, missValue, missValue, Excel.XlSaveAsAccessMode.xlNoChange, missValue, missValue, missValue, missValue, missValue);
+                xlBook.Close(true, missValue, missValue);
+                xlApp.Quit();
+
+                // release cac doi tuong COM
+                releaseObject(xlSheet);
+                releaseObject(xlBook);
+                releaseObject(xlApp);
+                return Application.StartupPath + @"\Export\BaocaoTH_" + DateTime.Now.ToString("dd_MM_yyyy_HH_mm") + ".xlsx";
+            }
+            catch (System.Exception ex)
+            {
+                xlBook.Close(true, missValue, missValue);
+                xlApp.Quit();
+
+                // release cac doi tuong COM
+                releaseObject(xlSheet);
+                releaseObject(xlBook);
+                releaseObject(xlApp);
+                MessageBox.Show(ex.Message);
+            }
+            return "";
+        }
+
+        private string BaoCaoChiTietNgay()
+        {
+            string templatePath = System.Windows.Forms.Application.StartupPath + @"\ReportTemplate\inDayNhanVien.xlsx";
+            Excel.Application xlApp;
+            Excel.Worksheet xlSheet;
+            Excel.Workbook xlBook;
+            Excel.Range oRng;
+            //doi tuong Trống để thêm  vào xlApp sau đó lưu lại sau
+            object missValue = System.Reflection.Missing.Value;
+            //khoi tao doi tuong Com Excel moi
+            xlApp = new Excel.Application();
+            xlBook = xlApp.Workbooks.Open(templatePath, 0, true, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
+            xlBook.CheckCompatibility = false;
+            xlBook.DoNotPromptForConvert = true;
+            //su dung Sheet dau tien de thao tac
+            xlSheet = (Excel.Worksheet)xlBook.Worksheets.get_Item(1);
+            //không cho hiện ứng dụng Excel lên để tránh gây đơ máy
+            xlApp.Visible = false;
+            try
+            {
+                var models = BLLReport.Instance.DetailReport(connectString, 0, 1, new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day), DateTime.Now);
+                if (models != null)
+                {
+                    xlSheet.Cells[2, 2] = string.Format("Ngày {0} Tổng số lượt khách giao dịch: {1}", DateTime.Now.ToString("dd/MM/yyyy"), models.Count.ToString());
+
+                    int row = 4;
+                    int cell = 2;
+                    for (int i = 0; i < models.Count; i++)
+                    {
+                        for (int j = 0; j < 11; j++)
+                        {
+                            switch (j)
+                            {
+                                case 0: xlSheet.Cells[row, cell] = (i + 1); break; // "=\"" + DateTime.ParseExact(models[i].Date, "dd/MM/yyyy", CultureInfo.CurrentCulture).ToString("dd/MM/yyyy") + "\"";   break;
+                                case 1: xlSheet.Cells[row, cell] = models[i].Number; break;
+                                case 2: xlSheet.Cells[row, cell] = models[i].UserName; break;
+                                case 3: xlSheet.Cells[row, cell] = models[i].MajorName; break;
+                                case 4: xlSheet.Cells[row, cell] = models[i].PrintTime.ToString("dd/MM/yyyy HH:mm"); break;
+                                case 5: xlSheet.Cells[row, cell] = (models[i].Start.HasValue ? models[i].Start.Value.ToString("dd/MM/yyyy HH:mm") : ""); break;
+                                case 6: xlSheet.Cells[row, cell] = (models[i].End.HasValue ? models[i].End.Value.ToString("dd/MM/yyyy HH:mm") : ""); break;
+                                case 7: xlSheet.Cells[row, cell] = models[i].ProcessTime; break;
+                                case 8: xlSheet.Cells[row, cell] = models[i].WaitingTime; break;
+                            }
+                            cell++;
+                        }
+                        cell = 2;
+                        row++;
+                    }
+                }
+
+                //save file
+                if (Directory.Exists(Application.StartupPath + @"\Export"))
+                    Directory.CreateDirectory(Application.StartupPath + @"\Export");
+                xlBook.SaveAs(Application.StartupPath + @"\Export\BaocaoCT_" + DateTime.Now.ToString("dd_MM_yyyy_HH_mm") + ".xlsx", Excel.XlFileFormat.xlWorkbookDefault, missValue, missValue, missValue, missValue, Excel.XlSaveAsAccessMode.xlNoChange, missValue, missValue, missValue, missValue, missValue);
+                xlBook.Close(true, missValue, missValue);
+                xlApp.Quit();
+
+                // release cac doi tuong COM
+                releaseObject(xlSheet);
+                releaseObject(xlBook);
+                releaseObject(xlApp);
+                return Application.StartupPath + @"\Export\BaocaoCT_" + DateTime.Now.ToString("dd_MM_yyyy_HH_mm") + ".xlsx";
+            }
+            catch (System.Exception ex)
+            {
+                xlBook.Close(true, missValue, missValue);
+                xlApp.Quit();
+
+                // release cac doi tuong COM
+                releaseObject(xlSheet);
+                releaseObject(xlBook);
+                releaseObject(xlApp);
+                MessageBox.Show(ex.Message);
+            }
+            return "";
+        }
+
+        #endregion
     }
 }

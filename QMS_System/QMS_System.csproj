@@ -385,6 +385,7 @@
     <Compile Include="frmWork.Designer.cs">
       <DependentUpon>frmWork.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helper\clsMail.cs" />
     <Compile Include="Helper\SoundInfo.cs" />
     <Compile Include="IssueTicketScreen\FormState.cs" />
     <Compile Include="IssueTicketScreen\frmButtonStyle.cs">

@@ -14,5 +14,6 @@ namespace QMS_System.Data.Enum
         LOGIN = 7,
         LOGOUT = 8,
         DANHGIA = 9,
+        QUALUOT = 10,
     }
 }

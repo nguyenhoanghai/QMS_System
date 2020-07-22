@@ -1356,9 +1356,10 @@ namespace QMS_System.Data.BLL
                             UserId = getIntValue(row["Id"]),
                             UserName = getStringValue(row["Name"]),
                             Number = 0,//sl cuoc goi
-                            TongTGChoTB = emptyDate,//tong tg cho trung binh
+                            TongTGCho = emptyDate,//tong tg cho trung binh
                             TGChoTruocSC = emptyDate,//tg cho truoc sua chua
-                            TGChoSauSC = emptyDate //tg cho sau sua chua
+                            TGChoSauSC = emptyDate, //tg cho sau sua chua,
+                            TGXuLyTT = emptyDate
                         });
                     }
                 }
@@ -1415,14 +1416,16 @@ namespace QMS_System.Data.BLL
                     for (int i = 0; i < report.Count; i++)
                     {
                         report[i].Number = 0;//sl cuoc goi
-                        report[i].TongTGChoTB = emptyDate;//tong tg cho trung binh
+                        report[i].TongTGCho = emptyDate;//tong tg cho trung binh
                         report[i].TGChoTruocSC = emptyDate;//tg cho truoc sua chua
                         report[i].TGChoSauSC = emptyDate;//tg cho sau sua chua
+                        report[i].TGXuLyTT = emptyDate;//tg xu ly
 
-                        var founds = queryResult.Where(x => x.UserId == report[i].UserId);
-                        if (founds.Count() > 0)
+                        var founds = queryResult.Where(x => x.UserId == report[i].UserId).ToList();
+                        if (founds.Count > 0)
                         {
-                            report[i].Number = founds.Count(); // so luong cuoc goi
+                            report[i].Number = founds.Count; // so luong cuoc goi
+                            var aa = founds.Select(x => x.Number).ToList();
                             foreach (var item in founds)
                             {
                                 if (item.Start.HasValue)
@@ -1433,6 +1436,9 @@ namespace QMS_System.Data.BLL
                                     //TG cho sau sủa chữa
                                     if (item.End.HasValue)
                                     {
+                                        //TG xu lý
+                                        report[i].TGXuLyTT = report[i].TGXuLyTT.Add(item.End.Value.Subtract(item.Start.Value));
+
                                         var thunganGoi = queryResult.FirstOrDefault(x => x.Number == item.Number && x.PrintTime == item.PrintTime && x.UserId == thuNganId);
                                         if (thunganGoi != null)
                                             report[i].TGChoSauSC = report[i].TGChoSauSC.Value.Add(thunganGoi.Start.Value.Subtract(item.End.Value));
@@ -1440,9 +1446,16 @@ namespace QMS_System.Data.BLL
                                 }
                             }
 
-                            double seconds = report[i].TGChoTruocSC.Value.TimeOfDay.TotalSeconds + report[i].TGChoSauSC.Value.TimeOfDay.TotalSeconds;
-                            var ss = emptyDate.AddSeconds(seconds / 2);
-                            report[i].TongTGChoTB = report[i].TongTGChoTB.Value.Add(ss.TimeOfDay);
+                            double seconds = report[i].TGChoTruocSC.Value.Subtract(emptyDate).TotalSeconds;
+                            seconds += report[i].TGChoSauSC.Value.Subtract(emptyDate).TotalSeconds;
+                            seconds += report[i].TGXuLyTT.Subtract(emptyDate).TotalSeconds;
+                            var ss = emptyDate.AddSeconds(seconds);  
+                            report[i].TongTGCho = report[i].TongTGCho.Value.Add(ss.TimeOfDay);
+
+                            report[i].dTongTGCho = Math.Round(ss.Subtract(emptyDate).TotalMinutes);
+                            report[i].dTGChoTruocSC = Math.Round(report[i].TGChoTruocSC.Value.Subtract(emptyDate).TotalMinutes);
+                            report[i].dTGChoSauSC = Math.Round(report[i].TGChoSauSC.Value.Subtract(emptyDate).TotalMinutes);
+                            report[i].dTGXuLyTT = Math.Round(report[i].TGXuLyTT.Subtract(emptyDate).TotalMinutes);
                         }
                         else
                             report[i].Number = 0;
@@ -1479,9 +1492,10 @@ namespace QMS_System.Data.BLL
                             ServiceId = getIntValue(row["Id"]),
                             ServiceName = getStringValue(row["Name"]),
                             Number = 0,//sl cuoc goi
-                            TongTGChoTB = emptyDate,//tong tg cho trung binh
+                            TongTGCho = emptyDate,//tong tg cho trung binh
                             TGChoTruocSC = emptyDate,//tg cho truoc sua chua
-                            TGChoSauSC = emptyDate //tg cho sau sua chua
+                            TGChoSauSC = emptyDate, //tg cho sau sua chua
+                            TGXuLyTT = emptyDate
                         });
                     }
                 }
@@ -1540,14 +1554,16 @@ namespace QMS_System.Data.BLL
                     for (int i = 0; i < report.Count; i++)
                     {
                         report[i].Number = 0;//sl cuoc goi
-                        report[i].TongTGChoTB = emptyDate;//tong tg cho trung binh
+                        report[i].TongTGCho = emptyDate;//tong tg cho trung binh
                         report[i].TGChoTruocSC = emptyDate;//tg cho truoc sua chua
                         report[i].TGChoSauSC = emptyDate;//tg cho sau sua chua
+                        report[i].TGXuLyTT = emptyDate;//tg xu lý
 
-                        var founds = queryResult.Where(x => x.ServiceId == report[i].ServiceId && x.UserId != thuNganId);
-                        if (founds.Count() > 0)
+                        var founds = queryResult.Where(x => x.ServiceId == report[i].ServiceId && x.UserId != thuNganId).ToList();
+                        if (founds.Count > 0)
                         {
-                            report[i].Number = founds.Count(); // so luong cuoc goi
+                            var aa = founds.Select(x => x.Number).ToList();
+                            report[i].Number = founds.Count; // so luong cuoc goi
                             foreach (var item in founds)
                             {
                                 if (item.Start.HasValue)
@@ -1558,6 +1574,9 @@ namespace QMS_System.Data.BLL
                                     //TG cho sau sủa chữa
                                     if (item.End.HasValue)
                                     {
+                                        //TG chờ truoc sửa chữa                                    
+                                        report[i].TGXuLyTT = report[i].TGXuLyTT.Add(item.End.Value.Subtract(item.Start.Value));
+
                                         var thunganGoi = queryResult.FirstOrDefault(x => x.Number == item.Number && x.PrintTime == item.PrintTime && x.UserId == thuNganId);
                                         if (thunganGoi != null)
                                             report[i].TGChoSauSC = report[i].TGChoSauSC.Value.Add(thunganGoi.Start.Value.Subtract(item.End.Value));
@@ -1565,9 +1584,16 @@ namespace QMS_System.Data.BLL
                                 }
                             }
 
-                            double seconds = report[i].TGChoTruocSC.Value.TimeOfDay.TotalSeconds + report[i].TGChoSauSC.Value.TimeOfDay.TotalSeconds;
-                            var ss = emptyDate.AddSeconds(seconds / 2);
-                            report[i].TongTGChoTB = report[i].TongTGChoTB.Value.Add(ss.TimeOfDay);
+                            double seconds = report[i].TGChoTruocSC.Value.Subtract(emptyDate).TotalSeconds;
+                            seconds += report[i].TGChoSauSC.Value.Subtract(emptyDate).TotalSeconds;
+                            seconds += report[i].TGXuLyTT.Subtract(emptyDate).TotalSeconds;
+                            var ss = emptyDate.AddSeconds(seconds);
+                            report[i].TongTGCho = report[i].TongTGCho.Value.Add(ss.TimeOfDay);
+
+                            report[i].dTongTGCho = Math.Round( ss.Subtract(emptyDate).TotalMinutes);
+                            report[i].dTGChoTruocSC = Math.Round(report[i].TGChoTruocSC.Value.Subtract(emptyDate).TotalMinutes);
+                            report[i].dTGChoSauSC = Math.Round(report[i].TGChoSauSC.Value.Subtract(emptyDate).TotalMinutes);
+                            report[i].dTGXuLyTT = Math.Round(report[i].TGXuLyTT.Subtract(emptyDate).TotalMinutes);
                         }
                         else
                             report[i].Number = 0;
@@ -1673,7 +1699,7 @@ namespace QMS_System.Data.BLL
                             else
                                 newObj.TGChoSauSC = emptyDate;
                             //tong tg chờ
-                            newObj.TongTGChoTB = newObj.TGChoTruocSC.Value.Add(newObj.TGChoSauSC.Value.TimeOfDay);
+                            newObj.TongTGCho = newObj.TGChoTruocSC.Value.Add(newObj.TGChoSauSC.Value.TimeOfDay);
                             report.Add(newObj);
                         }
                     }

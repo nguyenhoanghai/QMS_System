@@ -255,6 +255,141 @@ namespace QMS_System.Data.BLL
             return rs;
         }
 
+
+        public ResponseBaseModel Evaluate(string connectString, int matb, string value, int num, string isUseQMS, string comment)
+        {
+            var rs = new ResponseBaseModel();
+            using (var db = new QMSSystemEntities(connectString))
+            {
+                var user = db.Q_Login.OrderByDescending(x=>x.Date).FirstOrDefault(x => x.EquipCode == matb && x.StatusId ==(int)eStatus.LOGIN);
+                if (user != null)
+                {
+                    int tieuchi = 0;
+                    int.TryParse(value.Substring((value.IndexOf('_') + 1)), out tieuchi);
+                    var detail = db.Q_EvaluateDetail.FirstOrDefault(x => x.Id == tieuchi);
+                    bool sendSMS = detail != null ? detail.IsSendSMS : false;
+                    var now = DateTime.Now;
+                    var system = db.Q_Config.FirstOrDefault(x => x.IsActived && x.Code == eConfigCode.System).Value;
+
+                    if (isUseQMS == "1")
+                    {
+                        #region
+                        var ticketInfos = db.Q_DailyRequire_Detail.Where(x => x.Q_DailyRequire.TicketNumber == num && x.EquipCode.Value == matb && (x.StatusId == (int)eStatus.DANHGIA || x.StatusId == (int)eStatus.DAGXL)).ToList();
+                        if (ticketInfos.Count > 0)
+                        {
+                            var firstObj = ticketInfos.FirstOrDefault();
+                            IQueryable<Q_DailyRequire_Detail> details;
+                            details = (from x in db.Q_DailyRequire_Detail
+                                       where x.DailyRequireId == firstObj.DailyRequireId &&
+                                       //hthong xe may ?
+                                       // YES => lấy Status =HOTAT 
+                                       // NO =>  lấy ststus = DANHGIA | DAGXL
+                                       (system == "1" ? x.StatusId == (int)eStatus.HOTAT : (x.StatusId == (int)eStatus.DANHGIA || x.StatusId == (int)eStatus.DAGXL)) &&
+                                       //hthong xe may ?
+                                       // YES => danh gia cho thợ sửa cuối cùng ko phai thu ngân
+                                       // NO =>  danh gia cho user gui yc
+                                       (system == "1" ? x.UserId != user.UserId : x.UserId == user.UserId)
+                                       select x);
+                            var a = details.ToList();
+
+
+                            var config = db.Q_Config.FirstOrDefault(x => x.Code == eConfigCode.DoneTicketAfterEvaluate);
+                            string doneTicketAfterEvaluate = "0";
+                            if (config != null)
+                                doneTicketAfterEvaluate = config.Value;
+
+                            foreach (var item in details)
+                            {
+                                //ktra so phieu co danh gia chua ?
+                                var obj = (from
+                                          ue in db.Q_UserEvaluate
+                                           where
+                                           item.UserId == ue.UserId &&
+                                           item.DailyRequireId == ue.Q_DailyRequire_Detail.DailyRequireId
+                                           select ue).FirstOrDefault();
+                                if (obj == null)
+                                {
+                                    db.Q_UserEvaluate.Add(new Q_UserEvaluate()
+                                    {
+                                        UserId = item.UserId ?? 0,
+                                        DailyRequireDeId = item.Id,
+                                        Score = value,
+                                        SendSMS = sendSMS,
+                                        CreatedDate = now,
+                                        Comment = comment
+                                    });
+                                }
+
+                                if (item.StatusId != (int)eStatus.HOTAT && doneTicketAfterEvaluate == "1")
+                                {
+                                    item.StatusId = (int)eStatus.HOTAT;
+                                    item.EndProcessTime = now;
+                                    db.Entry<Q_DailyRequire_Detail>(item).State = System.Data.Entity.EntityState.Modified;
+                                }
+                            }
+
+                            //neu he thong xe may & end phieu sau khi danh gia thi di tim dòng của thu ngân sau đó end cho thu ngân
+                            if (system == "1" && doneTicketAfterEvaluate == "1")
+                            {
+                                details = (from x in db.Q_DailyRequire_Detail
+                                           where
+                                           x.DailyRequireId == firstObj.DailyRequireId &&
+                                           (x.StatusId == (int)eStatus.DANHGIA || x.StatusId == (int)eStatus.DAGXL)
+                                            && x.UserId == user.UserId
+                                           select x);
+                                foreach (var item in details)
+                                {
+                                    item.StatusId = (int)eStatus.HOTAT;
+                                    item.EndProcessTime = now;
+                                    db.Entry<Q_DailyRequire_Detail>(item).State = System.Data.Entity.EntityState.Modified;
+                                }
+                            }
+
+                            db.SaveChanges();
+                            rs.IsSuccess = true;
+                        }
+                        #endregion
+                    }
+                    else
+                    {
+                        db.Q_UserEvaluate.Add(new Q_UserEvaluate()
+                        {
+                            UserId = user.UserId,
+                            DailyRequireDeId = null,
+                            Score = value,
+                            SendSMS = sendSMS,
+                            CreatedDate = DateTime.Now,
+                            Comment = comment
+                        });
+                        db.SaveChanges();
+                        rs.IsSuccess = true;
+                    }
+
+                    if (sendSMS)
+                    {
+                        Q_CounterSoftRequire require;
+                        string maNV = user.UserId.ToString();
+                        var phones = db.Q_RecieverSMS.Where(x => x.IsActive && x.UserIds.Contains(maNV)).ToList();
+                        if (phones.Count > 0)
+                        {
+                            foreach (var item in phones)
+                            {
+                                if (item.UserIds.Split(',').ToArray().Contains(maNV) && item.PhoneNumber.Length > 0)
+                                {
+                                    require = new Q_CounterSoftRequire();
+                                    require.Content = item.PhoneNumber + ":" + user.Q_User.Name + "(" + user.Q_User.UserName + ")" + " " + detail.SmsContent;
+                                    require.TypeOfRequire = (int)eCounterSoftRequireType.SendSMS;
+                                    db.Q_CounterSoftRequire.Add(require);
+                                }
+                                db.SaveChanges();
+                            }
+                        }
+                    }
+                }
+            }
+            return rs;
+        }
+
         /// <summary>
         /// Đánh giá chất lượng phục vụ bằng counter
         /// </summary>
@@ -813,6 +948,50 @@ namespace QMS_System.Data.BLL
             }
         }
 
+        public AndroidModel GetInfoForAndroid(string connectString, int equipcode, int getSTT, int getSMS, int getUserInfo)
+        {
+            using (var db = new QMSSystemEntities(connectString))
+            {
+                AndroidModel androidModel = new AndroidModel();
+                if (getSTT == 1)
+                {
+                    var obj = db.Q_DailyRequire_Detail.Where(x => (x.StatusId == (int)eStatus.DAGXL || x.StatusId == (int)eStatus.DANHGIA) && x.ProcessTime.Value.Day == DateTime.Now.Day && x.ProcessTime.Value.Month == DateTime.Now.Month && x.ProcessTime.Value.Year == DateTime.Now.Year && x.EquipCode.HasValue && x.EquipCode.Value == equipcode).FirstOrDefault();
+                    if (obj != null)
+                    {
+                        var userEval = db.Q_UserEvaluate.FirstOrDefault(x => x.DailyRequireDeId == obj.Id);
+                        androidModel.HasEvaluate = (userEval != null ? true : false);
+                        androidModel.TicketNumber = obj.Q_DailyRequire.TicketNumber;
+                        androidModel.Status = (obj.StatusId == (int)eStatus.DANHGIA ? 1 : 0);
+                    }
+                    else
+                        androidModel.TicketNumber = 0;
+                }
+
+                if (getUserInfo == 1)
+                    androidModel.UserInfo = db.Q_Login.OrderByDescending(x => x.Date).Where(x => x.EquipCode == equipcode && x.StatusId == (int)eStatus.LOGIN).Select(x => new UserModel()
+                    {
+                        Id = x.Id,
+                        Name = x.Q_User.Name,
+                        Sex = x.Q_User.Sex,
+                        Address = x.Q_User.Address,
+                        Avatar = x.Q_User.Avatar,
+                        Professional = x.Q_User.Professional,
+                        Position = x.Q_User.Position,
+                        WorkingHistory = x.Q_User.WorkingHistory,
+                        UserName = x.Q_User.UserName,
+                        Password = x.Q_User.Password,
+                        Counters = x.Q_User.Counters
+                    }).FirstOrDefault(); //BLLUser.Instance.GetByUserName(connectString, userName);
+
+                if (getSMS == 1)
+                {
+                    androidModel.SMS = db.Q_CounterSoftRequire.Where(x => x.TypeOfRequire == (int)eCounterSoftRequireType.SendSMS).Select(x => x.Content).ToList();
+                    db.Database.ExecuteSqlCommand("delete  Q_CounterSoftRequire where TypeOfRequire = 3");
+                    db.SaveChanges();
+                }
+                return androidModel;
+            }
+        }
     }
 }
 

@@ -385,17 +385,23 @@ namespace QMS_System.Data.BLL
                 dataTable.Clear();
                 model.TotalWating = 0;
                 model.CounterWaitingTickets = "";
-                query = @"select r.TicketNumber as stt, r.STT_PhongKham as stt_pk from Q_DailyRequire_Detail d, Q_DailyRequire r where d.DailyRequireId = r.Id and StatusId =" + (int)eStatus.CHOXL + " and d.MajorId in (" + string.Join(",", majorIds) + ")";
+                query = @"select r.TicketNumber as stt, r.STT_PhongKham as stt_pk, StatusId from Q_DailyRequire_Detail d, Q_DailyRequire r where d.DailyRequireId = r.Id and (StatusId =" + (int)eStatus.CHOXL + " or StatusId =" + (int)eStatus.QUALUOT + ") and d.MajorId in (" + string.Join(",", majorIds) + ")";
                 da = new SqlDataAdapter(query, sqlConnection);
                 da.Fill(dataTable);
                 if (dataTable != null && dataTable.Rows.Count > 0)
                 {
                     foreach (DataRow row in dataTable.Rows)
                     {
+                        string _stt = "";
                         if (useWithThridPattern == 0)
-                            model.CounterWaitingTickets += row["stt"].ToString() + " ";
+                            _stt = row["stt"].ToString() + " ";
                         else if (!string.IsNullOrEmpty(row["stt_pk"].ToString()))
-                            model.CounterWaitingTickets += row["stt_pk"].ToString() + " ";
+                            _stt = row["stt_pk"].ToString() + " ";
+
+                        if ((int)row["StatusId"] == (int)eStatus.CHOXL)
+                            model.CounterWaitingTickets += row["stt"].ToString() + " ";
+                        else if ((int)row["StatusId"] == (int)eStatus.QUALUOT)
+                            model.CounterWaitingTickets_qualuot += row["stt"].ToString() + " ";
                     }
                     model.TotalWating = dataTable.Rows.Count;
                 }
@@ -720,6 +726,34 @@ namespace QMS_System.Data.BLL
             }
             return num;
         }
-    }
 
+        public ResponseBase findLogin(string connectString, string maphongkham)
+        {
+            var rs = new ResponseBase();
+            rs.IsSuccess = false;
+            try
+            {
+                using (db = new QMSSystemEntities(connectString))
+                {
+                    var tb = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && !x.Q_Counter.IsDeleted && x.Q_Counter.ShortName.Trim().ToUpper().Equals(maphongkham.Trim().ToUpper()));
+                    if (tb != null)
+                    {
+                        var login = db.Q_Login.OrderByDescending(x => x.Date).FirstOrDefault(x => !x.Q_User.IsDeleted && x.StatusId == (int)eStatus.LOGIN && x.EquipCode == tb.Code);
+                        if (login != null)
+                        {
+                            rs.IsSuccess = true;
+                            rs.Records = login.EquipCode;
+                            rs.Data = login.UserId;
+                            rs.Data_1 = tb.CounterId;
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return rs;
+        }
+
+    }
 }

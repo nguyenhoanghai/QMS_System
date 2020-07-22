@@ -2,7 +2,6 @@
 using QMS_System.Data.BLL;
 using QMS_System.Data.BLL.IssueTicketScreen;
 using QMS_System.Data.Enum;
-using QMS_System.Helper;
 using System;
 using System.Drawing;
 using System.IO;
@@ -12,29 +11,32 @@ namespace QMS_System.IssueTicketScreen
 {
     public partial class frmIssueTicketScreen : DevExpress.XtraEditors.XtraForm
     {
-        dynamic frmain; 
         string connect = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
-        public frmIssueTicketScreen(dynamic _frmain)
+        frmMain ver1;
+        frmMain_ver3 ver3;
+        public frmIssueTicketScreen(frmMain _fmain, frmMain_ver3 _fmainVer3)
         {
+            ver1 = _fmain;
+            ver3 = _fmainVer3;
             InitializeComponent();
-            frmain = _frmain;
         }
+
         public void frmIssueTicketScreen_Load(object sender, EventArgs e)
         {
             try
             {
                 string imgPath = BLLConfig.Instance.GetConfigByCode(connect, eConfigCode.Background);
-            if (!string.IsNullOrEmpty(imgPath) && File.Exists(imgPath))
-            {
-                Image img = new Bitmap(imgPath);
-                this.BackgroundImage = img;
-                this.BackgroundImageLayout = ImageLayout.Stretch;
-                this.WindowState = FormWindowState.Maximized;
-            }
+                if (!string.IsNullOrEmpty(imgPath) && File.Exists(imgPath))
+                {
+                    Image img = new Bitmap(imgPath);
+                    this.BackgroundImage = img;
+                    this.BackgroundImageLayout = ImageLayout.Stretch;
+                    this.WindowState = FormWindowState.Maximized;
+                }
             }
             catch (Exception)
-            { 
-            } 
+            {
+            }
 
             GetButton(); //phải để sau cùng
             this.KeyPreview = true; // kích hoạt loạt sự kiên nhấn Keyboard trên form
@@ -162,7 +164,10 @@ namespace QMS_System.IssueTicketScreen
 
         private void ShowMessage(string buttonName)
         {
-            frmain.PrintNewTicket(10, int.Parse(buttonName.Split('_')[1]), 0, true, false, null, null, null, null, null, null, null, null,null,null);
+            if (ver1 != null)
+                ver1.PrintNewTicket(10, int.Parse(buttonName.Split('_')[1]), 0, true, false, null, null, null, null, null, null, null, null, null, null);
+            else if (ver3 != null)
+                ver3.PrintNewTicket(10, int.Parse(buttonName.Split('_')[1]), 0, true, false, null, null, null, null, null, null, null, null, null, null);
         }
 
         private void frmIssueTicketScreen_ClientSizeChanged(object sender, EventArgs e)

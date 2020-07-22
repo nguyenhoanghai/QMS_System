@@ -32,13 +32,18 @@ namespace QMS_System.Data.Model
         public string WaitingTimeTN { get; set; }
         // public DateTime? EndTN { get; set; }        
 
-        public DateTime? TongTGChoTB { get; set; }
+        public DateTime? TongTGCho { get; set; }
         public DateTime? TGChoTruocSC { get; set; }
         public DateTime? TGChoSauSC { get; set; }
+
+        public double dTongTGCho { get; set; }
+        public double dTGChoTruocSC { get; set; }
+        public double dTGChoSauSC { get; set; }
 
         public string STT_PhongKham { get; set; }
         public DateTime ServeTime { get; set; }
         public DateTime TGXuLyTT { get; set; }
+        public double dTGXuLyTT { get; set; }
 
         public bool PhatSinh { get; set; }
     }
