@@ -1,4 +1,5 @@
 ﻿using GPRO.Core.Hai;
+using Newtonsoft.Json;
 using QMS_System.Data;
 using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
@@ -116,7 +117,11 @@ namespace QMS_System
         private void GetGridService()
         {
             var list = BLLService.Instance.Gets(connect);
+            var abc =   list.Select(x => (x.Code + " - " + x.Name)).ToArray() ;
+
+
             var now = DateTime.Now;
+            var snn = JsonConvert.SerializeObject(abc);
             var date = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0);
             list.Add(new ServiceModel() { Id = 0, Name = "", StartNumber = 0, EndNumber = 0, TimeProcess = date });
             gridService.DataSource = list;

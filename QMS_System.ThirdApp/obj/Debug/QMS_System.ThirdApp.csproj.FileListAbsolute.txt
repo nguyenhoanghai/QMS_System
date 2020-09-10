@@ -1,0 +1,6 @@
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.ThirdApp\bin\Debug\QMS_System.ThirdApp.dll
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.ThirdApp\bin\Debug\QMS_System.ThirdApp.pdb
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.ThirdApp\obj\Debug\QMS_System.ThirdApp.csprojAssemblyReference.cache
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.ThirdApp\obj\Debug\QMS_System.ThirdApp.csproj.CoreCompileInputs.cache
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.ThirdApp\obj\Debug\QMS_System.ThirdApp.dll
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.ThirdApp\obj\Debug\QMS_System.ThirdApp.pdb

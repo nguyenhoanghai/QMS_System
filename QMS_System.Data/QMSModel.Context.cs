@@ -34,13 +34,11 @@ namespace QMS_System.Data
         public DbSet<Q_CommandParameter> Q_CommandParameter { get; set; }
         public DbSet<Q_CounterSoftRequire> Q_CounterSoftRequire { get; set; }
         public DbSet<Q_CounterSound> Q_CounterSound { get; set; }
-        public DbSet<Q_DailyRequire> Q_DailyRequire { get; set; }
         public DbSet<Q_Equipment> Q_Equipment { get; set; }
         public DbSet<Q_EquipmentType> Q_EquipmentType { get; set; }
         public DbSet<Q_EquipTypeProcess> Q_EquipTypeProcess { get; set; }
         public DbSet<Q_Evaluate> Q_Evaluate { get; set; }
         public DbSet<Q_EvaluateDetail> Q_EvaluateDetail { get; set; }
-        public DbSet<Q_HisDailyRequire> Q_HisDailyRequire { get; set; }
         public DbSet<Q_Language> Q_Language { get; set; }
         public DbSet<Q_Login> Q_Login { get; set; }
         public DbSet<Q_LoginHistory> Q_LoginHistory { get; set; }
@@ -72,7 +70,6 @@ namespace QMS_System.Data
         public DbSet<Q_UserEvaluate> Q_UserEvaluate { get; set; }
         public DbSet<Q_Config> Q_Config { get; set; }
         public DbSet<Q_TVReadSound> Q_TVReadSound { get; set; }
-        public DbSet<Q_Service> Q_Service { get; set; }
         public DbSet<Q_Counter> Q_Counter { get; set; }
         public DbSet<Q_Video> Q_Video { get; set; }
         public DbSet<Q_CounterDayInfo> Q_CounterDayInfo { get; set; }
@@ -81,5 +78,8 @@ namespace QMS_System.Data
         public DbSet<Q_WorkType> Q_WorkType { get; set; }
         public DbSet<Q_DailyRequire_WorkDetail> Q_DailyRequire_WorkDetail { get; set; }
         public DbSet<Q_HisDailyRequire_WorkDetail> Q_HisDailyRequire_WorkDetail { get; set; }
+        public DbSet<Q_Service> Q_Service { get; set; }
+        public DbSet<Q_DailyRequire> Q_DailyRequire { get; set; }
+        public DbSet<Q_HisDailyRequire> Q_HisDailyRequire { get; set; }
     }
 }

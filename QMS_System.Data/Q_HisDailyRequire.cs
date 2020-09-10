@@ -34,6 +34,8 @@ namespace QMS_System.Data
         public string STT_PhongKham { get; set; }
         public string MaBenhNhan { get; set; }
         public string MaPhongKham { get; set; }
+        public int Type { get; set; }
+        public Nullable<System.DateTime> TGDKien { get; set; }
     
         public virtual Q_Business Q_Business { get; set; }
         public virtual ICollection<Q_HisDailyRequire_De> Q_HisDailyRequire_De { get; set; }

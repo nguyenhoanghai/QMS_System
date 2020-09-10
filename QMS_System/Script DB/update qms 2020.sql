@@ -1,4 +1,4 @@
- /****** Object:  Table [dbo].[Q_WorkType]    Script Date: 27/02/2020 9:49:46 SA ******/
+﻿ /****** Object:  Table [dbo].[Q_WorkType]    Script Date: 27/02/2020 9:49:46 SA ******/
 SET ANSI_NULLS ON
 GO
 
@@ -227,3 +227,17 @@ GO
 
 -- Update Q_Video table
 ALTER TABLE [Q_Video] ADD  [Duration] time(7) default('00:00:00') not null
+
+
+-- 3/8/2020
+-- Update q_service table 
+-- dung cho huu nghi
+alter table [Q_Service] add [ServiceType] int not null default(1)
+alter table [Q_DailyRequire] add [Type] int not null default(1)
+alter table [Q_DailyRequire] add [TGDKien] datetime   null  
+alter table [Q_DailyRequire] add [Type] int not null default(1)
+alter table [Q_HisDailyRequire] add [TGDKien] datetime   null  
+
+INSERT INTO [dbo].[Q_Config]([Code],[Value],[Note],[IsActived],[IsDeleted])
+     VALUES ('StartWork','07:00:00',N'Thời gian bắt đầu làm việc',1,0)
+GO

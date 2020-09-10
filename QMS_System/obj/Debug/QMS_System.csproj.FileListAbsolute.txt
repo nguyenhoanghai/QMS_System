@@ -596,3 +596,5 @@ E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.csproj.ResolveCom
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmMain_ver3.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmWork.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmCOMSetting.resources
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\QMS_System.ThirdApp.dll
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\QMS_System.ThirdApp.pdb

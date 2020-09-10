@@ -19,7 +19,7 @@ namespace QMS_System.Data
         public int WorkDetailId { get; set; }
         public bool IsDeleted { get; set; }
     
-        public virtual Q_DailyRequire Q_DailyRequire { get; set; }
         public virtual Q_WorkDetail Q_WorkDetail { get; set; }
+        public virtual Q_DailyRequire Q_DailyRequire { get; set; }
     }
 }

@@ -22,6 +22,7 @@ using System.Media;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using ExcelApp = Microsoft.Office.Interop.Excel;
 
 namespace QMS_System
 {
@@ -123,6 +124,7 @@ namespace QMS_System
         {
             try
             {
+               // docFileExcel();
                 //sqlStatus = BaseCore.Instance.CONNECT_STATUS(Application.StartupPath + "\\DATA.XML");
                 //if (sqlStatus)
                 //{
@@ -1361,8 +1363,6 @@ namespace QMS_System
         private void PrintWithNoBorad(int newNum, int oldNum, string tenQuay, string tendichvu, string noteDichVu)
         {
             var now = DateTime.Now;
-            //in theo driver
-            // InPhieu(newNum, oldNum, tenQuay, tendichvu, ("   Ngày: " + now.ToString("dd/MM/yyyy") + ("     Giờ: " + now.ToString("HH/mm"))), "VIỆT THÁI QUÂN 3");
             if (COM_Printer.IsOpen)
             {
                 var template = ticketTemplate;
@@ -1939,7 +1939,11 @@ namespace QMS_System
                             case (int)eCounterSoftRequireType.inPhieu:
                                 requireObj = JsonConvert.DeserializeObject<PrinterRequireModel>(requires[i].Content);
                                 var serObj = lib_Services.FirstOrDefault(x => x.Id == requireObj.ServiceId);
+                                //in  trực tiếp ko board
                                 PrintWithNoBorad(requireObj.newNumber, requireObj.oldNumber, requireObj.TenQuay, requireObj.TenDichVu, (serObj != null ? serObj.Note : ""));
+
+                                //in theo driver
+                                //InPhieuDungDriver(requireObj.newNumber, requireObj.oldNumber, requireObj.TenQuay, requireObj.TenQuay, ("   Ngày: " + now.ToString("dd/MM/yyyy") + ("     Giờ: " + now.ToString("HH/mm"))), "VIỆT THÁI QUÂN 3");
                                 if (AutoCallIfUserFree == 1 && requireObj.MajorId > 0)
                                 {
                                     var freeUser = (int)BLLDailyRequire.Instance.CheckUserFree(connectString, requireObj.MajorId, requireObj.ServiceId, requireObj.newNumber, autoCallFollowMajorOrder).Data;
@@ -2226,7 +2230,7 @@ namespace QMS_System
 
 
         #region Printer
-        private void InPhieu(int newNum, int oldNum, string tenquay, string tendichvu, string hoten, string tieude)
+        private void InPhieuDungDriver(int newNum, int oldNum, string tenquay, string tendichvu, string hoten, string tieude,string ngaygio)
         {
             LocalReport localReport = new LocalReport();
             try
@@ -2242,6 +2246,7 @@ namespace QMS_System
                 reportParameters[1] = new ReportParameter("TenBN", hoten.ToUpper());
                 reportParameters[2] = new ReportParameter("Stt", newNum.ToString());
                 reportParameters[3] = new ReportParameter("TieuDe", tieude.ToUpper());
+                reportParameters[4] = new ReportParameter("NgayGio", ngaygio.ToUpper());
 
                 localReport.SetParameters(reportParameters);
                 for (int i = 0; i < frmMain_ver3.solien; i++)
@@ -2344,6 +2349,49 @@ namespace QMS_System
             }
         }
         #endregion
+
+
+        public void docFileExcel()
+        {
+            string path = @"C:\Users\DoNguyen\Desktop\1595493383628734.xlsx";
+            ExcelApp.Application excelApp = new ExcelApp.Application();
+            ExcelApp.Workbook excelBook = excelApp.Workbooks.Open(path);
+            ExcelApp._Worksheet excelSheet = excelBook.Sheets[2];
+            ExcelApp.Range excelRange = excelSheet.UsedRange;
+
+            List<TinhModel> parents = new List<TinhModel>();
+           var childs = new List<HuyenModel>(); 
+            for (int ii = 10; ii < 73; ii++)
+            {
+                string matinh = excelRange.Cells[ii, 3].Value2.ToString();
+                string tentinh = excelRange.Cells[ii, 4].Value2.ToString(); 
+                parents.Add(new TinhModel() { Code = matinh, Name = tentinh } );
+            }
+            parents = parents.OrderBy(x => x.Name).ToList();
+
+            excelSheet = excelBook.Sheets[1];
+            excelRange = excelSheet.UsedRange; 
+            for (int ii = 10; ii < 705; ii++)
+            {
+                string maquan = excelRange.Cells[ii, 3].Value2.ToString();
+                string tenquan = excelRange.Cells[ii, 6].Value2.ToString();
+                string tentinh = excelRange.Cells[ii, 4].Value2.ToString();
+                childs.Add(new HuyenModel()
+                {
+                    Code = maquan,
+                    Name = tenquan,
+                    TName = tentinh
+                }); 
+            }
+
+            foreach (var item in parents)
+            {
+                var founds = childs.Where(x => x.TName == item.Name).OrderBy(x => x.Name).ToList();
+                item.Huyens = founds;
+            }
+
+           string json =  JsonConvert.SerializeObject(parents);
+        }
     }
 
     public class newObj
@@ -2356,5 +2404,22 @@ namespace QMS_System
         public int Cap { get; set; }
         public int CapTren_Id { get; set; }
         public string LoaiPhongBan { get; set; }
+    }
+
+    public class TinhModel
+    {
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public List<HuyenModel> Huyens { get; set; }
+        public TinhModel()
+        {
+            Huyens = new List<HuyenModel>();
+        }
+    }
+    public class HuyenModel
+    {
+        public string Code { get; set; }
+        public string Name { get; set; } 
+        public string TName { get; set; }
     }
 }

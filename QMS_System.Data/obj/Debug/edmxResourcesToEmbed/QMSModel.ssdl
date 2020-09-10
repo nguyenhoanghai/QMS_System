@@ -154,6 +154,8 @@
     <Property Name="STT_PhongKham" Type="nvarchar" MaxLength="500" />
     <Property Name="MaBenhNhan" Type="nvarchar" MaxLength="250" />
     <Property Name="MaPhongKham" Type="nvarchar" MaxLength="250" />
+    <Property Name="Type" Type="int" Nullable="false" />
+    <Property Name="TGDKien" Type="datetime" />
   </EntityType>
   <EntityType Name="Q_DailyRequire_Detail">
     <Key>
@@ -259,6 +261,8 @@
     <Property Name="STT_PhongKham" Type="nvarchar" MaxLength="500" />
     <Property Name="MaBenhNhan" Type="nvarchar" MaxLength="250" />
     <Property Name="MaPhongKham" Type="nvarchar" MaxLength="250" />
+    <Property Name="Type" Type="int" Nullable="false" />
+    <Property Name="TGDKien" Type="datetime" />
   </EntityType>
   <EntityType Name="Q_HisDailyRequire_De">
     <Key>
@@ -435,6 +439,7 @@
     <Property Name="TimeAutoEnd" Type="datetime" />
     <Property Name="showBenhVien" Type="bit" Nullable="false" />
     <Property Name="isKetLuan" Type="bit" Nullable="false" />
+    <Property Name="ServiceType" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Q_ServiceLimit">
     <Key>

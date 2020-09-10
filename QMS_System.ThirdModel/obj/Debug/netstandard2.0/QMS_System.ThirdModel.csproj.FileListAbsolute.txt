@@ -1,0 +1,9 @@
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.ThirdModel\bin\Debug\netstandard2.0\QMS_System.ThirdModel.deps.json
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.ThirdModel\bin\Debug\netstandard2.0\QMS_System.ThirdModel.dll
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.ThirdModel\bin\Debug\netstandard2.0\QMS_System.ThirdModel.pdb
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.ThirdModel\obj\Debug\netstandard2.0\QMS_System.ThirdModel.csprojAssemblyReference.cache
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.ThirdModel\obj\Debug\netstandard2.0\QMS_System.ThirdModel.csproj.CoreCompileInputs.cache
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.ThirdModel\obj\Debug\netstandard2.0\QMS_System.ThirdModel.AssemblyInfoInputs.cache
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.ThirdModel\obj\Debug\netstandard2.0\QMS_System.ThirdModel.AssemblyInfo.cs
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.ThirdModel\obj\Debug\netstandard2.0\QMS_System.ThirdModel.dll
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.ThirdModel\obj\Debug\netstandard2.0\QMS_System.ThirdModel.pdb

@@ -9,6 +9,7 @@ namespace QMS_System.Data.Model
         public int Id { get; set; }
         public string Name { get; set; }
         public int StartNumber { get; set; }
+        public int ServiceType { get; set; }
         public int EndNumber { get; set; }
         public bool IsActived { get; set; }
         public bool isKetLuan { get; set; }

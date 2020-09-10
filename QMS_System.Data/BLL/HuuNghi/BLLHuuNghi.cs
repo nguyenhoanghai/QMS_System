@@ -2,9 +2,13 @@
 using QMS_System.Data.Enum;
 using QMS_System.Data.Model;
 using QMS_System.Data.Model.HuuNghi;
+using QMS_System.ThirdApp;
+using QMS_System.ThirdApp.Enum;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 
 namespace QMS_System.Data.BLL.HuuNghi
@@ -29,7 +33,7 @@ namespace QMS_System.Data.BLL.HuuNghi
         private BLLHuuNghi() { }
         #endregion
 
-        public ResponseBaseModel chuyenJson(string connectString, string json)
+        public ResponseBaseModel chuyenJson(string connectString, string json, Boolean clearOldData)
         {
             var rs = new ResponseBaseModel();
             rs.IsSuccess = true;
@@ -68,9 +72,6 @@ namespace QMS_System.Data.BLL.HuuNghi
                 {
                     foreach (var dv in kh.DichVus)
                     {
-                        //dv.PhongKhams = _phongkham.Where(x => x.dsDichVu.Where(y=> y.DichVu_Id == dv.Id))
-                        //   .Select(x => new PhongKhamModel() { Id = x.PhongKham_Id, MaPK = x.MaPhongKham, TenPK = x.TenPhongKham })
-                        //  .GroupBy(x => x.Id).Select(x => x.First()).ToList();
                         foreach (var pk in _phongkham)
                         {
                             var found = pk.dsDichVu.FirstOrDefault(x => x.DichVu_Id == dv.Id);
@@ -85,20 +86,29 @@ namespace QMS_System.Data.BLL.HuuNghi
                 {
                     try
                     {
-                        var query = @"  DELETE [Q_ServiceStep]    
+                        var query = "";
+                        if (clearOldData)
+                        {
+                            query = @"  DELETE [Q_ServiceStep]    
                                     DBCC CHECKIDENT('Q_ServiceStep', RESEED, 1);  
                                     DELETE [Q_Service] where id > 30 
                                     DBCC CHECKIDENT('Q_Service', RESEED, 30); 
                                     DELETE [Q_Major] where id > 30 
                                     DBCC CHECKIDENT('Q_Major', RESEED, 30); 
-DELETE [Q_User] where id > 30 
+                                    DELETE [Q_User] where id > 30 
                                     DBCC CHECKIDENT('Q_User', RESEED, 30); 
-DELETE [Q_Counter] where id > 30 
+                                    DELETE [Q_Counter] where id > 30 
                                     DBCC CHECKIDENT('Q_Counter', RESEED, 30); 
-DELETE [Q_Equipment] where id > 30 
+                                    DELETE [Q_Equipment] where id > 30 
                                     DBCC CHECKIDENT('Q_Equipment', RESEED, 30); 
-";
-                        db.Database.ExecuteSqlCommand(query);
+                                    ";
+                            db.Database.ExecuteSqlCommand(query);
+                        }
+                        else
+                        {
+                            var ct = db.Q_Counter.OrderByDescending(x => x.Index).FirstOrDefault();
+                            index = ct.Index + 1;
+                        }
 
                         Q_Service service;
                         Q_Major major;
@@ -200,7 +210,8 @@ DELETE [Q_Equipment] where id > 30
             string SttPhongKham,
             string SoXe,
             string maCongViec,
-            string maLoaiCongViec
+            string maLoaiCongViec,
+            int serviceType
             )
         {
             ResponseBase rs = new ResponseBase();
@@ -212,14 +223,24 @@ DELETE [Q_Equipment] where id > 30
                        modelObj = new Q_DailyRequire();
                     int socu = 0;
                     int _serviceNumber = 0;
+                    TimeSpan startWork = TimeSpan.Parse("07:00:00");
+                    var configs = db.Q_Config.ToList();
+                    Q_Config config;
                     if (!printType.HasValue)
                     {
                         var _printType = 1;
-                        var cf = db.Q_Config.FirstOrDefault(x => x.Code == eConfigCode.PrintType);
-                        if (cf != null)
-                            int.TryParse(cf.Value, out _printType);
+                        config = configs.FirstOrDefault(x => x.Code == eConfigCode.PrintType);
+                        if (config != null)
+                            int.TryParse(config.Value, out _printType);
                         printType = _printType;
                     }
+
+                    config = configs.FirstOrDefault(x => x.Code == eConfigCode.StartWork);
+                    if (config != null)
+                        TimeSpan.TryParse(config.Value, out startWork);
+
+                    var lastTicket = db.Q_DailyRequire.Where(x => x.ServiceId == serviceId && x.Type == (int)eDailyRequireType.KhamBenh && x.Q_Service.ServiceType == (int)eServiceType.PhongKham).OrderByDescending(x => x.TicketNumber).FirstOrDefault();
+
 
                     if (!string.IsNullOrEmpty(maCongViec) && !string.IsNullOrEmpty(maLoaiCongViec))
                     {
@@ -230,7 +251,7 @@ DELETE [Q_Equipment] where id > 30
                     }
                     if (printType == (int)ePrintType.TheoTungDichVu)
                     {
-                        rq = db.Q_DailyRequire.Where(x => x.ServiceId == serviceId).OrderByDescending(x => x.TicketNumber).FirstOrDefault();
+                        rq = db.Q_DailyRequire.Where(x => x.ServiceId == serviceId && x.Type == serviceType).OrderByDescending(x => x.TicketNumber).FirstOrDefault();
                         var ser = db.Q_Service.FirstOrDefault(x => x.Id == serviceId);
                         if (ser != null)
                         {
@@ -256,7 +277,7 @@ DELETE [Q_Equipment] where id > 30
                     }
                     else
                     {
-                        var _found = db.Q_DailyRequire_Detail.FirstOrDefault(x => x.Q_DailyRequire.ServiceId == serviceId && x.Q_DailyRequire.MaBenhNhan == MaBenhNhan);
+                        var _found = db.Q_DailyRequire_Detail.FirstOrDefault(x => x.Q_DailyRequire.ServiceId == serviceId && x.Q_DailyRequire.MaBenhNhan == MaBenhNhan && x.Q_DailyRequire.Type == serviceType);
                         if (_found != null)
                         {
                             var sodanggoi = db.Q_DailyRequire_Detail.Where(x => x.Q_DailyRequire.ServiceId == serviceId && x.StatusId == (int)eStatus.DAGXL).OrderByDescending(x => x.ProcessTime).FirstOrDefault();
@@ -295,6 +316,7 @@ DELETE [Q_Equipment] where id > 30
                             modelObj.MaPhongKham = MaPhongKham;
                             modelObj.STT_PhongKham = SttPhongKham;
                             modelObj.CarNumber = SoXe;
+                            modelObj.Type = serviceType;
                             modelObj.Q_DailyRequire_Detail = new Collection<Q_DailyRequire_Detail>();
 
                             var foundService = db.Q_Service.FirstOrDefault(x => x.Id == serviceId);
@@ -346,6 +368,288 @@ DELETE [Q_Equipment] where id > 30
             return rs;
         }
 
+
+        public ResponseBase CapSoPhongKhamCoHen(string connectString, int dichvuId, string TenBN, string Address, int? DOB, string MaBenhNhan, string MaPhongKham, string SttPhongKham, string SoXe, DateTime printTime, DateTime gioHen)
+        {
+            var rs = new ResponseBase();
+            Q_DailyRequire rq = null,
+                     modelObj = new Q_DailyRequire();
+            int _serviceStartNumber = 0;
+            TimeSpan? serveTimeAllow = new TimeSpan(0, 0, 0);
+            TimeSpan? tgGoiDK = new TimeSpan(0, 0, 0);
+            using (var db = new QMSSystemEntities(connectString))
+            {
+                var dichvu = db.Q_Service.FirstOrDefault(x => x.Id == dichvuId);
+                if (dichvu != null)
+                {
+                    _serviceStartNumber = dichvu.StartNumber;
+                    serveTimeAllow = dichvu.TimeProcess.TimeOfDay;
+                }
+
+                var nv = db.Q_ServiceStep.Where(x => !x.IsDeleted && !x.Q_Service.IsDeleted && x.ServiceId == dichvuId).OrderBy(x => x.Index).FirstOrDefault();
+                if (nv == null)
+                {
+                    rs.IsSuccess = false;
+                    rs.Errors.Add(new Error() { MemberName = "Lỗi Nghiệp vụ", Message = "Lỗi: Dịch vụ này chưa được phân nghiệp vụ. Vui lòng liên hệ người quản lý hệ thống. Xin cám ơn!.." });
+                }
+                else
+                {
+                    var _found = db.Q_DailyRequire_Detail.FirstOrDefault(x => x.Q_DailyRequire.ServiceId == dichvuId && x.Q_DailyRequire.MaBenhNhan == MaBenhNhan && x.Q_DailyRequire.Type == (int)eDailyRequireType.KhamBenh);
+                    if (_found != null)
+                    {
+                        var sodanggoi = db.Q_DailyRequire_Detail.Where(x => x.Q_DailyRequire.ServiceId == dichvuId && x.StatusId == (int)eStatus.DAGXL).OrderByDescending(x => x.ProcessTime).FirstOrDefault();
+
+                        var userIds = (from x in db.Q_UserMajor where x.MajorId == nv.MajorId && !x.IsDeleted select x.UserId).ToList();
+                        var equipCodes = (from x in db.Q_Login where x.StatusId == (int)eStatus.LOGIN && userIds.Contains(x.UserId) && !x.Q_User.IsDeleted select x.EquipCode).ToList();
+
+                        var tq = (from x in db.Q_Equipment
+                                  where
+                                 (equipCodes.Count == 0 && userIds.Count > 0 ? userIds.Contains(x.Code) : equipCodes.Contains(x.Code)) &&
+                                  !x.IsDeleted &&
+                                  !x.Q_Counter.IsDeleted
+                                  select x.Q_Counter.Name).ToArray();
+                        var tqs = String.Join("@", tq).Replace("@", ("" + System.Environment.NewLine));
+
+                        rs.IsSuccess = true;
+                        rs.Data = _found.Q_DailyRequire.TicketNumber - 1;
+                        rs.Data_1 = _found.MajorId;
+                        rs.Records = (sodanggoi != null ? sodanggoi.Q_DailyRequire.TicketNumber : 0);
+                        rs.Data_2 = tqs;
+                        rs.Data_3 = _found.Q_DailyRequire.TicketNumber;
+                    }
+                    else
+                    {
+                        int stt = 0;
+                        var lastTicket = db.Q_DailyRequire
+                            .Where(x => x.ServiceId == dichvuId &&
+                            x.Type == (int)eDailyRequireType.KhamBenh &&
+                            x.Q_Service.ServiceType == (int)eServiceType.PhongKham &&
+                            x.TGDKien.HasValue && x.TGDKien <= gioHen
+                            )
+                            .OrderByDescending(x => x.TicketNumber)
+                            .FirstOrDefault();
+                        DateTime emptyDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
+                        if (lastTicket != null)
+                        {
+                            stt = lastTicket.TicketNumber + 1;
+                            emptyDate = lastTicket.TGDKien.Value.AddSeconds(dichvu.TimeProcess.TimeOfDay.TotalSeconds);
+                        }
+                        else
+                        {
+                            stt = _serviceStartNumber;
+                            TimeSpan startWork = TimeSpan.Parse("07:00:00");
+                            var configs = db.Q_Config.ToList();
+                            Q_Config config;
+                            config = configs.FirstOrDefault(x => x.Code == eConfigCode.StartWork);
+                            if (config != null)
+                                TimeSpan.TryParse(config.Value, out startWork);
+                            emptyDate = emptyDate.AddSeconds(startWork.TotalSeconds);
+                        }
+
+                        modelObj.TicketNumber = stt;
+                        modelObj.ServiceId = dichvuId;
+                        modelObj.BusinessId = null;
+                        modelObj.PrintTime = printTime;
+                        modelObj.ServeTimeAllow = serveTimeAllow ?? new TimeSpan(0, 0, 0);
+                        modelObj.CustomerName = TenBN;
+                        modelObj.CustomerDOB = DOB;
+                        modelObj.CustomerAddress = Address;
+                        modelObj.MaBenhNhan = MaBenhNhan;
+                        modelObj.MaPhongKham = MaPhongKham;
+                        modelObj.STT_PhongKham = SttPhongKham;
+                        modelObj.CarNumber = "";// SoXe;
+                        modelObj.TGDKien = emptyDate;
+                        modelObj.Type = (int)eDailyRequireType.KhamBenh;
+                        modelObj.Q_DailyRequire_Detail = new Collection<Q_DailyRequire_Detail>();
+
+                        var detail = new Q_DailyRequire_Detail();
+                        detail.Q_DailyRequire = modelObj;
+                        detail.MajorId = nv.MajorId;
+                        detail.StatusId = (int)eStatus.CHOXL;
+
+                        if (dichvu != null && dichvu.AutoEnd)
+                        {
+                            detail.StatusId = (int)eStatus.HOTAT;
+                            var now = DateTime.Now;
+                            var timeend = dichvu.TimeAutoEnd != null ? dichvu.TimeAutoEnd.Value.TimeOfDay : new TimeSpan(0, 10, 00);
+                            detail.ProcessTime = now;
+                            detail.EndProcessTime = now.AddMinutes(timeend.TotalMinutes);
+                        }
+                        modelObj.Q_DailyRequire_Detail.Add(detail);
+                        db.Q_DailyRequire.Add(modelObj);
+
+                        var sodanggoi = db.Q_DailyRequire_Detail.Where(x => x.Q_DailyRequire.ServiceId == dichvuId && x.StatusId == (int)eStatus.DAGXL).OrderByDescending(x => x.ProcessTime).FirstOrDefault();
+
+                        var userIds = (from x in db.Q_UserMajor where x.MajorId == nv.MajorId && !x.IsDeleted select x.UserId).ToList();
+                        var equipCodes = (from x in db.Q_Login where x.StatusId == (int)eStatus.LOGIN && userIds.Contains(x.UserId) && !x.Q_User.IsDeleted select x.EquipCode).ToList();
+                        var tq = (from x in db.Q_Equipment
+                                  where
+                                 (equipCodes.Count == 0 && userIds.Count > 0 ? userIds.Contains(x.Code) : equipCodes.Contains(x.Code)) &&
+                                  !x.IsDeleted &&
+                                  !x.Q_Counter.IsDeleted
+                                  select x.Q_Counter.Name).ToArray();
+                        var tqs = String.Join("@", tq).Replace("@", ("" + System.Environment.NewLine));
+
+                        db.SaveChanges();
+                        rs.IsSuccess = true;
+                        rs.Data = (stt - 1);
+                        rs.Data_1 = detail.MajorId;
+                        rs.Records = (sodanggoi != null ? sodanggoi.Q_DailyRequire.TicketNumber : 0);
+                        rs.Data_2 = tqs;
+                        rs.Data_3 = modelObj.TicketNumber;
+                    }
+                }
+            }
+            return rs;
+        }
+
+        public ResponseBase CapSoPhongKhamKhongHen(string connectString, int dichvuId, string TenBN, string Address, int? DOB, string MaBenhNhan, string MaPhongKham, string SttPhongKham, string SoXe, DateTime printTime, List<DateTime> gioHens)
+        {
+            var rs = new ResponseBase();
+            var modelObj = new Q_DailyRequire();
+            int _serviceStartNumber = 0;
+            TimeSpan? serveTimeAllow = new TimeSpan(0, 0, 0),
+              tgGoiDK = new TimeSpan(0, 0, 0);
+            using (var db = new QMSSystemEntities(connectString))
+            {
+                var dichvu = db.Q_Service.FirstOrDefault(x => x.Id == dichvuId);
+                if (dichvu != null)
+                {
+                    _serviceStartNumber = dichvu.StartNumber;
+                    serveTimeAllow = dichvu.TimeProcess.TimeOfDay;
+                }
+
+                var nv = db.Q_ServiceStep.Where(x => !x.IsDeleted && !x.Q_Service.IsDeleted && x.ServiceId == dichvuId).OrderBy(x => x.Index).FirstOrDefault();
+                if (nv == null)
+                {
+                    rs.IsSuccess = false;
+                    rs.Errors.Add(new Error() { MemberName = "Lỗi Nghiệp vụ", Message = "Lỗi: Dịch vụ này chưa được phân nghiệp vụ. Vui lòng liên hệ người quản lý hệ thống. Xin cám ơn!.." });
+                }
+                else
+                {
+                    var _found = db.Q_DailyRequire_Detail.FirstOrDefault(x => x.Q_DailyRequire.ServiceId == dichvuId && x.Q_DailyRequire.MaBenhNhan == MaBenhNhan && x.Q_DailyRequire.Type == (int)eDailyRequireType.KhamBenh);
+                    if (_found != null)
+                    {
+                        var sodanggoi = db.Q_DailyRequire_Detail.Where(x => x.Q_DailyRequire.ServiceId == dichvuId && x.StatusId == (int)eStatus.DAGXL).OrderByDescending(x => x.ProcessTime).FirstOrDefault();
+
+                        var userIds = (from x in db.Q_UserMajor where x.MajorId == nv.MajorId && !x.IsDeleted select x.UserId).ToList();
+                        var equipCodes = (from x in db.Q_Login where x.StatusId == (int)eStatus.LOGIN && userIds.Contains(x.UserId) && !x.Q_User.IsDeleted select x.EquipCode).ToList();
+
+                        var tq = (from x in db.Q_Equipment
+                                  where
+                                 (equipCodes.Count == 0 && userIds.Count > 0 ? userIds.Contains(x.Code) : equipCodes.Contains(x.Code)) &&
+                                  !x.IsDeleted &&
+                                  !x.Q_Counter.IsDeleted
+                                  select x.Q_Counter.Name).ToArray();
+                        var tqs = String.Join("@", tq).Replace("@", ("" + System.Environment.NewLine));
+
+                        rs.IsSuccess = true;
+                        rs.Data = _found.Q_DailyRequire.TicketNumber-1;
+                        rs.Data_1 = _found.MajorId;
+                        rs.Records = (sodanggoi != null ? sodanggoi.Q_DailyRequire.TicketNumber : 0);
+                        rs.Data_2 = tqs;
+                        rs.Data_3 = _found.Q_DailyRequire.TicketNumber;
+                    }
+                    else
+                    {
+                        int stt = 0;
+                        var lastTicket = db.Q_DailyRequire
+                            .Where(x => x.ServiceId == dichvuId &&
+                            x.Type == (int)eDailyRequireType.KhamBenh &&
+                            x.Q_Service.ServiceType == (int)eServiceType.PhongKham)
+                            .OrderByDescending(x => x.TicketNumber)
+                            .FirstOrDefault();
+                        DateTime emptyDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
+                        DateTime lastTGDKien = emptyDate;
+                        if (lastTicket != null)
+                        {
+                            stt = lastTicket.TicketNumber + 1;
+                            emptyDate = lastTicket.TGDKien.Value.AddSeconds(dichvu.TimeProcess.TimeOfDay.TotalSeconds);
+                            lastTGDKien = lastTicket.TGDKien.Value;
+                        }
+                        else
+                        {
+                            stt = _serviceStartNumber;
+                            TimeSpan startWork = TimeSpan.Parse("07:00:00");
+                            var configs = db.Q_Config.ToList();
+                            Q_Config config;
+                            config = configs.FirstOrDefault(x => x.Code == eConfigCode.StartWork);
+                            if (config != null)
+                                TimeSpan.TryParse(config.Value, out startWork);
+                            emptyDate = emptyDate.AddSeconds(startWork.TotalSeconds);
+                            lastTGDKien = emptyDate;
+                        }
+
+                        if (gioHens.Count > 0)
+                        {
+                            repeat:
+                            var foundHen = gioHens.FirstOrDefault(x => x >= lastTGDKien && x <= emptyDate);
+                            if (foundHen != null && foundHen.Year == DateTime.Now.Year)
+                            {
+                                stt++;
+                                lastTGDKien = emptyDate;
+                                emptyDate = emptyDate.AddSeconds(dichvu.TimeProcess.TimeOfDay.TotalSeconds);
+                                goto repeat;
+                            }
+                        }
+
+                        modelObj.TicketNumber = stt;
+                        modelObj.ServiceId = dichvuId;
+                        modelObj.BusinessId = null;
+                        modelObj.PrintTime = printTime;
+                        modelObj.ServeTimeAllow = serveTimeAllow ?? new TimeSpan(0, 0, 0);
+                        modelObj.CustomerName = TenBN;
+                        modelObj.CustomerDOB = DOB;
+                        modelObj.CustomerAddress = Address;
+                        modelObj.MaBenhNhan = MaBenhNhan;
+                        modelObj.MaPhongKham = MaPhongKham;
+                        modelObj.STT_PhongKham = SttPhongKham;
+                        modelObj.CarNumber = "";// SoXe;
+                        modelObj.TGDKien = emptyDate;
+                        modelObj.Type = (int)eDailyRequireType.KhamBenh;
+                        modelObj.Q_DailyRequire_Detail = new Collection<Q_DailyRequire_Detail>();
+
+                        var detail = new Q_DailyRequire_Detail();
+                        detail.Q_DailyRequire = modelObj;
+                        detail.MajorId = nv.MajorId;
+                        detail.StatusId = (int)eStatus.CHOXL;
+
+                        if (dichvu != null && dichvu.AutoEnd)
+                        {
+                            detail.StatusId = (int)eStatus.HOTAT;
+                            var now = DateTime.Now;
+                            var timeend = dichvu.TimeAutoEnd != null ? dichvu.TimeAutoEnd.Value.TimeOfDay : new TimeSpan(0, 10, 00);
+                            detail.ProcessTime = now;
+                            detail.EndProcessTime = now.AddMinutes(timeend.TotalMinutes);
+                        }
+                        modelObj.Q_DailyRequire_Detail.Add(detail);
+                        db.Q_DailyRequire.Add(modelObj);
+
+                        var sodanggoi = db.Q_DailyRequire_Detail.Where(x => x.Q_DailyRequire.ServiceId == dichvuId && x.StatusId == (int)eStatus.DAGXL).OrderByDescending(x => x.ProcessTime).FirstOrDefault();
+
+                        var userIds = (from x in db.Q_UserMajor where x.MajorId == nv.MajorId && !x.IsDeleted select x.UserId).ToList();
+                        var equipCodes = (from x in db.Q_Login where x.StatusId == (int)eStatus.LOGIN && userIds.Contains(x.UserId) && !x.Q_User.IsDeleted select x.EquipCode).ToList();
+                        var tq = (from x in db.Q_Equipment
+                                  where
+                                 (equipCodes.Count == 0 && userIds.Count > 0 ? userIds.Contains(x.Code) : equipCodes.Contains(x.Code)) &&
+                                  !x.IsDeleted &&
+                                  !x.Q_Counter.IsDeleted
+                                  select x.Q_Counter.Name).ToArray();
+                        var tqs = String.Join("@", tq).Replace("@", ("" + System.Environment.NewLine));
+
+                        db.SaveChanges();
+                        rs.IsSuccess = true;
+                        rs.Data = (stt - 1);
+                        rs.Data_1 = detail.MajorId;
+                        rs.Records = (sodanggoi != null ? sodanggoi.Q_DailyRequire.TicketNumber : 0);
+                        rs.Data_2 = tqs;
+                        rs.Data_3 = modelObj.TicketNumber;
+                    }
+                }
+            }
+            return rs;
+        }
+
         private Q_DailyRequire LayGioPhucVuDuKien(QMSSystemEntities db, string maCongViec, string maLoaiCongViec, Q_DailyRequire model)
         {
             DateTime processTime = new DateTime(2020, 1, 1, 00, 00, 00);
@@ -375,13 +679,13 @@ DELETE [Q_Equipment] where id > 30
             return model;
         }
 
-        public int QuaLuot(string connectString, int ticket, DateTime date)
+        public int QuaLuot(string connectString, int ticket, DateTime date, int serviceType)
         {
             try
             {
                 using (db = new QMSSystemEntities(connectString))
                 {
-                    var objs = db.Q_DailyRequire_Detail.Where(x => x.Q_DailyRequire.TicketNumber == ticket && x.StatusId == (int)eStatus.DAGXL);
+                    var objs = db.Q_DailyRequire_Detail.Where(x => x.Q_DailyRequire.TicketNumber == ticket && x.StatusId == (int)eStatus.DAGXL && x.Q_DailyRequire.Type == serviceType);
                     if (objs != null && objs.Count() > 0)
                     {
                         foreach (var item in objs)
@@ -401,7 +705,7 @@ DELETE [Q_Equipment] where id > 30
             return 0;
         }
 
-        public WebBVHuuNghiModel GetCounterDayInfo_Web(string connectString, int userId, int equipCode, int[] counterIds)
+        public WebBVHuuNghiModel GetCounterDayInfo_Web(string connectString, int userId, int equipCode, int[] counterIds, bool isPhongKham)
         {
             var webInfo = new WebBVHuuNghiModel();
             using (var db = new QMSSystemEntities(connectString))
@@ -410,78 +714,232 @@ DELETE [Q_Equipment] where id > 30
                 if (user != null)
                 {
                     var equipment = db.Q_Equipment.FirstOrDefault(x => x.Code == user.EquipCode);
-                    var rq = db.Q_DailyRequire.ToList();
-                    var dailyDetails = db.Q_DailyRequire_Detail;
-
                     var majorIds = db.Q_UserMajor.Where(x => !x.IsDeleted && !x.Q_Major.IsDeleted && !x.Q_User.IsDeleted && x.UserId == userId).Select(x => x.MajorId).ToList();
-                    ////STT dang kham
-                    //var current = dailyDetails.Where(x => x.StatusId == (int)eStatus.DAGXL && x.UserId == userId && x.Q_DailyRequire.ServiceId != maDichVuChoKL).OrderBy(x => x.ProcessTime).FirstOrDefault();
-                    //if (current != null)
-                    //    webInfo.STTDangKham = current.Q_DailyRequire.STT_PhongKham;
-
-                    ////STT dang ket luan
-                    //current = dailyDetails.Where(x => x.StatusId == (int)eStatus.DAGXL && x.UserId == userId && x.Q_DailyRequire.ServiceId == maDichVuChoKL).OrderBy(x => x.ProcessTime).FirstOrDefault();
-                    //if (current != null)
-                    //    webInfo.STTDangKetLuan = current.Q_DailyRequire.STT_PhongKham;
                     webInfo.STTDangKham = equipment.Q_Counter.LastCall.ToString();
                     webInfo.STTDangKetLuan = equipment.Q_Counter.LastCallKetLuan.ToString();
 
-                    if (rq.Count() > 0)
+                    var daysKB = db.Q_DailyRequire_Detail.Where(x => majorIds.Contains(x.MajorId) && x.StatusId != (int)eStatus.HOTAT && x.Q_DailyRequire.Type == (int)eDailyRequireType.KhamBenh)
+                        .Take(10)
+                        .Select(x => new
+                        {
+                            STT = x.Q_DailyRequire.TicketNumber,
+                            DOB = x.Q_DailyRequire.CustomerDOB,
+                            TenBN = x.Q_DailyRequire.CustomerName,
+                            StatusId = x.StatusId,
+                            Type = x.Q_DailyRequire.Type,
+                            STT_PhongKham = x.Q_DailyRequire.STT_PhongKham
+                        })
+                        .ToList();
+                    if (daysKB.Count > 0)
                     {
                         int tuoi = 0;
-                        foreach (var item in rq)
+                        foreach (var item in daysKB)
                         {
-                            var first = dailyDetails.FirstOrDefault(x => x.DailyRequireId == item.Id);
-                            if (first != null)
+                            tuoi = (item.DOB == null ? 0 : item.DOB.Value);
+                            if (tuoi > 0)
+                                tuoi = DateTime.Now.Year - tuoi;
+
+                            if (item.StatusId == (int)eStatus.CHOXL)
                             {
-                                tuoi = (item.CustomerDOB == null ? 0 : item.CustomerDOB.Value);
+                                webInfo.DSChoKham.Add(new ModelSelectItem()
+                                {
+                                    Name = (string.IsNullOrEmpty(item.STT_PhongKham) ? item.STT.ToString() : item.STT_PhongKham),
+                                    Code = (string.IsNullOrEmpty(item.TenBN) ? " " : item.TenBN),
+                                    Data = tuoi,
+                                });
+                            }
+                            else if (item.StatusId == (int)eStatus.QUALUOT)
+                            {
+                                webInfo.DSQuaLuotKham.Add(new ModelSelectItem()
+                                {
+                                    Name = (string.IsNullOrEmpty(item.STT_PhongKham) ? item.STT.ToString() : item.STT_PhongKham),
+                                    Code = (string.IsNullOrEmpty(item.TenBN) ? " " : item.TenBN),
+                                    Data = tuoi,
+                                });
+                            }
+                        }
+                    }
+
+                    if (isPhongKham)
+                    {
+                        var daysKL = db.Q_DailyRequire_Detail.Where(x => majorIds.Contains(x.MajorId) && x.StatusId != (int)eStatus.HOTAT && x.Q_DailyRequire.Type == (int)eDailyRequireType.KetLuan)
+                                                .Take(10)
+                                                .Select(x => new
+                                                {
+                                                    STT = x.Q_DailyRequire.TicketNumber,
+                                                    DOB = x.Q_DailyRequire.CustomerDOB,
+                                                    TenBN = x.Q_DailyRequire.CustomerName,
+                                                    StatusId = x.StatusId,
+                                                    Type = x.Q_DailyRequire.Type,
+                                                    STT_PhongKham = x.Q_DailyRequire.STT_PhongKham
+                                                })
+                                                .ToList();
+                        if (daysKL.Count > 0)
+                        {
+                            int tuoi = 0;
+                            foreach (var item in daysKL)
+                            {
+                                tuoi = (item.DOB == null ? 0 : item.DOB.Value);
                                 if (tuoi > 0)
                                     tuoi = DateTime.Now.Year - tuoi;
-                                if (first.StatusId == (int)eStatus.CHOXL && majorIds.Contains(first.MajorId) && !first.Q_DailyRequire.Q_Service.isKetLuan)
-                                {
 
-                                    webInfo.DSChoKham.Add(new ModelSelectItem()
-                                    {
-                                        Name = (string.IsNullOrEmpty(item.STT_PhongKham) ? item.TicketNumber.ToString() : item.STT_PhongKham),
-                                        Code = (string.IsNullOrEmpty(item.CustomerName) ? " " : item.CustomerName),
-                                        Data = tuoi,
-                                    });
-                                }
-                                else if (!first.Q_DailyRequire.Q_Service.isKetLuan && first.StatusId == (int)eStatus.QUALUOT && majorIds.Contains(first.MajorId))
-                                {
-                                    webInfo.DSQuaLuotKham.Add(new ModelSelectItem()
-                                    {
-                                        Name = (item.STT_PhongKham == null ? " " : item.STT_PhongKham),
-                                        Code = (item.CustomerName == null ? " " : item.CustomerName),
-                                        Data = tuoi,
-                                    });
-                                }
-                                else if (first.StatusId == (int)eStatus.CHOXL && majorIds.Contains(first.MajorId) && first.Q_DailyRequire.Q_Service.isKetLuan)
+                                if (item.StatusId == (int)eStatus.CHOXL)
                                 {
                                     webInfo.DSChoKL.Add(new ModelSelectItem()
                                     {
-                                        Name = (item.STT_PhongKham == null ? " " : item.STT_PhongKham),
-                                        Code = (item.CustomerName == null ? " " : item.CustomerName),
+                                        Name = (string.IsNullOrEmpty(item.STT_PhongKham) ? item.STT.ToString() : item.STT_PhongKham),
+                                        Code = (string.IsNullOrEmpty(item.TenBN) ? " " : item.TenBN),
                                         Data = tuoi,
                                     });
                                 }
-                                else if (first.Q_DailyRequire.Q_Service.isKetLuan && first.StatusId == (int)eStatus.QUALUOT && majorIds.Contains(first.MajorId))
+                                else if (item.StatusId == (int)eStatus.QUALUOT)
                                 {
                                     webInfo.DSQuaLuotKL.Add(new ModelSelectItem()
                                     {
-                                        Name = (item.STT_PhongKham == null ? " " : item.STT_PhongKham),
-                                        Code = (item.CustomerName == null ? " " : item.CustomerName),
+                                        Name = (string.IsNullOrEmpty(item.STT_PhongKham) ? item.STT.ToString() : item.STT_PhongKham),
+                                        Code = (string.IsNullOrEmpty(item.TenBN) ? " " : item.TenBN),
                                         Data = tuoi,
                                     });
                                 }
                             }
                         }
+
                     }
                 }
                 webInfo.Sounds = BLLTVReadSound.Instance.Gets(connectString, counterIds, userId);
             }
             return webInfo;
         }
+
+        /// <summary>
+        ///  Counter Soft
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="equipCode"></param>
+        /// <param name="ticket"></param>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public ResponseBaseModel CallAny(string connectString, int userId, int equipCode, int ticket, DateTime date, int serviceType)
+        {
+            ResponseBaseModel res = new ResponseBaseModel();
+            bool hasChange = false;
+            try
+            {
+                using (db = new QMSSystemEntities(connectString))
+                {
+                    var oldTickets = db.Q_DailyRequire_Detail.Where(x => x.Q_DailyRequire.TicketNumber != ticket && x.UserId == userId && x.EquipCode == equipCode && x.StatusId == (int)eStatus.DAGXL && x.Q_DailyRequire.Type == serviceType);
+                    if (oldTickets != null && oldTickets.Count() > 0)
+                    {
+                        foreach (var item in oldTickets)
+                        {
+                            item.StatusId = (int)eStatus.HOTAT;
+                            item.EndProcessTime = DateTime.Now;
+                        }
+                        hasChange = true;
+                    }
+                    var equip = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipCode);
+                    var check = db.Q_DailyRequire_Detail.FirstOrDefault(x => x.Q_DailyRequire.TicketNumber == ticket && (x.StatusId == (int)eStatus.CHOXL || x.StatusId == (int)eStatus.DAGXL || x.StatusId == (int)eStatus.QUALUOT) && x.Q_DailyRequire.Type == serviceType);
+                    if (check != null)
+                    {
+                        if (check.StatusId != (int)eStatus.DAGXL)
+                        {
+                            check.UserId = userId;
+                            check.EquipCode = equipCode;
+                            check.StatusId = (int)eStatus.DAGXL;
+                            check.ProcessTime = DateTime.Now;
+                        }
+                        hasChange = true;
+                        res.Data_3 = new TicketInfo()
+                        {
+                            RequireDetailId = check.Id,
+                            RequireId = check.DailyRequireId,
+                            StartTime = check.ProcessTime.Value.TimeOfDay,
+                            TimeServeAllow = check.Q_DailyRequire.ServeTimeAllow,
+                            TicketNumber = check.Q_DailyRequire.TicketNumber,
+                            CounterId = equip.CounterId,
+                            PrintTime = check.Q_DailyRequire.PrintTime,
+                            EquipCode = equipCode
+                        };
+                        switch (serviceType)
+                        {
+                            case (int)eDailyRequireType.KhamBenh:
+                                db.Database.ExecuteSqlCommand("update Q_Counter set LastCall =" + check.Q_DailyRequire.TicketNumber + ", CurrentNumber=" + check.Q_DailyRequire.TicketNumber + " where Id =" + equip.CounterId);
+                                break;
+                            case (int)eDailyRequireType.KetLuan:
+                                db.Database.ExecuteSqlCommand("update Q_Counter set LastCallKetLuan =" + check.Q_DailyRequire.TicketNumber + "  where Id =" + equip.CounterId);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        var mj = db.Q_UserMajor.Where(x => !x.IsDeleted && !x.Q_User.IsDeleted && !x.Q_Major.IsDeleted && x.UserId == userId).OrderBy(x => x.Index).FirstOrDefault();
+                        if (mj != null)
+                        {
+                            var rq = db.Q_DailyRequire.FirstOrDefault(x => x.TicketNumber == ticket && x.Type == serviceType);
+                            if (rq != null)
+                            {
+                                var newobj = new Q_DailyRequire_Detail();
+                                newobj.DailyRequireId = rq.Id;
+                                newobj.MajorId = mj.MajorId;
+                                newobj.UserId = userId;
+                                newobj.EquipCode = equipCode;
+                                newobj.StatusId = (int)eStatus.DAGXL;
+                                newobj.ProcessTime = DateTime.Now;
+                                db.Q_DailyRequire_Detail.Add(newobj);
+                                hasChange = true;
+
+                                res.Data_3 = new TicketInfo()
+                                {
+                                    RequireDetailId = newobj.Id,
+                                    RequireId = newobj.DailyRequireId,
+                                    StartTime = newobj.ProcessTime.Value.TimeOfDay,
+                                    TimeServeAllow = rq.ServeTimeAllow,
+                                    TicketNumber = rq.TicketNumber,
+                                    CounterId = equip.CounterId,
+                                    PrintTime = rq.PrintTime,
+                                    EquipCode = equipCode
+                                };
+
+                                switch (serviceType)
+                                {
+                                    case (int)eDailyRequireType.KhamBenh:
+                                        db.Database.ExecuteSqlCommand("update Q_Counter set LastCall =" + rq.TicketNumber + ", CurrentNumber=" + rq.TicketNumber + " where Id =" + equip.CounterId);
+                                        break;
+                                    case (int)eDailyRequireType.KetLuan:
+                                        db.Database.ExecuteSqlCommand("update Q_Counter set LastCallKetLuan =" + rq.TicketNumber + "  where Id =" + equip.CounterId);
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                res.IsSuccess = false;
+                                res.sms = "Không tìm thấy số phiếu " + ticket;
+                                res.Title = "Lỗi";
+                            }
+                        }
+                        else
+                        {
+                            res.IsSuccess = false;
+                            res.sms = "Nhân viên chưa được phân nghiệp vụ";
+                            res.Title = "Lỗi";
+                        }
+                    }
+                    if (hasChange)
+                    {
+                        db.SaveChanges();
+                        res.IsSuccess = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                res.IsSuccess = false;
+                res.sms = "Lỗi thực thi dữ liệu";
+                res.Title = "Lỗi";
+            }
+            return res;
+        }
+
         public class WebBVHuuNghiModel
         {
             public string STTDangKham { get; set; }
@@ -502,5 +960,100 @@ DELETE [Q_Equipment] where id > 30
                 Sounds = new List<string>();
             }
         }
+
+        public ResponseBaseModel KiemTraDKKham(string connectString, string maBN)
+        {
+            var rs = new ResponseBaseModel();
+            try
+            {
+                using (db = new QMSSystemEntities(connectString))
+                {
+                    var oldTickets = db.Q_DailyRequire.Where(x => x.MaBenhNhan == maBN && x.Type == (int)eDailyRequireType.KhamBenh && x.Q_Service.ServiceType == (int)eServiceType.PhongKham).OrderBy(x => x.PrintTime).FirstOrDefault();
+                    if (oldTickets != null)
+                    {
+                        rs.IsSuccess = true;
+                        rs.Data = oldTickets.ServiceId;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return rs;
+        }
+
+        public DataSet DSChoKetLuan(SqlConnection sqlConnection,string maPK)
+        {
+            if (sqlConnection.State == ConnectionState.Closed)
+                sqlConnection.Open();
+            //var list = new List<KetLuanModel>();
+            var dataset = new DataSet();
+            try
+            {
+                var query = string.Format(@"select dr.TicketNumber as STT,  dr.MaBenhNhan as MaBN, dr.CustomerName as TenBN, dr.CustomerDOB as NamSinh, dr.CustomerAddress as DiaChi   
+                            from Q_DailyRequire dr ,Q_Service s  
+                            where s.IsDeleted=0 and dr.[Type] ={0} and s.Id = dr.ServiceId and dr.MaPhongKham='{1}'  and (dr.Id IN (select drd.DailyRequireId from Q_DailyRequire_Detail drd where  StatusId={2}) )
+                            order by dr.TicketNumber", (int)eDailyRequireType.KetLuan, maPK, (int)eStatus.CHOXL);
+                var adap = new SqlDataAdapter(query, sqlConnection);
+                adap.Fill(dataset, "TableDSKetLuan");
+                //var dt = new DataTable();
+                //adap.Fill(dt);
+                //if (dt != null && dt.Rows.Count > 0)
+                //{
+                //    foreach (DataRow row in dt.Rows)
+                //    {
+                //        list.Add(new KetLuanModel()
+                //        {
+                //            NamSinh = getIntValue(row["CustomerDOB"]),
+                //            STT = getIntValue(row["TicketNumber"]),
+                //            MaBN = getStringValue(row["MaBenhNhan"]),
+                //            TenBN = getStringValue(row["CustomerName"]),
+                //            DiaChi = getStringValue(row["CustomerAddress"])
+                //        });
+                //    }
+                // }
+            }
+            catch (Exception ex)
+            {
+            }
+            return dataset;
+        }
+
+        private int getIntValue(object value)
+        {
+            if (value != null && !string.IsNullOrEmpty(value.ToString()))
+                return Convert.ToInt32(value);
+            return 0;
+        }
+
+        private string getStringValue(object value)
+        {
+            if (value != null && !string.IsNullOrEmpty(value.ToString()))
+                return value.ToString();
+            return "";
+        }
+
+        public ModelSelectItem SLPhieuCuaDichVu(string connectString, int serviceId)
+        {
+            var rs = new ModelSelectItem();
+            try
+            {
+                using (db = new QMSSystemEntities(connectString))
+                {
+                    var ticket = db.Q_DailyRequire.Where(x => x.ServiceId == serviceId && x.Type == (int)eDailyRequireType.KhamBenh && x.Q_Service.ServiceType == (int)eServiceType.PhongKham).OrderByDescending(x => x.TicketNumber).FirstOrDefault();
+                    if (ticket != null)
+                    {
+                        rs.Id = ticket.TicketNumber;
+                        rs.Data = ticket.ServiceId;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return rs;
+        }
+
     }
+
 }

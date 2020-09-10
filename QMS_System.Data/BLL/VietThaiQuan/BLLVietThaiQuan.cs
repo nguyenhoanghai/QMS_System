@@ -105,7 +105,7 @@ namespace QMS_System.Data.BLL.VietThaiQuan
 
                     db.SaveChanges();
                     rs.IsSuccess = true;
-                    rs.Data = 0;
+                    rs.Data = (stt-1);
                     rs.Data_1 = detail.MajorId;
                     rs.Records = (sodanggoi != null ? sodanggoi.Q_DailyRequire.TicketNumber : 0);
                     rs.Data_2 = tqs;

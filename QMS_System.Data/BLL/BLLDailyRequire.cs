@@ -811,7 +811,7 @@ namespace QMS_System.Data.BLL
             {
                 using (db = new QMSSystemEntities(connectString))
                 {
-                    var oldTickets = db.Q_DailyRequire_Detail.Where(x => x.UserId == userId && x.EquipCode == equipCode && x.StatusId == (int)eStatus.DAGXL);
+                    var oldTickets = db.Q_DailyRequire_Detail.Where(x => x.Q_DailyRequire.TicketNumber != ticket && x.UserId == userId && x.EquipCode == equipCode && x.StatusId == (int)eStatus.DAGXL);
                     if (oldTickets != null && oldTickets.Count() > 0)
                     {
                         foreach (var item in oldTickets)
@@ -822,13 +822,16 @@ namespace QMS_System.Data.BLL
                         hasChange = true;
                     }
                     var equip = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipCode);
-                    var check = db.Q_DailyRequire_Detail.FirstOrDefault(x => x.Q_DailyRequire.TicketNumber == ticket && (x.StatusId == (int)eStatus.CHOXL || x.StatusId == (int)eStatus.QUALUOT));
+                    var check = db.Q_DailyRequire_Detail.FirstOrDefault(x => x.Q_DailyRequire.TicketNumber == ticket && (x.StatusId == (int)eStatus.CHOXL || x.StatusId == (int)eStatus.DAGXL || x.StatusId == (int)eStatus.QUALUOT));
                     if (check != null)
                     {
-                        check.UserId = userId;
-                        check.EquipCode = equipCode;
-                        check.StatusId = (int)eStatus.DAGXL;
-                        check.ProcessTime = DateTime.Now;
+                        if (check.StatusId != (int)eStatus.DAGXL)
+                        {
+                            check.UserId = userId;
+                            check.EquipCode = equipCode;
+                            check.StatusId = (int)eStatus.DAGXL;
+                            check.ProcessTime = DateTime.Now;
+                        }
                         hasChange = true;
                         res.Data_3 = new TicketInfo()
                         {
@@ -841,6 +844,7 @@ namespace QMS_System.Data.BLL
                             PrintTime = check.Q_DailyRequire.PrintTime,
                             EquipCode = equipCode
                         };
+                        db.Database.ExecuteSqlCommand("update Q_Counter set LastCall =" + check.Q_DailyRequire.TicketNumber + ", CurrentNumber=" + check.Q_DailyRequire.TicketNumber + " where Id =" + equip.CounterId);
                     }
                     else
                     {
@@ -871,6 +875,8 @@ namespace QMS_System.Data.BLL
                                     PrintTime = rq.PrintTime,
                                     EquipCode = equipCode
                                 };
+
+                                db.Database.ExecuteSqlCommand("update Q_Counter set LastCall =" + rq.TicketNumber + ", CurrentNumber=" + rq.TicketNumber + " where Id =" + equip.CounterId);
                             }
                             else
                             {

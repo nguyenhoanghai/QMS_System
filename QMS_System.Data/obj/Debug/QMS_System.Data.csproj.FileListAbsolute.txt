@@ -62,3 +62,5 @@ E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.Data\bin\Debug\ru\DevExpress.Xpo.v18.1
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.Data\bin\Debug\Newtonsoft.Json.dll
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.Data\bin\Debug\Newtonsoft.Json.xml
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.Data\bin\Debug\EPPlus.dll
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.Data\bin\Debug\QMS_System.ThirdApp.dll
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System.Data\bin\Debug\QMS_System.ThirdApp.pdb

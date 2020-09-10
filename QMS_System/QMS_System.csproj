@@ -602,6 +602,10 @@
       <Project>{da64d714-1d68-4a11-b6a5-da2803aa5ccc}</Project>
       <Name>QMS_System.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\QMS_System.ThirdApp\QMS_System.ThirdApp.csproj">
+      <Project>{f9f288da-e056-498d-add0-445c01186277}</Project>
+      <Name>QMS_System.ThirdApp</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\delete.png" />

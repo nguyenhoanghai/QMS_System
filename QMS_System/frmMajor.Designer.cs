@@ -48,12 +48,14 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gridMajor.Cursor = System.Windows.Forms.Cursors.Default;
-            this.gridMajor.Location = new System.Drawing.Point(4, 47);
+            this.gridMajor.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gridMajor.Location = new System.Drawing.Point(5, 58);
             this.gridMajor.MainView = this.gridViewMajor;
+            this.gridMajor.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.gridMajor.Name = "gridMajor";
             this.gridMajor.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repbtn_deleteMajor});
-            this.gridMajor.Size = new System.Drawing.Size(669, 290);
+            this.gridMajor.Size = new System.Drawing.Size(892, 357);
             this.gridMajor.TabIndex = 1;
             this.gridMajor.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewMajor});
@@ -161,20 +163,22 @@
             this.btnResetMajor.Image = global::QMS_System.Properties.Resources.if_refresh22_216527;
             this.btnResetMajor.ImageLocation = DevExpress.XtraEditors.ImageLocation.MiddleLeft;
             this.btnResetMajor.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.LeftCenter;
-            this.btnResetMajor.Location = new System.Drawing.Point(4, 3);
+            this.btnResetMajor.Location = new System.Drawing.Point(5, 4);
+            this.btnResetMajor.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnResetMajor.Name = "btnResetMajor";
-            this.btnResetMajor.Size = new System.Drawing.Size(213, 38);
+            this.btnResetMajor.Size = new System.Drawing.Size(284, 47);
             this.btnResetMajor.TabIndex = 7;
             this.btnResetMajor.Text = "  Làm mới  danh sách nghiệp vụ";
             this.btnResetMajor.Click += new System.EventHandler(this.btnResetMajor_Click);
             // 
             // frmMajor
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(676, 340);
+            this.ClientSize = new System.Drawing.Size(901, 418);
             this.Controls.Add(this.gridMajor);
             this.Controls.Add(this.btnResetMajor);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "frmMajor";
             this.Text = "Nghiệp Vụ";
             this.Load += new System.EventHandler(this.frmMajor_Load);

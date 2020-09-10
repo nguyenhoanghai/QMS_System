@@ -129,6 +129,7 @@ namespace QMS_System.Data.Enum
         public const string MailSubject = "MailSubject";
 
         public const string HUUNGHI_JSON = "HUUNGHI_JSON"; 
+        public const string StartWork = "StartWork";
 
     }
 }

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QMS_System.Data", "QMS_Syst
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GPRO.Core.Hai", "GPRO.Core.Hai\GPRO.Core.Hai.csproj", "{C2C806F2-56D4-4CBA-846E-E24B76D0531A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QMS_System.ThirdApp", "QMS_System.ThirdApp\QMS_System.ThirdApp.csproj", "{F9F288DA-E056-498D-ADD0-445C01186277}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{C2C806F2-56D4-4CBA-846E-E24B76D0531A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2C806F2-56D4-4CBA-846E-E24B76D0531A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2C806F2-56D4-4CBA-846E-E24B76D0531A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9F288DA-E056-498D-ADD0-445C01186277}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9F288DA-E056-498D-ADD0-445C01186277}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9F288DA-E056-498D-ADD0-445C01186277}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9F288DA-E056-498D-ADD0-445C01186277}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
