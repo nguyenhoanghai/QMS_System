@@ -325,8 +325,8 @@ namespace QMS_System.Data.BLL
                             ThirdNumber = last.Q_DailyRequire.STT_PhongKham,
                             CounterId = (equip != null ? equip.CounterId : 0),
                             PrintTime = last.Q_DailyRequire.PrintTime,
-                            CountDown = getCountDownTime(last)
-                        };
+                            CountDown = getCountDownTime(last) 
+                         };
                     }
                 }
             }

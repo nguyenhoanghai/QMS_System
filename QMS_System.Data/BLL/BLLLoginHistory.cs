@@ -491,7 +491,8 @@ namespace QMS_System.Data.BLL
                                         LoginTime = obj.Date.ToString("dd/MM/yyyy HH:mm"),
                                         UserId = obj.Q_User.Id,
                                         CounterId = equipObj.CounterId,
-                                        CounterName = equipObj.Q_Counter.Name
+                                        CounterName = equipObj.Q_Counter.Name,
+                                        CounterCode = equipObj.Q_Counter.ShortName
                                     };
                                 }
                                 else
@@ -503,7 +504,8 @@ namespace QMS_System.Data.BLL
                                         LoginTime = now.ToString("dd/MM/yyyy HH:mm"),
                                         UserId = user.Id,
                                         CounterId = equipObj.CounterId,
-                                        CounterName = equipObj.Q_Counter.Name
+                                        CounterName = equipObj.Q_Counter.Name,
+                                        CounterCode = equipObj.Q_Counter.ShortName
                                     };
                                     db.Q_Login.Add(new Q_Login()
                                     {

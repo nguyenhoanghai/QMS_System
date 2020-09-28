@@ -3,9 +3,8 @@ using Newtonsoft.Json;
 using QMS_System.Data;
 using QMS_System.Data.BLL;
 using QMS_System.Data.Model;
-using QMS_System.Helper;
 using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -22,9 +21,9 @@ namespace QMS_System
         private void frmService_Load(object sender, EventArgs e)
         {
             GetGridService();
-            GetShift(); 
-            GetMajor(); 
-        }         
+            GetShift();
+            GetMajor();
+        }
 
         #region Service
         private void repbtn_deleteService_ButtonClick(object sender, DevExpress.XtraEditors.Controls.ButtonPressedEventArgs e)
@@ -32,7 +31,7 @@ namespace QMS_System
             int Id = int.Parse(gridViewService.GetRowCellValue(gridViewService.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLService.Instance.Delete(connect,Id);
+                BLLService.Instance.Delete(connect, Id);
                 GetGridService();
             }
         }
@@ -55,7 +54,7 @@ namespace QMS_System
                     goto End;
                 else if (Id == 0 && string.IsNullOrEmpty(gridViewService.GetRowCellValue(gridViewService.FocusedRowHandle, "TimeProcess").ToString()))
                     goto End;
-                 
+
 
                 if (Id != 0 && string.IsNullOrEmpty(gridViewService.GetRowCellValue(gridViewService.FocusedRowHandle, "Name").ToString()))
                     MessageBox.Show("Vui lòng nhập tên dịch vụ.", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -73,7 +72,7 @@ namespace QMS_System
                     MessageBox.Show("Số phiếu kết thúc có giá trị không hợp lệ. Xin nhập lại", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 else if (Id != 0 && string.IsNullOrEmpty(gridViewService.GetRowCellValue(gridViewService.FocusedRowHandle, "TimeProcess").ToString()))
                     MessageBox.Show("Vui lòng nhập thời gian xử lý.", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                 else
+                else
                 {
                     var obj = new Q_Service();
                     obj.Id = Id;
@@ -109,7 +108,7 @@ namespace QMS_System
             catch (Exception ex)
             {
             }
-        End:
+            End:
             {
 
             }
@@ -117,7 +116,7 @@ namespace QMS_System
         private void GetGridService()
         {
             var list = BLLService.Instance.Gets(connect);
-            var abc =   list.Select(x => (x.Code + " - " + x.Name)).ToArray() ;
+            var abc = list.Select(x => (x.Code + " - " + x.Name)).ToArray();
 
 
             var now = DateTime.Now;
@@ -142,7 +141,7 @@ namespace QMS_System
         }
 
         private void GetGridServiceStep()
-        {      
+        {
             var list = BLLServiceStep.Instance.Gets(connect, serId);
             list.Add(new ServiceStepModel() { Id = 0, ServiceId = 0, MajorId = 0, Index = 1 });
             gridStep.DataSource = list;
@@ -160,7 +159,7 @@ namespace QMS_System
             gridLookUpMajor.View.Columns[1].Caption = "Nghiệp vụ";
             gridLookUpMajor.View.Columns[0].AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Near;
         }
-       
+
         private void gridViewStep_CellValueChanged(object sender, DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs e)
         {
             try
@@ -206,15 +205,15 @@ namespace QMS_System
                 }
             }
             catch (Exception ex) { }
-        End: { }
+            End: { }
         }
-          
+
         private void repositoryItemButtonEdit1_Click(object sender, EventArgs e)
         {
             int Id = int.Parse(gridViewStep.GetRowCellValue(gridViewStep.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLServiceStep.Instance.Delete(connect,Id);
+                BLLServiceStep.Instance.Delete(connect, Id);
                 GetGridServiceStep();
             }
         }
@@ -225,7 +224,7 @@ namespace QMS_System
         #endregion
 
         #region Shift
-         private void repbtnTime_ButtonClick(object sender, DevExpress.XtraEditors.Controls.ButtonPressedEventArgs e)
+        private void repbtnTime_ButtonClick(object sender, DevExpress.XtraEditors.Controls.ButtonPressedEventArgs e)
         {
             int.TryParse(gridViewService.GetRowCellValue(gridViewService.FocusedRowHandle, "Id").ToString(), out serId);
             GetGridServiceShift();
@@ -296,7 +295,7 @@ namespace QMS_System
                 }
             }
             catch (Exception ex) { }
-        End: { }
+            End: { }
         }
 
         private void repbtnDelete_ButtonClick(object sender, DevExpress.XtraEditors.Controls.ButtonPressedEventArgs e)
@@ -304,16 +303,46 @@ namespace QMS_System
             int Id = int.Parse(gridViewServiceShift.GetRowCellValue(gridViewServiceShift.FocusedRowHandle, "Id").ToString());
             if (Id != 0)
             {
-                BLLServiceShift.Instance.Delete(connect,Id);
+                BLLServiceShift.Instance.Delete(connect, Id);
                 GetGridServiceShift();
             }
         }
-                 
+
         private void btnReShift_Click(object sender, EventArgs e)
         {
             GetShift();
         }
         #endregion
-        
+
+        private void btExportDV_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                SaveFileDialog vrow = new SaveFileDialog();
+                vrow.DefaultExt = "xlsx";
+                vrow.Filter = "Excel Files (*.xlsx) | *.xlsx |Excel Files (*.xls) | *.xls";
+                vrow.InitialDirectory = @"C:\";
+                vrow.Title = "Save File As";
+                if (vrow.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    string path = vrow.FileName;
+                    gridService.ExportToXlsx(path);
+                    if (MessageBox.Show("Bạn có muốn mở file này không?", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        if (File.Exists(path))
+                            System.Diagnostics.Process.Start(path);
+                        else
+                        {
+                            MessageBox.Show("File không tồn tại", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                //    MessageBox.Show("Lỗi: " + ex.Message);
+            }
+        }
     }
 }

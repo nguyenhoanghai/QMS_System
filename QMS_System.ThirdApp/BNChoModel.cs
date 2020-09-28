@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace QMS_System.ThirdApp
 {
-    public class KetLuanModel
+    public class BNChoModel
     {
         public int STT { get; set; }
         public string TenBN { get; set; }
@@ -14,5 +14,6 @@ namespace QMS_System.ThirdApp
         public string MaBN { get; set; }
         public string DiaChi { get; set; }
         public string MaPK { get; set; }
+        public string TrangThai { get; set; }
     }
 }

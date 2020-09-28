@@ -19,5 +19,6 @@ namespace QMS_System.Data.Model
         public DateTime? PrintTime { get; set; }
         public int EquipCode { get; set; }
         public string CountDown { get; set; }
+        public string Note { get; set; }
     }
 }
