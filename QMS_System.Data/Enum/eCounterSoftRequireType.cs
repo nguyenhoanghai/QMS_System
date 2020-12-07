@@ -17,5 +17,6 @@ namespace QMS_System.Data.Enum
         CheckUserFree = 7,
         inPhieu = 8,
         PrintTicket_VietThaiQuan = 9,
+        ShowCustDetail_TT = 10,
     }
 }

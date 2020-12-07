@@ -183,7 +183,9 @@ namespace QMS_System.Data.BLL
                         if (current != null)
                         {
                             if (useWithThridPattern == 0)
-                                item.CurrentTicket = current.Q_DailyRequire.TicketNumber;
+                            {
+                                item.CurrentTicket = current.Q_DailyRequire != null? current.Q_DailyRequire.TicketNumber: 0;
+                            }
                             else
                             {
                                 if (current.Q_DailyRequire.STT_PhongKham != null)

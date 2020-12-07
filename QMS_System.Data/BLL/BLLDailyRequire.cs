@@ -325,8 +325,8 @@ namespace QMS_System.Data.BLL
                             ThirdNumber = last.Q_DailyRequire.STT_PhongKham,
                             CounterId = (equip != null ? equip.CounterId : 0),
                             PrintTime = last.Q_DailyRequire.PrintTime,
-                            CountDown = getCountDownTime(last) 
-                         };
+                            CountDown = getCountDownTime(last)
+                        };
                     }
                 }
             }
@@ -1833,14 +1833,12 @@ namespace QMS_System.Data.BLL
                        modelObj = new Q_DailyRequire();
                     int socu = 0;
                     int _serviceNumber = 0;
-                    if (!printType.HasValue)
-                    {
-                        var _printType = 1;
-                        var cf = db.Q_Config.FirstOrDefault(x => x.Code == eConfigCode.PrintType);
-                        if (cf != null)
-                            int.TryParse(cf.Value, out _printType);
-                        printType = _printType;
-                    }
+
+                    var _printType = 1;
+                    var cf = db.Q_Config.FirstOrDefault(x => x.Code == eConfigCode.PrintType);
+                    if (cf != null)
+                        int.TryParse(cf.Value, out _printType);
+                    printType = _printType; 
 
                     if (!string.IsNullOrEmpty(maCongViec) && !string.IsNullOrEmpty(maLoaiCongViec))
                     {
@@ -1863,10 +1861,12 @@ namespace QMS_System.Data.BLL
                     else if (printType == (int)ePrintType.BatDauChung)
                     {
                         rq = db.Q_DailyRequire.OrderByDescending(x => x.TicketNumber).FirstOrDefault();
-                        var cf = db.Q_Config.FirstOrDefault(x => x.Code == eConfigCode.StartNumber);
+
+                        cf = db.Q_Config.FirstOrDefault(x => x.Code == eConfigCode.StartNumber);
                         if (cf != null)
-                            int.TryParse(cf.Value, out _serviceNumber);
+                            int.TryParse(cf.Value, out _serviceNumber); 
                     }
+                    serviceNumber = _serviceNumber;
                     socu = ((rq == null) ? serviceNumber : rq.TicketNumber);
 
                     var nv = db.Q_ServiceStep.Where(x => !x.IsDeleted && !x.Q_Service.IsDeleted && x.ServiceId == serviceId).OrderBy(x => x.Index).FirstOrDefault();
@@ -1930,6 +1930,7 @@ namespace QMS_System.Data.BLL
                         rs.Records = (sodanggoi != null ? sodanggoi.Q_DailyRequire.TicketNumber : 0);
                         rs.Data_2 = tqs;
                         rs.Data_3 = modelObj.TicketNumber;
+                        rs.str1 = printType.ToString();
                     }
                 }
             }

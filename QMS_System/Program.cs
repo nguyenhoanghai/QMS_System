@@ -28,11 +28,24 @@ namespace QMS_System
                     }
                     else
                     {
+                        //Single application
+                        string[] commandLineArgs = Environment.GetCommandLineArgs();
+                        if (commandLineArgs.Length == 1 || commandLineArgs[1] != "/new")
+                        {
+                            if (SingleInstanceApplication.NotifyExistingInstance(Process.GetCurrentProcess().Id))
+                            {
+                                return;
+                            }
+                        }
+
+
                         if (!string.IsNullOrEmpty(modelCheckKey.message))
                             MessageBox.Show(modelCheckKey.message);
 
                         Application.EnableVisualStyles();
                         Application.SetCompatibleTextRenderingDefault(false);
+                        SingleInstanceApplication.Initialize();
+
                         QMSAppInfo.Version = (ConfigurationManager.AppSettings["AppVersion"] != null && !string.IsNullOrEmpty(ConfigurationManager.AppSettings["AppVersion"].ToString()) ? Convert.ToInt32(ConfigurationManager.AppSettings["AppVersion"].ToString()) : 1);
                         try
                         {
@@ -44,11 +57,12 @@ namespace QMS_System
                             }
                         }
                         catch (Exception ex)
-                        { 
+                        {
                             string errorsms = "Kết nối máy chủ SQL thất bại. Vui lòng kiểm tra lại.";
                             MessageBox.Show(errorsms + "- " + ex.Message, "Lỗi SQL", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             Application.Run(new FrmSQLConnect());
                         }
+                        SingleInstanceApplication.Close();
                         Process[] processe;
                         processe = Process.GetProcessesByName("QMS_System");
                         foreach (Process dovi in processe)

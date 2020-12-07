@@ -235,7 +235,7 @@ ALTER TABLE [Q_Video] ADD  [Duration] time(7) default('00:00:00') not null
 alter table [Q_Service] add [ServiceType] int not null default(1)
 alter table [Q_DailyRequire] add [Type] int not null default(1)
 alter table [Q_DailyRequire] add [TGDKien] datetime   null  
-alter table [Q_DailyRequire] add [Type] int not null default(1)
+alter table [Q_HisDailyRequire] add [Type] int not null default(1)
 alter table [Q_HisDailyRequire] add [TGDKien] datetime   null  
 
 INSERT INTO [dbo].[Q_Config]([Code],[Value],[Note],[IsActived],[IsDeleted])

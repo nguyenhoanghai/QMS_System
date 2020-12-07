@@ -128,6 +128,28 @@ namespace QMS_System.Data.BLL
             }
         }
 
+        public List<VideoPlaylist> GetPlaylist(string connectString, string playlistName)
+        {
+            using (var db = new QMSSystemEntities(connectString))
+            {
+                var objs = db.Q_VideoTemplate_De.Where(x => !x.IsDeleted &&
+                x.Q_VideoTemplate.TemplateName.Trim().ToUpper() == playlistName.Trim().ToUpper() &&
+                        !x.Q_VideoTemplate.IsDeleted &&
+                        !x.Q_Video.IsDeleted &&
+                        x.Q_VideoTemplate.IsActive)
+                .Select(x => new VideoPlaylist()
+                {
+                    Index = x.Index,
+                    Path = x.Q_Video.FakeName,
+                    Duration = x.Q_Video.Duration
+                }).OrderBy(x => x.Index).ToList();
+                for (int i = 0; i < objs.Count; i++)
+                    objs[i]._Duration = objs[i].Duration.TotalMilliseconds;
+
+                return objs;
+            }
+        }
+
     }
 
     public class BLLVideoTemplate_De

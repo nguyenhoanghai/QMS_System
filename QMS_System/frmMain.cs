@@ -106,12 +106,15 @@ namespace QMS_System
         {
             try
             {
+                connectString = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
+               // MessageBox.Show(connectString);
                 if (isRunning)
                     btRunProcess.PerformClick();
                 sqlStatus = BaseCore.Instance.CONNECT_STATUS(Application.StartupPath + "\\DATA.XML");
                 if (sqlStatus)
                 {
                     connectString = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
+                    //MessageBox.Show(connectString);
                     QMSAppInfo.ConnectString = connectString;
                     QMSAppInfo.sqlConnection = DatabaseConnection.Instance.Connect(Application.StartupPath + "\\DATA.XML");
                     configs = BLLConfig.Instance.Gets(connectString, true);

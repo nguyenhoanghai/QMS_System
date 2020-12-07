@@ -49,6 +49,29 @@ namespace QMS_System.Data.BLL
             return list;
         }
 
+        public List<CounterSoftRequireModel> Gets (string connectString, int type)
+        {
+            var list = new List<CounterSoftRequireModel>();
+            using (db = new QMSSystemEntities(connectString))
+            {
+                var objs = db.Q_CounterSoftRequire.Where(x => x.TypeOfRequire == type).ToList();
+                if (objs.Count > 0)
+                {
+                    for (int i = 0; i < objs.Count; i++)
+                    {
+                        list.Add(new CounterSoftRequireModel() { Id = objs[i].Id, Content = objs[i].Content, Type = objs[i].TypeOfRequire });
+                        if (objs[i].TypeOfRequire == (int)eCounterSoftRequireType.ReadSound ||
+                            objs[i].TypeOfRequire == (int)eCounterSoftRequireType.SendNextToMainDisplay ||
+                            objs[i].TypeOfRequire == (int)eCounterSoftRequireType.SendRecallToMainDisplay ||
+                            objs[i].TypeOfRequire == (int)eCounterSoftRequireType.CheckUserFree)
+                            db.Q_CounterSoftRequire.Remove(objs[i]);
+                    }
+                    db.SaveChanges();
+                }
+            }
+            return list;
+        }
+
         /// <summary>
         /// 
         /// </summary>

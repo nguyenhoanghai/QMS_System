@@ -428,6 +428,7 @@
       <DependentUpon>R_DetailInDayByUser.cs</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
+    <Compile Include="SingleInstanceApplication.cs" />
     <Compile Include="WebApi\CallServiceApi.cs" />
     <EmbeddedResource Include="frmAction.resx">
       <DependentUpon>frmAction.cs</DependentUpon>
