@@ -12,11 +12,21 @@ namespace QMS_System.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class Q_CounterSoftRequire
+    public partial class Q_KhungGio
     {
+        public Q_KhungGio()
+        {
+            this.Q_Schedule_Detail = new HashSet<Q_Schedule_Detail>();
+        }
+    
         public int Id { get; set; }
-        public string Content { get; set; }
-        public int TypeOfRequire { get; set; }
-        public System.DateTime CreatedDate { get; set; }
+        public int Index { get; set; }
+        public string Name { get; set; }
+        public System.TimeSpan StartTime { get; set; }
+        public System.TimeSpan EndTime { get; set; }
+        public string Note { get; set; }
+        public bool IsDeleted { get; set; }
+    
+        public virtual ICollection<Q_Schedule_Detail> Q_Schedule_Detail { get; set; }
     }
 }

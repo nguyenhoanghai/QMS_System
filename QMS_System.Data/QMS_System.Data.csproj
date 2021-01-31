@@ -101,6 +101,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="BLL\BLLService.cs" />
+    <Compile Include="BLL\BLLPrintTemplate.cs" />
+    <Compile Include="BLL\BLLCustomer.cs" />
+    <Compile Include="BLL\BLLTimeSchedule.cs" />
     <Compile Include="BLL\BLLWorkType.cs" />
     <Compile Include="BLL\BLLWorkDetail.cs" />
     <Compile Include="BLL\BLLWork.cs" />
@@ -122,6 +125,8 @@
     <Compile Include="BLL\BLLVideoTemplate.cs" />
     <Compile Include="BLL\HuuNghi\BLLHuuNghi.cs" />
     <Compile Include="BLL\IssueTicketScreen\BLLSetupInterface.cs" />
+    <Compile Include="BLL\RangHamMat\BLLRangHamMat.cs" />
+    <Compile Include="BLL\TienThu\BLLKhachHangInfo.cs" />
     <Compile Include="BLL\VietThaiQuan\BLLVietThaiQuan.cs" />
     <Compile Include="Enum\eCounterSoftRequireType.cs" />
     <Compile Include="Model\A_CurrentInfoModel.cs" />
@@ -129,10 +134,16 @@
     <Compile Include="Model\CounterDayInfoModel.cs" />
     <Compile Include="Model\CounterSoftRequireModel.cs" />
     <Compile Include="Model\CountServeOverTimeModel.cs" />
+    <Compile Include="Model\CustomerModel.cs" />
     <Compile Include="Model\HuuNghi\Model.cs" />
     <Compile Include="Model\PrinterRequireModel.cs" />
+    <Compile Include="Model\PrintModel.cs" />
+    <Compile Include="Model\PrintTicketModel.cs" />
     <Compile Include="Model\RecieverSMSModel.cs" />
     <Compile Include="Model\RequireMainDisplay.cs" />
+    <Compile Include="Model\ScheduleModel.cs" />
+    <Compile Include="Model\TienThu\ShowThongTinKHModel.cs" />
+    <Compile Include="Model\TimeScheduleModel.cs" />
     <Compile Include="Model\WorkModel.cs" />
     <Compile Include="Model\ServiceInfoModel.cs" />
     <Compile Include="Model\ReportModel.cs" />
@@ -260,6 +271,9 @@
     <Compile Include="Q_CounterSound.cs">
       <DependentUpon>QMSModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Q_Customer.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Q_DailyRequire.cs">
       <DependentUpon>QMSModel.tt</DependentUpon>
     </Compile>
@@ -296,6 +310,9 @@
     <Compile Include="Q_HisUserEvaluate.cs">
       <DependentUpon>QMSModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Q_KhungGio.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Q_Language.cs">
       <DependentUpon>QMSModel.tt</DependentUpon>
     </Compile>
@@ -314,6 +331,9 @@
     <Compile Include="Q_Policy.cs">
       <DependentUpon>QMSModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Q_PrintTicket.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Q_Process.cs">
       <DependentUpon>QMSModel.tt</DependentUpon>
     </Compile>
@@ -330,6 +350,12 @@
       <DependentUpon>QMSModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Q_RequestTicket.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_Schedule.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_Schedule_Detail.cs">
       <DependentUpon>QMSModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Q_Service.cs">

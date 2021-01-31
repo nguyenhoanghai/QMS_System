@@ -28,7 +28,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -246,6 +246,12 @@
     </Compile>
     <Compile Include="frmPolicy.Designer.cs">
       <DependentUpon>frmPolicy.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmPrintSetting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmPrintSetting.Designer.cs">
+      <DependentUpon>frmPrintSetting.cs</DependentUpon>
     </Compile>
     <Compile Include="frmProcess.cs">
       <SubType>Form</SubType>
@@ -486,6 +492,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmPolicy.resx">
       <DependentUpon>frmPolicy.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmPrintSetting.resx">
+      <DependentUpon>frmPrintSetting.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmProcess.resx">
       <DependentUpon>frmProcess.cs</DependentUpon>

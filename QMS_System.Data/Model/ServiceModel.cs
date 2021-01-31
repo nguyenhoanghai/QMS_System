@@ -27,6 +27,7 @@ namespace QMS_System.Data.Model
         public int EndNumber { get; set; }
         public DateTime TimeProcess { get; set; } 
         public List<ServiceShiftModel> Shifts { get; set; }
+        public int ServiceType { get; set; }
         public ServiceDayModel()
         {
             Shifts = new List<ServiceShiftModel>();

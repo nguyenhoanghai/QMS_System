@@ -54,7 +54,7 @@ namespace QMS_System.Data.BLL
         {
             using (db = new QMSSystemEntities(connectString))
             {
-                var sers = db.Q_Service.Where(x => !x.IsDeleted && x.IsActived).Select(x => new ServiceDayModel() { Id = x.Id, Name = x.Name, StartNumber = x.StartNumber, EndNumber = x.EndNumber, TimeProcess = x.TimeProcess, Note = x.Note }).ToList();
+                var sers = db.Q_Service.Where(x => !x.IsDeleted && x.IsActived).Select(x => new ServiceDayModel() { Id = x.Id, Name = x.Name, StartNumber = x.StartNumber, EndNumber = x.EndNumber, TimeProcess = x.TimeProcess, Note = x.Note, ServiceType = x.ServiceType }).ToList();
                 var serShifts = db.Q_ServiceShift.Where(x => !x.IsDeleted && !x.Q_Service.IsDeleted && !x.Q_Shift.IsDeleted).Select(x => new ServiceShiftModel() { Id = x.Id, ServiceId = x.ServiceId, ShiftId = x.ShiftId, Index = x.Index, Start = x.Q_Shift.Start, End = x.Q_Shift.End }).ToList();
                 if (sers.Count > 0)
                     foreach (var item in sers)
@@ -84,7 +84,7 @@ namespace QMS_System.Data.BLL
             using (db = new QMSSystemEntities(connectString))
             {
 
-                var services = db.Q_Service.Where(x => !x.IsDeleted && x.IsActived).AsEnumerable().Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Name, Code = x.TimeProcess.TimeOfDay.ToString(), Data = 0 }).ToList();
+                var services = db.Q_Service.Where(x => !x.IsDeleted && x.IsActived).AsEnumerable().Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Name, Code = x.TimeProcess.TimeOfDay.ToString(), Data = 0,Data1= x.Note, Record = x.ServiceType }).ToList();
                 if (countWaiting)
                 {
                     var details = (from x in db.Q_DailyRequire_Detail where !x.UserId.HasValue select x).ToList();

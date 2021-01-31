@@ -27,7 +27,7 @@ namespace QMS_System.Data.BLL.VietThaiQuan
         private BLLVietThaiQuan() { }
         #endregion
 
-        public ResponseBase ThemPhieu(string connectString, int stt, int dichvuId, string maphieuDichVu, string maCongViec, string maLoaiCongViec, TimeSpan? serveTimeAllow,DateTime printTime)
+        public ResponseBase ThemPhieu(string connectString, int stt, int dichvuId, string maphieuDichVu, string maCongViec, string maLoaiCongViec, TimeSpan? serveTimeAllow, DateTime printTime)
         {
             var rs = new ResponseBase();
             Q_DailyRequire rq = null,
@@ -61,7 +61,7 @@ namespace QMS_System.Data.BLL.VietThaiQuan
                 {
                     modelObj.TicketNumber = stt;
                     modelObj.ServiceId = dichvuId;
-                    modelObj.BusinessId = null; 
+                    modelObj.BusinessId = null;
                     modelObj.PrintTime = printTime;
                     modelObj.ServeTimeAllow = serveTimeAllow ?? new TimeSpan(0, 0, 0);
                     modelObj.CustomerName = "";// Name;
@@ -105,13 +105,14 @@ namespace QMS_System.Data.BLL.VietThaiQuan
 
                     db.SaveChanges();
                     rs.IsSuccess = true;
-                    rs.Data = (stt-1);
+                    rs.Data = (stt - 1);
                     rs.Data_1 = detail.MajorId;
                     rs.Records = (sodanggoi != null ? sodanggoi.Q_DailyRequire.TicketNumber : 0);
                     rs.Data_2 = tqs;
                     rs.Data_3 = modelObj.TicketNumber;
+                    rs.Data_4 = modelObj;
                 }
-            } 
+            }
             return rs;
         }
 

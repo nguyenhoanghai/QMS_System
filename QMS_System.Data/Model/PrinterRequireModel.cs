@@ -16,6 +16,7 @@ namespace QMS_System.Data.Model
         public string SoXe { get; set; }
         public string MaCongViec { get; set; }
         public string MaLoaiCongViec { get; set; }
+        public string Phone { get; set; }
 
         public int newNumber { get; set; }
         public int oldNumber { get; set; }

@@ -190,8 +190,8 @@ namespace QMS_System
                             frmMain.solien = (int)txtsolien.Value;
                             break;
                         case 3:
-                            frmMain_ver3.ticketTemplate = txtContent.Text;
-                            frmMain_ver3.solien = (int)txtsolien.Value;
+                           // frmMain_ver3.ticketTemplate = txtContent.Text;
+                            //frmMain_ver3.solien = (int)txtsolien.Value;
                             break;
                     }
                     MessageBox.Show("Cập nhật thành công.!");
@@ -211,8 +211,8 @@ namespace QMS_System
                     txtsolien.Value = frmMain.solien;
                     break;
                 case 3:
-                    txtContent.Text = frmMain_ver3.ticketTemplate;
-                    txtsolien.Value = frmMain_ver3.solien;
+                   // txtContent.Text = frmMain_ver3.ticketTemplate;
+                  //  txtsolien.Value = frmMain_ver3.solien;
                     break;
             }
 

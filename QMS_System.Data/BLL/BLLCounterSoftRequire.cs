@@ -36,10 +36,16 @@ namespace QMS_System.Data.BLL
                 {
                     for (int i = 0; i < objs.Count; i++)
                     {
-                        list.Add(new CounterSoftRequireModel() { Id = objs[i].Id, Content = objs[i].Content, Type = objs[i].TypeOfRequire });
+                        list.Add(new CounterSoftRequireModel()
+                        {
+                            Id = objs[i].Id,
+                            Content = objs[i].Content,
+                            Type = objs[i].TypeOfRequire,
+                            CreatedDate = objs[i].CreatedDate
+                        });
                         if (objs[i].TypeOfRequire == (int)eCounterSoftRequireType.ReadSound ||
                             objs[i].TypeOfRequire == (int)eCounterSoftRequireType.SendNextToMainDisplay ||
-                            objs[i].TypeOfRequire == (int)eCounterSoftRequireType.SendRecallToMainDisplay||
+                            objs[i].TypeOfRequire == (int)eCounterSoftRequireType.SendRecallToMainDisplay ||
                             objs[i].TypeOfRequire == (int)eCounterSoftRequireType.CheckUserFree)
                             db.Q_CounterSoftRequire.Remove(objs[i]);
                     }
@@ -49,7 +55,7 @@ namespace QMS_System.Data.BLL
             return list;
         }
 
-        public List<CounterSoftRequireModel> Gets (string connectString, int type)
+        public List<CounterSoftRequireModel> Gets(string connectString, int type)
         {
             var list = new List<CounterSoftRequireModel>();
             using (db = new QMSSystemEntities(connectString))
@@ -59,7 +65,13 @@ namespace QMS_System.Data.BLL
                 {
                     for (int i = 0; i < objs.Count; i++)
                     {
-                        list.Add(new CounterSoftRequireModel() { Id = objs[i].Id, Content = objs[i].Content, Type = objs[i].TypeOfRequire });
+                        list.Add(new CounterSoftRequireModel()
+                        {
+                            Id = objs[i].Id,
+                            Content = objs[i].Content,
+                            Type = objs[i].TypeOfRequire,
+                            CreatedDate = objs[i].CreatedDate
+                        });
                         if (objs[i].TypeOfRequire == (int)eCounterSoftRequireType.ReadSound ||
                             objs[i].TypeOfRequire == (int)eCounterSoftRequireType.SendNextToMainDisplay ||
                             objs[i].TypeOfRequire == (int)eCounterSoftRequireType.SendRecallToMainDisplay ||
@@ -82,7 +94,12 @@ namespace QMS_System.Data.BLL
         {
             using (db = new QMSSystemEntities(connectString))
             {
-                db.Q_CounterSoftRequire.Add(new Q_CounterSoftRequire() { Content = str, TypeOfRequire = requireType });
+                db.Q_CounterSoftRequire.Add(new Q_CounterSoftRequire()
+                {
+                    Content = str,
+                    TypeOfRequire = requireType,
+                    CreatedDate = DateTime.Now
+                });
                 db.SaveChanges();
                 return true;
             }
@@ -93,7 +110,12 @@ namespace QMS_System.Data.BLL
         {
             using (db = new QMSSystemEntities(connectString))
             {
-                db.Q_CounterSoftRequire.Add(new Q_CounterSoftRequire() { Content = str, TypeOfRequire = requireType });
+                db.Q_CounterSoftRequire.Add(new Q_CounterSoftRequire()
+                {
+                    Content = str,
+                    TypeOfRequire = requireType,
+                    CreatedDate = DateTime.Now
+                });
                 if (requireType == (int)eCounterSoftRequireType.ReadSound)
                 {
                     var config = db.Q_Config.FirstOrDefault(x => x.Code == eConfigCode.TVReadSound);

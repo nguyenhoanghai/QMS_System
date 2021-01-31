@@ -11,5 +11,6 @@ namespace QMS_System.Data.Model
         public int Id { get; set; }
         public string Content { get; set; }
         public int Type { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 }

@@ -8,7 +8,6 @@
     <EntitySet Name="Q_BusinessType" EntityType="QMSSystemModel.Q_BusinessType" />
     <EntitySet Name="Q_Command" EntityType="QMSSystemModel.Q_Command" />
     <EntitySet Name="Q_CommandParameter" EntityType="QMSSystemModel.Q_CommandParameter" />
-    <EntitySet Name="Q_CounterSoftRequire" EntityType="QMSSystemModel.Q_CounterSoftRequire" />
     <EntitySet Name="Q_CounterSound" EntityType="QMSSystemModel.Q_CounterSound" />
     <EntitySet Name="Q_Equipment" EntityType="QMSSystemModel.Q_Equipment" />
     <EntitySet Name="Q_EquipmentType" EntityType="QMSSystemModel.Q_EquipmentType" />
@@ -313,6 +312,28 @@
       <End Role="Q_HisDailyRequire" EntitySet="Q_HisDailyRequire" />
       <End Role="Q_HisDailyRequire_WorkDetail" EntitySet="Q_HisDailyRequire_WorkDetail" />
     </AssociationSet>
+    <EntitySet Name="Q_PrintTicket" EntityType="QMSSystemModel.Q_PrintTicket" />
+    <EntitySet Name="Q_Schedule" EntityType="QMSSystemModel.Q_Schedule" />
+    <EntitySet Name="Q_CounterSoftRequire" EntityType="QMSSystemModel.Q_CounterSoftRequire" />
+    <EntitySet Name="Q_Customer" EntityType="QMSSystemModel.Q_Customer" />
+    <EntitySet Name="Q_KhungGio" EntityType="QMSSystemModel.Q_KhungGio" />
+    <EntitySet Name="Q_Schedule_Detail" EntityType="QMSSystemModel.Q_Schedule_Detail" />
+    <AssociationSet Name="FK_Q_Schedule_Detail_Q_Customer" Association="QMSSystemModel.FK_Q_Schedule_Detail_Q_Customer">
+      <End Role="Q_Customer" EntitySet="Q_Customer" />
+      <End Role="Q_Schedule_Detail" EntitySet="Q_Schedule_Detail" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_Schedule_Detail_Q_KhungGio" Association="QMSSystemModel.FK_Q_Schedule_Detail_Q_KhungGio">
+      <End Role="Q_KhungGio" EntitySet="Q_KhungGio" />
+      <End Role="Q_Schedule_Detail" EntitySet="Q_Schedule_Detail" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_Schedule_Detail_Q_Schedule" Association="QMSSystemModel.FK_Q_Schedule_Detail_Q_Schedule">
+      <End Role="Q_Schedule" EntitySet="Q_Schedule" />
+      <End Role="Q_Schedule_Detail" EntitySet="Q_Schedule_Detail" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_Schedule_Detail_Q_Service" Association="QMSSystemModel.FK_Q_Schedule_Detail_Q_Service">
+      <End Role="Q_Service" EntitySet="Q_Service" />
+      <End Role="Q_Schedule_Detail" EntitySet="Q_Schedule_Detail" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="Q_Action">
     <Key>
@@ -398,14 +419,6 @@
     <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
     <NavigationProperty Name="Q_Command" Relationship="QMSSystemModel.FK_Q_CommandParameter_Q_Command" FromRole="Q_CommandParameter" ToRole="Q_Command" />
     <NavigationProperty Name="Q_UserCmdRegister" Relationship="QMSSystemModel.FK_Q_UserCommand_Q_CommandParameter" FromRole="Q_CommandParameter" ToRole="Q_UserCmdRegister" />
-  </EntityType>
-  <EntityType Name="Q_CounterSoftRequire">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="Content" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
-    <Property Name="TypeOfRequire" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="Q_CounterSound">
     <Key>
@@ -1674,6 +1687,7 @@
     <NavigationProperty Name="Q_ServiceStep" Relationship="QMSSystemModel.FK_Q_ServiceStep_Q_Service" FromRole="Q_Service" ToRole="Q_ServiceStep" />
     <NavigationProperty Name="Q_DailyRequire" Relationship="QMSSystemModel.FK_Q_DailyRequire_Q_Service" FromRole="Q_Service" ToRole="Q_DailyRequire" />
     <NavigationProperty Name="Q_HisDailyRequire" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_Q_Service" FromRole="Q_Service" ToRole="Q_HisDailyRequire" />
+    <NavigationProperty Name="Q_Schedule_Detail" Relationship="QMSSystemModel.FK_Q_Schedule_Detail_Q_Service" FromRole="Q_Service" ToRole="Q_Schedule_Detail" />
   </EntityType>
   <Association Name="FK_Q_ServiceLimit_Q_Service">
     <End Type="QMSSystemModel.Q_Service" Role="Q_Service" Multiplicity="1" />
@@ -1854,6 +1868,128 @@
       </Principal>
       <Dependent Role="Q_HisDailyRequire_WorkDetail">
         <PropertyRef Name="HisDailyRequireId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Q_PrintTicket">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="PrintTemplate" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PrintIndex" Type="Int32" Nullable="false" />
+    <Property Name="PrintPages" Type="Int32" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_Schedule">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Month" Type="Int32" Nullable="false" />
+    <Property Name="Year" Type="Int32" Nullable="false" />
+    <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="Q_Schedule_Detail" Relationship="QMSSystemModel.FK_Q_Schedule_Detail_Q_Schedule" FromRole="Q_Schedule" ToRole="Q_Schedule_Detail" />
+  </EntityType>
+  <EntityType Name="Q_CounterSoftRequire">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Content" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
+    <Property Name="TypeOfRequire" Type="Int32" Nullable="false" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="Q_Customer">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="YearOfBirth" Type="Int32" Nullable="false" />
+    <Property Name="Gender" Type="Boolean" Nullable="false" />
+    <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="Q_Schedule_Detail" Relationship="QMSSystemModel.FK_Q_Schedule_Detail_Q_Customer" FromRole="Q_Customer" ToRole="Q_Schedule_Detail" />
+  </EntityType>
+  <EntityType Name="Q_KhungGio">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Index" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="StartTime" Type="Time" Nullable="false" Precision="7" />
+    <Property Name="EndTime" Type="Time" Nullable="false" Precision="7" />
+    <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="Q_Schedule_Detail" Relationship="QMSSystemModel.FK_Q_Schedule_Detail_Q_KhungGio" FromRole="Q_KhungGio" ToRole="Q_Schedule_Detail" />
+  </EntityType>
+  <EntityType Name="Q_Schedule_Detail">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ServiceId" Type="Int32" Nullable="false" />
+    <Property Name="ScheduleId" Type="Int32" Nullable="false" />
+    <Property Name="CustomerId" Type="Int32" Nullable="false" />
+    <Property Name="KhungGioId" Type="Int32" Nullable="false" />
+    <Property Name="ScheduleDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="Q_Customer" Relationship="QMSSystemModel.FK_Q_Schedule_Detail_Q_Customer" FromRole="Q_Schedule_Detail" ToRole="Q_Customer" />
+    <NavigationProperty Name="Q_KhungGio" Relationship="QMSSystemModel.FK_Q_Schedule_Detail_Q_KhungGio" FromRole="Q_Schedule_Detail" ToRole="Q_KhungGio" />
+    <NavigationProperty Name="Q_Schedule" Relationship="QMSSystemModel.FK_Q_Schedule_Detail_Q_Schedule" FromRole="Q_Schedule_Detail" ToRole="Q_Schedule" />
+    <NavigationProperty Name="Q_Service" Relationship="QMSSystemModel.FK_Q_Schedule_Detail_Q_Service" FromRole="Q_Schedule_Detail" ToRole="Q_Service" />
+  </EntityType>
+  <Association Name="FK_Q_Schedule_Detail_Q_Customer">
+    <End Type="QMSSystemModel.Q_Customer" Role="Q_Customer" Multiplicity="1" />
+    <End Type="QMSSystemModel.Q_Schedule_Detail" Role="Q_Schedule_Detail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Customer">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_Schedule_Detail">
+        <PropertyRef Name="CustomerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_Schedule_Detail_Q_KhungGio">
+    <End Type="QMSSystemModel.Q_KhungGio" Role="Q_KhungGio" Multiplicity="1" />
+    <End Type="QMSSystemModel.Q_Schedule_Detail" Role="Q_Schedule_Detail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_KhungGio">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_Schedule_Detail">
+        <PropertyRef Name="KhungGioId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_Schedule_Detail_Q_Schedule">
+    <End Type="QMSSystemModel.Q_Schedule" Role="Q_Schedule" Multiplicity="1" />
+    <End Type="QMSSystemModel.Q_Schedule_Detail" Role="Q_Schedule_Detail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Schedule">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_Schedule_Detail">
+        <PropertyRef Name="ScheduleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_Schedule_Detail_Q_Service">
+    <End Type="QMSSystemModel.Q_Service" Role="Q_Service" Multiplicity="1" />
+    <End Type="QMSSystemModel.Q_Schedule_Detail" Role="Q_Schedule_Detail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Service">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_Schedule_Detail">
+        <PropertyRef Name="ServiceId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>

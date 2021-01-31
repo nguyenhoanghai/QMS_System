@@ -1286,6 +1286,7 @@ namespace QMS_System.Data.BLL
                             var require = new Q_CounterSoftRequire();
                             require.TypeOfRequire = (int)eCounterSoftRequireType.CheckUserFree;
                             require.Content = JsonConvert.SerializeObject(new ModelSelectItem() { Id = majorId, Data = dq.ServiceId, Code = dq.TicketNumber.ToString() });
+                            require.CreatedDate = DateTime.Now;
                             db.Q_CounterSoftRequire.Add(require);
                             db.SaveChanges();
                             return true;
@@ -1724,8 +1725,7 @@ namespace QMS_System.Data.BLL
             }
             return rs;
         }
-
-
+        
         public void CopyHistory(string connectString, bool isver3)
         {
             using (db = new QMSSystemEntities(connectString))

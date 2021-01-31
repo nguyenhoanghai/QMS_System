@@ -12,11 +12,22 @@ namespace QMS_System.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class Q_CounterSoftRequire
+    public partial class Q_Customer
     {
+        public Q_Customer()
+        {
+            this.Q_Schedule_Detail = new HashSet<Q_Schedule_Detail>();
+        }
+    
         public int Id { get; set; }
-        public string Content { get; set; }
-        public int TypeOfRequire { get; set; }
-        public System.DateTime CreatedDate { get; set; }
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public int YearOfBirth { get; set; }
+        public bool Gender { get; set; }
+        public string Phone { get; set; }
+        public string Address { get; set; }
+        public bool IsDeleted { get; set; }
+    
+        public virtual ICollection<Q_Schedule_Detail> Q_Schedule_Detail { get; set; }
     }
 }

@@ -12,7 +12,6 @@
         <EntityTypeShape EntityType="QMSSystemModel.Q_BusinessType" Width="1.5" PointX="1.5" PointY="40.25" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_Command" Width="1.5" PointX="0.75" PointY="9.125" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_CommandParameter" Width="1.5" PointX="3.75" PointY="3.375" />
-        <EntityTypeShape EntityType="QMSSystemModel.Q_CounterSoftRequire" Width="1.5" PointX="11.75" PointY="9.75" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_CounterSound" Width="1.5" PointX="11.75" PointY="13.5" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_Equipment" Width="1.5" PointX="6.75" PointY="29" />
         <EntityTypeShape EntityType="QMSSystemModel.Q_EquipmentType" Width="1.5" PointX="4.5" PointY="27.875" />
@@ -125,6 +124,15 @@
         <AssociationConnector Association="QMSSystemModel.FK_Q_HisDailyRequire_De_Q_HisDailyRequire" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_HisDailyRequire_Q_Service" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_HisDailyRequire_WorkDetail_Q_HisDailyRequire" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Schedule" Width="1.5" PointX="15.375" PointY="4.25" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_CounterSoftRequire" Width="1.5" PointX="11.375" PointY="9.75" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Customer" Width="1.5" PointX="17.375" PointY="31" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_KhungGio" Width="1.5" PointX="16.375" PointY="8" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Schedule_Detail" Width="1.5" PointX="19.625" PointY="18.625" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_Schedule_Detail_Q_Customer" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_Schedule_Detail_Q_KhungGio" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_Schedule_Detail_Q_Schedule" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_Schedule_Detail_Q_Service" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

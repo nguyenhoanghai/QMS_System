@@ -241,3 +241,35 @@ alter table [Q_HisDailyRequire] add [TGDKien] datetime   null
 INSERT INTO [dbo].[Q_Config]([Code],[Value],[Note],[IsActived],[IsDeleted])
      VALUES ('StartWork','07:00:00',N'Thời gian bắt đầu làm việc',1,0)
 GO
+
+--25/12/2020
+-- tien thu
+alter table [Q_CounterSoftRequire] add [CreatedDate] datetime  not null default(getDate())
+
+/****** Object:  Table [dbo].[Q_PrintTicket]    Script Date: 25/12/2020 10:19:58 CH ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Q_PrintTicket](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](500) NOT NULL,
+	[PrintTemplate] [nvarchar](max) NOT NULL,
+	[PrintIndex] [int] NOT NULL,
+	[PrintPages] [int] NOT NULL,
+	[IsActive] [bit] NOT NULL,
+ CONSTRAINT [PK_Q_PrintTicket] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[Q_PrintTicket] ADD  CONSTRAINT [DF_Q_PrintTicket_PrintPages]  DEFAULT ((1)) FOR [PrintPages]
+GO
+
+ALTER TABLE [dbo].[Q_PrintTicket] ADD  CONSTRAINT [DF_Q_PrintTicket_IsActive]  DEFAULT ((1)) FOR [IsActive]
+GO

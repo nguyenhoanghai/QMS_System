@@ -15,6 +15,6 @@ namespace QMS_System.Data.Model
         public dynamic Data2 { get; set; } 
         public dynamic Data3 { get; set; } 
         public dynamic Data4 { get; set; } 
-        public dynamic Data5 { get; set; }
+        public dynamic Data5 { get; set; } 
     }
 }

@@ -30,6 +30,7 @@ namespace QMS_System.Data.Model
     {
         public int STT { get; set; }
         public int TableId { get; set; }
+        public string UserName { get; set; }
         public string TableName { get; set; }
         public string TableCode { get; set; }
         public int TicketNumber { get; set; }
@@ -45,6 +46,7 @@ namespace QMS_System.Data.Model
         public string strTimeCL { get; set; }
         public bool IsEndTime { get; set; }
         public int TienDoTH { get; set; }
+        public int Tong { get; set; }
         public int PhutConLai { get; set; }
         public string GioGiaoDK { get; set; }
         public int ReadServeOverCounter { get; set; }
@@ -52,7 +54,14 @@ namespace QMS_System.Data.Model
         public DateTime TGDK_Khach { get; set; }
         public int EquipCode { get; set; }
         public int CurrentNumber { get; set; }
-        public int LastCallKetLuan { get; set; } 
+        public int LastCallKetLuan { get; set; }
+
+        public string TenBN { get; set; }
+        public string KhungGio { get; set; }
+        public string GioLaySo { get; set; }
+        public string Note { get; set; }
+        public string NamSinh { get; set; }
+
     }
 
     public class SubModel

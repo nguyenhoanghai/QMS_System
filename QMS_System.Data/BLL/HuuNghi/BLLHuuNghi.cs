@@ -1434,7 +1434,7 @@ namespace QMS_System.Data.BLL.HuuNghi
                     }
 
                     webInfo.Sounds = BLLTVReadSound.Instance.Gets(connectString, counterIds, userId);
-                    
+
 
                     var counters = db_.Q_Equipment.Where(x => !x.IsDeleted && !x.Q_Counter.IsDeleted && counterIds.Contains(x.CounterId) && x.EquipTypeId == (int)eEquipType.Counter)
                         .Select(x => new ViewDetailModel()
@@ -1523,12 +1523,12 @@ namespace QMS_System.Data.BLL.HuuNghi
                                 if (_found != null)
                                 {
                                     rs.IsSuccess = true;
-                                    rs.Data = _found.Q_DailyRequire.TicketNumber-1;
+                                    rs.Data = _found.Q_DailyRequire.TicketNumber - 1;
                                     rs.Records = (sodanggoi != null ? sodanggoi.Q_DailyRequire.TicketNumber : 0);
                                     rs.Data_3 = _found.Q_DailyRequire.TicketNumber;
                                 }
                                 else
-                                { 
+                                {
                                     var lastTicket = db.Q_DailyRequire
                                         .Where(x => x.ServiceId == DV.Id &&
                                         x.Type == (int)eDailyRequireType.KhamBenh &&
@@ -1538,12 +1538,12 @@ namespace QMS_System.Data.BLL.HuuNghi
                                     DateTime emptyDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
                                     DateTime lastTGDKien = emptyDate;
                                     if (lastTicket != null)
-                                    { 
+                                    {
                                         emptyDate = lastTicket.TGDKien.Value.AddSeconds(DV.TimeProcess.TimeOfDay.TotalSeconds);
                                         lastTGDKien = lastTicket.TGDKien.Value;
                                     }
                                     else
-                                    { 
+                                    {
                                         TimeSpan startWork = TimeSpan.Parse("07:00:00");
                                         var configs = db.Q_Config.ToList();
                                         Q_Config config;
@@ -1581,7 +1581,7 @@ namespace QMS_System.Data.BLL.HuuNghi
                                     rs.Data = socu;
                                     rs.Records = (sodanggoi != null ? sodanggoi.Q_DailyRequire.TicketNumber : 0);
                                     rs.Data_3 = obj.TicketNumber;
-                                }                                   
+                                }
                             }
                         }
                         else
@@ -1613,15 +1613,17 @@ namespace QMS_System.Data.BLL.HuuNghi
         /// <param name="maBN"></param>
         /// <param name="maPK"></param>
         /// <returns></returns>
-        public int DeleteTicket(string connectString, int ticket,string maBN, string maPK)
+        public int DeleteTicket(string connectString, int ticket, string maBN, string maPK, int type)
         {
             try
             {
                 using (db = new QMSSystemEntities(connectString))
                 {
-                    var objs = db.Q_DailyRequire_Detail.Where(x => x.Q_DailyRequire.TicketNumber == ticket && 
-                    maBN.Trim() == x.Q_DailyRequire.MaBenhNhan.Trim() && 
-                    x.Q_DailyRequire.MaPhongKham.Trim() == maPK.Trim());
+                    var objs = db.Q_DailyRequire_Detail
+                        .Where(x => x.Q_DailyRequire.TicketNumber == ticket &&
+                                    maBN.Trim() == x.Q_DailyRequire.MaBenhNhan.Trim() &&
+                                    x.Q_DailyRequire.MaPhongKham.Trim() == maPK.Trim() &&
+                                    x.Q_DailyRequire.Type == type);
                     if (objs != null && objs.Count() > 0)
                     {
                         int parentId = 0;
@@ -1649,16 +1651,18 @@ namespace QMS_System.Data.BLL.HuuNghi
             return 0;
         }
 
-        public int DoneTicket(string connectString, int userId,  string maBN, string maPK)
+        public int DoneTicket(string connectString, string maBN, string maPK, int _ticket, int type)
         {
             int ticket = 0;
             try
             {
                 using (db = new QMSSystemEntities(connectString))
                 {
-                    var objs = db.Q_DailyRequire_Detail.Where(x => x.Q_DailyRequire.TicketNumber == ticket &&
-                    maBN.Trim() == x.Q_DailyRequire.MaBenhNhan.Trim() &&
-                    x.Q_DailyRequire.MaPhongKham.Trim() == maPK.Trim());
+                    var objs = db.Q_DailyRequire_Detail
+                        .Where(x => x.Q_DailyRequire.TicketNumber == _ticket &&
+                                    maBN.Trim() == x.Q_DailyRequire.MaBenhNhan.Trim() &&
+                                    x.Q_DailyRequire.MaPhongKham.Trim() == maPK.Trim() && 
+                                    x.Q_DailyRequire.Type == type);
                     if (objs != null && objs.Count() > 0)
                     {
                         foreach (var item in objs)

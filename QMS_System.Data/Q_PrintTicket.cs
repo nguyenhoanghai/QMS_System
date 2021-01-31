@@ -12,11 +12,13 @@ namespace QMS_System.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class Q_CounterSoftRequire
+    public partial class Q_PrintTicket
     {
         public int Id { get; set; }
-        public string Content { get; set; }
-        public int TypeOfRequire { get; set; }
-        public System.DateTime CreatedDate { get; set; }
+        public string Name { get; set; }
+        public string PrintTemplate { get; set; }
+        public int PrintIndex { get; set; }
+        public int PrintPages { get; set; }
+        public bool IsActive { get; set; }
     }
 }

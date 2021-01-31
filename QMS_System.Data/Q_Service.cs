@@ -21,6 +21,7 @@ namespace QMS_System.Data
             this.Q_ServiceStep = new HashSet<Q_ServiceStep>();
             this.Q_DailyRequire = new HashSet<Q_DailyRequire>();
             this.Q_HisDailyRequire = new HashSet<Q_HisDailyRequire>();
+            this.Q_Schedule_Detail = new HashSet<Q_Schedule_Detail>();
         }
     
         public int Id { get; set; }
@@ -43,5 +44,6 @@ namespace QMS_System.Data
         public virtual ICollection<Q_ServiceStep> Q_ServiceStep { get; set; }
         public virtual ICollection<Q_DailyRequire> Q_DailyRequire { get; set; }
         public virtual ICollection<Q_HisDailyRequire> Q_HisDailyRequire { get; set; }
+        public virtual ICollection<Q_Schedule_Detail> Q_Schedule_Detail { get; set; }
     }
 }

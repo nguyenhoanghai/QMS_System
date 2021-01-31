@@ -208,12 +208,12 @@ namespace QMS_System
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show("Lỗi: không thể kết nối với cổng COM Máy in, Vui lòng thử cấu hình lại kết nối", "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                   // MessageBox.Show("Lỗi: không thể kết nối với cổng COM Máy in, Vui lòng thử cấu hình lại kết nối", "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lấy thông tin Com Máy in bị lỗi.\n" + ex.Message, "Lỗi Com Máy in");
+               // MessageBox.Show("Lấy thông tin Com Máy in bị lỗi.\n" + ex.Message, "Lỗi Com Máy in");
             }
         }
 
@@ -834,12 +834,12 @@ namespace QMS_System
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show("Lỗi: không thể kết nối với cổng COM Keypad, Vui lòng thử cấu hình lại kết nối", "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                   // MessageBox.Show("Lỗi: không thể kết nối với cổng COM Keypad, Vui lòng thử cấu hình lại kết nối", "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lấy thông tin Com Keypad bị lỗi.\n" + ex.Message, "Lỗi Com Keypad");
+               // MessageBox.Show("Lấy thông tin Com Keypad bị lỗi.\n" + ex.Message, "Lỗi Com Keypad");
             }
         }
 
@@ -1150,9 +1150,9 @@ namespace QMS_System
                 template = template.Replace("[ten-quay]", tenQuay);
                 template = template.Replace("[ten-dich-vu]", tendichvu);
                 template = template.Replace("[ghi-chu-dich-vu]", noteDichVu);
-                template = template.Replace("[ngay]", ("ngay: " + now.ToString("dd/MM/yyyy")));
-                template = template.Replace("[gio]", (" gio: " + now.ToString("HH/mm")));
-                template = template.Replace("[dang-goi]", " dang goi " + oldNum);
+                template = template.Replace("[ngay]", ("Ngày: " + now.ToString("dd/MM/yyyy")));
+                template = template.Replace("[gio]", ("Giờ: " + now.ToString("HH:mm")));
+                template = template.Replace("[dang-goi]", "đang gọi: " + oldNum);
                 template = template.Replace("[cat-giay]", "\x1b\x69|+|");
 
                 var arr = template.Split(new string[] { "|+|" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
@@ -1633,7 +1633,8 @@ namespace QMS_System
                     Settings.Default.Today = DateTime.Now.Day;
                     Settings.Default.Save();
                     //ko su dung GO 
-                    var query = @"  DELETE from Q_CounterSoftSound  
+                    var query = @"  DELETE from Q_CounterSoftSound
+                                    DELETE from Q_CounterSoftRequire  
                                     DBCC CHECKIDENT('Q_CounterSoftSound', RESEED, 1);
                                     UPDATE [Q_COUNTER] set lastcall = 0 ,isrunning =1, CurrentNumber=0 , LastCallKetLuan= 0  
                                     DELETE FROM [dbo].[Q_RequestTicket]  

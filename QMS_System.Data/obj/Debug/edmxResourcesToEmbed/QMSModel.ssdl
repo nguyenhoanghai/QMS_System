@@ -124,6 +124,7 @@
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Content" Type="nvarchar" MaxLength="1000" Nullable="false" />
     <Property Name="TypeOfRequire" Type="int" Nullable="false" />
+    <Property Name="CreatedDate" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="Q_CounterSound">
     <Key>
@@ -134,6 +135,19 @@
     <Property Name="LanguageId" Type="int" Nullable="false" />
     <Property Name="SoundName" Type="nvarchar" MaxLength="250" Nullable="false" />
     <Property Name="Note" Type="nvarchar" MaxLength="1000" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_Customer">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Code" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="YearOfBirth" Type="int" Nullable="false" />
+    <Property Name="Gender" Type="bit" Nullable="false" />
+    <Property Name="Phone" Type="nvarchar" MaxLength="50" />
+    <Property Name="Address" Type="nvarchar(max)" />
     <Property Name="IsDeleted" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="Q_DailyRequire">
@@ -301,6 +315,18 @@
     <Property Name="CreatedDate" Type="datetime" Nullable="false" />
     <Property Name="Comment" Type="nvarchar(max)" />
   </EntityType>
+  <EntityType Name="Q_KhungGio">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Index" Type="int" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="StartTime" Type="time" Precision="7" Nullable="false" />
+    <Property Name="EndTime" Type="time" Precision="7" Nullable="false" />
+    <Property Name="Note" Type="nvarchar(max)" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
   <EntityType Name="Q_Language">
     <Key>
       <PropertyRef Name="Id" />
@@ -363,6 +389,17 @@
     <Property Name="IsActived" Type="bit" Nullable="false" />
     <Property Name="IsDeleted" Type="bit" Nullable="false" />
   </EntityType>
+  <EntityType Name="Q_PrintTicket">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="PrintTemplate" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="PrintIndex" Type="int" Nullable="false" />
+    <Property Name="PrintPages" Type="int" Nullable="false" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+  </EntityType>
   <EntityType Name="Q_Process">
     <Key>
       <PropertyRef Name="Id" />
@@ -421,6 +458,28 @@
     <Property Name="UserId" Type="int" Nullable="false" />
     <Property Name="IsDeleted" Type="bit" Nullable="false" />
     <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_Schedule">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Month" Type="int" Nullable="false" />
+    <Property Name="Year" Type="int" Nullable="false" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_Schedule_Detail">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ServiceId" Type="int" Nullable="false" />
+    <Property Name="ScheduleId" Type="int" Nullable="false" />
+    <Property Name="CustomerId" Type="int" Nullable="false" />
+    <Property Name="KhungGioId" Type="int" Nullable="false" />
+    <Property Name="ScheduleDate" Type="datetime" Nullable="false" />
+    <Property Name="Note" Type="nvarchar(max)" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="Q_Service">
     <Key>
@@ -1139,6 +1198,54 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_Q_Schedule_Detail_Q_Customer">
+    <End Role="Q_Customer" Type="Self.Q_Customer" Multiplicity="1" />
+    <End Role="Q_Schedule_Detail" Type="Self.Q_Schedule_Detail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Customer">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_Schedule_Detail">
+        <PropertyRef Name="CustomerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_Schedule_Detail_Q_KhungGio">
+    <End Role="Q_KhungGio" Type="Self.Q_KhungGio" Multiplicity="1" />
+    <End Role="Q_Schedule_Detail" Type="Self.Q_Schedule_Detail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_KhungGio">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_Schedule_Detail">
+        <PropertyRef Name="KhungGioId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_Schedule_Detail_Q_Schedule">
+    <End Role="Q_Schedule" Type="Self.Q_Schedule" Multiplicity="1" />
+    <End Role="Q_Schedule_Detail" Type="Self.Q_Schedule_Detail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Schedule">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_Schedule_Detail">
+        <PropertyRef Name="ScheduleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_Schedule_Detail_Q_Service">
+    <End Role="Q_Service" Type="Self.Q_Service" Multiplicity="1" />
+    <End Role="Q_Schedule_Detail" Type="Self.Q_Schedule_Detail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Service">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_Schedule_Detail">
+        <PropertyRef Name="ServiceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_Q_ServiceLimit_Q_Service">
     <End Role="Q_Service" Type="Self.Q_Service" Multiplicity="1" />
     <End Role="Q_ServiceLimit" Type="Self.Q_ServiceLimit" Multiplicity="*" />
@@ -1428,6 +1535,7 @@
     <EntitySet Name="Q_CounterDayInfo" EntityType="Self.Q_CounterDayInfo" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_CounterSoftRequire" EntityType="Self.Q_CounterSoftRequire" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_CounterSound" EntityType="Self.Q_CounterSound" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_Customer" EntityType="Self.Q_Customer" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_DailyRequire" EntityType="Self.Q_DailyRequire" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_DailyRequire_Detail" EntityType="Self.Q_DailyRequire_Detail" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_DailyRequire_WorkDetail" EntityType="Self.Q_DailyRequire_WorkDetail" Schema="dbo" store:Type="Tables" />
@@ -1440,18 +1548,22 @@
     <EntitySet Name="Q_HisDailyRequire_De" EntityType="Self.Q_HisDailyRequire_De" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_HisDailyRequire_WorkDetail" EntityType="Self.Q_HisDailyRequire_WorkDetail" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_HisUserEvaluate" EntityType="Self.Q_HisUserEvaluate" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_KhungGio" EntityType="Self.Q_KhungGio" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_Language" EntityType="Self.Q_Language" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_Login" EntityType="Self.Q_Login" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_LoginHistory" EntityType="Self.Q_LoginHistory" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_MaindisplayDirection" EntityType="Self.Q_MaindisplayDirection" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_Major" EntityType="Self.Q_Major" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_Policy" EntityType="Self.Q_Policy" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_PrintTicket" EntityType="Self.Q_PrintTicket" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_Process" EntityType="Self.Q_Process" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_ReadTemp_Detail" EntityType="Self.Q_ReadTemp_Detail" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_ReadTemplate" EntityType="Self.Q_ReadTemplate" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_RecieverSMS" EntityType="Self.Q_RecieverSMS" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_RegisterRecieveTicket" EntityType="Self.Q_RegisterRecieveTicket" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_RequestTicket" EntityType="Self.Q_RequestTicket" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_Schedule" EntityType="Self.Q_Schedule" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_Schedule_Detail" EntityType="Self.Q_Schedule_Detail" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_Service" EntityType="Self.Q_Service" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_ServiceLimit" EntityType="Self.Q_ServiceLimit" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_ServiceShift" EntityType="Self.Q_ServiceShift" Schema="dbo" store:Type="Tables" />
@@ -1635,6 +1747,22 @@
     <AssociationSet Name="FK_Q_RegisterRecieveTicket_Q_User" Association="Self.FK_Q_RegisterRecieveTicket_Q_User">
       <End Role="Q_User" EntitySet="Q_User" />
       <End Role="Q_RegisterRecieveTicket" EntitySet="Q_RegisterRecieveTicket" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_Schedule_Detail_Q_Customer" Association="Self.FK_Q_Schedule_Detail_Q_Customer">
+      <End Role="Q_Customer" EntitySet="Q_Customer" />
+      <End Role="Q_Schedule_Detail" EntitySet="Q_Schedule_Detail" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_Schedule_Detail_Q_KhungGio" Association="Self.FK_Q_Schedule_Detail_Q_KhungGio">
+      <End Role="Q_KhungGio" EntitySet="Q_KhungGio" />
+      <End Role="Q_Schedule_Detail" EntitySet="Q_Schedule_Detail" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_Schedule_Detail_Q_Schedule" Association="Self.FK_Q_Schedule_Detail_Q_Schedule">
+      <End Role="Q_Schedule" EntitySet="Q_Schedule" />
+      <End Role="Q_Schedule_Detail" EntitySet="Q_Schedule_Detail" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_Schedule_Detail_Q_Service" Association="Self.FK_Q_Schedule_Detail_Q_Service">
+      <End Role="Q_Service" EntitySet="Q_Service" />
+      <End Role="Q_Schedule_Detail" EntitySet="Q_Schedule_Detail" />
     </AssociationSet>
     <AssociationSet Name="FK_Q_ServiceLimit_Q_Service" Association="Self.FK_Q_ServiceLimit_Q_Service">
       <End Role="Q_Service" EntitySet="Q_Service" />

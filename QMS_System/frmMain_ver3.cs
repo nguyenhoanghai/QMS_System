@@ -1,6 +1,7 @@
 ﻿using GPRO.Core.Hai;
 using Microsoft.Reporting.WinForms;
 using Newtonsoft.Json;
+using QMS_System.Data;
 using QMS_System.Data.BLL;
 using QMS_System.Data.BLL.VietThaiQuan;
 using QMS_System.Data.Enum;
@@ -59,10 +60,8 @@ namespace QMS_System
 
         bool isSendDataKeyPad = false,
             isFinishRead = true,
-            isFirstLoad = false,
             isErorr = false,
             isRunning = false,
-            sqlStatus = false,
             autoCall = false,
             hasAA = false;
         public static List<ServiceDayModel> lib_Services;
@@ -82,9 +81,8 @@ namespace QMS_System
             comPort = new SerialPort(),
             COM_Printer = new SerialPort();
         public string lbSendrequest, lbSendData, lbPrinRequire;
-        public static string ticketTemplate = string.Empty,
-            connectString;
-        public static int solien = 1;
+        public static string connectString;
+        public static List<PrintTicketModel> printTemplates;
         public static string logText = "";
 
         int so = 1000, gio = 1;
@@ -105,6 +103,7 @@ namespace QMS_System
                 Settings.Default.Save();
                 //ko su dung GO 
                 var query = @"  UPDATE [Q_COUNTER] set lastcall = 0 ,isrunning =1 , CurrentNumber=0 , LastCallKetLuan= 0 
+                                        DELETE from Q_CounterSoftRequire  
                                         DELETE [Q_CounterSoftSound]  
                                         DBCC CHECKIDENT('Q_CounterSoftSound', RESEED, 1);                                             
                                         DELETE [dbo].[Q_RequestTicket]  
@@ -124,7 +123,7 @@ namespace QMS_System
         {
             try
             {
-               // docFileExcel();
+                // docFileExcel();
                 //sqlStatus = BaseCore.Instance.CONNECT_STATUS(Application.StartupPath + "\\DATA.XML");
                 //if (sqlStatus)
                 //{
@@ -133,13 +132,15 @@ namespace QMS_System
                 QMSAppInfo.sqlConnection = DatabaseConnection.Instance.Connect(Application.StartupPath + "\\DATA.XML");
                 configs = BLLConfig.Instance.Gets(connectString, true);
                 soundPath = GetConfigByCode(eConfigCode.SoundPath);
-                ticketTemplate = GetConfigByCode(eConfigCode.TicketTemplate);
+
+                printTemplates = BLLPrintTemplate.Instance.Gets(connectString).Where(x => x.IsActive).ToList();
+
                 SoundLockPrintTicket = GetConfigByCode(eConfigCode.SoundLockPrintTicket);
                 CheckTimeBeforePrintTicket = GetConfigByCode(eConfigCode.CheckTimeBeforePrintTicket);
 
                 int.TryParse(GetConfigByCode(eConfigCode.PrintType), out printType);
                 int.TryParse(GetConfigByCode(eConfigCode.PrintTicketReturnCurrentNumberOrServiceCode), out printTicketReturnCurrentNumberOrServiceCode);
-                int.TryParse(GetConfigByCode(eConfigCode.NumberOfLinePerTime), out solien);
+
                 int.TryParse(GetConfigByCode(eConfigCode.SilenceTime), out silenceTime);
                 int.TryParse(GetConfigByCode(eConfigCode.StartNumber), out startNumber);
                 int.TryParse(GetConfigByCode(eConfigCode.TimeWaitForRecieveData), out timeQuetComport);
@@ -235,12 +236,12 @@ namespace QMS_System
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show("Lỗi: không thể kết nối với cổng COM Máy in, Vui lòng thử cấu hình lại kết nối", "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                   // MessageBox.Show("Lỗi: không thể kết nối với cổng COM Máy in, Vui lòng thử cấu hình lại kết nối", "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lấy thông tin Com Máy in bị lỗi.\n" + ex.Message, "Lỗi Com Máy in");
+               // MessageBox.Show("Lấy thông tin Com Máy in bị lỗi.\n" + ex.Message, "Lỗi Com Máy in");
             }
         }
 
@@ -684,10 +685,12 @@ namespace QMS_System
 
         private void barbtmauphieu_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            Form frm = IsActive(typeof(frmTicketTemplate));
+            //  Form frm = IsActive(typeof(frmTicketTemplate));
+            Form frm = IsActive(typeof(frmPrintSetting));
             if (frm == null)
             {
-                var forms = new frmTicketTemplate();
+                //var forms = new frmTicketTemplate();
+                var forms = new frmPrintSetting();
                 forms.MdiParent = this;
                 forms.Show();
             }
@@ -933,12 +936,12 @@ namespace QMS_System
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show("Lỗi: không thể kết nối với cổng COM Keypad, Vui lòng thử cấu hình lại kết nối", "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                   // MessageBox.Show("Lỗi: không thể kết nối với cổng COM Keypad, Vui lòng thử cấu hình lại kết nối", "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lấy thông tin Com Keypad bị lỗi.\n" + ex.Message, "Lỗi Com Keypad");
+              //  MessageBox.Show("Lấy thông tin Com Keypad bị lỗi.\n" + ex.Message, "Lỗi Com Keypad");
             }
         }
 
@@ -1084,6 +1087,8 @@ namespace QMS_System
             bool err = false;
             ServiceDayModel serObj = null;
             DateTime now = DateTime.Now;
+
+            var printModel = new PrintModel();
             switch (printType)
             {
                 case (int)ePrintType.TheoTungDichVu:
@@ -1097,6 +1102,8 @@ namespace QMS_System
                             temp.Add(SoundLockPrintTicket);
                         else
                         {
+                            printModel.TenDichVu = (serObj != null ? serObj.Name : "");
+                            printModel.NoteDV = (serObj != null ? serObj.Note : "");
                             var rs = BLLDailyRequire.Instance.PrintNewTicket(connectString, serviceId, serObj.StartNumber, businessId, now, printType, (timeServeAllow != null ? timeServeAllow.Value : serObj.TimeProcess.TimeOfDay), Name, Address, DOB, MaBenhNhan, MaPhongKham, SttPhongKham, SoXe, MaCongViec, MaLoaiCongViec);
                             if (rs.IsSuccess)
                             {
@@ -1118,8 +1125,17 @@ namespace QMS_System
                                     lbRecieve.Caption = printerId + "," + serviceId + "," + ((int)rs.Data + 1);
                                 barButtonItem10.Caption = "đang gọi :" + (int)rs.Records;
                                 nghiepVu = rs.Data_1;
-                                newNumber = ((int)rs.Data + 1);
-                                tenQuay = rs.Data_2;
+
+                                printModel.TenQuay = rs.Data_2;
+                                printModel.STT = ((int)rs.Data + 1);
+                                printModel.STTHienTai = ((int)rs.Records);
+                                printModel.SoXe = SoXe;
+                                printModel.MaKH = MaBenhNhan;
+                                printModel.TenKH = Name;
+                                printModel.DOB = DOB ?? 0;
+                                printModel.DiaChi = Address;
+                                printModel.MaDV = MaPhongKham;
+                                printModel.Phone = "";
                             }
                             else
                                 errorsms = rs.Errors[0].Message;
@@ -1139,6 +1155,8 @@ namespace QMS_System
                             temp.Add(SoundLockPrintTicket);
                         else
                         {
+                            printModel.TenDichVu = (serObj != null ? serObj.Name : "");
+                            printModel.NoteDV = (serObj != null ? serObj.Note : "");
                             var rs = BLLDailyRequire.Instance.PrintNewTicket(connectString, serviceId, startNumber, businessId, now, printType, (timeServeAllow != null ? timeServeAllow.Value : serObj.TimeProcess.TimeOfDay), Name, Address, DOB, MaBenhNhan, MaPhongKham, SttPhongKham, SoXe, MaCongViec, MaLoaiCongViec);
                             if (rs.IsSuccess)
                             {
@@ -1159,8 +1177,17 @@ namespace QMS_System
                                 else if (isProgrammer)
                                     lbRecieve.Caption = printerId + "," + serviceId + "," + ((int)rs.Data + 1);
                                 nghiepVu = rs.Data_1;
-                                newNumber = ((int)rs.Data + 1);
-                                tenQuay = rs.Data_2;
+
+                                printModel.TenQuay = rs.Data_2;
+                                printModel.STT = ((int)rs.Data + 1);
+                                printModel.STTHienTai = ((int)rs.Records);
+                                printModel.SoXe = SoXe;
+                                printModel.MaKH = MaBenhNhan;
+                                printModel.TenKH = Name;
+                                printModel.DOB = DOB ?? 0;
+                                printModel.DiaChi = Address;
+                                printModel.MaDV = MaPhongKham;
+                                printModel.Phone = "";
                             }
                             else
                                 errorsms = rs.Errors[0].Message;
@@ -1203,6 +1230,8 @@ namespace QMS_System
                         }
                         if (!err)
                         {
+                            printModel.TenDichVu = (serObj != null ? serObj.Name : "");
+                            printModel.NoteDV = (serObj != null ? serObj.Note : "");
                             var rs = BLLDailyRequire.Instance.Insert(connectString, lastTicket, serviceId, businessId, now, MaCongViec, MaLoaiCongViec);
                             if (rs.IsSuccess)
                             {
@@ -1225,7 +1254,17 @@ namespace QMS_System
                                 else if (newNumber != 0 && isProgrammer)
                                     lbRecieve.Caption = serviceId + "," + "1," + lastTicket;
                                 nghiepVu = rs.Data_1;
-                                tenQuay = rs.Data_2;
+
+                                printModel.TenQuay = rs.Data_2;
+                                printModel.STT = ((int)rs.Data);
+                                printModel.STTHienTai = lastTicket;
+                                printModel.SoXe = SoXe;
+                                printModel.MaKH = MaBenhNhan;
+                                printModel.TenKH = Name;
+                                printModel.DOB = DOB ?? 0;
+                                printModel.DiaChi = Address;
+                                printModel.MaDV = MaPhongKham;
+                                printModel.Phone = "";
                             }
                         }
                     }
@@ -1244,12 +1283,12 @@ namespace QMS_System
                 }
                 else
                 {
-                    PrintWithNoBorad(newNumber, lastTicket, tenQuay, (serObj != null ? serObj.Name : ""), (serObj != null ? serObj.Note : ""));
+                    PrintWithNoBorad(printModel);
                 }
             }
-            else if (newNumber != 0)
+            else if (printModel.STT != 0)
                 if (UsePrintBoard == 0)
-                    PrintWithNoBorad(newNumber, lastTicket, tenQuay, (serObj != null ? serObj.Name : ""), (serObj != null ? serObj.Note : ""));
+                    PrintWithNoBorad(printModel);
 
             if (AutoCallIfUserFree == 1 && nghiepVu > 0)
             {
@@ -1283,9 +1322,8 @@ namespace QMS_System
           )
         {
             IsDatabaseChange = true;
-            int lastTicket = 0,
-                newNumber = 0,
-            nghiepVu = 0;
+            var printModel = new PrintModel();
+            int nghiepVu = 0;
             string printStr = string.Empty,
                 tenQuay = string.Empty;
             bool err = false;
@@ -1296,6 +1334,8 @@ namespace QMS_System
                 errorsms = "Dịch vụ số " + serviceId + " không tồn tại. Xin quý khách vui lòng chọn dịch vụ khác.";
             else
             {
+                printModel.TenDichVu = (serObj != null ? serObj.Name : "");
+                printModel.NoteDV = (serObj != null ? serObj.Note : "");
                 if (CheckTimeBeforePrintTicket == "1" && serObj.Shifts.FirstOrDefault(x => now.TimeOfDay >= x.Start.TimeOfDay && now.TimeOfDay <= x.End.TimeOfDay) == null)
                     temp.Add(SoundLockPrintTicket);
                 else
@@ -1320,13 +1360,23 @@ namespace QMS_System
                         else if (isProgrammer)
                             lbRecieve.Caption = printerId + "," + serviceId + "," + ((int)rs.Data + 1);
                         nghiepVu = rs.Data_1;
-                        newNumber = ((int)rs.Data + 1);
-                        tenQuay = rs.Data_2;
+
+                        var tk = (Q_DailyRequire)rs.Data_4;
+                        printModel.TenQuay = rs.Data_2;
+                        printModel.STT = ((int)rs.Data + 1);
+                        printModel.SoXe = tk.CarNumber;
+                        printModel.MaKH = tk.MaBenhNhan;
+                        printModel.TenKH = tk.CustomerName;
+                        printModel.DOB = tk.CustomerDOB ?? 0;
+                        printModel.DiaChi = tk.CustomerAddress;
+                        printModel.MaDV = tk.MaPhongKham;
+                        printModel.Phone = tk.PhoneNumber;
                     }
                     else
                         errorsms = rs.Errors[0].Message;
                 }
             }
+
 
             if (!string.IsNullOrEmpty(printStr))
             {
@@ -1339,16 +1389,16 @@ namespace QMS_System
                 }
                 else
                 {
-                    PrintWithNoBorad(newNumber, lastTicket, tenQuay, (serObj != null ? serObj.Name : ""), (serObj != null ? serObj.Note : ""));
+                    PrintWithNoBorad(printModel);
                 }
             }
-            else if (newNumber != 0)
+            else if (printModel.STT != 0)
                 if (UsePrintBoard == 0)
-                    PrintWithNoBorad(newNumber, lastTicket, tenQuay, (serObj != null ? serObj.Name : ""), (serObj != null ? serObj.Note : ""));
+                    PrintWithNoBorad(printModel);
 
             if (AutoCallIfUserFree == 1 && nghiepVu > 0)
             {
-                var freeUser = (int)BLLDailyRequire.Instance.CheckUserFree(connectString, nghiepVu, serviceId, newNumber, autoCallFollowMajorOrder).Data;
+                var freeUser = (int)BLLDailyRequire.Instance.CheckUserFree(connectString, nghiepVu, serviceId, printModel.STT, autoCallFollowMajorOrder).Data;
                 if (freeUser > 0)
                 {
                     var counter = lib_Users.FirstOrDefault(x => x.UserId == freeUser).EquipCode;
@@ -1360,43 +1410,66 @@ namespace QMS_System
             return true;
         }
 
-        private void PrintWithNoBorad(int newNum, int oldNum, string tenQuay, string tendichvu, string noteDichVu)
+        private void PrintWithNoBorad(PrintModel printModel)
         {
             var now = DateTime.Now;
-            if (COM_Printer.IsOpen)
+            if (COM_Printer.IsOpen && printTemplates.Count > 0)
             {
-                var template = ticketTemplate;
-                template = template.Replace("[canh-giua]", "\x1b\x61\x01|+|");
-                template = template.Replace("[canh-trai]", "\x1b\x61\x00|+|");
-                template = template.Replace("[1x1]", "\x1d\x21\x00|+|");
-                template = template.Replace("[2x1]", "\x1d\x21\x01|+|");
-                template = template.Replace("[3x1]", "\x1d\x21\x02|+|");
-                template = template.Replace("[2x2]", "\x1d\x21\x11|+|");
-                template = template.Replace("[3x3]", "\x1d\x21\x22|+|");
+                for (int i = 0; i < printTemplates.Count; i++)
+                { 
+                    var template = printTemplates[i].PrintTemplate;
+                    template = template.Replace("[canh-giua]", "\x1b\x61\x01|+|");
+                    template = template.Replace("[canh-trai]", "\x1b\x61\x00|+|");
+                    template = template.Replace("[1x1]", "\x1d\x21\x00|+|");
+                    template = template.Replace("[2x1]", "\x1d\x21\x01|+|");
+                    template = template.Replace("[3x1]", "\x1d\x21\x02|+|");
+                    template = template.Replace("[2x2]", "\x1d\x21\x11|+|");
+                    template = template.Replace("[3x3]", "\x1d\x21\x22|+|");
 
-                template = template.Replace("[STT]", newNum.ToString());
-                template = template.Replace("[ten-quay]", tenQuay);
-                template = template.Replace("[ten-dich-vu]", tendichvu);
-                template = template.Replace("[ghi-chu-dich-vu]", noteDichVu);
-                template = template.Replace("[ngay]", ("ngay: " + now.ToString("dd/MM/yyyy")));
-                template = template.Replace("[gio]", (" gio: " + now.ToString("HH/mm")));
-                template = template.Replace("[dang-goi]", " dang goi " + oldNum);
-                template = template.Replace("[cat-giay]", "\x1b\x69|+|");
+                    template = template.Replace("[STT]", printModel.STT.ToString());
+                    template = template.Replace("[ten-quay]", printModel.TenQuay);
+                    template = template.Replace("[ten-dich-vu]", printModel.TenDichVu);
+                    template = template.Replace("[ghi-chu-dich-vu]", printModel.NoteDV); 
+                    template = template.Replace("[ngay]", ("Ngày: " + now.ToString("dd/MM/yyyy")));
+                    template = template.Replace("[gio]", ("Giờ: " + now.ToString("HH:mm")));
+                    template = template.Replace("[dang-goi]", "đang gọi: " + printModel.STTHienTai);
 
-                var arr = template.Split(new string[] { "|+|" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                for (int ii = 0; ii < solien; ii++)
-                {
-                    for (int i = 0; i < arr.Length; i++)
+
+                    template = template.Replace("[so-xe]", getStringValue(printModel.SoXe));
+                    template = template.Replace("[phone]", getStringValue(printModel.Phone));
+                    template = template.Replace("[ma-kh]", getStringValue(printModel.MaKH));
+                    template = template.Replace("[ten-kh]", getStringValue(printModel.TenKH));
+                    template = template.Replace("[dia-chi]", getStringValue(printModel.DiaChi));
+                    template = template.Replace("[ma-dv]", getStringValue(printModel.MaDV));
+                    template = template.Replace("[dob]", getIntValue(printModel.DOB));
+                    
+                    template = template.Replace("[cat-giay]", "\x1b\x69|+|");
+
+                    var arr = template.Split(new string[] { "|+|" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    for (int ii = 0; ii < printTemplates[i].PrintPages; ii++)
                     {
-                        // frmMain.COM_Printer.Write(arr[i]);
-                        BaseCore.Instance.PrintTicketTCVN3(COM_Printer, arr[i]);
-                        //sleep
-                        Thread.Sleep(50);
+                        for (int iii = 0; iii < arr.Length; iii++)
+                        {
+                            // frmMain.COM_Printer.Write(arr[i]);
+                            BaseCore.Instance.PrintTicketTCVN3(COM_Printer, arr[iii]);
+                            //sleep
+                            Thread.Sleep(50);
+                        }
                     }
                 }
             }
             else
                 errorsms = "Cổng COM máy in hiện tại chưa kết nối. Vui lòng kiểm tra lại COM máy in";
+        }
+
+        private string getStringValue(string value)
+        {
+            return !string.IsNullOrEmpty(value) ? (value + "\n") : "";
+        }
+
+        private string getIntValue(int value)
+        {
+            return value != null && value > 0 ? (value.ToString() + "\n") : "";
         }
 
         private void TmerQuetComport_Tick(object sender, EventArgs e)
@@ -1939,8 +2012,24 @@ namespace QMS_System
                             case (int)eCounterSoftRequireType.inPhieu:
                                 requireObj = JsonConvert.DeserializeObject<PrinterRequireModel>(requires[i].Content);
                                 var serObj = lib_Services.FirstOrDefault(x => x.Id == requireObj.ServiceId);
+                                var printModel = new PrintModel()
+                                {
+                                    STT = requireObj.newNumber,
+                                    STTHienTai = requireObj.oldNumber,
+                                    TenQuay = requireObj.TenQuay,
+                                    TenDichVu = requireObj.TenDichVu,
+                                    NoteDV = (serObj != null ? serObj.Note : ""),
+                                    SoXe = requireObj.SoXe,
+                                    DiaChi = requireObj.Address,
+                                    DOB = requireObj.DOB ?? 0,
+                                    MaDV = requireObj.MaPhongKham,
+                                    MaKH = requireObj.MaBenhNhan,
+                                    Phone = requireObj.Phone,
+                                    TenKH = requireObj.Name
+                                };
                                 //in  trực tiếp ko board
-                                PrintWithNoBorad(requireObj.newNumber, requireObj.oldNumber, requireObj.TenQuay, requireObj.TenDichVu, (serObj != null ? serObj.Note : ""));
+                                PrintWithNoBorad(printModel);
+                               // MessageBox.Show(JsonConvert.SerializeObject(printModel));
 
                                 //in theo driver
                                 //InPhieuDungDriver(requireObj.newNumber, requireObj.oldNumber, requireObj.TenQuay, requireObj.TenQuay, ("   Ngày: " + now.ToString("dd/MM/yyyy") + ("     Giờ: " + now.ToString("HH/mm"))), "VIỆT THÁI QUÂN 3");
@@ -2227,10 +2316,8 @@ namespace QMS_System
                 COM_Printer.Close();
         }
 
-
-
         #region Printer
-        private void InPhieuDungDriver(int newNum, int oldNum, string tenquay, string tendichvu, string hoten, string tieude,string ngaygio)
+        private void InPhieuDungDriver(int newNum, int oldNum, string tenquay, string tendichvu, string hoten, string tieude, string ngaygio)
         {
             LocalReport localReport = new LocalReport();
             try
@@ -2249,7 +2336,7 @@ namespace QMS_System
                 reportParameters[4] = new ReportParameter("NgayGio", ngaygio.ToUpper());
 
                 localReport.SetParameters(reportParameters);
-                for (int i = 0; i < frmMain_ver3.solien; i++)
+                for (int i = 0; i < 1; i++)
                 {
                     PrintToPrinter(localReport);
                 }
@@ -2350,7 +2437,6 @@ namespace QMS_System
         }
         #endregion
 
-
         public void docFileExcel()
         {
             string path = @"C:\Users\DoNguyen\Desktop\1595493383628734.xlsx";
@@ -2360,17 +2446,17 @@ namespace QMS_System
             ExcelApp.Range excelRange = excelSheet.UsedRange;
 
             List<TinhModel> parents = new List<TinhModel>();
-           var childs = new List<HuyenModel>(); 
+            var childs = new List<HuyenModel>();
             for (int ii = 10; ii < 73; ii++)
             {
                 string matinh = excelRange.Cells[ii, 3].Value2.ToString();
-                string tentinh = excelRange.Cells[ii, 4].Value2.ToString(); 
-                parents.Add(new TinhModel() { Code = matinh, Name = tentinh } );
+                string tentinh = excelRange.Cells[ii, 4].Value2.ToString();
+                parents.Add(new TinhModel() { Code = matinh, Name = tentinh });
             }
             parents = parents.OrderBy(x => x.Name).ToList();
 
             excelSheet = excelBook.Sheets[1];
-            excelRange = excelSheet.UsedRange; 
+            excelRange = excelSheet.UsedRange;
             for (int ii = 10; ii < 705; ii++)
             {
                 string maquan = excelRange.Cells[ii, 3].Value2.ToString();
@@ -2381,7 +2467,7 @@ namespace QMS_System
                     Code = maquan,
                     Name = tenquan,
                     TName = tentinh
-                }); 
+                });
             }
 
             foreach (var item in parents)
@@ -2390,7 +2476,7 @@ namespace QMS_System
                 item.Huyens = founds;
             }
 
-           string json =  JsonConvert.SerializeObject(parents);
+            string json = JsonConvert.SerializeObject(parents);
         }
     }
 
@@ -2419,7 +2505,7 @@ namespace QMS_System
     public class HuyenModel
     {
         public string Code { get; set; }
-        public string Name { get; set; } 
+        public string Name { get; set; }
         public string TName { get; set; }
     }
 }

@@ -13,6 +13,7 @@ namespace QMS_System.Data.Model
         public dynamic Data_1 { get; set; }
         public dynamic Data_2 { get; set; }
         public dynamic Data_3 { get; set; }
+        public dynamic Data_4 { get; set; }
     }
 
     public class ResponseBase
@@ -25,6 +26,7 @@ namespace QMS_System.Data.Model
         public dynamic Data_1 { get; set; }
         public dynamic Data_2 { get; set; }
         public dynamic Data_3 { get; set; }
+        public dynamic Data_4 { get; set; }
         public string str1 { get; set; }
         public string str2 { get; set; }
         public string str3 { get; set; } 
