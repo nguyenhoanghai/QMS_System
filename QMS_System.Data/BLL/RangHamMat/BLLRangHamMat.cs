@@ -178,7 +178,7 @@ namespace QMS_System.Data.BLL.RangHamMat
                             if (printTime.TimeOfDay <= kGioObj.EndTime)
                             {
                                 // dung gio
-                                var lastTicket = db.Q_DailyRequire.Where(x => x.ServiceId == dichvuId && x.STT_PhongKham == kGioObj.Name && x.TicketNumber < 20).OrderBy(x => x.TicketNumber).FirstOrDefault();
+                                var lastTicket = db.Q_DailyRequire.Where(x => x.ServiceId == dichvuId && x.STT_PhongKham == kGioObj.Name && x.TicketNumber < 20).OrderByDescending(x => x.TicketNumber).FirstOrDefault();
                                 if (lastTicket != null)
                                 {
                                     stt = lastTicket.TicketNumber++;
@@ -191,7 +191,7 @@ namespace QMS_System.Data.BLL.RangHamMat
                             else
                             {
                                 // di trễ
-                                var lastTicket = db.Q_DailyRequire.Where(x => x.ServiceId == dichvuId && x.TicketNumber >= (_serviceStartNumber + 20)).OrderBy(x => x.TicketNumber).FirstOrDefault();
+                                var lastTicket = db.Q_DailyRequire.Where(x => x.ServiceId == dichvuId && x.TicketNumber >= (_serviceStartNumber + 20)).OrderByDescending(x => x.TicketNumber).FirstOrDefault();
                                 if (lastTicket != null)
                                 {
                                     stt = lastTicket.TicketNumber++;
@@ -205,7 +205,7 @@ namespace QMS_System.Data.BLL.RangHamMat
                         else
                         {
                             //ko hẹn
-                            var lastTicket = db.Q_DailyRequire.Where(x => x.ServiceId == dichvuId && x.TicketNumber >= (_serviceStartNumber + 20)).OrderBy(x => x.TicketNumber).FirstOrDefault();
+                            var lastTicket = db.Q_DailyRequire.Where(x => x.ServiceId == dichvuId && x.TicketNumber >= (_serviceStartNumber + 20)).OrderByDescending(x => x.TicketNumber).FirstOrDefault();
                             if (lastTicket != null)
                             {
                                 stt = lastTicket.TicketNumber++;
@@ -215,7 +215,6 @@ namespace QMS_System.Data.BLL.RangHamMat
                                 stt = (_serviceStartNumber + 20);
                             }
                         }
-
                         modelObj.TicketNumber = stt;
                         modelObj.ServiceId = dichvuId;
                         modelObj.PrintTime = printTime;
