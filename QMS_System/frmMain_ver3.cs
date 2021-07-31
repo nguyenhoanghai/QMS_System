@@ -47,6 +47,7 @@ namespace QMS_System
             silenceTime = 100,
             printTicketReturnCurrentNumberOrServiceCode = 1,
             _8cUseFor = 1,
+            TVReadSound = 0,
             UsePrintBoard = 1;
 
         public static int UseWithThirdPattern = 0,
@@ -152,6 +153,7 @@ namespace QMS_System
                 int.TryParse(GetConfigByCode(eConfigCode.System), out system);
                 int.TryParse(GetConfigByCode(eConfigCode._8cUseFor), out _8cUseFor);
                 int.TryParse(GetConfigByCode(eConfigCode.UsePrintBoard), out UsePrintBoard);
+                int.TryParse(GetConfigByCode(eConfigCode.TVReadSound), out TVReadSound);
                 equipmentIds = ConfigurationManager.AppSettings["quetEquipments"].ToString().Split(',').Select(x => Convert.ToInt32(x)).ToList();
                 strEquipmentIds.Clear();
                 for (int i = 0; i < equipmentIds.Count; i++)
@@ -236,12 +238,12 @@ namespace QMS_System
                 }
                 catch (Exception)
                 {
-                   // MessageBox.Show("Lỗi: không thể kết nối với cổng COM Máy in, Vui lòng thử cấu hình lại kết nối", "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    // MessageBox.Show("Lỗi: không thể kết nối với cổng COM Máy in, Vui lòng thử cấu hình lại kết nối", "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
             {
-               // MessageBox.Show("Lấy thông tin Com Máy in bị lỗi.\n" + ex.Message, "Lỗi Com Máy in");
+                // MessageBox.Show("Lấy thông tin Com Máy in bị lỗi.\n" + ex.Message, "Lỗi Com Máy in");
             }
         }
 
@@ -867,6 +869,7 @@ namespace QMS_System
                 //  var lib_Sounds = BLLSound.Instance.Gets(connect);
                 SoundModel soundFound;
                 CounterSoundModel ctSound;
+                var soundStr = string.Empty;
                 if (lib_Sounds.Count > 0)
                 {
                     playlist.Clear();
@@ -882,24 +885,40 @@ namespace QMS_System
                                     {
                                         soundFound = lib_Sounds.FirstOrDefault(x => x.Code != null && x.Code.Equals(ticket[j] + "") && x.LanguageId == readDetails[y].LanguageId);
                                         if (soundFound != null)
+                                        {
                                             playlist.Add(soundFound.Name);
+                                            soundStr += soundFound.Name + "|";
+                                        }
                                     }
                                 }
                                 else if (readDetails[y].Details[i].SoundId == (int)eSoundConfig.Counter)
                                 {
                                     ctSound = lib_CounterSound.FirstOrDefault(x => x.CounterId == counterId && x.LanguageId == readDetails[y].LanguageId);
-                                    playlist.Add((ctSound == null ? "" : ctSound.SoundName));//  BLLCounterSound.Instance.GetSoundName(counterId, ));
+                                    // playlist.Add((ctSound == null ? "" : ctSound.SoundName));//  BLLCounterSound.Instance.GetSoundName(counterId, ));
+                                    if (ctSound != null)
+                                    {
+                                        playlist.Add(ctSound.SoundName);
+                                        soundStr += ctSound.SoundName + "|";
+                                    }
                                 }
                                 else
                                 {
                                     soundFound = lib_Sounds.FirstOrDefault(x => x.Id == readDetails[y].Details[i].SoundId);
                                     if (soundFound != null)
+                                    {
                                         playlist.Add(soundFound.Name);
+                                        soundStr += soundFound.Name + "|";
+                                    }
                                 }
                             }
                         }
                     }
                     temp.AddRange(playlist);
+                    if (!string.IsNullOrEmpty(soundStr) && TVReadSound == 1)
+                    {
+                        soundStr = soundStr.Substring(0, soundStr.Length - 1);
+                        BLLCounterSoftRequire.Instance.Insert(connectString, soundStr, (int)eCounterSoftRequireType.TVReadSound, counterId);
+                    }
                 }
             }
         }
@@ -936,12 +955,12 @@ namespace QMS_System
                 }
                 catch (Exception)
                 {
-                   // MessageBox.Show("Lỗi: không thể kết nối với cổng COM Keypad, Vui lòng thử cấu hình lại kết nối", "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    // MessageBox.Show("Lỗi: không thể kết nối với cổng COM Keypad, Vui lòng thử cấu hình lại kết nối", "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
             {
-              //  MessageBox.Show("Lấy thông tin Com Keypad bị lỗi.\n" + ex.Message, "Lỗi Com Keypad");
+                //  MessageBox.Show("Lấy thông tin Com Keypad bị lỗi.\n" + ex.Message, "Lỗi Com Keypad");
             }
         }
 
@@ -1078,228 +1097,234 @@ namespace QMS_System
            string MaLoaiCongViec
            )
         {
-            IsDatabaseChange = true;
-            int lastTicket = 0,
-                newNumber = 0,
-            nghiepVu = 0;
-            string printStr = string.Empty,
-                tenQuay = string.Empty;
-            bool err = false;
-            ServiceDayModel serObj = null;
-            DateTime now = DateTime.Now;
-
-            var printModel = new PrintModel();
-            switch (printType)
+            try
             {
-                case (int)ePrintType.TheoTungDichVu:
-                    #region
-                    serObj = lib_Services.FirstOrDefault(x => x.Id == serviceId);
-                    if (serObj == null)
-                        errorsms = "Dịch vụ số " + serviceId + " không tồn tại. Xin quý khách vui lòng chọn dịch vụ khác.";
-                    else
-                    {
-                        if (CheckTimeBeforePrintTicket == "1" && serObj.Shifts.FirstOrDefault(x => now.TimeOfDay >= x.Start.TimeOfDay && now.TimeOfDay <= x.End.TimeOfDay) == null)
-                            temp.Add(SoundLockPrintTicket);
-                        else
-                        {
-                            printModel.TenDichVu = (serObj != null ? serObj.Name : "");
-                            printModel.NoteDV = (serObj != null ? serObj.Note : "");
-                            var rs = BLLDailyRequire.Instance.PrintNewTicket(connectString, serviceId, serObj.StartNumber, businessId, now, printType, (timeServeAllow != null ? timeServeAllow.Value : serObj.TimeProcess.TimeOfDay), Name, Address, DOB, MaBenhNhan, MaPhongKham, SttPhongKham, SoXe, MaCongViec, MaLoaiCongViec);
-                            if (rs.IsSuccess)
-                            {
-                                if (!isProgrammer)
-                                {
-                                    var soArr = BaseCore.Instance.ChangeNumber(((int)rs.Data + 1));
-                                    printStr = (soArr[0] + " " + soArr[1] + " ");
-                                    if (printTicketReturnCurrentNumberOrServiceCode == 1)
-                                    {
-                                        soArr = BaseCore.Instance.ChangeNumber((int)rs.Records);
-                                    }
-                                    else
-                                    {
-                                        soArr = BaseCore.Instance.ChangeNumber(serviceId);
-                                    }
-                                    printStr += (soArr[0] + " " + soArr[1] + " " + now.ToString("dd") + " " + now.ToString("MM") + " " + now.ToString("yy") + " " + now.ToString("HH") + " " + now.ToString("mm"));
-                                }
-                                else if (isProgrammer)
-                                    lbRecieve.Caption = printerId + "," + serviceId + "," + ((int)rs.Data + 1);
-                                barButtonItem10.Caption = "đang gọi :" + (int)rs.Records;
-                                nghiepVu = rs.Data_1;
+                IsDatabaseChange = true;
+                int lastTicket = 0,
+                    newNumber = 0,
+                nghiepVu = 0;
+                string printStr = string.Empty,
+                    tenQuay = string.Empty;
+                bool err = false;
+                ServiceDayModel serObj = null;
+                DateTime now = DateTime.Now;
 
-                                printModel.TenQuay = rs.Data_2;
-                                printModel.STT = ((int)rs.Data + 1);
-                                printModel.STTHienTai = ((int)rs.Records);
-                                printModel.SoXe = SoXe;
-                                printModel.MaKH = MaBenhNhan;
-                                printModel.TenKH = Name;
-                                printModel.DOB = DOB ?? 0;
-                                printModel.DiaChi = Address;
-                                printModel.MaDV = MaPhongKham;
-                                printModel.Phone = "";
-                            }
-                            else
-                                errorsms = rs.Errors[0].Message;
-                            //   MessageBox.Show(rs.Errors[0].Message, rs.Errors[0].MemberName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                    }
-                    #endregion
-                    break;
-                case (int)ePrintType.BatDauChung:
-                    #region MyRegion
-                    serObj = lib_Services.FirstOrDefault(x => x.Id == serviceId);
-                    if (serObj == null)
-                        errorsms = "Dịch vụ số " + serviceId + " không tồn tại. Xin quý khách vui lòng chọn dịch vụ khác.";
-                    else
-                    {
-                        if (CheckTimeBeforePrintTicket == "1" && serObj.Shifts.FirstOrDefault(x => now.TimeOfDay >= x.Start.TimeOfDay && now.TimeOfDay <= x.End.TimeOfDay) == null)
-                            temp.Add(SoundLockPrintTicket);
-                        else
-                        {
-                            printModel.TenDichVu = (serObj != null ? serObj.Name : "");
-                            printModel.NoteDV = (serObj != null ? serObj.Note : "");
-                            var rs = BLLDailyRequire.Instance.PrintNewTicket(connectString, serviceId, startNumber, businessId, now, printType, (timeServeAllow != null ? timeServeAllow.Value : serObj.TimeProcess.TimeOfDay), Name, Address, DOB, MaBenhNhan, MaPhongKham, SttPhongKham, SoXe, MaCongViec, MaLoaiCongViec);
-                            if (rs.IsSuccess)
-                            {
-                                if (!isProgrammer)
-                                {
-                                    var soArr = BaseCore.Instance.ChangeNumber(((int)rs.Data + 1));
-                                    printStr = (soArr[0] + " " + soArr[1] + " ");
-                                    if (printTicketReturnCurrentNumberOrServiceCode == 1)
-                                    {
-                                        soArr = BaseCore.Instance.ChangeNumber((int)rs.Records);
-                                    }
-                                    else
-                                    {
-                                        soArr = BaseCore.Instance.ChangeNumber(serviceId);
-                                    }
-                                    printStr += (soArr[0] + " " + soArr[1] + " " + now.ToString("dd") + " " + now.ToString("MM") + " " + now.ToString("yy") + " " + now.ToString("HH") + " " + now.ToString("mm"));
-                                }
-                                else if (isProgrammer)
-                                    lbRecieve.Caption = printerId + "," + serviceId + "," + ((int)rs.Data + 1);
-                                nghiepVu = rs.Data_1;
-
-                                printModel.TenQuay = rs.Data_2;
-                                printModel.STT = ((int)rs.Data + 1);
-                                printModel.STTHienTai = ((int)rs.Records);
-                                printModel.SoXe = SoXe;
-                                printModel.MaKH = MaBenhNhan;
-                                printModel.TenKH = Name;
-                                printModel.DOB = DOB ?? 0;
-                                printModel.DiaChi = Address;
-                                printModel.MaDV = MaPhongKham;
-                                printModel.Phone = "";
-                            }
-                            else
-                                errorsms = rs.Errors[0].Message;
-                            //  MessageBox.Show(rs.Errors[0].Message, rs.Errors[0].MemberName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                    }
-                    #endregion
-                    break;
-                case (int)ePrintType.TheoGioiHanSoPhieu:
-                    #region MyRegion
-                    int slCP = BLLBusiness.Instance.GetTicketAllow(connectString, businessId);
-                    int slDacap = BLLDailyRequire.Instance.CountTicket(connectString, businessId);
-                    if (slDacap != null && slDacap == slCP)
-                        errorsms = ("Doanh nghiệp của bạn đã được cấp đủ số lượng phiếu giới hạn trong ngày. Xin quý khách vui lòng quay lại sau.");
-                    //  MessageBox.Show("Doanh nghiệp của bạn đã được cấp đủ số lượng phiếu giới hạn trong ngày. Xin quý khách vui lòng quay lại sau.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    else
-                    {
-                        lastTicket = BLLDailyRequire.Instance.GetLastTicketNumber(connectString, serviceId, today);
+                var printModel = new PrintModel();
+                switch (printType)
+                {
+                    case (int)ePrintType.TheoTungDichVu:
+                        #region
                         serObj = lib_Services.FirstOrDefault(x => x.Id == serviceId);
-                        if (lastTicket == 0)
-                        {
-                            if (serObj != null)
-                            {
-                                err = true;
-                                errorsms = ("Dịch vụ không tồn tại. Xin quý khách vui lòng chọn dịch vụ khác.");
-                                //  MessageBox.Show("Dịch vụ không tồn tại. Xin quý khách vui lòng chọn dịch vụ khác.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            }
-                            else
-                                lastTicket = serObj.StartNumber;
-                        }
+                        if (serObj == null)
+                            errorsms = "Dịch vụ số " + serviceId + " không tồn tại. Xin quý khách vui lòng chọn dịch vụ khác.";
                         else
                         {
-                            lastTicket++;
-                            if (serObj.EndNumber < lastTicket)
+                            if (CheckTimeBeforePrintTicket == "1" && serObj.Shifts.FirstOrDefault(x => now.TimeOfDay >= x.Start.TimeOfDay && now.TimeOfDay <= x.End.TimeOfDay) == null)
+                                temp.Add(SoundLockPrintTicket);
+                            else
                             {
-                                err = true;
-                                errorsms = ("Dịch vụ này đã cấp hết phiếu trong ngày. Xin quý khách vui lòng chọn dịch vụ khác.");
-                                //  MessageBox.Show("Dịch vụ này đã cấp hết phiếu trong ngày. Xin quý khách vui lòng chọn dịch vụ khác.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            }
-                        }
-                        if (!err)
-                        {
-                            printModel.TenDichVu = (serObj != null ? serObj.Name : "");
-                            printModel.NoteDV = (serObj != null ? serObj.Note : "");
-                            var rs = BLLDailyRequire.Instance.Insert(connectString, lastTicket, serviceId, businessId, now, MaCongViec, MaLoaiCongViec);
-                            if (rs.IsSuccess)
-                            {
-                                newNumber = rs.Data;
-                                if (newNumber != 0 && !isProgrammer)
+                                printModel.TenDichVu = (serObj != null ? serObj.Name : "");
+                                printModel.NoteDV = (serObj != null ? serObj.Note : "");
+                                var rs = BLLDailyRequire.Instance.PrintNewTicket(connectString, serviceId, serObj.StartNumber, businessId, now, printType, (timeServeAllow != null ? timeServeAllow.Value : serObj.TimeProcess.TimeOfDay), Name, Address, DOB, MaBenhNhan, MaPhongKham, SttPhongKham, SoXe, MaCongViec, MaLoaiCongViec);
+                                if (rs.IsSuccess)
                                 {
-                                    var soArr = BaseCore.Instance.ChangeNumber(lastTicket);
-                                    printStr = (soArr[0] + " " + soArr[1] + " ");
-                                    if (printTicketReturnCurrentNumberOrServiceCode == 1)
+                                    if (!isProgrammer)
                                     {
-                                        soArr = BaseCore.Instance.ChangeNumber(BLLDailyRequire.Instance.GetCurrentNumber(connectString, serviceId));
+                                        var soArr = BaseCore.Instance.ChangeNumber(((int)rs.Data + 1));
+                                        printStr = (soArr[0] + " " + soArr[1] + " ");
+                                        if (printTicketReturnCurrentNumberOrServiceCode == 1)
+                                        {
+                                            soArr = BaseCore.Instance.ChangeNumber((int)rs.Records);
+                                        }
+                                        else
+                                        {
+                                            soArr = BaseCore.Instance.ChangeNumber(serviceId);
+                                        }
+                                        printStr += (soArr[0] + " " + soArr[1] + " " + now.ToString("dd") + " " + now.ToString("MM") + " " + now.ToString("yy") + " " + now.ToString("HH") + " " + now.ToString("mm"));
                                     }
-                                    else
-                                    {
-                                        soArr = BaseCore.Instance.ChangeNumber(serviceId);
-                                    }
+                                    else if (isProgrammer)
+                                        lbRecieve.Caption = printerId + "," + serviceId + "," + ((int)rs.Data + 1);
+                                    barButtonItem10.Caption = "đang gọi :" + (int)rs.Records;
+                                    nghiepVu = rs.Data_1;
 
-                                    printStr += (soArr[0] + " " + soArr[1] + " " + now.ToString("dd") + " " + now.ToString("MM") + " " + now.ToString("yy") + " " + now.ToString("HH") + " " + now.ToString("mm"));
+                                    printModel.TenQuay = rs.Data_2;
+                                    printModel.STT = ((int)rs.Data + 1);
+                                    printModel.STTHienTai = ((int)rs.Records);
+                                    printModel.SoXe = SoXe;
+                                    printModel.MaKH = MaBenhNhan;
+                                    printModel.TenKH = Name;
+                                    printModel.DOB = DOB ?? 0;
+                                    printModel.DiaChi = Address;
+                                    printModel.MaDV = MaPhongKham;
+                                    printModel.Phone = "";
                                 }
-                                else if (newNumber != 0 && isProgrammer)
-                                    lbRecieve.Caption = serviceId + "," + "1," + lastTicket;
-                                nghiepVu = rs.Data_1;
-
-                                printModel.TenQuay = rs.Data_2;
-                                printModel.STT = ((int)rs.Data);
-                                printModel.STTHienTai = lastTicket;
-                                printModel.SoXe = SoXe;
-                                printModel.MaKH = MaBenhNhan;
-                                printModel.TenKH = Name;
-                                printModel.DOB = DOB ?? 0;
-                                printModel.DiaChi = Address;
-                                printModel.MaDV = MaPhongKham;
-                                printModel.Phone = "";
+                                else
+                                    errorsms = rs.Errors[0].Message;
+                                //   MessageBox.Show(rs.Errors[0].Message, rs.Errors[0].MemberName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }
                         }
+                        #endregion
+                        break;
+                    case (int)ePrintType.BatDauChung:
+                        #region MyRegion
+                        serObj = lib_Services.FirstOrDefault(x => x.Id == serviceId);
+                        if (serObj == null)
+                            errorsms = "Dịch vụ số " + serviceId + " không tồn tại. Xin quý khách vui lòng chọn dịch vụ khác.";
+                        else
+                        {
+                            if (CheckTimeBeforePrintTicket == "1" && serObj.Shifts.FirstOrDefault(x => now.TimeOfDay >= x.Start.TimeOfDay && now.TimeOfDay <= x.End.TimeOfDay) == null)
+                                temp.Add(SoundLockPrintTicket);
+                            else
+                            {
+                                printModel.TenDichVu = (serObj != null ? serObj.Name : "");
+                                printModel.NoteDV = (serObj != null ? serObj.Note : "");
+                                var rs = BLLDailyRequire.Instance.PrintNewTicket(connectString, serviceId, startNumber, businessId, now, printType, (timeServeAllow != null ? timeServeAllow.Value : serObj.TimeProcess.TimeOfDay), Name, Address, DOB, MaBenhNhan, MaPhongKham, SttPhongKham, SoXe, MaCongViec, MaLoaiCongViec);
+                                if (rs.IsSuccess)
+                                {
+                                    if (!isProgrammer)
+                                    {
+                                        var soArr = BaseCore.Instance.ChangeNumber(((int)rs.Data + 1));
+                                        printStr = (soArr[0] + " " + soArr[1] + " ");
+                                        if (printTicketReturnCurrentNumberOrServiceCode == 1)
+                                        {
+                                            soArr = BaseCore.Instance.ChangeNumber((int)rs.Records);
+                                        }
+                                        else
+                                        {
+                                            soArr = BaseCore.Instance.ChangeNumber(serviceId);
+                                        }
+                                        printStr += (soArr[0] + " " + soArr[1] + " " + now.ToString("dd") + " " + now.ToString("MM") + " " + now.ToString("yy") + " " + now.ToString("HH") + " " + now.ToString("mm"));
+                                    }
+                                    else if (isProgrammer)
+                                        lbRecieve.Caption = printerId + "," + serviceId + "," + ((int)rs.Data + 1);
+                                    nghiepVu = rs.Data_1;
+
+                                    printModel.TenQuay = rs.Data_2;
+                                    printModel.STT = ((int)rs.Data + 1);
+                                    printModel.STTHienTai = ((int)rs.Records);
+                                    printModel.SoXe = SoXe;
+                                    printModel.MaKH = MaBenhNhan;
+                                    printModel.TenKH = Name;
+                                    printModel.DOB = DOB ?? 0;
+                                    printModel.DiaChi = Address;
+                                    printModel.MaDV = MaPhongKham;
+                                    printModel.Phone = "";
+                                }
+                                else
+                                    errorsms = rs.Errors[0].Message;
+                                //  MessageBox.Show(rs.Errors[0].Message, rs.Errors[0].MemberName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
+                        #endregion
+                        break;
+                    case (int)ePrintType.TheoGioiHanSoPhieu:
+                        #region MyRegion
+                        int slCP = BLLBusiness.Instance.GetTicketAllow(connectString, businessId);
+                        int slDacap = BLLDailyRequire.Instance.CountTicket(connectString, businessId);
+                        if (slDacap != null && slDacap == slCP)
+                            errorsms = ("Doanh nghiệp của bạn đã được cấp đủ số lượng phiếu giới hạn trong ngày. Xin quý khách vui lòng quay lại sau.");
+                        //  MessageBox.Show("Doanh nghiệp của bạn đã được cấp đủ số lượng phiếu giới hạn trong ngày. Xin quý khách vui lòng quay lại sau.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        else
+                        {
+                            lastTicket = BLLDailyRequire.Instance.GetLastTicketNumber(connectString, serviceId, today);
+                            serObj = lib_Services.FirstOrDefault(x => x.Id == serviceId);
+                            if (lastTicket == 0)
+                            {
+                                if (serObj != null)
+                                {
+                                    err = true;
+                                    errorsms = ("Dịch vụ không tồn tại. Xin quý khách vui lòng chọn dịch vụ khác.");
+                                    //  MessageBox.Show("Dịch vụ không tồn tại. Xin quý khách vui lòng chọn dịch vụ khác.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                }
+                                else
+                                    lastTicket = serObj.StartNumber;
+                            }
+                            else
+                            {
+                                lastTicket++;
+                                if (serObj.EndNumber < lastTicket)
+                                {
+                                    err = true;
+                                    errorsms = ("Dịch vụ này đã cấp hết phiếu trong ngày. Xin quý khách vui lòng chọn dịch vụ khác.");
+                                    //  MessageBox.Show("Dịch vụ này đã cấp hết phiếu trong ngày. Xin quý khách vui lòng chọn dịch vụ khác.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                }
+                            }
+                            if (!err)
+                            {
+                                printModel.TenDichVu = (serObj != null ? serObj.Name : "");
+                                printModel.NoteDV = (serObj != null ? serObj.Note : "");
+                                var rs = BLLDailyRequire.Instance.Insert(connectString, lastTicket, serviceId, businessId, now, MaCongViec, MaLoaiCongViec);
+                                if (rs.IsSuccess)
+                                {
+                                    newNumber = rs.Data;
+                                    if (newNumber != 0 && !isProgrammer)
+                                    {
+                                        var soArr = BaseCore.Instance.ChangeNumber(lastTicket);
+                                        printStr = (soArr[0] + " " + soArr[1] + " ");
+                                        if (printTicketReturnCurrentNumberOrServiceCode == 1)
+                                        {
+                                            soArr = BaseCore.Instance.ChangeNumber(BLLDailyRequire.Instance.GetCurrentNumber(connectString, serviceId));
+                                        }
+                                        else
+                                        {
+                                            soArr = BaseCore.Instance.ChangeNumber(serviceId);
+                                        }
+
+                                        printStr += (soArr[0] + " " + soArr[1] + " " + now.ToString("dd") + " " + now.ToString("MM") + " " + now.ToString("yy") + " " + now.ToString("HH") + " " + now.ToString("mm"));
+                                    }
+                                    else if (newNumber != 0 && isProgrammer)
+                                        lbRecieve.Caption = serviceId + "," + "1," + lastTicket;
+                                    nghiepVu = rs.Data_1;
+
+                                    printModel.TenQuay = rs.Data_2;
+                                    printModel.STT = ((int)rs.Data);
+                                    printModel.STTHienTai = lastTicket;
+                                    printModel.SoXe = SoXe;
+                                    printModel.MaKH = MaBenhNhan;
+                                    printModel.TenKH = Name;
+                                    printModel.DOB = DOB ?? 0;
+                                    printModel.DiaChi = Address;
+                                    printModel.MaDV = MaPhongKham;
+                                    printModel.Phone = "";
+                                }
+                            }
+                        }
+                        #endregion
+                        break;
+                }
+
+                if (!string.IsNullOrEmpty(printStr))
+                {
+                    errorsms = printStr.ToString();
+                    if (UsePrintBoard == 1)
+                    {
+                        if (isTouchScreen)
+                            dataSendToComport.Add("AA " + BaseCore.Instance.ConvertIntToStringWith0Number(printerId));
+                        dataSendToComport.Add(printStr);
                     }
-                    #endregion
-                    break;
-            }
+                    else
+                    {
+                        PrintWithNoBorad(printModel);
+                    }
+                }
+                else if (printModel.STT != 0)
+                    if (UsePrintBoard == 0)
+                        PrintWithNoBorad(printModel);
 
-            if (!string.IsNullOrEmpty(printStr))
-            {
-                errorsms = printStr.ToString();
-                if (UsePrintBoard == 1)
+                if (AutoCallIfUserFree == 1 && nghiepVu > 0)
                 {
-                    if (isTouchScreen)
-                        dataSendToComport.Add("AA " + BaseCore.Instance.ConvertIntToStringWith0Number(printerId));
-                    dataSendToComport.Add(printStr);
-                }
-                else
-                {
-                    PrintWithNoBorad(printModel);
+                    var freeUser = (int)BLLDailyRequire.Instance.CheckUserFree(connectString, nghiepVu, serviceId, newNumber, autoCallFollowMajorOrder).Data;
+                    if (freeUser > 0)
+                    {
+                        var counter = lib_Users.FirstOrDefault(x => x.UserId == freeUser).EquipCode;
+                        var str = ("AA," + BaseCore.Instance.ConvertIntToStringWith0Number(counter) + ",8B,00,00");
+                        autoCall = true;
+                        CounterProcess(str.Split(',').ToArray(), 0);
+                    }
                 }
             }
-            else if (printModel.STT != 0)
-                if (UsePrintBoard == 0)
-                    PrintWithNoBorad(printModel);
-
-            if (AutoCallIfUserFree == 1 && nghiepVu > 0)
+            catch (Exception)
             {
-                var freeUser = (int)BLLDailyRequire.Instance.CheckUserFree(connectString, nghiepVu, serviceId, newNumber, autoCallFollowMajorOrder).Data;
-                if (freeUser > 0)
-                {
-                    var counter = lib_Users.FirstOrDefault(x => x.UserId == freeUser).EquipCode;
-                    var str = ("AA," + BaseCore.Instance.ConvertIntToStringWith0Number(counter) + ",8B,00,00");
-                    autoCall = true;
-                    CounterProcess(str.Split(',').ToArray(), 0);
-                }
             }
             return true;
         }
@@ -1413,10 +1438,19 @@ namespace QMS_System
         private void PrintWithNoBorad(PrintModel printModel)
         {
             var now = DateTime.Now;
+
+            checkCOM:
+            if (!COM_Printer.IsOpen)
+            {
+                COM_Printer.Open();
+                LogWriter.LogWrite(string.Format("func PrintWithNoBorad: Restart COM Máy in {0}", DateTime.Now.ToString("dd/MM/YYYY HH:mm:ss")));
+                goto checkCOM;
+            }
+
             if (COM_Printer.IsOpen && printTemplates.Count > 0)
             {
                 for (int i = 0; i < printTemplates.Count; i++)
-                { 
+                {
                     var template = printTemplates[i].PrintTemplate;
                     template = template.Replace("[canh-giua]", "\x1b\x61\x01|+|");
                     template = template.Replace("[canh-trai]", "\x1b\x61\x00|+|");
@@ -1429,7 +1463,7 @@ namespace QMS_System
                     template = template.Replace("[STT]", printModel.STT.ToString());
                     template = template.Replace("[ten-quay]", printModel.TenQuay);
                     template = template.Replace("[ten-dich-vu]", printModel.TenDichVu);
-                    template = template.Replace("[ghi-chu-dich-vu]", printModel.NoteDV); 
+                    template = template.Replace("[ghi-chu-dich-vu]", printModel.NoteDV);
                     template = template.Replace("[ngay]", ("Ngày: " + now.ToString("dd/MM/yyyy")));
                     template = template.Replace("[gio]", ("Giờ: " + now.ToString("HH:mm")));
                     template = template.Replace("[dang-goi]", "đang gọi: " + printModel.STTHienTai);
@@ -1442,7 +1476,7 @@ namespace QMS_System
                     template = template.Replace("[dia-chi]", getStringValue(printModel.DiaChi));
                     template = template.Replace("[ma-dv]", getStringValue(printModel.MaDV));
                     template = template.Replace("[dob]", getIntValue(printModel.DOB));
-                    
+
                     template = template.Replace("[cat-giay]", "\x1b\x69|+|");
 
                     var arr = template.Split(new string[] { "|+|" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
@@ -1451,7 +1485,15 @@ namespace QMS_System
                         for (int iii = 0; iii < arr.Length; iii++)
                         {
                             // frmMain.COM_Printer.Write(arr[i]);
-                            BaseCore.Instance.PrintTicketTCVN3(COM_Printer, arr[iii]);
+                            try
+                            {
+                                BaseCore.Instance.PrintTicketTCVN3(COM_Printer, arr[iii]);
+                            }
+                            catch (Exception ex)
+                            {
+                                LogWriter.LogWrite(("COM write error: " + ex.Message));
+                            }
+
                             //sleep
                             Thread.Sleep(50);
                         }
@@ -1506,6 +1548,9 @@ namespace QMS_System
                         {
                             lbSendrequest = ("AA " + strEquipmentIds[q] + " 05 00 00");
                             SendRequest(("AA " + strEquipmentIds[q] + " 05 00 00"));
+
+                            // lbSendrequest = ("AA " + strEquipmentIds[q]  );
+                            // SendRequest(("AA " + strEquipmentIds[q]  ));
                             lbQuet.Caption = lbSendrequest;
                             if (q == (equipmentIds.Count() - 1))
                                 q = -1;
@@ -1546,11 +1591,15 @@ namespace QMS_System
             }
         }
 
-        private void CounterProcess(string[] hexStr, int requireId)
+        private void CounterProcess(string[] _hexStr, int requireId)
         {
             //MessageBox.Show(string.Join("-", hexStr));
             try
             {
+                var hexStr = _hexStr.ToList();
+                if (hexStr.Count > 5)
+                    hexStr.RemoveRange(0, 2);
+
                 // lib_Users.Clear();
                 //  lib_Users = BLLLoginHistory.Instance.GetsForMain();
                 int equipCode = int.Parse(hexStr[1]);
@@ -1917,13 +1966,21 @@ namespace QMS_System
                     errorsms = ("Không tìm thấy thông tin đăng nhập của thiết bị " + equipCode);
                 //  MessageBox.Show("Không tìm thấy thông tin đăng nhập của thiết bị " + equipCode, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Lỗi hàm CounterProcess => " + ex.Message);
             }
-            if (requireId != 0)
-                BLLCounterSoftRequire.Instance.Delete(requireId, connectString);
+
+            try
+            {
+                if (requireId != 0)
+                    BLLCounterSoftRequire.Instance.Delete(requireId, connectString);
+            }
+            catch (Exception)
+            {
+            }
         }
 
         #endregion
@@ -2007,125 +2064,133 @@ namespace QMS_System
                     PrinterRequireModel requireObj = null;
                     for (int i = 0; i < requires.Count; i++)
                     {
-                        switch (requires[i].Type)
+                        try
                         {
-                            case (int)eCounterSoftRequireType.inPhieu:
-                                requireObj = JsonConvert.DeserializeObject<PrinterRequireModel>(requires[i].Content);
-                                var serObj = lib_Services.FirstOrDefault(x => x.Id == requireObj.ServiceId);
-                                var printModel = new PrintModel()
-                                {
-                                    STT = requireObj.newNumber,
-                                    STTHienTai = requireObj.oldNumber,
-                                    TenQuay = requireObj.TenQuay,
-                                    TenDichVu = requireObj.TenDichVu,
-                                    NoteDV = (serObj != null ? serObj.Note : ""),
-                                    SoXe = requireObj.SoXe,
-                                    DiaChi = requireObj.Address,
-                                    DOB = requireObj.DOB ?? 0,
-                                    MaDV = requireObj.MaPhongKham,
-                                    MaKH = requireObj.MaBenhNhan,
-                                    Phone = requireObj.Phone,
-                                    TenKH = requireObj.Name
-                                };
-                                //in  trực tiếp ko board
-                                PrintWithNoBorad(printModel);
-                               // MessageBox.Show(JsonConvert.SerializeObject(printModel));
-
-                                //in theo driver
-                                //InPhieuDungDriver(requireObj.newNumber, requireObj.oldNumber, requireObj.TenQuay, requireObj.TenQuay, ("   Ngày: " + now.ToString("dd/MM/yyyy") + ("     Giờ: " + now.ToString("HH/mm"))), "VIỆT THÁI QUÂN 3");
-                                if (AutoCallIfUserFree == 1 && requireObj.MajorId > 0)
-                                {
-                                    var freeUser = (int)BLLDailyRequire.Instance.CheckUserFree(connectString, requireObj.MajorId, requireObj.ServiceId, requireObj.newNumber, autoCallFollowMajorOrder).Data;
-                                    if (freeUser > 0)
+                            switch (requires[i].Type)
+                            {
+                                case (int)eCounterSoftRequireType.inPhieu:
+                                    requireObj = JsonConvert.DeserializeObject<PrinterRequireModel>(requires[i].Content);
+                                    var serObj = lib_Services.FirstOrDefault(x => x.Id == requireObj.ServiceId);
+                                    var printModel = new PrintModel()
                                     {
-                                        var counter = lib_Users.FirstOrDefault(x => x.UserId == freeUser).EquipCode;
-                                        var str = ("AA," + BaseCore.Instance.ConvertIntToStringWith0Number(counter) + ",8B,00,00");
-                                        autoCall = true;
-                                        CounterProcess(str.Split(',').ToArray(), 0);
+                                        STT = requireObj.newNumber,
+                                        STTHienTai = requireObj.oldNumber,
+                                        TenQuay = requireObj.TenQuay,
+                                        TenDichVu = requireObj.TenDichVu,
+                                        NoteDV = (serObj != null ? serObj.Note : ""),
+                                        SoXe = requireObj.SoXe,
+                                        DiaChi = requireObj.Address,
+                                        DOB = requireObj.DOB ?? 0,
+                                        MaDV = requireObj.MaPhongKham,
+                                        MaKH = requireObj.MaBenhNhan,
+                                        Phone = requireObj.Phone,
+                                        TenKH = requireObj.Name
+                                    };
+                                    //in  trực tiếp ko board
+                                    PrintWithNoBorad(printModel);
+                                    // MessageBox.Show(JsonConvert.SerializeObject(printModel));
+
+                                    //in theo driver
+                                    //InPhieuDungDriver(requireObj.newNumber, requireObj.oldNumber, requireObj.TenQuay, requireObj.TenQuay, ("   Ngày: " + now.ToString("dd/MM/yyyy") + ("     Giờ: " + now.ToString("HH/mm"))), "VIỆT THÁI QUÂN 3");
+                                    if (AutoCallIfUserFree == 1 && requireObj.MajorId > 0)
+                                    {
+                                        var freeUser = (int)BLLDailyRequire.Instance.CheckUserFree(connectString, requireObj.MajorId, requireObj.ServiceId, requireObj.newNumber, autoCallFollowMajorOrder).Data;
+                                        if (freeUser > 0)
+                                        {
+                                            var counter = lib_Users.FirstOrDefault(x => x.UserId == freeUser).EquipCode;
+                                            var str = ("AA," + BaseCore.Instance.ConvertIntToStringWith0Number(counter) + ",8B,00,00");
+                                            autoCall = true;
+                                            CounterProcess(str.Split(',').ToArray(), 0);
+                                        }
                                     }
-                                }
-                                BLLCounterSoftRequire.Instance.Delete(requires[i].Id, connectString);
-                                break;
-                            case (int)eCounterSoftRequireType.ReadSound:
-                                temp.AddRange(requires[i].Content.Split('|').ToList());
-                                hasSound = true;
-                                break;
-                            case (int)eCounterSoftRequireType.PrintTicket:
-                                requireObj = JsonConvert.DeserializeObject<PrinterRequireModel>(requires[i].Content);
-                                var result = PrintNewTicket(requireObj.PrinterId, requireObj.ServiceId, 0, true, false, requireObj.ServeTime.TimeOfDay, requireObj.Name, requireObj.Address, requireObj.DOB, requireObj.MaBenhNhan, requireObj.MaPhongKham, requireObj.SttPhongKham, requireObj.SoXe, requireObj.MaCongViec, requireObj.MaLoaiCongViec);
-                                if (result)
                                     BLLCounterSoftRequire.Instance.Delete(requires[i].Id, connectString);
-                                break;
-                            case (int)eCounterSoftRequireType.CounterEvent:
-                                if (!string.IsNullOrEmpty(requires[i].Content))
-                                {
-                                    var arr = requires[i].Content.Split(',').ToArray();
-                                    if (arr != null && arr.Length == 5)
-                                        CounterProcess(arr, requires[i].Id);
-                                }
-                                break;
-                            case (int)eCounterSoftRequireType.SendNextToMainDisplay:  // gui so len hien thi chính
-                                var mainRequireObj = JsonConvert.DeserializeObject<RequireMainDisplay>(requires[i].Content);
-                                mains = BLLMaindisplayDirection.Instance.Gets(connectString, mainRequireObj.EquipCode);
-                                if (mains.Count > 0)
-                                {
-                                    arrStr = BaseCore.Instance.ChangeNumber(mainRequireObj.TicketNumber);
-                                    string id = "";
-                                    for (int z = 0; z < mains.Count; z++)
+                                    break;
+                                case (int)eCounterSoftRequireType.ReadSound:
+                                    temp.AddRange(requires[i].Content.Split('|').ToList());
+                                    hasSound = true;
+                                    break;
+                                case (int)eCounterSoftRequireType.PrintTicket:
+                                    requireObj = JsonConvert.DeserializeObject<PrinterRequireModel>(requires[i].Content);
+                                    var result = PrintNewTicket(requireObj.PrinterId, requireObj.ServiceId, 0, true, false, requireObj.ServeTime.TimeOfDay, requireObj.Name, requireObj.Address, requireObj.DOB, requireObj.MaBenhNhan, requireObj.MaPhongKham, requireObj.SttPhongKham, requireObj.SoXe, requireObj.MaCongViec, requireObj.MaLoaiCongViec);
+                                    if (result)
+                                        BLLCounterSoftRequire.Instance.Delete(requires[i].Id, connectString);
+                                    break;
+                                case (int)eCounterSoftRequireType.CounterEvent:
+                                    if (!string.IsNullOrEmpty(requires[i].Content))
                                     {
-                                        id = (mains[z].EquipmentCode < 10 ? ("0" + mains[z].EquipmentCode) : mains[z].EquipmentCode.ToString());
-                                        int mainDiric = (mains[z].Direction ? 8 : 0);
-                                        if (mainRequireObj.EquipCode > 1)
-                                            mainDiric = mainDiric + mainRequireObj.EquipCode;
-                                        dataSendToComport.Add("AA " + id);
-                                        dataSendToComport.Add(("AA " + id + " " + arrStr[0] + " " + arrStr[1] + " 0" + mainRequireObj.EquipCode));
-                                        lbRecieve.Caption = dataSendToComport[1];
+                                        var arr = requires[i].Content.Split(',').ToArray();
+                                        if (arr != null && arr.Length == 5)
+                                            CounterProcess(arr, requires[i].Id);
                                     }
-                                }
-                                break;
-                            case (int)eCounterSoftRequireType.SendRecallToMainDisplay: // gui so len hien thi chính
-                                var _mainRequireObj = JsonConvert.DeserializeObject<RequireMainDisplay>(requires[i].Content);
-                                mains = BLLMaindisplayDirection.Instance.Gets(connectString, _mainRequireObj.EquipCode);
-                                if (mains.Count > 0)
-                                {
-                                    arrStr = BaseCore.Instance.ChangeNumber(_mainRequireObj.TicketNumber);
-                                    string id = "";
-                                    for (int z = 0; z < mains.Count; z++)
+                                    break;
+                                case (int)eCounterSoftRequireType.SendNextToMainDisplay:  // gui so len hien thi chính
+                                    var mainRequireObj = JsonConvert.DeserializeObject<RequireMainDisplay>(requires[i].Content);
+                                    mains = BLLMaindisplayDirection.Instance.Gets(connectString, mainRequireObj.EquipCode);
+                                    if (mains.Count > 0)
                                     {
-                                        id = (mains[z].EquipmentCode < 10 ? ("0" + mains[z].EquipmentCode) : mains[z].EquipmentCode.ToString());
+                                        arrStr = BaseCore.Instance.ChangeNumber(mainRequireObj.TicketNumber);
+                                        string id = "";
+                                        for (int z = 0; z < mains.Count; z++)
+                                        {
+                                            id = (mains[z].EquipmentCode < 10 ? ("0" + mains[z].EquipmentCode) : mains[z].EquipmentCode.ToString());
+                                            int mainDiric = (mains[z].Direction ? 8 : 0);
+                                            if (mainRequireObj.EquipCode > 1)
+                                                mainDiric = mainDiric + mainRequireObj.EquipCode;
+                                            dataSendToComport.Add("AA " + id);
+                                            dataSendToComport.Add(("AA " + id + " " + arrStr[0] + " " + arrStr[1] + " 0" + mainRequireObj.EquipCode));
+                                            lbRecieve.Caption = dataSendToComport[1];
+                                        }
+                                    }
+                                    break;
+                                case (int)eCounterSoftRequireType.SendRecallToMainDisplay: // gui so len hien thi chính
+                                    var _mainRequireObj = JsonConvert.DeserializeObject<RequireMainDisplay>(requires[i].Content);
+                                    mains = BLLMaindisplayDirection.Instance.Gets(connectString, _mainRequireObj.EquipCode);
+                                    if (mains.Count > 0)
+                                    {
+                                        arrStr = BaseCore.Instance.ChangeNumber(_mainRequireObj.TicketNumber);
+                                        string id = "";
+                                        for (int z = 0; z < mains.Count; z++)
+                                        {
+                                            id = (mains[z].EquipmentCode < 10 ? ("0" + mains[z].EquipmentCode) : mains[z].EquipmentCode.ToString());
 
-                                        int mainDiric = (mains[z].Direction ? 8 : 0);
-                                        if (_mainRequireObj.EquipCode > 1)
-                                            mainDiric = mainDiric + _mainRequireObj.EquipCode;
-                                        dataSendToComport.Add("AA " + id);
-                                        dataSendToComport.Add(("AA " + id + " " + arrStr[0] + " " + arrStr[1] + " 0" + _mainRequireObj.EquipCode));
+                                            int mainDiric = (mains[z].Direction ? 8 : 0);
+                                            if (_mainRequireObj.EquipCode > 1)
+                                                mainDiric = mainDiric + _mainRequireObj.EquipCode;
+                                            dataSendToComport.Add("AA " + id);
+                                            dataSendToComport.Add(("AA " + id + " " + arrStr[0] + " " + arrStr[1] + " 0" + _mainRequireObj.EquipCode));
+                                        }
                                     }
-                                }
-                                break;
-                            case (int)eCounterSoftRequireType.CheckUserFree: // check user free use for autocall
-                                var checkRequireObj = JsonConvert.DeserializeObject<ModelSelectItem>(requires[i].Content);
-                                int nghiepVu = checkRequireObj.Id,
-                                    serviceId = checkRequireObj.Data,
-                                    newNumber = Convert.ToInt32(checkRequireObj.Code);
-                                if (AutoCallIfUserFree == 1 && nghiepVu > 0)
-                                {
-                                    var freeUser = (int)BLLDailyRequire.Instance.CheckUserFree(connectString, nghiepVu, serviceId, newNumber, autoCallFollowMajorOrder).Data;
-                                    if (freeUser > 0)
+                                    break;
+                                case (int)eCounterSoftRequireType.CheckUserFree: // check user free use for autocall
+                                    var checkRequireObj = JsonConvert.DeserializeObject<ModelSelectItem>(requires[i].Content);
+                                    int nghiepVu = checkRequireObj.Id,
+                                        serviceId = checkRequireObj.Data,
+                                        newNumber = Convert.ToInt32(checkRequireObj.Code);
+                                    if (AutoCallIfUserFree == 1 && nghiepVu > 0)
                                     {
-                                        var counter = lib_Users.FirstOrDefault(x => x.UserId == freeUser).EquipCode;
-                                        var str = ("AA," + BaseCore.Instance.ConvertIntToStringWith0Number(counter) + ",8B,00,00");
-                                        autoCall = true;
-                                        CounterProcess(str.Split(',').ToArray(), 0);
+                                        var freeUser = (int)BLLDailyRequire.Instance.CheckUserFree(connectString, nghiepVu, serviceId, newNumber, autoCallFollowMajorOrder).Data;
+                                        if (freeUser > 0)
+                                        {
+                                            var counter = lib_Users.FirstOrDefault(x => x.UserId == freeUser).EquipCode;
+                                            var str = ("AA," + BaseCore.Instance.ConvertIntToStringWith0Number(counter) + ",8B,00,00");
+                                            autoCall = true;
+                                            CounterProcess(str.Split(',').ToArray(), 0);
+                                        }
                                     }
-                                }
-                                break;
-                            case (int)eCounterSoftRequireType.PrintTicket_VietThaiQuan:
-                                requireObj = JsonConvert.DeserializeObject<PrinterRequireModel>(requires[i].Content);
-                                var printResult = PrintNewTicket_VietThaiQuan(requireObj.ServiceId, false, false, requireObj.ServeTime.TimeOfDay, requireObj.Name, requireObj.Address, requireObj.DOB, requireObj.MaBenhNhan, requireObj.MaPhongKham, requireObj.SttPhongKham, requireObj.SoXe, requireObj.MaCongViec, requireObj.MaLoaiCongViec, requireObj.newNumber, requireObj.PrinterId);
-                                if (printResult)
-                                    BLLCounterSoftRequire.Instance.Delete(requires[i].Id, connectString);
-                                break;
+                                    break;
+                                case (int)eCounterSoftRequireType.PrintTicket_VietThaiQuan:
+                                    requireObj = JsonConvert.DeserializeObject<PrinterRequireModel>(requires[i].Content);
+                                    var printResult = PrintNewTicket_VietThaiQuan(requireObj.ServiceId, false, false, requireObj.ServeTime.TimeOfDay, requireObj.Name, requireObj.Address, requireObj.DOB, requireObj.MaBenhNhan, requireObj.MaPhongKham, requireObj.SttPhongKham, requireObj.SoXe, requireObj.MaCongViec, requireObj.MaLoaiCongViec, requireObj.newNumber, requireObj.PrinterId);
+                                    if (printResult)
+                                        BLLCounterSoftRequire.Instance.Delete(requires[i].Id, connectString);
+                                    break;
 
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            LogWriter.LogWrite(ex.Message);
                         }
                     }
 
@@ -2357,8 +2422,10 @@ namespace QMS_System
 
         public static void Export(LocalReport report, bool print = true)
         {
-            string deviceInfo =
-             @"<DeviceInfo>
+            try
+            {
+                string deviceInfo =
+                 @"<DeviceInfo>
                 <OutputFormat>EMF</OutputFormat>
                 <PageWidth>8.5in</PageWidth>
                 <PageHeight>18.3in</PageHeight>
@@ -2367,32 +2434,42 @@ namespace QMS_System
                 <MarginRight>0in</MarginRight>
                 <MarginBottom>5in</MarginBottom>
             </DeviceInfo>";
-            Warning[] warnings;
-            m_streams = new List<Stream>();
-            report.Render("Image", deviceInfo, CreateStream, out warnings);
-            foreach (Stream stream in m_streams)
-                stream.Position = 0;
+                Warning[] warnings;
+                m_streams = new List<Stream>();
+                report.Render("Image", deviceInfo, CreateStream, out warnings);
+                foreach (Stream stream in m_streams)
+                    stream.Position = 0;
 
-            if (print)
+                if (print)
+                {
+                    Print();
+                }
+            }
+            catch (Exception)
             {
-                Print();
             }
         }
 
         public static void Print()
         {
-            if (m_streams == null || m_streams.Count == 0)
-                throw new Exception("Error: no stream to print.");
-            PrintDocument printDoc = new PrintDocument();
-            if (!printDoc.PrinterSettings.IsValid)
+            try
             {
-                throw new Exception("Error: cannot find the default printer.");
+                if (m_streams == null || m_streams.Count == 0)
+                    throw new Exception("Error: no stream to print.");
+                PrintDocument printDoc = new PrintDocument();
+                if (!printDoc.PrinterSettings.IsValid)
+                {
+                    throw new Exception("Error: cannot find the default printer.");
+                }
+                else
+                {
+                    printDoc.PrintPage += new PrintPageEventHandler(PrintPage);
+                    m_currentPageIndex = 0;
+                    printDoc.Print();
+                }
             }
-            else
+            catch (Exception)
             {
-                printDoc.PrintPage += new PrintPageEventHandler(PrintPage);
-                m_currentPageIndex = 0;
-                printDoc.Print();
             }
         }
 
@@ -2405,25 +2482,31 @@ namespace QMS_System
 
         public static void PrintPage(object sender, PrintPageEventArgs ev)
         {
-            Metafile pageImage = new
-               Metafile(m_streams[m_currentPageIndex]);
+            try
+            {
+                Metafile pageImage = new
+                   Metafile(m_streams[m_currentPageIndex]);
 
-            // Adjust rectangular area with printer margins.
-            Rectangle adjustedRect = new Rectangle(
-                ev.PageBounds.Left - (int)ev.PageSettings.HardMarginX,
-                ev.PageBounds.Top - (int)ev.PageSettings.HardMarginY,
-                ev.PageBounds.Width,
-                ev.PageBounds.Height);
+                // Adjust rectangular area with printer margins.
+                Rectangle adjustedRect = new Rectangle(
+                    ev.PageBounds.Left - (int)ev.PageSettings.HardMarginX,
+                    ev.PageBounds.Top - (int)ev.PageSettings.HardMarginY,
+                    ev.PageBounds.Width,
+                    ev.PageBounds.Height);
 
-            // Draw a white background for the report
-            ev.Graphics.FillRectangle(Brushes.White, adjustedRect);
+                // Draw a white background for the report
+                ev.Graphics.FillRectangle(Brushes.White, adjustedRect);
 
-            // Draw the report content
-            ev.Graphics.DrawImage(pageImage, adjustedRect);
+                // Draw the report content
+                ev.Graphics.DrawImage(pageImage, adjustedRect);
 
-            // Prepare for the next page. Make sure we haven't hit the end.
-            m_currentPageIndex++;
-            ev.HasMorePages = (m_currentPageIndex < m_streams.Count);
+                // Prepare for the next page. Make sure we haven't hit the end.
+                m_currentPageIndex++;
+                ev.HasMorePages = (m_currentPageIndex < m_streams.Count);
+            }
+            catch (Exception)
+            {
+            }
         }
 
         public static void DisposePrint()
@@ -2439,44 +2522,50 @@ namespace QMS_System
 
         public void docFileExcel()
         {
-            string path = @"C:\Users\DoNguyen\Desktop\1595493383628734.xlsx";
-            ExcelApp.Application excelApp = new ExcelApp.Application();
-            ExcelApp.Workbook excelBook = excelApp.Workbooks.Open(path);
-            ExcelApp._Worksheet excelSheet = excelBook.Sheets[2];
-            ExcelApp.Range excelRange = excelSheet.UsedRange;
-
-            List<TinhModel> parents = new List<TinhModel>();
-            var childs = new List<HuyenModel>();
-            for (int ii = 10; ii < 73; ii++)
+            try
             {
-                string matinh = excelRange.Cells[ii, 3].Value2.ToString();
-                string tentinh = excelRange.Cells[ii, 4].Value2.ToString();
-                parents.Add(new TinhModel() { Code = matinh, Name = tentinh });
-            }
-            parents = parents.OrderBy(x => x.Name).ToList();
+                string path = @"C:\Users\DoNguyen\Desktop\1595493383628734.xlsx";
+                ExcelApp.Application excelApp = new ExcelApp.Application();
+                ExcelApp.Workbook excelBook = excelApp.Workbooks.Open(path);
+                ExcelApp._Worksheet excelSheet = excelBook.Sheets[2];
+                ExcelApp.Range excelRange = excelSheet.UsedRange;
 
-            excelSheet = excelBook.Sheets[1];
-            excelRange = excelSheet.UsedRange;
-            for (int ii = 10; ii < 705; ii++)
-            {
-                string maquan = excelRange.Cells[ii, 3].Value2.ToString();
-                string tenquan = excelRange.Cells[ii, 6].Value2.ToString();
-                string tentinh = excelRange.Cells[ii, 4].Value2.ToString();
-                childs.Add(new HuyenModel()
+                List<TinhModel> parents = new List<TinhModel>();
+                var childs = new List<HuyenModel>();
+                for (int ii = 10; ii < 73; ii++)
                 {
-                    Code = maquan,
-                    Name = tenquan,
-                    TName = tentinh
-                });
-            }
+                    string matinh = excelRange.Cells[ii, 3].Value2.ToString();
+                    string tentinh = excelRange.Cells[ii, 4].Value2.ToString();
+                    parents.Add(new TinhModel() { Code = matinh, Name = tentinh });
+                }
+                parents = parents.OrderBy(x => x.Name).ToList();
 
-            foreach (var item in parents)
+                excelSheet = excelBook.Sheets[1];
+                excelRange = excelSheet.UsedRange;
+                for (int ii = 10; ii < 705; ii++)
+                {
+                    string maquan = excelRange.Cells[ii, 3].Value2.ToString();
+                    string tenquan = excelRange.Cells[ii, 6].Value2.ToString();
+                    string tentinh = excelRange.Cells[ii, 4].Value2.ToString();
+                    childs.Add(new HuyenModel()
+                    {
+                        Code = maquan,
+                        Name = tenquan,
+                        TName = tentinh
+                    });
+                }
+
+                foreach (var item in parents)
+                {
+                    var founds = childs.Where(x => x.TName == item.Name).OrderBy(x => x.Name).ToList();
+                    item.Huyens = founds;
+                }
+
+                string json = JsonConvert.SerializeObject(parents);
+            }
+            catch (Exception)
             {
-                var founds = childs.Where(x => x.TName == item.Name).OrderBy(x => x.Name).ToList();
-                item.Huyens = founds;
             }
-
-            string json = JsonConvert.SerializeObject(parents);
         }
     }
 

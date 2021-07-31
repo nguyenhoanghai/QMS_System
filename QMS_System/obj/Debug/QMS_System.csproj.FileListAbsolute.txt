@@ -359,9 +359,11 @@ E:\Hai_GPRO\QMS\QMS_System\QMS_System\obj\Debug\QMS_System.csproj.CopyComplete
 E:\Hai_GPRO\QMS\QMS_System\QMS_System\obj\Debug\QMS_System.exe
 E:\Hai_GPRO\QMS\QMS_System\QMS_System\obj\Debug\QMS_System.pdb
 E:\Hai_GPRO\QMS\QMS_System\QMS_System\obj\Debug\QMS_System.csprojAssemblyReference.cache
-E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\QMS_System.exe.config
-E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\QMS_System.exe
-E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\QMS_System.pdb
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\EPPlus.dll
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\GPRO.Core.Hai.dll
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\QMS_System.Data.dll
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\Newtonsoft.Json.dll
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\GPRO.Core.dll
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\DevExpress.Charts.v15.1.Core.dll
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\DevExpress.CodeParser.v15.1.dll
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\DevExpress.Data.v15.1.dll
@@ -394,18 +396,18 @@ E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\DevExpress.XtraTreeList.v15.
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\DevExpress.XtraVerticalGrid.v15.1.dll
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\EntityFramework.dll
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\EntityFramework.SqlServer.dll
-E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\EPPlus.dll
-E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\GPRO.Core.Hai.dll
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\PagedList.dll
-E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\QMS_System.Data.dll
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\QMS_System.ThirdApp.dll
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\System.Net.Http.Formatting.dll
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\SystemGPRO.Serial.dll
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\GPRO.Ultilities.dll
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\Hugate.Framework.dll
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\Microsoft.SqlServer.Types.dll
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\GPRO.Core.Hai.pdb
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\GPRO.Core.Hai.dll.config
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\QMS_System.Data.pdb
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\QMS_System.Data.dll.config
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\QMS_System.ThirdApp.pdb
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\DevExpress.Data.v15.1.xml
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\DevExpress.DataAccess.v15.1.xml
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\DevExpress.DataAccess.v15.1.UI.xml
@@ -433,6 +435,7 @@ E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\DevExpress.XtraReports.v15.1
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\DevExpress.XtraRichEdit.v15.1.xml
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\DevExpress.XtraTreeList.v15.1.xml
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\DevExpress.XtraVerticalGrid.v15.1.xml
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\Newtonsoft.Json.xml
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\de\DevExpress.Data.v15.1.resources.dll
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\es\DevExpress.Data.v15.1.resources.dll
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\ja\DevExpress.Data.v15.1.resources.dll
@@ -538,10 +541,13 @@ E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\es\DevExpress.XtraVerticalGr
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\ja\DevExpress.XtraVerticalGrid.v15.1.resources.dll
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\ru\DevExpress.XtraVerticalGrid.v15.1.resources.dll
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.csprojAssemblyReference.cache
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\Interop.WMPLib.dll
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.csproj.ResolveComReference.cache
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmAction.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmAlert.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmBusiness.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmCommand.resources
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmCOMSetting.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmConfig.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmCopyRegisterCmd.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmCounter.resources
@@ -551,10 +557,12 @@ E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmEquipTypeProce
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmHome.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmLanguage.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmLoginHistory.resources
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmMain_ver3.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmMain.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmMaindisplayDirection.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmMajor.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmPolicy.resources
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmPrintSetting.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmProcess.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmReadTemplate.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmRecieverSMS.resources
@@ -577,6 +585,7 @@ E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmUserCommandRea
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmUserMajor.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmVideo.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmVideoTemplate.resources
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmWork.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.IssueTicketScreen.frmButtonStyle.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.IssueTicketScreen.frmIssueTicketScreen.resources
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.IssueTicketScreen.frmNumOfColumn.resources
@@ -586,16 +595,9 @@ E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.Report.R_DetailIn
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.csproj.GenerateResource.cache
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.exe.licenses
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.csproj.CoreCompileInputs.cache
-E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.csproj.CopyComplete
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.exe
 E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.pdb
-E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\Newtonsoft.Json.dll
-E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\Newtonsoft.Json.xml
-E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\Interop.WMPLib.dll
-E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.csproj.ResolveComReference.cache
-E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmMain_ver3.resources
-E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmWork.resources
-E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmCOMSetting.resources
-E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\QMS_System.ThirdApp.dll
-E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\QMS_System.ThirdApp.pdb
-E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.frmPrintSetting.resources
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\QMS_System.exe.config
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\QMS_System.exe
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\bin\Debug\QMS_System.pdb
+E:\Hai_GPRO\Git QMS\QMS_System\QMS_System\obj\Debug\QMS_System.csproj.CopyComplete

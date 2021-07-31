@@ -1,0 +1,34 @@
+
+Log Entry : 10:47:00 AM Monday, April 26, 2021
+  :
+  :13:20:00
+-------------------------------
+
+Log Entry : 10:48:03 AM Monday, April 26, 2021
+  :
+  :mailSending: False
+-------------------------------
+
+Log Entry : 10:48:09 AM Monday, April 26, 2021
+  :
+  :13:20:00
+-------------------------------
+
+Log Entry : 10:48:09 AM Monday, April 26, 2021
+  :
+  :mailSending: False
+-------------------------------
+
+Log Entry : 10:48:43 AM Monday, April 26, 2021
+  :
+  :13:20:00
+-------------------------------
+
+Log Entry : 10:48:55 AM Monday, April 26, 2021
+  :
+  :mailSending: False
+-------------------------------
+
+Log Entry : 4:33:12 AM Wednesday, July 7, 2021
+  :func CounterProcess: hexStr AA 03 8A 34 56
+-------------------------------

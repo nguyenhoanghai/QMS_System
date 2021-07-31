@@ -9,5 +9,6 @@ namespace QMS_System.Data.Model
         public int Id { get; set; }
         public string Name { get; set; }
         public string Note { get; set; }
+        public bool IsShow { get; set; }
     }
 }

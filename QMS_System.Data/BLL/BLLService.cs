@@ -1,4 +1,8 @@
-﻿using QMS_System.Data.Model;
+﻿using GPRO.Core.Mvc;
+using GPRO.Ultilities;
+using Hugate.Framework;
+using PagedList;
+using QMS_System.Data.Model;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -34,11 +38,11 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public List<ServiceModel> Gets(string connectString,int type)
+        public List<ServiceModel> Gets(string connectString, int type)
         {
             using (db = new QMSSystemEntities(connectString))
             {
-                return db.Q_Service.Where(x => !x.IsDeleted && x.ServiceType ==type).Select(x => new ServiceModel() { Id = x.Id, Name = x.Name, StartNumber = x.StartNumber, EndNumber = x.EndNumber, TimeProcess = x.TimeProcess, Note = x.Note, IsActived = x.IsActived, Code = x.Code,ServiceType = x.ServiceType }).ToList();
+                return db.Q_Service.Where(x => !x.IsDeleted && x.ServiceType == type).Select(x => new ServiceModel() { Id = x.Id, Name = x.Name, StartNumber = x.StartNumber, EndNumber = x.EndNumber, TimeProcess = x.TimeProcess, Note = x.Note, IsActived = x.IsActived, Code = x.Code, ServiceType = x.ServiceType }).ToList();
             }
         }
 
@@ -46,7 +50,7 @@ namespace QMS_System.Data.BLL
         {
             using (db = new QMSSystemEntities(connectString))
             {
-                return db.Q_Service.Where(x => !x.IsDeleted && x.showBenhVien).Select(x => new ServiceModel() { Id = x.Id, Name = x.Name, StartNumber = x.StartNumber, EndNumber = x.EndNumber, TimeProcess = x.TimeProcess, Note = x.Note, IsActived = x.IsActived, Code = x.Code ,isKetLuan= x.isKetLuan}).ToList();
+                return db.Q_Service.Where(x => !x.IsDeleted && x.showBenhVien).Select(x => new ServiceModel() { Id = x.Id, Name = x.Name, StartNumber = x.StartNumber, EndNumber = x.EndNumber, TimeProcess = x.TimeProcess, Note = x.Note, IsActived = x.IsActived, Code = x.Code, isKetLuan = x.isKetLuan }).ToList();
             }
         }
 
@@ -75,7 +79,7 @@ namespace QMS_System.Data.BLL
         {
             using (db = new QMSSystemEntities(connectString))
             {
-                var obj = db.Q_Service.Where(x => !x.IsDeleted && x.Code.Trim().ToUpper().Equals(code.Trim().ToUpper())  ).FirstOrDefault();
+                var obj = db.Q_Service.Where(x => !x.IsDeleted && x.Code.Trim().ToUpper().Equals(code.Trim().ToUpper())).FirstOrDefault();
                 return obj;
             }
         }
@@ -84,7 +88,7 @@ namespace QMS_System.Data.BLL
             using (db = new QMSSystemEntities(connectString))
             {
 
-                var services = db.Q_Service.Where(x => !x.IsDeleted && x.IsActived).AsEnumerable().Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Name, Code = x.TimeProcess.TimeOfDay.ToString(), Data = 0,Data1= x.Note, Record = x.ServiceType }).ToList();
+                var services = db.Q_Service.Where(x => !x.IsDeleted && x.IsActived).AsEnumerable().Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Name, Code = x.TimeProcess.TimeOfDay.ToString(), Data = 0, Data1 = x.Note, Record = x.ServiceType }).ToList();
                 if (countWaiting)
                 {
                     var details = (from x in db.Q_DailyRequire_Detail where !x.UserId.HasValue select x).ToList();
@@ -118,7 +122,8 @@ namespace QMS_System.Data.BLL
                         Name = row["Name"].ToString(),
                         Data = 0
                     };
-                    if (!string.IsNullOrEmpty(row["TimeProcess"].ToString())){
+                    if (!string.IsNullOrEmpty(row["TimeProcess"].ToString()))
+                    {
                         var date = DateTime.Parse(row["TimeProcess"].ToString());
                         modelSelectItem.Code = date.TimeOfDay.ToString();
                     }
@@ -195,5 +200,121 @@ namespace QMS_System.Data.BLL
                 obj = db.Q_Service.FirstOrDefault(x => !x.IsDeleted && x.Id != model.Id && x.Name.Trim().ToUpper().Equals(model.Name.Trim().ToUpper()));
             return obj != null ? true : false;
         }
+
+        public PagedList<ServiceModel> GetList(string connectString, string keyWord, int startIndexRecord, int pageSize, string sorting)
+        {
+            using (db = new QMSSystemEntities(connectString))
+            {
+                try
+                {
+                    if (string.IsNullOrEmpty(sorting))
+                        sorting = "Name ASC";
+
+                    IQueryable<Q_Service> objs = null;
+                    var pageNumber = (startIndexRecord / pageSize) + 1;
+                    if (!string.IsNullOrEmpty(keyWord))
+                        objs = db.Q_Service.Where(x => !x.IsDeleted && x.Name.Trim().ToUpper().Contains(keyWord.Trim().ToUpper()));
+                    else
+                        objs = db.Q_Service.Where(x => !x.IsDeleted);
+
+                    return new PagedList<ServiceModel>(objs
+                        .OrderBy(sorting)
+                        .Select(x => new ServiceModel()
+                        {
+                            Id = x.Id,
+                            Name = x.Name,
+                            Code = x.Code,
+                            StartNumber = x.StartNumber,
+                            EndNumber = x.EndNumber,
+                            TimeProcess = x.TimeProcess,
+                            Note = x.Note,
+                            AutoEnd = x.AutoEnd,
+                            TimeAutoEnd = x.TimeAutoEnd,
+                            IsActived = x.IsActived,
+                            isKetLuan = x.isKetLuan
+                        }).ToList(), pageNumber, pageSize);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+        }
+
+        private bool CheckExists(int Id, string keyword)
+        {
+            try
+            {
+                var nv = db.Q_Service.FirstOrDefault(x => !x.IsDeleted && x.Id != Id && x.Name.Trim().ToUpper().Equals(keyword));
+                if (nv == null)
+                    return false;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public ResponseBase InsertOrUpdate(string connectString, ServiceModel model)
+        {
+            using (db = new QMSSystemEntities(connectString))
+            {
+                try
+                {
+                    var rs = new ResponseBase();
+                    if (CheckExists(model.Id, model.Name.Trim().ToUpper()))
+                    {
+                        rs.IsSuccess = false;
+                        rs.Errors.Add(new Error() { MemberName = "Insert", Message = "Tên dịch vụ này đã được sử dụng. Vui lòng nhập Tên khác !." });
+                    }
+                    else
+                    {
+                        Q_Service obj;
+                        if (model.Id == 0)
+                        {
+                            obj = new Q_Service();
+                            Parse.CopyObject(model, ref obj);
+                            db.Q_Service.Add(obj);
+                            rs.IsSuccess = true;
+                        }
+                        else
+                        {
+                            obj = db.Q_Service.FirstOrDefault(m => m.Id == model.Id);
+                            if (obj == null)
+                            {
+                                rs.IsSuccess = false;
+                                rs.Errors.Add(new Error() { MemberName = "Update", Message = "Dữ liệu bạn đang thao tác đã bị xóa hoặc không tồn tại. Vui lòng kiểm tra lại !." });
+                            }
+                            else
+                            {
+                                obj.Name = model.Name;
+                                obj.Code = model.Code;
+                                obj.AutoEnd = model.AutoEnd;
+                                obj.TimeAutoEnd = model.TimeAutoEnd;
+                                obj.StartNumber = model.StartNumber;
+                                obj.EndNumber = model.EndNumber;
+                                obj.TimeProcess = model.TimeProcess;
+                                obj.IsActived = model.IsActived;
+                                obj.isKetLuan = model.isKetLuan;
+                                obj.Note = model.Note;
+                                rs.IsSuccess = true;
+                            }
+                        }
+                        if (rs.IsSuccess)
+                        {
+                            db.SaveChanges();
+                            rs.IsSuccess = true;
+                        }
+                    }
+                    return rs;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+        }
+
     }
 }

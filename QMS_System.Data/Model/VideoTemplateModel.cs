@@ -20,5 +20,7 @@ namespace QMS_System.Data.Model
         public int Index { get; set; }
         public int VideoId { get; set; }
         public int TemplateId { get; set; }
+        public string FileName { get; set; }
+        public string TemplateName { get; set; }
     }
 }

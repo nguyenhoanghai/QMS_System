@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace QMS_System.Data.Enum
 {
     public enum eCounterSoftRequireType
-    {
+    { 
         ReadSound=1,
-        PrintTicket=2 ,
+        PrintTicket =2 ,
         SendSMS = 3,
         CounterEvent = 4,
         SendNextToMainDisplay = 5,
@@ -18,5 +18,6 @@ namespace QMS_System.Data.Enum
         inPhieu = 8,
         PrintTicket_VietThaiQuan = 9,
         ShowCustDetail_TT = 10,
+        TVReadSound = 11
     }
 }

@@ -43,8 +43,14 @@
     <Reference Include="EPPlus">
       <HintPath>..\Libs\EPPlus.dll</HintPath>
     </Reference>
+    <Reference Include="GPRO.Core">
+      <HintPath>..\Libs\GPRO.Core.dll</HintPath>
+    </Reference>
     <Reference Include="GPRO.Ultilities">
       <HintPath>..\Libs\GPRO.Ultilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Hugate.Framework">
+      <HintPath>..\Libs\Hugate.Framework.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -103,6 +109,7 @@
     <Compile Include="BLL\BLLService.cs" />
     <Compile Include="BLL\BLLPrintTemplate.cs" />
     <Compile Include="BLL\BLLCustomer.cs" />
+    <Compile Include="BLL\BLLServiceApi.cs" />
     <Compile Include="BLL\BLLTimeSchedule.cs" />
     <Compile Include="BLL\BLLWorkType.cs" />
     <Compile Include="BLL\BLLWorkDetail.cs" />

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using GPRO.Core.Mvc;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace QMS_System.Data.Model
@@ -35,10 +36,5 @@ namespace QMS_System.Data.Model
             Errors = new List<Error>();
         }
     }
-
-    public class Error
-    {
-        public string MemberName { get; set; }
-        public string Message { get; set; }
-    }
+     
 }

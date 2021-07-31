@@ -1,6 +1,9 @@
-﻿using QMS_System.Data.Model;
+﻿using PagedList;
+using QMS_System.Data.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Hugate.Framework;
 
 namespace QMS_System.Data.BLL
 {
@@ -69,6 +72,39 @@ namespace QMS_System.Data.BLL
                 {
                 }
                 return false;
+            }
+        }
+
+        public PagedList<VideoModel> GetList(string connectString, string keyWord, int startIndexRecord, int pageSize, string sorting)
+        {
+            using (var db = new QMSSystemEntities(connectString))
+            {
+                try
+                {
+                    if (string.IsNullOrEmpty(sorting))
+                        sorting = "FileName ASC";
+
+                    IQueryable<Q_Video> objs = null;
+                    var pageNumber = (startIndexRecord / pageSize) + 1;
+                    if (!string.IsNullOrEmpty(keyWord))
+                        objs = db.Q_Video.Where(x => !x.IsDeleted && x.FileName.Trim().ToUpper().Contains(keyWord.Trim().ToUpper()));
+                    else
+                        objs = db.Q_Video.Where(x => !x.IsDeleted);
+
+                    return new PagedList<VideoModel>(objs
+                        .OrderBy(sorting)
+                        .Select(x => new VideoModel()
+                        {
+                            Id = x.Id,
+                            FileName = x.FileName,
+                            Duration = x.Duration,
+                            FakeName = x.FakeName, 
+                        }).ToList(), pageNumber, pageSize);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
         }
 

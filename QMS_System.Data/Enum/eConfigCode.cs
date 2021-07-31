@@ -131,5 +131,12 @@ namespace QMS_System.Data.Enum
         public const string HUUNGHI_JSON = "HUUNGHI_JSON"; 
         public const string StartWork = "StartWork";
 
+        /// <summary>
+        /// kiểu cấp phiếu khi nhận dc tin nhắn có mã phòng khám nằm ngoài ds DichVu
+        /// 1: cấp chung ai lay truoc goi truoc
+        /// 2: cấp thẳng cho người có số lượng phiếu ít nhất tại thời điểm hiện tại
+        /// </summary>
+        public const string TypeOfPrintTicketWithoutService = "TypeOfPrintTicketWithoutService";
+
     }
 }

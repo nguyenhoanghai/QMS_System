@@ -28,7 +28,8 @@ namespace QMS_System.Data.BLL
        public bool IsDefault { get; set; }
        public bool IsDeleted { get; set; }
        public string Icon { get; set; }
-       public string SmsContent { get; set; }
+       public string Image { get; set; }
+        public string SmsContent { get; set; }
        public bool IsSendSMS { get; set; }
    }
 }

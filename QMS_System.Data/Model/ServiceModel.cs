@@ -4,18 +4,8 @@ using System.Linq;
 
 namespace QMS_System.Data.Model
 {
-    public class ServiceModel
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public int StartNumber { get; set; }
-        public int ServiceType { get; set; }
-        public int EndNumber { get; set; }
-        public bool IsActived { get; set; }
-        public bool isKetLuan { get; set; }
-        public DateTime TimeProcess { get; set; }
-        public string Note { get; set; }
-        public string Code { get; set; }
+    public class ServiceModel:Q_Service
+    { 
     }
 
     public class ServiceDayModel

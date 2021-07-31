@@ -1,4 +1,5 @@
-﻿using GPRO.Ultilities;
+﻿using GPRO.Core.Mvc;
+using GPRO.Ultilities;
 using QMS_System.Data.Model;
 using System;
 using System.Collections.Generic;

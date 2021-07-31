@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using GPRO.Core.Mvc;
 
 namespace QMS_System.Data.BLL.HuuNghi
 {

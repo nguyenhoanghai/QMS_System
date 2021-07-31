@@ -4,6 +4,7 @@ using QMS_System.Data.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GPRO.Core.Mvc;
 
 namespace QMS_System.Data.BLL
 {

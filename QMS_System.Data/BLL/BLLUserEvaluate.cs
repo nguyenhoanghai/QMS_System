@@ -1050,6 +1050,9 @@ public class AndroidModel
     public int Status { get; set; }
     public UserModel UserInfo { get; set; }
     public bool HasEvaluate { get; set; }
+    public int TotalWaiting { get; set; }
+    public string CounterWaitings { get; set; }
+    public int UserId { get; set; }
     public AndroidModel()
     {
         SMS = new List<string>();

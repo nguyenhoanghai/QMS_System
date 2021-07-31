@@ -1,26 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace QMS_System.Data.Model
 {
     public class ViewModel
     {
         public string Date { get; set; }
-        public string Time { get; set; }      
+        public string Time { get; set; }
         public int TotalCar { get; set; }
         public int TotalCarServed { get; set; }
         public int TotalCarWaiting { get; set; }
         public int TotalCarProcessing { get; set; }
         public List<ViewDetailModel> Details { get; set; }
 
-         public List<SubModel> Services { get; set; }
+        public List<SubModel> Services { get; set; }
         public List<string> Sounds { get; set; }
 
         public ViewModel()
         {
-            Details = new List<ViewDetailModel>(); 
+            Details = new List<ViewDetailModel>();
             Services = new List<SubModel>();
             Sounds = new List<string>();
         }
@@ -61,6 +59,7 @@ namespace QMS_System.Data.Model
         public string GioLaySo { get; set; }
         public string Note { get; set; }
         public string NamSinh { get; set; }
+        public List<int> LastFiveTickets { get; set; }
 
     }
 
@@ -71,5 +70,5 @@ namespace QMS_System.Data.Model
         public int Ticket { get; set; }
     }
 
- 
+
 }

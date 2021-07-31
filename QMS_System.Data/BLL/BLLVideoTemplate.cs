@@ -1,4 +1,7 @@
-﻿using QMS_System.Data.Model;
+﻿using GPRO.Core.Mvc;
+using Hugate.Framework;
+using PagedList;
+using QMS_System.Data.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -150,6 +153,39 @@ namespace QMS_System.Data.BLL
             }
         }
 
+        public PagedList<VideoTemplateModel> GetList(string connectString, string keyWord, int startIndexRecord, int pageSize, string sorting)
+        {
+            using (var db = new QMSSystemEntities(connectString))
+            {
+                try
+                {
+                    if (string.IsNullOrEmpty(sorting))
+                        sorting = "TemplateName DESC";
+
+                    IQueryable<Q_VideoTemplate> objs = null;
+                    var pageNumber = (startIndexRecord / pageSize) + 1;
+                    if (!string.IsNullOrEmpty(keyWord))
+                        objs = db.Q_VideoTemplate.Where(x => !x.IsDeleted && x.TemplateName.Trim().ToUpper().Contains(keyWord.Trim().ToUpper()));
+                    else
+                        objs = db.Q_VideoTemplate.Where(x => !x.IsDeleted);
+
+                    return new PagedList<VideoTemplateModel>(objs
+                        .OrderBy(sorting)
+                        .Select(x => new VideoTemplateModel()
+                        {
+                            Id = x.Id,
+                            TemplateName = x.TemplateName,
+                            Note = x.Note,
+                            IsActive = x.IsActive
+                        }).ToList(), pageNumber, pageSize);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+        }
+
     }
 
     public class BLLVideoTemplate_De
@@ -170,6 +206,40 @@ namespace QMS_System.Data.BLL
         }
         private BLLVideoTemplate_De() { }
         #endregion
+
+        public PagedList<VideoTemplate_DeModel> GetList(string connectString, int _templateId, int startIndexRecord, int pageSize, string sorting)
+        {
+            using (var db = new QMSSystemEntities(connectString))
+            {
+                try
+                {
+                    if (string.IsNullOrEmpty(sorting))
+                        sorting = "Index ASC";
+
+                    IQueryable<Q_VideoTemplate_De> objs = null;
+                    var pageNumber = (startIndexRecord / pageSize) + 1;
+                    objs = db.Q_VideoTemplate_De.Where(x => !x.IsDeleted && !x.Q_Video.IsDeleted && !x.Q_VideoTemplate.IsDeleted && x.TemplateId == _templateId);
+
+
+                    return new PagedList<VideoTemplate_DeModel>(objs
+                        .OrderBy(sorting)
+                        .Select(x => new VideoTemplate_DeModel()
+                        {
+                            Id = x.Id,
+                            VideoId = x.VideoId,
+                            FileName = x.Q_Video.FileName,
+                            TemplateId = x.TemplateId,
+                            TemplateName = x.Q_VideoTemplate.TemplateName,
+                            Index = x.Index
+                        }).ToList(), pageNumber, pageSize);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+        }
+
 
         public List<VideoTemplate_DeModel> Gets(string connectString, int templateId)
         {

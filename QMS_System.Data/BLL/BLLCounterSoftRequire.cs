@@ -116,7 +116,7 @@ namespace QMS_System.Data.BLL
                     TypeOfRequire = requireType,
                     CreatedDate = DateTime.Now
                 });
-                if (requireType == (int)eCounterSoftRequireType.ReadSound)
+                if (requireType == (int)eCounterSoftRequireType.TVReadSound)
                 {
                     var config = db.Q_Config.FirstOrDefault(x => x.Code == eConfigCode.TVReadSound);
                     if (config != null && config.Value == "1")

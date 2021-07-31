@@ -9,7 +9,7 @@ namespace QMS_System
 {
     public partial class FrmSQLConnect : Form
     {
-        string conString = "";
+        string conString = "", dbName ="";
         public FrmSQLConnect()
         {
             InitializeComponent();
@@ -18,18 +18,20 @@ namespace QMS_System
         private void FrmSQLConnect_Load(object sender, EventArgs e)
         {
             try
-            {
+            { 
                 string info = BaseCore.Instance.GetStringConnectInfo(Application.StartupPath + "\\DATA.XML");
                 if (!string.IsNullOrEmpty(info))
                 {
                     var infos = info.Split(',');
                     txtServerName.Text = infos[0];
+                    dbName = infos[1];
                     cbDatabases.Text = infos[1];
                     txtLogin.Text = infos[2];
                     txtPass.Text = infos[3];
                     chkIsAuthen.Checked = bool.Parse(infos[4]);
                     chkIsAuthen_CheckedChanged(sender, e);
                 }
+                getDatabases();
             }
             catch (Exception)
             { }
@@ -63,6 +65,7 @@ namespace QMS_System
                     da.Fill(ds, "databasenames");
                     this.cbDatabases.DataSource = ds.Tables["databasenames"];
                     this.cbDatabases.DisplayMember = "name";
+                    cbDatabases.Text = dbName;
                 }
                 catch
                 {
@@ -116,7 +119,7 @@ namespace QMS_System
 
         private void cbDatabases_Enter(object sender, EventArgs e)
         {
-            getDatabases();
+            //getDatabases();
         }
 
         private void btnConnect_Click(object sender, EventArgs e)

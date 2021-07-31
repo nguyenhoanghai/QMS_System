@@ -24,6 +24,8 @@ namespace QMS_System.Data.Model
         public int CountWaitAtCounter { get; set; }
         public bool IsLogout { get; set; }
         public DateTime? TimeRegister { get; set; }
-
+        public int Status { get; set; }
+        public bool HasEvaluate { get; set; }
+        public List<string> SMS { get; set; }
     }
 }

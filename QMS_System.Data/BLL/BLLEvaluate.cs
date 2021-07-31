@@ -1,9 +1,10 @@
-﻿using PagedList;
+﻿using GPRO.Core.Mvc;
+using GPRO.Ultilities;
+using PagedList;
 using QMS_System.Data.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
 
 namespace QMS_System.Data.BLL
 {
@@ -42,7 +43,7 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public int Insert(string connectString,Q_Evaluate obj)
+        public int Insert(string connectString, Q_Evaluate obj)
         {
             using (db = new QMSSystemEntities(connectString))
             {
@@ -55,7 +56,7 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public int Update(string connectString,Q_Evaluate model)
+        public int Update(string connectString, Q_Evaluate model)
         {
             using (db = new QMSSystemEntities(connectString))
             {
@@ -76,7 +77,7 @@ namespace QMS_System.Data.BLL
                 return 0;
             }
         }
-        public ResponseBase InsertOrUpdate(string connectString,Q_Evaluate obj)
+        public ResponseBase InsertOrUpdate(string connectString, Q_Evaluate obj)
         {
             using (db = new QMSSystemEntities(connectString))
             {
@@ -106,7 +107,7 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Delete(string connectString,int Id)
+        public bool Delete(string connectString, int Id)
         {
             using (db = new QMSSystemEntities(connectString))
             {
@@ -210,7 +211,7 @@ namespace QMS_System.Data.BLL
         }
         private BLLEvaluateDetail() { }
         #endregion
-        public List<EvaluateDetailModel> Gets(string connectString,int Id)
+        public List<EvaluateDetailModel> Gets(string connectString, int Id)
         {
             using (db = new QMSSystemEntities(connectString))
             {
@@ -226,7 +227,7 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public ResponseBase InsertOrUpdate(string connectString,Q_EvaluateDetail model)
+        public ResponseBase InsertOrUpdate(string connectString, EvaluateDetailModel model)
         {
             var rs = new ResponseBase();
             using (db = new QMSSystemEntities(connectString))
@@ -235,7 +236,11 @@ namespace QMS_System.Data.BLL
                 {
                     if (model.Id == 0)
                     {
-                        db.Q_EvaluateDetail.Add(model);
+                        Q_EvaluateDetail obj = new Q_EvaluateDetail();
+                        Parse.CopyObject(model, ref obj);
+                        if (!string.IsNullOrEmpty(model.Image))
+                            obj.Icon = model.Image;
+                        db.Q_EvaluateDetail.Add(obj);
                         rs.IsSuccess = false;
                     }
                     else
@@ -253,7 +258,8 @@ namespace QMS_System.Data.BLL
                             oldObj.Name = model.Name;
                             oldObj.IsDefault = model.IsDefault;
                             oldObj.Note = model.Note;
-                            oldObj.Icon = model.Icon;
+                            if (!string.IsNullOrEmpty(model.Image))
+                                oldObj.Icon = model.Image;
                             oldObj.SmsContent = null;
                             oldObj.IsSendSMS = model.IsSendSMS;
                             if (model.IsSendSMS)
@@ -272,7 +278,7 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Delete(string connectString,int Id)
+        public bool Delete(string connectString, int Id)
         {
             using (db = new QMSSystemEntities(connectString))
             {
@@ -286,14 +292,14 @@ namespace QMS_System.Data.BLL
                 return false;
             }
         }
-        private bool CheckExists(Q_EvaluateDetail model)
+        private bool CheckExists( EvaluateDetailModel model)
         {
             Q_EvaluateDetail obj = null;
             if (!string.IsNullOrEmpty(model.Name))
                 obj = db.Q_EvaluateDetail.FirstOrDefault(x => x.Id != model.Id && x.EvaluateId == model.EvaluateId && x.Name.Trim().ToUpper().Equals(model.Name.Trim().ToUpper()));
             return obj != null ? true : false;
         }
-        public PagedList<EvaluateDetailModel> Gets(string connectString,int type, int startIndexRecord, int pageSize, string sorting)
+        public PagedList<EvaluateDetailModel> Gets(string connectString, int type, int startIndexRecord, int pageSize, string sorting)
         {
             try
             {

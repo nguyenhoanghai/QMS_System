@@ -1,4 +1,6 @@
-﻿using GPRO.Ultilities;
+﻿using GPRO.Core.Mvc;
+using GPRO.Ultilities;
+using Hugate.Framework;
 using PagedList;
 using QMS_System.Data.Model;
 using System;
@@ -42,7 +44,7 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public ResponseBase CreateOrUpdate(string connectString,Q_User model)
+        public ResponseBase CreateOrUpdate(string connectString, UserModel model)
         {
             using (db = new QMSSystemEntities(connectString))
             {
@@ -61,7 +63,9 @@ namespace QMS_System.Data.BLL
                         {
                             obj = new Q_User();
                             Parse.CopyObject(model, ref obj);
-                            db.Q_User.Add(model);
+                            if (!string.IsNullOrEmpty(model.Image))
+                                obj.Avatar = model.Image;
+                            db.Q_User.Add(obj);
                             rs.IsSuccess = true;
                         }
                         else
@@ -81,8 +85,8 @@ namespace QMS_System.Data.BLL
                                 obj.UserName = model.UserName;
                                 if (model.Password != obj.Password)
                                     obj.Password = model.Password;
-                                if (!string.IsNullOrEmpty(model.Avatar))
-                                    obj.Avatar = model.Avatar;
+                                if (!string.IsNullOrEmpty(model.Image))
+                                    obj.Avatar = model.Image;
                                 obj.Position = model.Position;
                                 obj.WorkingHistory = model.WorkingHistory;
                                 obj.Professional = model.Professional;
@@ -135,7 +139,7 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public int Insert(string connectString,Q_User obj)
+        public int Insert(string connectString, Q_User obj)
         {
             using (db = new QMSSystemEntities(connectString))
             {
@@ -145,7 +149,7 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public bool Update(string connectString,Q_User model)
+        public bool Update(string connectString, Q_User model)
         {
             using (db = new QMSSystemEntities(connectString))
             {
@@ -203,7 +207,7 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public UserModel Get(string connectString,int userId)
+        public UserModel Get(string connectString, int userId)
         {
             using (db = new QMSSystemEntities(connectString))
             {
@@ -227,6 +231,7 @@ namespace QMS_System.Data.BLL
                 return obj;
             }
         }
+
         public UserModel GetByUserName(string connectString, string userName)
         {
             using (db = new QMSSystemEntities(connectString))
@@ -236,22 +241,22 @@ namespace QMS_System.Data.BLL
                         select
                             new UserModel()
                             {
-                            Id = x.Id,
-                            Name = x.Name,
-                            Sex = x.Sex,
-                            Address = x.Address,
-                            Avatar = x.Avatar,
-                            Professional = x.Professional,
-                            Position = x.Position,
-                            WorkingHistory = x.WorkingHistory,
-                            UserName = x.UserName,
-                            Password = x.Password,
-                            Counters = x.Counters
+                                Id = x.Id,
+                                Name = x.Name,
+                                Sex = x.Sex,
+                                Address = x.Address,
+                                Avatar = x.Avatar,
+                                Professional = x.Professional,
+                                Position = x.Position,
+                                WorkingHistory = x.WorkingHistory,
+                                UserName = x.UserName,
+                                Password = x.Password,
+                                Counters = x.Counters
                             }).FirstOrDefault();
             }
         }
 
-        public Q_User Get(string connectString,string userName, string password)
+        public Q_User Get(string connectString, string userName, string password)
         {
             using (db = new QMSSystemEntities(connectString))
             {
@@ -259,12 +264,12 @@ namespace QMS_System.Data.BLL
             }
         }
 
-        public Q_User  Get(string connectString,string username)
+        public Q_User Get(string connectString, string username)
         {
             using (db = new QMSSystemEntities(connectString)) { return db.Q_User.FirstOrDefault(x => !x.IsDeleted && x.UserName.Trim().Equals(username)); }
         }
 
-        public PagedList<UserModel> GetList(string connectString, string keyWord, int searchBy, int startIndexRecord, int pageSize, string sorting)
+        public PagedList<UserModel> GetList(string connectString, string keyWord, int startIndexRecord, int pageSize, string sorting)
         {
             using (db = new QMSSystemEntities(connectString))
             {
@@ -276,13 +281,15 @@ namespace QMS_System.Data.BLL
                     IQueryable<Q_User> objs = null;
                     var pageNumber = (startIndexRecord / pageSize) + 1;
                     if (!string.IsNullOrEmpty(keyWord))
-                        objs = db.Q_User.Where(x => !x.IsDeleted && x.Name.Trim().ToUpper().Contains(keyWord.Trim().ToUpper())).OrderByDescending(x => x.Id);
+                        objs = db.Q_User.Where(x => !x.IsDeleted &&
+                        (x.Name.Trim().ToUpper().Contains(keyWord.Trim().ToUpper()) ||
+                        x.UserName.Trim().ToUpper().Contains(keyWord.Trim().ToUpper())));
                     else
-                        objs = db.Q_User.Where(x => !x.IsDeleted).OrderByDescending(x => x.Id);
+                        objs = db.Q_User.Where(x => !x.IsDeleted);
 
-                    if (objs != null && objs.Count() > 0)
-                    {
-                        var NhanVien = objs.Select(x => new UserModel()
+                    return new PagedList<UserModel>(objs
+                        .OrderBy(sorting)
+                        .Select(x => new UserModel()
                         {
                             Id = x.Id,
                             Name = x.Name,
@@ -296,11 +303,7 @@ namespace QMS_System.Data.BLL
                             Position = x.Position,
                             WorkingHistory = x.WorkingHistory,
                             Counters = x.Counters
-                        });
-                        return new PagedList<UserModel>(NhanVien.ToList(), pageNumber, pageSize);
-                    }
-                    else
-                        return new PagedList<UserModel>(new List<UserModel>(), pageNumber, pageSize);
+                        }).ToList(), pageNumber, pageSize);
                 }
                 catch (Exception ex)
                 {

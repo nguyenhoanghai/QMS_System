@@ -305,387 +305,393 @@ namespace GPRO.Core.Hai
 
         public void PrintTicketTCVN3(SerialPort COM, string content)
         {
-            if (COM.IsOpen)
+            try
             {
-                dynamic newMsg = null;
-                for (int i = 0; i < content.Length; i++)
+                if (COM.IsOpen)
                 {
-                    var kytu = content[i];
-                    switch (kytu)
+                    dynamic newMsg = null;
+                    for (int i = 0; i < content.Length; i++)
                     {
-                        #region MyRegion 
-                        case 'à':
-                        case 'À':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("B5");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'á':
-                        case 'Á':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("B8");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'ả':
-                        case 'Ả':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("B6");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ã':
-                        case 'ã':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("B7");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ạ':
-                        case 'ạ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("B9");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Â':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("A2");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'â':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("A9");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ấ':
-                        case 'ấ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("CA");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ầ':
-                        case 'ầ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("C7");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ẩ':
-                        case 'ẩ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("C8");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ẫ':
-                        case 'ẫ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("C9");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ậ':
-                        case 'ậ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("CB");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ă':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("A1");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'ă':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("A8");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ắ':
-                        case 'ắ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("BE");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ằ':
-                        case 'ằ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("BB");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ẳ':
-                        case 'ẳ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("BC");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ẵ':
-                        case 'ẵ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("BD");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ặ':
-                        case 'ặ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("C6");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'É':
-                        case 'é':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("D0");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'È':
-                        case 'è':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("CC");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ẻ':
-                        case 'ẻ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("CE");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ẽ':
-                        case 'ẽ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("CF");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ẹ':
-                        case 'ẹ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("D1");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ê':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("A3");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'ê':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("AA");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ế':
-                        case 'ế':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("D5");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ề':
-                        case 'ề':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("D2");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ể':
-                        case 'ể':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("D3");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ễ':
-                        case 'ễ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("D4");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ệ':
-                        case 'ệ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("D6");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
+                        var kytu = content[i];
+                        switch (kytu)
+                        {
+                            #region MyRegion 
+                            case 'à':
+                            case 'À':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("B5");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'á':
+                            case 'Á':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("B8");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'ả':
+                            case 'Ả':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("B6");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ã':
+                            case 'ã':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("B7");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ạ':
+                            case 'ạ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("B9");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Â':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("A2");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'â':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("A9");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ấ':
+                            case 'ấ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("CA");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ầ':
+                            case 'ầ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("C7");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ẩ':
+                            case 'ẩ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("C8");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ẫ':
+                            case 'ẫ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("C9");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ậ':
+                            case 'ậ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("CB");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ă':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("A1");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'ă':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("A8");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ắ':
+                            case 'ắ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("BE");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ằ':
+                            case 'ằ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("BB");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ẳ':
+                            case 'ẳ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("BC");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ẵ':
+                            case 'ẵ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("BD");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ặ':
+                            case 'ặ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("C6");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'É':
+                            case 'é':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("D0");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'È':
+                            case 'è':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("CC");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ẻ':
+                            case 'ẻ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("CE");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ẽ':
+                            case 'ẽ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("CF");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ẹ':
+                            case 'ẹ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("D1");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ê':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("A3");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'ê':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("AA");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ế':
+                            case 'ế':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("D5");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ề':
+                            case 'ề':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("D2");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ể':
+                            case 'ể':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("D3");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ễ':
+                            case 'ễ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("D4");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ệ':
+                            case 'ệ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("D6");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
 
-                        case 'Ò':
-                        case 'ò':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("DF");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ó':
-                        case 'ó':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("E3");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ỏ':
-                        case 'ỏ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("E1");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Õ':
-                        case 'õ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("E2");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ọ':
-                        case 'ọ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("E4");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ô':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("A4");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'ô':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("AB");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ố':
-                        case 'ố':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("E8");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ồ':
-                        case 'ồ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("E5");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ổ':
-                        case 'ổ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("E6");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ỗ':
-                        case 'ỗ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("E7");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ộ':
-                        case 'ộ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("E9");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ơ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("A5");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'ơ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("AC");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ớ':
-                        case 'ớ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("ED");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ờ':
-                        case 'ờ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("EA");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ở':
-                        case 'ở':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("EB");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ỡ':
-                        case 'ỡ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("EC");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ợ':
-                        case 'ợ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("EE");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Í':
-                        case 'í':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("DD");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ì':
-                        case 'ì':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("D7");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ỉ':
-                        case 'ỉ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("D8");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ĩ':
-                        case 'ĩ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("DC");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ị':
-                        case 'ị':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("DE");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ú':
-                        case 'ú':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("F3");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ù':
-                        case 'ù':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("EF");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ủ':
-                        case 'ủ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("F1");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ũ':
-                        case 'ũ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("F2");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ụ':
-                        case 'ụ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("F4");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ư':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("A6");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'ư':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("AD");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ứ':
-                        case 'ứ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("F8");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ừ':
-                        case 'ừ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("F5");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ử':
-                        case 'ử':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("F6");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ữ':
-                        case 'ữ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("F7");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ự':
-                        case 'ự':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("F9");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ý':
-                        case 'ý':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("FD");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ỳ':
-                        case 'ỳ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("FA");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ỷ':
-                        case 'ỷ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("FB");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ỹ':
-                        case 'ỹ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("FC");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Ỵ':
-                        case 'ỵ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("FE");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'Đ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("A7");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        case 'đ':
-                            newMsg = BaseCore.Instance.HexStringToByteArray("AE");
-                            COM.Write(newMsg, 0, newMsg.Length);
-                            break;
-                        default:
-                            COM.Write((content[i]).ToString());
-                            break;
-                            #endregion
+                            case 'Ò':
+                            case 'ò':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("DF");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ó':
+                            case 'ó':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("E3");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ỏ':
+                            case 'ỏ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("E1");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Õ':
+                            case 'õ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("E2");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ọ':
+                            case 'ọ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("E4");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ô':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("A4");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'ô':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("AB");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ố':
+                            case 'ố':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("E8");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ồ':
+                            case 'ồ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("E5");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ổ':
+                            case 'ổ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("E6");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ỗ':
+                            case 'ỗ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("E7");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ộ':
+                            case 'ộ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("E9");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ơ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("A5");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'ơ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("AC");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ớ':
+                            case 'ớ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("ED");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ờ':
+                            case 'ờ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("EA");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ở':
+                            case 'ở':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("EB");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ỡ':
+                            case 'ỡ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("EC");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ợ':
+                            case 'ợ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("EE");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Í':
+                            case 'í':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("DD");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ì':
+                            case 'ì':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("D7");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ỉ':
+                            case 'ỉ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("D8");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ĩ':
+                            case 'ĩ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("DC");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ị':
+                            case 'ị':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("DE");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ú':
+                            case 'ú':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("F3");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ù':
+                            case 'ù':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("EF");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ủ':
+                            case 'ủ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("F1");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ũ':
+                            case 'ũ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("F2");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ụ':
+                            case 'ụ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("F4");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ư':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("A6");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'ư':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("AD");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ứ':
+                            case 'ứ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("F8");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ừ':
+                            case 'ừ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("F5");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ử':
+                            case 'ử':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("F6");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ữ':
+                            case 'ữ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("F7");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ự':
+                            case 'ự':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("F9");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ý':
+                            case 'ý':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("FD");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ỳ':
+                            case 'ỳ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("FA");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ỷ':
+                            case 'ỷ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("FB");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ỹ':
+                            case 'ỹ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("FC");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Ỵ':
+                            case 'ỵ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("FE");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'Đ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("A7");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            case 'đ':
+                                newMsg = BaseCore.Instance.HexStringToByteArray("AE");
+                                COM.Write(newMsg, 0, newMsg.Length);
+                                break;
+                            default:
+                                COM.Write((content[i]).ToString());
+                                break;
+                                #endregion
+                        }
                     }
                 }
             }
+            catch (Exception)
+            {
+            }
         }
-        
+
         /// <summary>
         /// from 1 => 01
         /// </summary>
         /// <param name="so"></param>
         /// <returns></returns>
-        public string  ConvertIntToStringWith0Number(int so)
+        public string ConvertIntToStringWith0Number(int so)
         {
             return so < 10 ? ("0" + so) : so.ToString();
         }

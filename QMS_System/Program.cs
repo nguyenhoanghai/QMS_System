@@ -13,34 +13,34 @@ namespace QMS_System
         {
             try
             {
-                SerialKey serialKey = new SerialKey();
-                //  ModelStatic.dateCheckActive = DateTime.Now.Date;
-                ModelCheckKey modelCheckKey = serialKey.CheckActive("GPRO_QMS", Application.StartupPath);
-                if (modelCheckKey != null)
-                {
-                    if (!modelCheckKey.checkResult)
-                    {
-                        // if (!string.IsNullOrEmpty(modelCheckKey.message))
-                        //       MessageBox.Show(modelCheckKey.message);
-                        //   else
-                        MessageBox.Show("Phần mềm QMS đã hết hạn sử dụng.\nQuý khách vui lòng liên hệ theo Hotline : Võ Đại Trí 0918319714 hoặc Email : vodaitri@yahoo.com để được tư vấn và kích hoạt sử dụng.\nXin cám ơn quý khách.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        Application.Exit();
-                    }
-                    else
-                    {
+                //SerialKey serialKey = new SerialKey();
+                ////  ModelStatic.dateCheckActive = DateTime.Now.Date;
+                //ModelCheckKey modelCheckKey = serialKey.CheckActive("GPRO_QMS", Application.StartupPath);
+                //if (modelCheckKey != null)
+                //{
+                //    if (!modelCheckKey.checkResult)
+                //    {
+                //        // if (!string.IsNullOrEmpty(modelCheckKey.message))
+                //        //       MessageBox.Show(modelCheckKey.message);
+                //        //   else
+                //        MessageBox.Show("Phần mềm QMS đã hết hạn sử dụng.\nQuý khách vui lòng liên hệ theo Hotline : Võ Đại Trí 0918319714 hoặc Email : vodaitri@yahoo.com để được tư vấn và kích hoạt sử dụng.\nXin cám ơn quý khách.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //        Application.Exit();
+                //    }
+                //    else
+                //    {
                         //Single application
-                        string[] commandLineArgs = Environment.GetCommandLineArgs();
-                        if (commandLineArgs.Length == 1 || commandLineArgs[1] != "/new")
-                        {
-                            if (SingleInstanceApplication.NotifyExistingInstance(Process.GetCurrentProcess().Id))
-                            {
-                                return;
-                            }
-                        }
+                        //string[] commandLineArgs = Environment.GetCommandLineArgs();
+                        //if (commandLineArgs.Length == 1 || commandLineArgs[1] != "/new")
+                        //{
+                        //    if (SingleInstanceApplication.NotifyExistingInstance(Process.GetCurrentProcess().Id))
+                        //    {
+                        //        return;
+                        //    }
+                        //}
 
 
-                        if (!string.IsNullOrEmpty(modelCheckKey.message))
-                            MessageBox.Show(modelCheckKey.message);
+                       // if (!string.IsNullOrEmpty(modelCheckKey.message))
+                        //    MessageBox.Show(modelCheckKey.message);
 
                         Application.EnableVisualStyles();
                         Application.SetCompatibleTextRenderingDefault(false);
@@ -67,13 +67,13 @@ namespace QMS_System
                         processe = Process.GetProcessesByName("QMS_System");
                         foreach (Process dovi in processe)
                             dovi.Kill();
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Phần mềm QMS chưa được kích hoạt sử dụng.\nQuý khách vui lòng liên hệ theo Hotline : Võ Đại Trí 0918319714 hoặc Email : vodaitri@yahoo.com để được tư vấn và kích hoạt sử dụng.\nXin cám ơn quý khách.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    Application.Exit();
-                }
+                   // }
+                //}
+                //else
+                //{
+                //    MessageBox.Show("Phần mềm QMS chưa được kích hoạt sử dụng.\nQuý khách vui lòng liên hệ theo Hotline : Võ Đại Trí 0918319714 hoặc Email : vodaitri@yahoo.com để được tư vấn và kích hoạt sử dụng.\nXin cám ơn quý khách.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //    Application.Exit();
+                //}
             }
             catch (Exception ex)
             {

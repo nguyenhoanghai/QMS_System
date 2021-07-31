@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using GPRO.Core.Mvc;
 
 namespace QMS_System.Data.BLL.VietThaiQuan
 {

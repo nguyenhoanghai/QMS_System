@@ -5,11 +5,9 @@ using System.Text;
 
 namespace QMS_System.Data.Model
 {
-   public class UserMajorModel
-    {
-        public int Id { get; set; }
-        public int UserId { get; set; }
-        public int MajorId { get; set; }
-        public int Index { get; set; }
+   public class UserMajorModel:Q_UserMajor
+    { 
+        public string UserName { get; set; }
+        public string MajorName { get; set; }
     }
 }

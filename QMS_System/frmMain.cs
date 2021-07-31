@@ -29,7 +29,7 @@ namespace QMS_System
 
         List<ConfigModel> configs;
         int q = -1,
-
+            TVReadSound = 0,
             startNumber = 0,
             timeQuetComport = 50,
          PrintTicketCode = 50,
@@ -107,7 +107,7 @@ namespace QMS_System
             try
             {
                 connectString = BaseCore.Instance.GetEntityConnectString(Application.StartupPath + "\\DATA.XML");
-               // MessageBox.Show(connectString);
+                // MessageBox.Show(connectString);
                 if (isRunning)
                     btRunProcess.PerformClick();
                 sqlStatus = BaseCore.Instance.CONNECT_STATUS(Application.StartupPath + "\\DATA.XML");
@@ -137,6 +137,7 @@ namespace QMS_System
                     int.TryParse(GetConfigByCode(eConfigCode.System), out system);
                     int.TryParse(GetConfigByCode(eConfigCode._8cUseFor), out _8cUseFor);
                     int.TryParse(GetConfigByCode(eConfigCode.UsePrintBoard), out UsePrintBoard);
+                    int.TryParse(GetConfigByCode(eConfigCode.TVReadSound), out TVReadSound);
 
                     if (Settings.Default.Today != DateTime.Now.Day)
                     {
@@ -169,6 +170,8 @@ namespace QMS_System
                             BLLLoginHistory.Instance.AutoLogin(connectString, autoLogin);
                     }
                     catch (Exception) { }
+
+                    CounterProcess(("AA 03 AA 03 8A 34 56").Split(' ').ToArray(), 0);
                 }
                 else
                 {
@@ -208,12 +211,12 @@ namespace QMS_System
                 }
                 catch (Exception)
                 {
-                   // MessageBox.Show("Lỗi: không thể kết nối với cổng COM Máy in, Vui lòng thử cấu hình lại kết nối", "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    // MessageBox.Show("Lỗi: không thể kết nối với cổng COM Máy in, Vui lòng thử cấu hình lại kết nối", "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
             {
-               // MessageBox.Show("Lấy thông tin Com Máy in bị lỗi.\n" + ex.Message, "Lỗi Com Máy in");
+                // MessageBox.Show("Lấy thông tin Com Máy in bị lỗi.\n" + ex.Message, "Lỗi Com Máy in");
             }
         }
 
@@ -719,12 +722,12 @@ namespace QMS_System
                 {
                     try
                     {
-                      //  MessageBox.Show(temp.Count.ToString());
-                       // MessageBox.Show(temp[0]);
+                        //  MessageBox.Show(temp.Count.ToString());
+                        // MessageBox.Show(temp[0]);
                         var _path = soundPath + temp[0];
                         if (File.Exists(_path))
                         {
-                          //  MessageBox.Show(_path + " _ Exists");
+                            //  MessageBox.Show(_path + " _ Exists");
                             player.SoundLocation = (_path);
 
                             // MessageBox.Show(SoundInfo.GetSoundLength(player.SoundLocation.Trim()).ToString());
@@ -736,7 +739,7 @@ namespace QMS_System
                         }
                         else
                         {
-                           // MessageBox.Show(_path + " _ not Exists");
+                            // MessageBox.Show(_path + " _ not Exists");
                             if (temp.Count > 0)
                             {
                                 temp.Remove(temp[0]);
@@ -746,7 +749,7 @@ namespace QMS_System
                     }
                     catch (Exception ex)
                     {
-                      //  MessageBox.Show(ex.Message);
+                        //  MessageBox.Show(ex.Message);
                     }
                 }
             }
@@ -763,6 +766,7 @@ namespace QMS_System
                 //  var lib_Sounds = BLLSound.Instance.Gets(connect);
                 SoundModel soundFound;
                 CounterSoundModel ctSound;
+                var soundStr = string.Empty;
                 if (lib_Sounds.Count > 0)
                 {
                     playlist.Clear();
@@ -778,24 +782,40 @@ namespace QMS_System
                                     {
                                         soundFound = lib_Sounds.FirstOrDefault(x => x.Code != null && x.Code.Equals(ticket[j] + "") && x.LanguageId == readDetails[y].LanguageId);
                                         if (soundFound != null)
+                                        {
                                             playlist.Add(soundFound.Name);
+                                            soundStr += soundFound.Name + "|";
+                                        }
                                     }
                                 }
                                 else if (readDetails[y].Details[i].SoundId == (int)eSoundConfig.Counter)
                                 {
                                     ctSound = lib_CounterSound.FirstOrDefault(x => x.CounterId == counterId && x.LanguageId == readDetails[y].LanguageId);
-                                    playlist.Add((ctSound == null ? "" : ctSound.SoundName));//  BLLCounterSound.Instance.GetSoundName(counterId, ));
+                                    // playlist.Add((ctSound == null ? "" : ctSound.SoundName));//  BLLCounterSound.Instance.GetSoundName(counterId, ));
+                                    if (ctSound != null)
+                                    {
+                                        playlist.Add(ctSound.SoundName);
+                                        soundStr += ctSound.SoundName + "|";
+                                    }
                                 }
                                 else
                                 {
                                     soundFound = lib_Sounds.FirstOrDefault(x => x.Id == readDetails[y].Details[i].SoundId);
                                     if (soundFound != null)
+                                    {
                                         playlist.Add(soundFound.Name);
+                                        soundStr += soundFound.Name + "|";
+                                    }
                                 }
                             }
                         }
                     }
                     temp.AddRange(playlist);
+                    if (!string.IsNullOrEmpty(soundStr) && TVReadSound == 1)
+                    {
+                        soundStr = soundStr.Substring(0, soundStr.Length - 1);
+                        BLLCounterSoftRequire.Instance.Insert(connectString, soundStr, (int)eCounterSoftRequireType.TVReadSound, counterId);
+                    }
                 }
             }
         }
@@ -834,12 +854,12 @@ namespace QMS_System
                 }
                 catch (Exception)
                 {
-                   // MessageBox.Show("Lỗi: không thể kết nối với cổng COM Keypad, Vui lòng thử cấu hình lại kết nối", "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    // MessageBox.Show("Lỗi: không thể kết nối với cổng COM Keypad, Vui lòng thử cấu hình lại kết nối", "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
             {
-               // MessageBox.Show("Lấy thông tin Com Keypad bị lỗi.\n" + ex.Message, "Lỗi Com Keypad");
+                // MessageBox.Show("Lấy thông tin Com Keypad bị lỗi.\n" + ex.Message, "Lỗi Com Keypad");
             }
         }
 
@@ -1242,10 +1262,16 @@ namespace QMS_System
             { }
         }
 
-        private void CounterProcess(string[] hexStr, int requireId)
+        private void CounterProcess(string[] _hexStr, int requireId)
         {
             try
             {
+                var hexStr = _hexStr.ToList();
+                if (hexStr.Count > 5)
+                    hexStr.RemoveRange(0, 2);
+
+                LogWriter.LogWrite(string.Format("func CounterProcess: hexStr {0}", string.Join(" ", hexStr)));
+
                 // lib_Users.Clear();
                 //  lib_Users = BLLLoginHistory.Instance.GetsForMain();
                 int equipCode = int.Parse(hexStr[1]);
@@ -1904,8 +1930,6 @@ namespace QMS_System
                         tmerQuetServeOver.Enabled = true;
                     btRunProcess.Enabled = true;
 
-
-
                     int.TryParse(GetConfigByCode(eConfigCode.SendMail), out _int);
                     if (_int == 1)
                     {
@@ -1922,8 +1946,9 @@ namespace QMS_System
             catch (Exception ex)
             {
                 //throw ex;
+                MessageBox.Show(ex.Message);
             }
-            DatabaseConnection.Instance.GetConnectionString("");
+            //  DatabaseConnection.Instance.GetConnectionString("");
         }
 
         private void tmerQuetServeOver_Tick(object sender, EventArgs e)
@@ -1965,20 +1990,13 @@ namespace QMS_System
         #region Send mail 12/11/2018 
         private void tmerCheckSendMail_Tick(object sender, EventArgs e)
         {
-            //try
-            //{
-            //    TimeSendMail = Settings.Default.TimeSend.TimeOfDay;
-            //}
-            //catch (Exception ex)
-            //{
-            //    TimeSendMail = null;
-            //    MessageBox.Show("Không thể cài đặt được thời gian gửi thư điện tử. Vui lòng kiểm tra lại cấu hình.");
-            //}
+            //LogWriter.LogWrite(TimeSendMail.Value.ToString());
+            //LogWriter.LogWrite(("mailSending: "+mailSending.ToString()));
             if (TimeSendMail.HasValue && !mailSending)
             {
-                TimeSendMail = TimeSpan.Parse("16:55:00");
+                //  TimeSendMail = TimeSpan.Parse("11:00:00");
                 // mailSending = false;
-
+                //LogWriter.LogWrite(TimeSendMail.Value.ToString());
                 TimeSpan dateTimeNow = DateTime.Now.TimeOfDay;
                 TimeSpan timeNow = TimeSpan.Parse(dateTimeNow.Hours.ToString() + ":" + dateTimeNow.Minutes.ToString() + ":00");
                 if (timeNow == TimeSendMail.Value)
