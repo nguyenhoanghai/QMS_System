@@ -196,6 +196,16 @@
     <Property Name="WorkDetailId" Type="int" Nullable="false" />
     <Property Name="IsDeleted" Type="bit" Nullable="false" />
   </EntityType>
+  <EntityType Name="Q_Devices">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="DeviceCode" Type="int" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="250" Nullable="false" />
+    <Property Name="CounterIds" Type="varchar" MaxLength="250" Nullable="false" />
+    <Property Name="SocketId" Type="nvarchar" MaxLength="250" Nullable="false" />
+  </EntityType>
   <EntityType Name="Q_Equipment">
     <Key>
       <PropertyRef Name="Id" />
@@ -511,6 +521,14 @@
     <Property Name="IsDeleted" Type="bit" Nullable="false" />
     <Property Name="CurrentQuantity" Type="int" Nullable="false" />
     <Property Name="CurrentDay" Type="varchar" MaxLength="10" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Q_ServicePrintTemplate">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ServiceId" Type="int" Nullable="false" />
+    <Property Name="PrintTemplateId" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Q_ServiceShift">
     <Key>
@@ -1270,6 +1288,30 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_Q_ServicePrintTemplate_Q_PrintTicket">
+    <End Role="Q_PrintTicket" Type="Self.Q_PrintTicket" Multiplicity="1" />
+    <End Role="Q_ServicePrintTemplate" Type="Self.Q_ServicePrintTemplate" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_PrintTicket">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_ServicePrintTemplate">
+        <PropertyRef Name="PrintTemplateId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Q_ServicePrintTemplate_Q_Service">
+    <End Role="Q_Service" Type="Self.Q_Service" Multiplicity="1" />
+    <End Role="Q_ServicePrintTemplate" Type="Self.Q_ServicePrintTemplate" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Q_Service">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Q_ServicePrintTemplate">
+        <PropertyRef Name="ServiceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_Q_ServiceShift_Q_Service">
     <End Role="Q_Service" Type="Self.Q_Service" Multiplicity="1" />
     <End Role="Q_ServiceShift" Type="Self.Q_ServiceShift" Multiplicity="*" />
@@ -1539,6 +1581,7 @@
     <EntitySet Name="Q_DailyRequire" EntityType="Self.Q_DailyRequire" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_DailyRequire_Detail" EntityType="Self.Q_DailyRequire_Detail" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_DailyRequire_WorkDetail" EntityType="Self.Q_DailyRequire_WorkDetail" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_Devices" EntityType="Self.Q_Devices" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_Equipment" EntityType="Self.Q_Equipment" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_EquipmentType" EntityType="Self.Q_EquipmentType" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_EquipTypeProcess" EntityType="Self.Q_EquipTypeProcess" Schema="dbo" store:Type="Tables" />
@@ -1566,6 +1609,7 @@
     <EntitySet Name="Q_Schedule_Detail" EntityType="Self.Q_Schedule_Detail" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_Service" EntityType="Self.Q_Service" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_ServiceLimit" EntityType="Self.Q_ServiceLimit" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Q_ServicePrintTemplate" EntityType="Self.Q_ServicePrintTemplate" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_ServiceShift" EntityType="Self.Q_ServiceShift" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_ServiceStep" EntityType="Self.Q_ServiceStep" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Q_Shift" EntityType="Self.Q_Shift" Schema="dbo" store:Type="Tables" />
@@ -1771,6 +1815,14 @@
     <AssociationSet Name="FK_Q_ServiceLimit_Q_User" Association="Self.FK_Q_ServiceLimit_Q_User">
       <End Role="Q_User" EntitySet="Q_User" />
       <End Role="Q_ServiceLimit" EntitySet="Q_ServiceLimit" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_ServicePrintTemplate_Q_PrintTicket" Association="Self.FK_Q_ServicePrintTemplate_Q_PrintTicket">
+      <End Role="Q_PrintTicket" EntitySet="Q_PrintTicket" />
+      <End Role="Q_ServicePrintTemplate" EntitySet="Q_ServicePrintTemplate" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Q_ServicePrintTemplate_Q_Service" Association="Self.FK_Q_ServicePrintTemplate_Q_Service">
+      <End Role="Q_Service" EntitySet="Q_Service" />
+      <End Role="Q_ServicePrintTemplate" EntitySet="Q_ServicePrintTemplate" />
     </AssociationSet>
     <AssociationSet Name="FK_Q_ServiceShift_Q_Service" Association="Self.FK_Q_ServiceShift_Q_Service">
       <End Role="Q_Service" EntitySet="Q_Service" />

@@ -273,3 +273,21 @@ GO
 
 ALTER TABLE [dbo].[Q_PrintTicket] ADD  CONSTRAINT [DF_Q_PrintTicket_IsActive]  DEFAULT ((1)) FOR [IsActive]
 GO
+
+
+
+INSERT INTO [dbo].[Q_Config]([Code],[Value],[Note],[IsActived],[IsDeleted])
+     VALUES ('NodeServerIP','localhost:3000',N'dia chi node server',1,0)
+GO
+INSERT INTO [dbo].[Q_Config]([Code],[Value],[Note],[IsActived],[IsDeleted])
+     VALUES ('UseFakeTiket','0',N'Cap phieu ao moi ngay',1,0)
+GO
+INSERT INTO [dbo].[Q_Config]([Code],[Value],[Note],[IsActived],[IsDeleted])
+     VALUES ('NumOfFakeTiket','1000',N'so luong phieu ao can cap',1,0)
+GO
+INSERT INTO [dbo].[Q_Config]([Code],[Value],[Note],[IsActived],[IsDeleted])
+     VALUES ('NWaitting','5',N'n lan luu phieu',1,0)
+GO
+INSERT INTO [dbo].[Q_Config]([Code],[Value],[Note],[IsActived],[IsDeleted])
+     VALUES ('IsSaveHistory','1',N'luu lich su lam viec moi ngay',1,0)
+GO

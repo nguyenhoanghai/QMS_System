@@ -109,6 +109,7 @@
             this.barButtonCOMSetup = new DevExpress.XtraBars.BarButtonItem();
             this.ấu = new DevExpress.XtraBars.BarButtonItem();
             this.btReloadApp = new DevExpress.XtraBars.BarButtonItem();
+            this.lbsendmailStatus = new DevExpress.XtraBars.BarStaticItem();
             this.ribbonPage3 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup16 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -146,7 +147,7 @@
             this.tmerQuetServeOver = new System.Windows.Forms.Timer(this.components);
             this.barButtonItem11 = new DevExpress.XtraBars.BarButtonItem();
             this.tmerCheckSendMail = new System.Windows.Forms.Timer(this.components);
-            this.lbsendmailStatus = new DevExpress.XtraBars.BarStaticItem();
+            this.btConnectNodeStatus = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemRichTextEdit2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemRichTextEdit3)).BeginInit();
@@ -238,10 +239,11 @@
             this.barButtonCOMSetup,
             this.ấu,
             this.btReloadApp,
-            this.lbsendmailStatus});
+            this.lbsendmailStatus,
+            this.btConnectNodeStatus});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ribbonControl1.MaxItemId = 96;
+            this.ribbonControl1.MaxItemId = 97;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage3,
@@ -862,6 +864,12 @@
             this.btReloadApp.Name = "btReloadApp";
             this.btReloadApp.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btReloadApp_ItemClick);
             // 
+            // lbsendmailStatus
+            // 
+            this.lbsendmailStatus.Id = 95;
+            this.lbsendmailStatus.Name = "lbsendmailStatus";
+            this.lbsendmailStatus.TextAlignment = System.Drawing.StringAlignment.Near;
+            // 
             // ribbonPage3
             // 
             this.ribbonPage3.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
@@ -1066,6 +1074,7 @@
             // 
             this.ribbonStatusBar1.ItemLinks.Add(this.barButtonItem14, true);
             this.ribbonStatusBar1.ItemLinks.Add(this.barButtonItem8);
+            this.ribbonStatusBar1.ItemLinks.Add(this.btConnectNodeStatus);
             this.ribbonStatusBar1.ItemLinks.Add(this.lbQuet);
             this.ribbonStatusBar1.ItemLinks.Add(this.lbRecieve);
             this.ribbonStatusBar1.ItemLinks.Add(this.lbErrorsms);
@@ -1132,11 +1141,15 @@
             this.tmerCheckSendMail.Interval = 3000;
             this.tmerCheckSendMail.Tick += new System.EventHandler(this.tmerCheckSendMail_Tick);
             // 
-            // lbsendmailStatus
+            // btConnectNodeStatus
             // 
-            this.lbsendmailStatus.Id = 95;
-            this.lbsendmailStatus.Name = "lbsendmailStatus";
-            this.lbsendmailStatus.TextAlignment = System.Drawing.StringAlignment.Near;
+            this.btConnectNodeStatus.Caption = "Node Disconnect";
+            this.btConnectNodeStatus.Id = 96;
+            this.btConnectNodeStatus.ItemAppearance.Normal.Font = new System.Drawing.Font("Tahoma", 7.8F, System.Drawing.FontStyle.Bold);
+            this.btConnectNodeStatus.ItemAppearance.Normal.ForeColor = System.Drawing.Color.Red;
+            this.btConnectNodeStatus.ItemAppearance.Normal.Options.UseFont = true;
+            this.btConnectNodeStatus.ItemAppearance.Normal.Options.UseForeColor = true;
+            this.btConnectNodeStatus.Name = "btConnectNodeStatus";
             // 
             // frmMain
             // 
@@ -1295,5 +1308,6 @@
         private DevExpress.XtraBars.BarButtonItem btReloadApp;
         private System.Windows.Forms.Timer tmerCheckSendMail;
         private DevExpress.XtraBars.BarStaticItem lbsendmailStatus;
+        private DevExpress.XtraBars.BarButtonItem btConnectNodeStatus;
     }
 }

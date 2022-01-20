@@ -201,6 +201,16 @@
           <Property Name="WorkDetailId" Type="int" Nullable="false" />
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="Q_Devices">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DeviceCode" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="CounterIds" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="SocketId" Type="nvarchar" MaxLength="250" Nullable="false" />
+        </EntityType>
         <EntityType Name="Q_Equipment">
           <Key>
             <PropertyRef Name="Id" />
@@ -516,6 +526,14 @@
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
           <Property Name="CurrentQuantity" Type="int" Nullable="false" />
           <Property Name="CurrentDay" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Q_ServicePrintTemplate">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ServiceId" Type="int" Nullable="false" />
+          <Property Name="PrintTemplateId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Q_ServiceShift">
           <Key>
@@ -1275,6 +1293,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Q_ServicePrintTemplate_Q_PrintTicket">
+          <End Role="Q_PrintTicket" Type="Self.Q_PrintTicket" Multiplicity="1" />
+          <End Role="Q_ServicePrintTemplate" Type="Self.Q_ServicePrintTemplate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_PrintTicket">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_ServicePrintTemplate">
+              <PropertyRef Name="PrintTemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Q_ServicePrintTemplate_Q_Service">
+          <End Role="Q_Service" Type="Self.Q_Service" Multiplicity="1" />
+          <End Role="Q_ServicePrintTemplate" Type="Self.Q_ServicePrintTemplate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_Service">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_ServicePrintTemplate">
+              <PropertyRef Name="ServiceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Q_ServiceShift_Q_Service">
           <End Role="Q_Service" Type="Self.Q_Service" Multiplicity="1" />
           <End Role="Q_ServiceShift" Type="Self.Q_ServiceShift" Multiplicity="*" />
@@ -1544,6 +1586,7 @@
           <EntitySet Name="Q_DailyRequire" EntityType="Self.Q_DailyRequire" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_DailyRequire_Detail" EntityType="Self.Q_DailyRequire_Detail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_DailyRequire_WorkDetail" EntityType="Self.Q_DailyRequire_WorkDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Q_Devices" EntityType="Self.Q_Devices" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_Equipment" EntityType="Self.Q_Equipment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_EquipmentType" EntityType="Self.Q_EquipmentType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_EquipTypeProcess" EntityType="Self.Q_EquipTypeProcess" Schema="dbo" store:Type="Tables" />
@@ -1571,6 +1614,7 @@
           <EntitySet Name="Q_Schedule_Detail" EntityType="Self.Q_Schedule_Detail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_Service" EntityType="Self.Q_Service" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_ServiceLimit" EntityType="Self.Q_ServiceLimit" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Q_ServicePrintTemplate" EntityType="Self.Q_ServicePrintTemplate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_ServiceShift" EntityType="Self.Q_ServiceShift" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_ServiceStep" EntityType="Self.Q_ServiceStep" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Q_Shift" EntityType="Self.Q_Shift" Schema="dbo" store:Type="Tables" />
@@ -1776,6 +1820,14 @@
           <AssociationSet Name="FK_Q_ServiceLimit_Q_User" Association="Self.FK_Q_ServiceLimit_Q_User">
             <End Role="Q_User" EntitySet="Q_User" />
             <End Role="Q_ServiceLimit" EntitySet="Q_ServiceLimit" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Q_ServicePrintTemplate_Q_PrintTicket" Association="Self.FK_Q_ServicePrintTemplate_Q_PrintTicket">
+            <End Role="Q_PrintTicket" EntitySet="Q_PrintTicket" />
+            <End Role="Q_ServicePrintTemplate" EntitySet="Q_ServicePrintTemplate" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Q_ServicePrintTemplate_Q_Service" Association="Self.FK_Q_ServicePrintTemplate_Q_Service">
+            <End Role="Q_Service" EntitySet="Q_Service" />
+            <End Role="Q_ServicePrintTemplate" EntitySet="Q_ServicePrintTemplate" />
           </AssociationSet>
           <AssociationSet Name="FK_Q_ServiceShift_Q_Service" Association="Self.FK_Q_ServiceShift_Q_Service">
             <End Role="Q_Service" EntitySet="Q_Service" />
@@ -2200,6 +2252,16 @@
             <End Role="Q_Service" EntitySet="Q_Service" />
             <End Role="Q_Schedule_Detail" EntitySet="Q_Schedule_Detail" />
           </AssociationSet>
+          <EntitySet Name="Q_ServicePrintTemplate" EntityType="QMSSystemModel.Q_ServicePrintTemplate" />
+          <AssociationSet Name="FK_Q_ServicePrintTemplate_Q_PrintTicket" Association="QMSSystemModel.FK_Q_ServicePrintTemplate_Q_PrintTicket">
+            <End Role="Q_PrintTicket" EntitySet="Q_PrintTicket" />
+            <End Role="Q_ServicePrintTemplate" EntitySet="Q_ServicePrintTemplate" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Q_ServicePrintTemplate_Q_Service" Association="QMSSystemModel.FK_Q_ServicePrintTemplate_Q_Service">
+            <End Role="Q_Service" EntitySet="Q_Service" />
+            <End Role="Q_ServicePrintTemplate" EntitySet="Q_ServicePrintTemplate" />
+          </AssociationSet>
+          <EntitySet Name="Q_Devices" EntityType="QMSSystemModel.Q_Devices" />
           </EntityContainer>
         <EntityType Name="Q_Action">
           <Key>
@@ -3554,6 +3616,7 @@
           <NavigationProperty Name="Q_DailyRequire" Relationship="QMSSystemModel.FK_Q_DailyRequire_Q_Service" FromRole="Q_Service" ToRole="Q_DailyRequire" />
           <NavigationProperty Name="Q_HisDailyRequire" Relationship="QMSSystemModel.FK_Q_HisDailyRequire_Q_Service" FromRole="Q_Service" ToRole="Q_HisDailyRequire" />
           <NavigationProperty Name="Q_Schedule_Detail" Relationship="QMSSystemModel.FK_Q_Schedule_Detail_Q_Service" FromRole="Q_Service" ToRole="Q_Schedule_Detail" />
+          <NavigationProperty Name="Q_ServicePrintTemplate" Relationship="QMSSystemModel.FK_Q_ServicePrintTemplate_Q_Service" FromRole="Q_Service" ToRole="Q_ServicePrintTemplate" />
         </EntityType>
         <Association Name="FK_Q_ServiceLimit_Q_Service">
           <End Type="QMSSystemModel.Q_Service" Role="Q_Service" Multiplicity="1" />
@@ -3747,6 +3810,7 @@
           <Property Name="PrintIndex" Type="Int32" Nullable="false" />
           <Property Name="PrintPages" Type="Int32" Nullable="false" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Q_ServicePrintTemplate" Relationship="QMSSystemModel.FK_Q_ServicePrintTemplate_Q_PrintTicket" FromRole="Q_PrintTicket" ToRole="Q_ServicePrintTemplate" />
         </EntityType>
         <EntityType Name="Q_Schedule">
           <Key>
@@ -3859,6 +3923,50 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Q_ServicePrintTemplate">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ServiceId" Type="Int32" Nullable="false" />
+          <Property Name="PrintTemplateId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Q_PrintTicket" Relationship="QMSSystemModel.FK_Q_ServicePrintTemplate_Q_PrintTicket" FromRole="Q_ServicePrintTemplate" ToRole="Q_PrintTicket" />
+          <NavigationProperty Name="Q_Service" Relationship="QMSSystemModel.FK_Q_ServicePrintTemplate_Q_Service" FromRole="Q_ServicePrintTemplate" ToRole="Q_Service" />
+        </EntityType>
+        <Association Name="FK_Q_ServicePrintTemplate_Q_PrintTicket">
+          <End Type="QMSSystemModel.Q_PrintTicket" Role="Q_PrintTicket" Multiplicity="1" />
+          <End Type="QMSSystemModel.Q_ServicePrintTemplate" Role="Q_ServicePrintTemplate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_PrintTicket">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_ServicePrintTemplate">
+              <PropertyRef Name="PrintTemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Q_ServicePrintTemplate_Q_Service">
+          <End Type="QMSSystemModel.Q_Service" Role="Q_Service" Multiplicity="1" />
+          <End Type="QMSSystemModel.Q_ServicePrintTemplate" Role="Q_ServicePrintTemplate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Q_Service">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Q_ServicePrintTemplate">
+              <PropertyRef Name="ServiceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Q_Devices">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DeviceCode" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="CounterIds" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="SocketId" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4628,6 +4736,26 @@
                 <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
                 <ScalarProperty Name="ScheduleId" ColumnName="ScheduleId" />
                 <ScalarProperty Name="ServiceId" ColumnName="ServiceId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Q_ServicePrintTemplate">
+            <EntityTypeMapping TypeName="QMSSystemModel.Q_ServicePrintTemplate">
+              <MappingFragment StoreEntitySet="Q_ServicePrintTemplate">
+                <ScalarProperty Name="PrintTemplateId" ColumnName="PrintTemplateId" />
+                <ScalarProperty Name="ServiceId" ColumnName="ServiceId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Q_Devices">
+            <EntityTypeMapping TypeName="QMSSystemModel.Q_Devices">
+              <MappingFragment StoreEntitySet="Q_Devices">
+                <ScalarProperty Name="SocketId" ColumnName="SocketId" />
+                <ScalarProperty Name="CounterIds" ColumnName="CounterIds" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="DeviceCode" ColumnName="DeviceCode" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

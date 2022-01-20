@@ -110,6 +110,7 @@
             this.barButtonItem16 = new DevExpress.XtraBars.BarButtonItem();
             this.barServiceDetail = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonCOMSetup = new DevExpress.XtraBars.BarButtonItem();
+            this.btConnectNodeStatus = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPage3 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup16 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -238,10 +239,11 @@
             this.barButtonItem15,
             this.barButtonItem16,
             this.barServiceDetail,
-            this.barButtonCOMSetup});
+            this.barButtonCOMSetup,
+            this.btConnectNodeStatus});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ribbonControl1.MaxItemId = 95;
+            this.ribbonControl1.MaxItemId = 96;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage3,
@@ -869,6 +871,16 @@
             this.barButtonCOMSetup.Name = "barButtonCOMSetup";
             this.barButtonCOMSetup.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonCOMSetup_ItemClick);
             // 
+            // btConnectNodeStatus
+            // 
+            this.btConnectNodeStatus.Caption = "Node Disconnect";
+            this.btConnectNodeStatus.Id = 95;
+            this.btConnectNodeStatus.ItemAppearance.Normal.Font = new System.Drawing.Font("Tahoma", 7.8F, System.Drawing.FontStyle.Bold);
+            this.btConnectNodeStatus.ItemAppearance.Normal.ForeColor = System.Drawing.Color.Red;
+            this.btConnectNodeStatus.ItemAppearance.Normal.Options.UseFont = true;
+            this.btConnectNodeStatus.ItemAppearance.Normal.Options.UseForeColor = true;
+            this.btConnectNodeStatus.Name = "btConnectNodeStatus";
+            // 
             // ribbonPage3
             // 
             this.ribbonPage3.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
@@ -1075,6 +1087,7 @@
             // 
             this.ribbonStatusBar1.ItemLinks.Add(this.barButtonItem14);
             this.ribbonStatusBar1.ItemLinks.Add(this.barButtonItem8);
+            this.ribbonStatusBar1.ItemLinks.Add(this.btConnectNodeStatus);
             this.ribbonStatusBar1.ItemLinks.Add(this.lbQuet);
             this.ribbonStatusBar1.ItemLinks.Add(this.lbRecieve);
             this.ribbonStatusBar1.ItemLinks.Add(this.lbErrorsms);
@@ -1297,5 +1310,6 @@
         private DevExpress.XtraBars.BarButtonItem barServiceDetail;
         private System.Windows.Forms.Timer timerCapNhatGioCounter;
         private DevExpress.XtraBars.BarButtonItem barButtonCOMSetup;
+        private DevExpress.XtraBars.BarButtonItem btConnectNodeStatus;
     }
 }

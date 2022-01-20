@@ -14,11 +14,18 @@ namespace QMS_System.Data
     
     public partial class Q_PrintTicket
     {
+        public Q_PrintTicket()
+        {
+            this.Q_ServicePrintTemplate = new HashSet<Q_ServicePrintTemplate>();
+        }
+    
         public int Id { get; set; }
         public string Name { get; set; }
         public string PrintTemplate { get; set; }
         public int PrintIndex { get; set; }
         public int PrintPages { get; set; }
         public bool IsActive { get; set; }
+    
+        public virtual ICollection<Q_ServicePrintTemplate> Q_ServicePrintTemplate { get; set; }
     }
 }

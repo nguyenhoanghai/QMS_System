@@ -6,10 +6,12 @@ using QMS_System.Data.Model;
 using QMS_System.Helper;
 using QMS_System.IssueTicketScreen;
 using QMS_System.Properties;
+using Quobject.SocketIoClientDotNet.Client;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Drawing;
 using System.IO;
 using System.IO.Ports;
 using System.Linq;
@@ -39,7 +41,14 @@ namespace QMS_System
             silenceTime = 100,
             printTicketReturnCurrentNumberOrServiceCode = 1,
             _8cUseFor = 1,
-            UsePrintBoard = 1;
+            _8aUseFor = 0,
+            UsePrintBoard = 1,
+
+             NWaitting = 1,
+            NumOfFakeTicket = 0,
+            NumOfFakeTicket_Done = 0,
+            UseFakeTicket = 0,
+            isSaveHistory = 1;
 
         public static int
             UseWithThirdPattern = 0,
@@ -78,7 +87,7 @@ namespace QMS_System
         public static string
             ticketTemplate = string.Empty,
              errorsms = "",
-            connectString;
+            connectString, nodeServerIP;
         public static int
             solien = 1,
             appVersion = 1;
@@ -92,6 +101,7 @@ namespace QMS_System
         TimeSpan? TimeSendMail = TimeSpan.Parse("15:10:00");
         bool mailSending = false,
             useSendMail = false;
+       // public static List<PrintTicketModel> printTemplates;
 
         public frmMain()
         {
@@ -101,6 +111,36 @@ namespace QMS_System
         {
             getSystemConfig();
         }
+
+        Socket socket;
+        private void ConnectSocketIO()
+        {
+            if (!string.IsNullOrEmpty(nodeServerIP))
+            {
+                try
+                {
+
+
+                    string _nodeIP = @"http://" + nodeServerIP;
+                    socket = IO.Socket(_nodeIP);
+                    socket.Connect();
+                    socket.On(Socket.EVENT_CONNECT, () =>
+                    {
+                        btConnectNodeStatus.Caption = ("Node Connected");
+                        btConnectNodeStatus.ItemAppearance.Normal.ForeColor = Color.Blue;
+
+                        socket.On(Socket.EVENT_DISCONNECT, () =>
+                        {
+                            // errorsms =("Disconnect");
+                            btConnectNodeStatus.Caption = "Node Disconnect";
+                            btConnectNodeStatus.ItemAppearance.Normal.ForeColor = Color.Red;
+                        });
+                    });
+                }
+                catch (Exception ex) { }
+            }
+        }
+
 
         public void getSystemConfig()
         {
@@ -118,6 +158,13 @@ namespace QMS_System
                     QMSAppInfo.ConnectString = connectString;
                     QMSAppInfo.sqlConnection = DatabaseConnection.Instance.Connect(Application.StartupPath + "\\DATA.XML");
                     configs = BLLConfig.Instance.Gets(connectString, true);
+
+                    nodeServerIP = GetConfigByCode(eConfigCode.NodeServerIP);
+                    ConnectSocketIO();
+
+                  //  printTemplates = BLLPrintTemplate.Instance.Gets(connectString).Where(x => x.IsActive).ToList();
+
+
                     soundPath = GetConfigByCode(eConfigCode.SoundPath);
                     ticketTemplate = GetConfigByCode(eConfigCode.TicketTemplate);
                     SoundLockPrintTicket = GetConfigByCode(eConfigCode.SoundLockPrintTicket);
@@ -136,8 +183,16 @@ namespace QMS_System
                     int.TryParse(GetConfigByCode(eConfigCode.AutoCallIfUserFree), out AutoCallIfUserFree);
                     int.TryParse(GetConfigByCode(eConfigCode.System), out system);
                     int.TryParse(GetConfigByCode(eConfigCode._8cUseFor), out _8cUseFor);
+                    int.TryParse(GetConfigByCode(eConfigCode._8aUseFor), out _8aUseFor);
                     int.TryParse(GetConfigByCode(eConfigCode.UsePrintBoard), out UsePrintBoard);
                     int.TryParse(GetConfigByCode(eConfigCode.TVReadSound), out TVReadSound);
+
+                    int.TryParse(GetConfigByCode(eConfigCode.UseFakeTiket), out UseFakeTicket);
+                    int.TryParse(GetConfigByCode(eConfigCode.NumOfFakeTiket), out NumOfFakeTicket);
+                    int.TryParse(GetConfigByCode(eConfigCode.NWaitting), out NWaitting);
+                    int.TryParse(GetConfigByCode(eConfigCode.IsSaveHistory), out isSaveHistory);
+
+                    lib_Services = BLLService.Instance.GetsForMain(connectString);
 
                     if (Settings.Default.Today != DateTime.Now.Day)
                     {
@@ -145,7 +200,7 @@ namespace QMS_System
                         {
                             errorsms = "sang ngày mới " + DateTime.Now.Day;
                             BLLLoginHistory.Instance.ResetDailyLoginInfor(connectString, today, GetConfigByCode(eConfigCode.AutoSetLoginFromYesterday));
-                            BLLDailyRequire.Instance.CopyHistory(connectString, false);
+                            BLLDailyRequire.Instance.CopyHistory(connectString, false, (isSaveHistory == 1));
                             Settings.Default.Today = DateTime.Now.Day;
                             Settings.Default.Save();
                             //ko su dung GO 
@@ -157,6 +212,9 @@ namespace QMS_System
                                             DELETE [dbo].[Q_TVReadSound] 
                                             DBCC CHECKIDENT('Q_TVReadSound', RESEED, 1);   ";
                             BLLSQLBuilder.Instance.Excecute(connectString, query);
+
+                            if (UseFakeTicket == 1)
+                                InitFakeTicket();
                         }
                         catch (Exception ex) { }
                     }
@@ -171,7 +229,7 @@ namespace QMS_System
                     }
                     catch (Exception) { }
 
-                    CounterProcess(("AA 03 AA 03 8A 34 56").Split(' ').ToArray(), 0);
+                    // CounterProcess(("AA 03 AA 03 8A 34 56").Split(' ').ToArray(), 0);
                 }
                 else
                 {
@@ -185,7 +243,50 @@ namespace QMS_System
                 Form form = new FrmSQLConnect();
                 form.ShowDialog();
             }
+        }
 
+        Thread _hideThread = null;
+        private void InitFakeTicket()
+        {
+            int startNumber = 0;
+            var serObj = lib_Services.FirstOrDefault(x => x.Id == 1);
+            if (serObj != null)
+                startNumber = serObj.StartNumber;
+
+            if (NumOfFakeTicket > 300)
+            {
+                if (!BLLDailyRequire.Instance.InitFakeTicket(connectString, 300, startNumber, 1))
+                {
+                    MessageBox.Show("Lỗi: Không tạo được phiếu ảo.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    NumOfFakeTicket_Done = 300;
+                    if (NumOfFakeTicket > NumOfFakeTicket_Done)
+                    {
+                        //run thread 
+                        _hideThread = new Thread(InitFakeTicketHide);
+                        _hideThread.Start();
+                    }
+                }
+            }
+        }
+
+        private void InitFakeTicketHide()
+        {
+            Top:
+            int slPhieu = 500;
+            if (NumOfFakeTicket - NumOfFakeTicket_Done < 500)
+                slPhieu = NumOfFakeTicket - NumOfFakeTicket_Done;
+
+            if (BLLDailyRequire.Instance.InitFakeTicket(connectString, slPhieu, startNumber, 1))
+            {
+                NumOfFakeTicket_Done += slPhieu;
+            }
+            if (NumOfFakeTicket > NumOfFakeTicket_Done)
+                goto Top;
+            else
+                _hideThread.Abort();
         }
 
         /// <summary>
@@ -518,6 +619,11 @@ namespace QMS_System
                 else
                 {
                     IsDatabaseChange = true;
+                    if (UseFakeTicket == 1)
+                    {
+                        NumOfFakeTicket_Done = 0;
+                        InitFakeTicket();
+                    }
                 }
         }
 
@@ -1131,12 +1237,17 @@ namespace QMS_System
                 }
                 else
                 {
-                    PrintWithNoBorad(newNumber, lastTicket, tenQuay, (serObj != null ? serObj.Name : ""), (serObj != null ? serObj.Note : ""));
+                    PrintWithNoBorad(newNumber, lastTicket, tenQuay, (serObj != null ? serObj.Name : ""), (serObj != null ? serObj.Note : ""), serObj.Id);
                 }
             }
             else if (newNumber != 0)
                 if (UsePrintBoard == 0)
-                    PrintWithNoBorad(newNumber, lastTicket, tenQuay, (serObj != null ? serObj.Name : ""), (serObj != null ? serObj.Note : ""));
+                    PrintWithNoBorad(newNumber, lastTicket, tenQuay, (serObj != null ? serObj.Name : ""), (serObj != null ? serObj.Note : ""),serObj.Id);
+            try
+            {
+                socket.Emit("qms-system-counter-next", "1");
+            }
+            catch (Exception ex) { }
 
             if (AutoCallIfUserFree == 1 && nghiepVu > 0)
             {
@@ -1152,37 +1263,41 @@ namespace QMS_System
             return true;
         }
 
-        private void PrintWithNoBorad(int newNum, int oldNum, string tenQuay, string tendichvu, string noteDichVu)
+        private void PrintWithNoBorad(int newNum, int oldNum, string tenQuay, string tendichvu, string noteDichVu, int serviceId )
         {
             if (COM_Printer.IsOpen)
             {
-                var template = ticketTemplate;
-                var now = DateTime.Now;
-                template = template.Replace("[canh-giua]", "\x1b\x61\x01|+|");
-                template = template.Replace("[canh-trai]", "\x1b\x61\x00|+|");
-                template = template.Replace("[1x1]", "\x1d\x21\x00|+|");
-                template = template.Replace("[2x1]", "\x1d\x21\x01|+|");
-                template = template.Replace("[3x1]", "\x1d\x21\x02|+|");
-                template = template.Replace("[2x2]", "\x1d\x21\x11|+|");
-                template = template.Replace("[3x3]", "\x1d\x21\x22|+|");
+               // var _temp = printTemplates.Where(x => x._ServiceIds.Contains(serviceId) && x.IsActive).ToList();
+                //  for (int i = 0; i < _temp.Count; i++)
+                // {
+                var template = ticketTemplate;// _temp[i].PrintTemplate; 
+                    var now = DateTime.Now;
+                    template = template.Replace("[canh-giua]", "\x1b\x61\x01|+|");
+                    template = template.Replace("[canh-trai]", "\x1b\x61\x00|+|");
+                    template = template.Replace("[1x1]", "\x1d\x21\x00|+|");
+                    template = template.Replace("[2x1]", "\x1d\x21\x01|+|");
+                    template = template.Replace("[3x1]", "\x1d\x21\x02|+|");
+                    template = template.Replace("[2x2]", "\x1d\x21\x11|+|");
+                    template = template.Replace("[3x3]", "\x1d\x21\x22|+|");
 
-                template = template.Replace("[STT]", newNum.ToString());
-                template = template.Replace("[ten-quay]", tenQuay);
-                template = template.Replace("[ten-dich-vu]", tendichvu);
-                template = template.Replace("[ghi-chu-dich-vu]", noteDichVu);
-                template = template.Replace("[ngay]", ("Ngày: " + now.ToString("dd/MM/yyyy")));
-                template = template.Replace("[gio]", ("Giờ: " + now.ToString("HH:mm")));
-                template = template.Replace("[dang-goi]", "đang gọi: " + oldNum);
-                template = template.Replace("[cat-giay]", "\x1b\x69|+|");
+                    template = template.Replace("[STT]", newNum.ToString());
+                    template = template.Replace("[ten-quay]", tenQuay);
+                    template = template.Replace("[ten-dich-vu]", tendichvu);
+                    template = template.Replace("[ghi-chu-dich-vu]", noteDichVu);
+                    template = template.Replace("[ngay]", ("Ngày: " + now.ToString("dd/MM/yyyy")));
+                    template = template.Replace("[gio]", ("Giờ: " + now.ToString("HH:mm")));
+                    template = template.Replace("[dang-goi]", "đang gọi: " + oldNum);
+                    template = template.Replace("[cat-giay]", "\x1b\x69|+|");
 
-                var arr = template.Split(new string[] { "|+|" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                for (int ii = 0; ii < solien; ii++)
-                {
-                    for (int i = 0; i < arr.Length; i++)
+                    var arr = template.Split(new string[] { "|+|" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    for (int ii = 0; ii < solien; ii++)
                     {
-                        BaseCore.Instance.PrintTicketTCVN3(COM_Printer, arr[i]);
+                        for (int iii = 0; iii < arr.Length; iii++)
+                        {
+                            BaseCore.Instance.PrintTicketTCVN3(COM_Printer, arr[iii]);
+                        }
                     }
-                }
+               // }
             }
             else
                 errorsms = "Cổng COM máy in hiện tại chưa kết nối. Vui lòng kiểm tra lại COM máy in";
@@ -1299,6 +1414,10 @@ namespace QMS_System
                         // nếu là * lấy cái tham số lệnh = 0 xử lý cho trường hợp đổi thời gian phục vụ DK
                         userRight = lib_RegisterUserCmds.Where(x => x.UserId == userId && x.CMDName == hexStr[2] && x.CMDParamName == "0").OrderBy(x => x.Index).ToList();
                     }
+                    else if (hexStr[2] == eCodeHex.Store && _8aUseFor == 1)
+                    {
+                        userRight = lib_RegisterUserCmds.Where(x => x.UserId == userId && x.CMDName == hexStr[2] && x.CMDParamName == "0").OrderBy(x => x.Index).ToList();
+                    }
                     else if (hexStr[3] == "00")
                     {
                         userRight = lib_RegisterUserCmds.Where(x => x.UserId == userId && x.CMDName == hexStr[2] && x.CMDParamName == int.Parse(hexStr[4]).ToString()).OrderBy(x => x.Index).ToList();
@@ -1306,6 +1425,7 @@ namespace QMS_System
                     else
                         userRight = lib_RegisterUserCmds.Where(x => x.UserId == userId && x.CMDName == hexStr[2] && x.CMDParamName == "0").OrderBy(x => x.Index).ToList();
 
+                    //MessageBox.Show(string.Join(" ", hexStr));
                     var userMajors = lib_UserMajors.Where(x => x.UserId == userId).ToList();
                     if (userRight.Count > 0)
                     {
@@ -1330,6 +1450,12 @@ namespace QMS_System
                                         case eActionParam.HITHI:
                                             currentTicket = BLLDailyRequire.Instance.CurrentTicket(connectString, userId, equipCode, today, UseWithThirdPattern);
                                             break;
+                                        case eActionParam.SAUNK:
+                                            currentTicket = BLLDailyRequire.Instance.SaveTicket(connectString, userId, equipCode, NWaitting);
+                                            break;
+                                        case eActionParam.CHUYEN_DGIA:
+                                            currentTicket = BLLDailyRequire.Instance.ChangeToEvaluateStatus(connectString, userId, equipCode);
+                                            break;
                                     }
                                     break;
                                 case eActionCode.GoiMoi:
@@ -1350,9 +1476,9 @@ namespace QMS_System
                                         case eActionParam.GLAYP:
                                             ticketInfo = BLLDailyRequire.Instance.CallNewTicket_GLP_NghiepVu(connectString, userMajors.Select(x => x.MajorId).ToArray(), userId, equipCode, DateTime.Now, UseWithThirdPattern);
                                             break;
-                                        case eActionParam.COUNT: // goi bat ky 
+                                        case eActionParam.GOI_UT: // goi bat ky 
                                             int num = int.Parse((hexStr[3] + "" + hexStr[4]));
-                                            var rs = BLLDailyRequire.Instance.CallAny(connectString, userMajors[0].MajorId, userId, equipCode, num, DateTime.Now, UseWithThirdPattern);
+                                            var rs = BLLDailyRequire.Instance.CallAny(connectString, userId, equipCode, num, DateTime.Now);
                                             if (rs.IsSuccess)
                                                 ticketInfo = rs.Data_3;// new TicketInfo() { TicketNumber = num, TicketNumber_3 = rs.Data_2, StartTime = rs.Data_1, TimeServeAllow = rs.Data };
 
@@ -1384,6 +1510,12 @@ namespace QMS_System
                                             break;
                                     }
                                     #endregion
+                                    try
+                                    {
+                                        socket.Emit("qms-system-counter-next", equipCode.ToString());
+                                    }
+                                    catch (Exception ex) { }
+
                                     break;
                                 case eActionCode.Counter:
                                     #region xu ly gui so len counter
@@ -1544,14 +1676,17 @@ namespace QMS_System
                                     switch (userRight[i].ActionParamName)
                                     {
                                         case eActionParam.NGHVU:
-
                                             if (BLLDailyRequire.Instance.TranferTicket(connectString, equipCode, int.Parse(userRight[i].Param), currentTicket, today, false))
                                             {
                                                 if (frmMain.comPort.IsOpen)
                                                     dataSendToComport.Add(("AA " + hexStr[1] + " 00 00"));
                                                 currentTicket = 0;
+                                                try
+                                                {
+                                                    socket.Emit("qms-system-counter-next", equipCode.ToString());
+                                                }
+                                                catch (Exception ex) { }
                                             }
-
                                             break;
                                     }
                                     break;
@@ -1564,6 +1699,11 @@ namespace QMS_System
                                                 if (frmMain.comPort.IsOpen)
                                                     dataSendToComport.Add(("AA " + hexStr[1] + " 00 00"));
                                                 currentTicket = 0;
+                                                try
+                                                {
+                                                    socket.Emit("qms-system-counter-next", equipCode.ToString());
+                                                }
+                                                catch (Exception ex) { }
                                             }
                                             break;
                                     }
@@ -1655,7 +1795,7 @@ namespace QMS_System
                 {
                     errorsms = "sang ngày mới " + DateTime.Now.Day;
                     BLLLoginHistory.Instance.ResetDailyLoginInfor(connectString, today, GetConfigByCode(eConfigCode.AutoSetLoginFromYesterday));
-                    BLLDailyRequire.Instance.CopyHistory(connectString, false);
+                    BLLDailyRequire.Instance.CopyHistory(connectString, false, (isSaveHistory == 1));
                     Settings.Default.Today = DateTime.Now.Day;
                     Settings.Default.Save();
                     //ko su dung GO 
@@ -1669,6 +1809,12 @@ namespace QMS_System
                                     DBCC CHECKIDENT('Q_TVReadSound', RESEED, 1); ";
                     BLLSQLBuilder.Instance.Excecute(connectString, query);
                     lib_Users = BLLLoginHistory.Instance.GetsForMain(connectString);
+
+                    if (UseFakeTicket == 1)
+                    {
+                        NumOfFakeTicket_Done = 0;
+                        InitFakeTicket();
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1693,7 +1839,7 @@ namespace QMS_System
                         {
                             case (int)eCounterSoftRequireType.inPhieu:
                                 requireObj = JsonConvert.DeserializeObject<PrinterRequireModel>(requires[i].Content);
-                                PrintWithNoBorad(requireObj.newNumber, requireObj.oldNumber, requireObj.TenQuay, requireObj.TenDichVu, "");
+                                PrintWithNoBorad(requireObj.newNumber, requireObj.oldNumber, requireObj.TenQuay, requireObj.TenDichVu, "",requireObj.ServiceId);
                                 if (AutoCallIfUserFree == 1 && requireObj.MajorId > 0)
                                 {
                                     var freeUser = (int)BLLDailyRequire.Instance.CheckUserFree(connectString, requireObj.MajorId, requireObj.ServiceId, requireObj.newNumber, autoCallFollowMajorOrder).Data;
@@ -1907,7 +2053,7 @@ namespace QMS_System
                     lib_Sounds = BLLSound.Instance.Gets(connectString);
                     lib_ReadTemplates = BLLReadTemplate.Instance.GetsForMain(connectString);
                     lib_CounterSound = BLLCounterSound.Instance.Gets(connectString);
-                    lib_Services = BLLService.Instance.GetsForMain(connectString);
+
 
                     int time = 1000, _int = 0;
                     int.TryParse(GetConfigByCode(eConfigCode.TimerQuetServeOverTime), out time);

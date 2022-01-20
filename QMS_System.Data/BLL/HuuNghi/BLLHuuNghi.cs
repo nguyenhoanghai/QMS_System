@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using GPRO.Core.Mvc;
+using Newtonsoft.Json;
 using QMS_System.Data.Enum;
 using QMS_System.Data.Model;
 using QMS_System.Data.Model.HuuNghi;
@@ -10,7 +11,6 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using GPRO.Core.Mvc;
 
 namespace QMS_System.Data.BLL.HuuNghi
 {
@@ -216,7 +216,8 @@ namespace QMS_System.Data.BLL.HuuNghi
             string SoXe,
             string maCongViec,
             string maLoaiCongViec,
-            int serviceType
+            int serviceType,
+            string phoneNumber
             )
         {
             ResponseBase rs = new ResponseBase();
@@ -283,7 +284,7 @@ namespace QMS_System.Data.BLL.HuuNghi
                     {
                         int somoi = 0;
                         var _found = db.Q_DailyRequire_Detail.FirstOrDefault(x => x.Q_DailyRequire.ServiceId == serviceId && x.Q_DailyRequire.MaBenhNhan == MaBenhNhan && x.Q_DailyRequire.Type == serviceType);
-                        if (_found != null)
+                        if (_found != null && !string.IsNullOrEmpty(MaBenhNhan))
                         {
                             var sodanggoi = db.Q_DailyRequire_Detail.Where(x => x.Q_DailyRequire.ServiceId == serviceId && x.StatusId == (int)eStatus.DAGXL).OrderByDescending(x => x.ProcessTime).FirstOrDefault();
 
@@ -295,15 +296,16 @@ namespace QMS_System.Data.BLL.HuuNghi
                                      (equipCodes.Count == 0 && userIds.Count > 0 ? userIds.Contains(x.Code) : equipCodes.Contains(x.Code)) &&
                                       !x.IsDeleted &&
                                       !x.Q_Counter.IsDeleted
-                                      select x.Q_Counter.Name).ToArray();
-                            var tqs = String.Join("@", tq).Replace("@", ("" + System.Environment.NewLine));
+                                      select new { CounterName = x.Q_Counter.Name, CounterId = x.CounterId }).ToList();
+                           
                             somoi = _found.Q_DailyRequire.TicketNumber;
                             rs.IsSuccess = true;
                             rs.Data = socu;
                             rs.Data_1 = _found.MajorId;
                             rs.Records = (sodanggoi != null ? sodanggoi.Q_DailyRequire.TicketNumber : 0);
-                            rs.Data_2 = tqs;
+                            rs.Data_2 = String.Join("@", tq.Select(x=>x.CounterName).ToArray()).Replace("@", ("" + System.Environment.NewLine)); 
                             rs.Data_3 = somoi;
+                            rs.Data_4 = tq.Select(x => x.CounterId).ToList();
                         }
                         else
                         {
@@ -323,6 +325,8 @@ namespace QMS_System.Data.BLL.HuuNghi
                             modelObj.STT_PhongKham = SttPhongKham;
                             modelObj.CarNumber = SoXe;
                             modelObj.Type = serviceType;
+                            modelObj.PhoneNumber = phoneNumber;
+
                             modelObj.Q_DailyRequire_Detail = new Collection<Q_DailyRequire_Detail>();
 
                             var foundService = db.Q_Service.FirstOrDefault(x => x.Id == serviceId);
@@ -352,16 +356,16 @@ namespace QMS_System.Data.BLL.HuuNghi
                                      (equipCodes.Count == 0 && userIds.Count > 0 ? userIds.Contains(x.Code) : equipCodes.Contains(x.Code)) &&
                                       !x.IsDeleted &&
                                       !x.Q_Counter.IsDeleted
-                                      select x.Q_Counter.Name).ToArray();
-                            var tqs = String.Join("@", tq).Replace("@", ("" + System.Environment.NewLine));
-
+                                      select new { CounterName = x.Q_Counter.Name, CounterId = x.CounterId }).ToList();
+                           
                             db.SaveChanges();
                             rs.IsSuccess = true;
                             rs.Data = socu;
                             rs.Data_1 = detail.MajorId;
                             rs.Records = (sodanggoi != null ? sodanggoi.Q_DailyRequire.TicketNumber : 0);
-                            rs.Data_2 = tqs;
+                            rs.Data_2 = String.Join("@", tq.Select(x=>x.CounterName)).Replace("@", ("" + System.Environment.NewLine)) ;
                             rs.Data_3 = somoi;
+                            rs.Data_4 = tq.Select(x=>x.CounterId).ToList();
                         }
                     }
                 }
@@ -1662,7 +1666,7 @@ namespace QMS_System.Data.BLL.HuuNghi
                     var objs = db.Q_DailyRequire_Detail
                         .Where(x => x.Q_DailyRequire.TicketNumber == _ticket &&
                                     maBN.Trim() == x.Q_DailyRequire.MaBenhNhan.Trim() &&
-                                    x.Q_DailyRequire.MaPhongKham.Trim() == maPK.Trim() && 
+                                    x.Q_DailyRequire.MaPhongKham.Trim() == maPK.Trim() &&
                                     x.Q_DailyRequire.Type == type);
                     if (objs != null && objs.Count() > 0)
                     {
@@ -1682,5 +1686,62 @@ namespace QMS_System.Data.BLL.HuuNghi
             return ticket;
         }
 
+        public List<PrintModel> FindTickets(string connectString, string phoneNumer)
+        {
+            var rs = new List<PrintModel>();
+            try
+            {
+                using (db = new QMSSystemEntities(connectString))
+                {
+                    rs.AddRange(db.Q_DailyRequire.Where(x => x.PhoneNumber.Trim().Equals(phoneNumer.Trim()))
+                        .OrderByDescending(x => x.TicketNumber).ToList()
+                        .Select(x => new PrintModel()
+                        {
+                            STT = x.TicketNumber,
+                            ServiceId = x.ServiceId,
+                            TenDichVu = x.Q_Service.Name,
+                            NoteDV = x.Q_Service.Note,
+
+                            TenKH = x.CustomerName,
+                            DOB = x.CustomerDOB ?? 0,
+                            DiaChi = x.CustomerAddress,
+                            MaKH = x.MaBenhNhan,
+                            Phone = x.PhoneNumber,
+                            MaDV = x.MaPhongKham,
+                            SoXe = x.PrintTime.ToString("dd/MM/yyyy hh:mm tt")
+                        })
+                        .ToList());
+                    if (rs.Count > 0)
+                    {
+                        var serviceSteps = db.Q_ServiceStep.Where(x => !x.IsDeleted && !x.Q_Service.IsDeleted)
+                            .Select(x => new { Index = x.Index, MajorId = x.MajorId, ServiceId = x.ServiceId })
+                            .ToList();
+                        var userMajors = db.Q_UserMajor.Where(x => !x.IsDeleted && !x.Q_User.IsDeleted && !x.Q_Major.IsDeleted)
+                            .Select(x => new { MajorId = x.MajorId, UserId = x.UserId })
+                            .ToList();
+                        var logins = db.Q_Login.Where(x => x.StatusId == (int)eStatus.LOGIN && !x.Q_User.IsDeleted)
+                            .Select(x => new { EquipCode = x.EquipCode, UserId = x.UserId })
+                            .ToList();
+                        var equipments = db.Q_Equipment.Where(x => !x.IsDeleted && !x.Q_Counter.IsDeleted)
+                            .Select(x => new { CounterId = x.CounterId, Code = x.Code, CounterName = x.Q_Counter.Name })
+                            .ToList();
+                        foreach (var item in rs)
+                        {
+                            var nv = serviceSteps.Where(x => x.ServiceId == item.ServiceId).OrderBy(x => x.Index).FirstOrDefault();
+                            var userIds = userMajors.Where(x => x.MajorId == nv.MajorId).Select(x => x.UserId).ToList();
+                            var equipCodes = logins.Where(x => userIds.Contains(x.UserId)).Select(x => x.EquipCode).ToList();
+
+                            var tq = equipments.Where(x => (equipCodes.Count == 0 && userIds.Count > 0 ? userIds.Contains(x.Code) : equipCodes.Contains(x.Code)))
+                                      .Select(x => x.CounterName).ToArray();
+                            item.TenQuay = String.Join("@", tq).Replace("@", ("" + System.Environment.NewLine));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return rs;
+        }
     }
 }

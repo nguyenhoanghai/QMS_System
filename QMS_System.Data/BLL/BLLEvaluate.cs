@@ -223,7 +223,7 @@ namespace QMS_System.Data.BLL
         {
             using (db = new QMSSystemEntities(connectString))
             {
-                return db.Q_EvaluateDetail.Where(x => !x.IsDeleted).OrderBy(x => x.Index).Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Name }).ToList();
+                return db.Q_EvaluateDetail.Where(x => !x.IsDeleted).OrderBy(x => x.Index).Select(x => new ModelSelectItem() { Id = x.Id, Name = x.Name, Data = x.EvaluateId }).ToList();
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using DevExpress.XtraEditors.Controls;
+﻿using DevExpress.Utils;
+using DevExpress.XtraEditors.Controls;
 using GPRO.Core.Hai;
 using QMS_System.Data;
 using QMS_System.Data.BLL;
@@ -45,7 +46,7 @@ namespace QMS_System
             lookUpSex.View.Columns[0].Caption = "Id";
             lookUpSex.View.Columns[0].Visible = false;
             lookUpSex.View.Columns[1].Caption = "Giới tính";
-            lookUpSex.View.Columns[0].AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Near;
+            lookUpSex.View.Columns[0].AppearanceCell.TextOptions.HAlignment = HorzAlignment.Near;
 
 
             var list = BLLUser.Instance.Gets(connect);

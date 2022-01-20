@@ -103,5 +103,15 @@ namespace QMS_System.Data.Enum
         /// Hủy Đký lấy số tự động
         /// </summary>
         public const string HUY_DKY_LAYSO = "HUY_DKY_LAYSO";
+
+        /// <summary>
+        /// Chuyển trạng thái phiếu đang gọi sang chờ đánh giá
+        /// </summary>
+        public const string CHUYEN_DGIA = "CHUYEN_DGIA";
+
+        /// <summary>
+        /// Gọi số bất kỳ
+        /// </summary>
+        public const string GOI_UT = "GOI_UT";
     }
 }

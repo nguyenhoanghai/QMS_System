@@ -8,6 +8,7 @@ namespace QMS_System.Data.Model
     {
         public string Counter { get; set; }
         public int UserId { get; set; }
+        public string UserName { get; set; }
         public int CounterId { get; set; }
         public string CounterName { get; set; }
         public string User { get; set; }

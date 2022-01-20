@@ -110,6 +110,7 @@
     <Compile Include="BLL\BLLPrintTemplate.cs" />
     <Compile Include="BLL\BLLCustomer.cs" />
     <Compile Include="BLL\BLLServiceApi.cs" />
+    <Compile Include="BLL\BLLServiceInfo.cs" />
     <Compile Include="BLL\BLLTimeSchedule.cs" />
     <Compile Include="BLL\BLLWorkType.cs" />
     <Compile Include="BLL\BLLWorkDetail.cs" />
@@ -290,6 +291,9 @@
     <Compile Include="Q_DailyRequire_WorkDetail.cs">
       <DependentUpon>QMSModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Q_Devices.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Q_Equipment.cs">
       <DependentUpon>QMSModel.tt</DependentUpon>
     </Compile>
@@ -369,6 +373,9 @@
       <DependentUpon>QMSModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Q_ServiceLimit.cs">
+      <DependentUpon>QMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Q_ServicePrintTemplate.cs">
       <DependentUpon>QMSModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Q_ServiceShift.cs">

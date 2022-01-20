@@ -101,7 +101,7 @@ namespace QMS_System.Data.BLL
             {
                 using (db = new QMSSystemEntities(connectString))
                 {
-                    var last = db.Q_DailyRequire_Detail.Where(x => x.UserId == userId && x.EquipCode == equipCode && x.StatusId == (int)eStatus.DAGXL);
+                    var last = db.Q_DailyRequire_Detail.Where(x => x.UserId == userId && x.EquipCode == equipCode && (x.StatusId == (int)eStatus.DAGXL || x.StatusId == (int)eStatus.DANHGIA));
                     if (last != null && last.Count() > 0)
                     {
                         foreach (var item in last)
@@ -113,7 +113,15 @@ namespace QMS_System.Data.BLL
 
                         var equip = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipCode);
                         if (equip != null)
+                        {
                             db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=0,CurrentNumber=0, isrunning=0 where Id=" + equip.CounterId);
+                            try
+                            {
+                                db.Database.ExecuteSqlCommand("update Q_CounterDayInfo set stt =0, stt_qms=0 where counterId =" + equip.CounterId);
+                            }
+                            catch (Exception ex) { }
+                        }
+
                         db.SaveChanges();
                         return ticket;
                     }
@@ -437,6 +445,20 @@ namespace QMS_System.Data.BLL
                         int parentId = 0;
                         foreach (var item in objs)
                         {
+                            if ((item.StatusId == (int)eStatus.DAGXL || item.StatusId == (int)eStatus.DANHGIA) && item.EquipCode.HasValue)
+                            {
+                                var equip = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == item.EquipCode);
+                                if (equip != null)
+                                {
+                                    db.Database.ExecuteSqlCommand(@"update Q_Counter set LastCall=0,CurrentNumber=0, isrunning=0 where Id=" + equip.CounterId);
+                                    try
+                                    {
+                                        db.Database.ExecuteSqlCommand("update Q_CounterDayInfo set stt =0, stt_qms=0 where counterId =" + equip.CounterId);
+                                    }
+                                    catch (Exception ex) { }
+                                }
+                            }
+
                             parentId = item.DailyRequireId;
                             db.Q_DailyRequire_Detail.Remove(item);
                         }
@@ -849,6 +871,11 @@ namespace QMS_System.Data.BLL
                             EquipCode = equipCode
                         };
                         db.Database.ExecuteSqlCommand("update Q_Counter set LastCall =" + check.Q_DailyRequire.TicketNumber + ", CurrentNumber=" + check.Q_DailyRequire.TicketNumber + " where Id =" + equip.CounterId);
+                        try
+                        {
+                            db.Database.ExecuteSqlCommand("update Q_CounterDayInfo set stt =" + check.Q_DailyRequire.TicketNumber + ", stt_qms=" + check.Q_DailyRequire.TicketNumber + " where counterId =" + equip.CounterId);
+                        }
+                        catch (Exception ex) { }
                     }
                     else
                     {
@@ -1649,6 +1676,7 @@ namespace QMS_System.Data.BLL
                         }
                     }
 
+                    var counterss = db_.Q_Equipment.Where(x => !x.IsDeleted && !x.Q_Counter.IsDeleted && counterIds.Contains(x.CounterId) && x.EquipTypeId == (int)eEquipType.Counter).ToList();
                     var counters = db_.Q_Equipment.Where(x => !x.IsDeleted && !x.Q_Counter.IsDeleted && counterIds.Contains(x.CounterId) && x.EquipTypeId == (int)eEquipType.Counter)
                         .Select(x => new ViewDetailModel()
                         {
@@ -1681,7 +1709,7 @@ namespace QMS_System.Data.BLL
                             //   }
 
                         }
-                        item.LastFiveTickets = allRequireDetails.Where(x => x.EquipCode == item.EquipCode && x.Q_DailyRequire.TicketNumber != item.TicketNumber).OrderByDescending(x => x.ProcessTime).Take(5).OrderBy(x => x.ProcessTime).Select(x => x.Q_DailyRequire.TicketNumber).ToList();
+                        item.LastFiveTickets = allRequireDetails.Where(x => x.EquipCode == item.EquipCode && x.Q_DailyRequire.TicketNumber != item.TicketNumber).OrderByDescending(x => x.ProcessTime).Take(5).OrderBy(x => x.ProcessTime).Select(x => new SubModel() { Ticket = x.Q_DailyRequire.TicketNumber, ServiceName = x.Q_DailyRequire.CustomerName }).ToList();
                         returnModel.Details.Add(item);
                     }
                     returnModel.Sounds = BLLTVReadSound.Instance.Gets(connectString, counterIds, userId);
@@ -1697,6 +1725,85 @@ namespace QMS_System.Data.BLL
                 return returnModel;
             }
         }
+
+        public ViewModel GetDayInfo(string connectString, int[] counterIds, int userId)
+        {
+            using (var db_ = new QMSSystemEntities(connectString))
+            {
+                var returnModel = new ViewModel();
+                try
+                {
+                    var counterss = db_.Q_Equipment.Where(x => !x.IsDeleted && !x.Q_Counter.IsDeleted && counterIds.Contains(x.CounterId) && x.EquipTypeId == (int)eEquipType.Counter).ToList();
+                    var counters = db_.Q_Equipment
+                        .Where(x => !x.IsDeleted &&
+                        !x.Q_Counter.IsDeleted &&
+                        counterIds.Contains(x.CounterId) &&
+                        x.EquipTypeId == (int)eEquipType.Counter)
+                        .Select(x => new ViewDetailModel()
+                        {
+                            STT = (!x.Q_Counter.IsRunning ? 1 : 0),
+                            CarNumber = "0",
+                            TableId = x.Q_Counter.Id,
+                            TableName = x.Q_Counter.Name,
+                            TableCode = x.Q_Counter.ShortName,
+                            Start = null,
+                            TicketNumber = x.Q_Counter.CurrentNumber,
+                            TimeProcess = "0",
+                            StartStr = (!x.Q_Counter.IsRunning ? ("Mời bệnh nhân " + x.Q_Counter.CurrentNumber + " đến phòng : " + x.Q_Counter.Name) : ""),
+                            EquipCode = x.Code
+                        }).ToList();
+
+                    var dangXL = db_.Q_DailyRequire_Detail.Where(x => x.StatusId == (int)eStatus.DAGXL).ToList();
+
+                    var allRequireDetails = db_.Q_DailyRequire_Detail.Where(x => x.UserId.HasValue && x.ProcessTime.HasValue).ToList();
+
+                    var logins = db_.Q_Login.Where(x => x.StatusId == (int)eStatus.LOGIN).ToList();
+                    var uMajors = db_.Q_UserMajor.Where(x => !x.IsDeleted).ToList();
+                    foreach (var item in counters)
+                    {
+                        var found = logins.FirstOrDefault(x => x.EquipCode == item.EquipCode);
+                        List<int> userMajorIds = new List<int>();
+                        if (found != null)
+                        {
+                            item.UserId = found.UserId;
+                            userMajorIds = uMajors.Where(x => x.UserId == found.UserId).Select(x => x.MajorId).ToList();
+                        }
+
+                        var current = dangXL.Where(x => x.StatusId == (int)eStatus.DAGXL && x.EquipCode == item.EquipCode).OrderByDescending(x => x.ProcessTime).FirstOrDefault();
+                        if (current != null)
+                        {
+                            item.TicketNumber = current.Q_DailyRequire.TicketNumber;
+                            item.TenBN = current.Q_DailyRequire.CustomerName;
+                            //  item.NamSinh = current.Q_DailyRequire.CustomerDOB.Value.ToString();
+                        }
+
+                        item.LastFiveTickets = db_.Q_DailyRequire_Detail
+                            .Where(x => x.Q_DailyRequire.TicketNumber != item.TicketNumber &&
+                            x.StatusId == (int)eStatus.CHOXL &&
+                            userMajorIds.Contains(x.MajorId)).
+                            OrderBy(x => x.Q_DailyRequire.PrintTime)
+                            .Take(5)
+                            .Select(x => new SubModel()
+                            {
+                                Ticket = x.Q_DailyRequire.TicketNumber,
+                                ServiceName = x.Q_DailyRequire.CustomerName
+                            }).ToList();
+                        returnModel.Details.Add(item);
+                    }
+                    returnModel.Sounds = BLLTVReadSound.Instance.Gets(connectString, counterIds, userId);
+                    if (returnModel.Details.Count > 0)
+                    {
+                        returnModel.Details[0].RuningText = returnModel.Details.Where(x => x.STT == 1).Select(x => x.StartStr).ToArray();
+                        db_.Database.ExecuteSqlCommand("update q_counter set isrunning =1");
+                        db_.SaveChanges();
+                    }
+                }
+                catch (Exception ex)
+                { }
+                return returnModel;
+            }
+        }
+
 
         public ModelSelectItem GetCurrentProcess(string connectString, string userName)
         {
@@ -1733,77 +1840,94 @@ namespace QMS_System.Data.BLL
             return rs;
         }
 
-        public void CopyHistory(string connectString, bool isver3)
+        public void CopyHistory(string connectString, bool isver3, bool saveHistory)
         {
             using (db = new QMSSystemEntities(connectString))
             {
-                DateTime now = DateTime.Now,
-                  today = new DateTime(now.Year, now.Month, now.Day);
-                List<int> ids;
-                var requires = db.Q_DailyRequire.Where(x => x.PrintTime < today).ToList();
-                if (requires.Count > 0)
+                if (saveHistory)
                 {
-                    ids = requires.Select(x => x.Id).ToList();
-                    var reDetails = db.Q_DailyRequire_Detail.Where(x => ids.Contains(x.DailyRequireId)).ToList();
-                    ids = reDetails.Select(x => x.Id).ToList();
-                    var userEvas = db.Q_UserEvaluate.Where(x => !x.IsDeleted && ids.Contains(x.DailyRequireDeId ?? 0)).ToList();
-
-                    List<ModelSelectItem> dailyWorkDetails = new List<ModelSelectItem>();
-                    if (isver3)
+                    DateTime now = DateTime.Now,
+                      today = new DateTime(now.Year, now.Month, now.Day);
+                    List<int> ids;
+                    var requires = db.Q_DailyRequire.Where(x => x.PrintTime < today).ToList();
+                    if (requires.Count > 0)
                     {
-                        dailyWorkDetails = db.Q_DailyRequire_WorkDetail.Where(x => !x.IsDeleted).Select(x => new ModelSelectItem() { Id = x.DailyRequireId, Data = x.WorkDetailId }).ToList();
-                    }
-                    Q_HisDailyRequire grandParentObj;
-                    Q_HisDailyRequire_De ParentObj;
-                    Q_HisUserEvaluate childObj;
-                    foreach (var grand in requires)
-                    {
-                        grandParentObj = new Q_HisDailyRequire();
-                        Parse.CopyObject(grand, ref grandParentObj);
-                        grandParentObj.Id = 0;
-                        grandParentObj.Q_HisDailyRequire_De = new Collection<Q_HisDailyRequire_De>();
-                        foreach (var parent in reDetails.Where(x => x.DailyRequireId == grand.Id).ToList())
-                        {
-                            ParentObj = new Q_HisDailyRequire_De();
-                            Parse.CopyObject(parent, ref ParentObj);
-                            ParentObj.Id = 0;
-                            ParentObj.Q_HisUserEvaluate = new Collection<Q_HisUserEvaluate>();
-                            foreach (var child in userEvas.Where(x => x.DailyRequireDeId == parent.Id))
-                            {
-                                childObj = new Q_HisUserEvaluate();
-                                Parse.CopyObject(child, ref childObj);
-                                childObj.Id = 0;
-                                childObj.HisDailyRequireDeId = 0;
-                                childObj.Q_HisDailyRequire_De = ParentObj;
-                                ParentObj.Q_HisUserEvaluate.Add(childObj);
-                            }
-                            ParentObj.HisDailyRequireId = 0;
-                            ParentObj.Q_HisDailyRequire = grandParentObj;
-                            grandParentObj.Q_HisDailyRequire_De.Add(ParentObj);
-                        }
+                        ids = requires.Select(x => x.Id).ToList();
+                        var reDetails = db.Q_DailyRequire_Detail.Where(x => ids.Contains(x.DailyRequireId)).ToList();
+                        ids = reDetails.Select(x => x.Id).ToList();
+                        var userEvas = db.Q_UserEvaluate.Where(x => !x.IsDeleted && ids.Contains(x.DailyRequireDeId ?? 0)).ToList();
 
+                        List<ModelSelectItem> dailyWorkDetails = new List<ModelSelectItem>();
                         if (isver3)
                         {
-                            grandParentObj.Q_HisDailyRequire_WorkDetail = new List<Q_HisDailyRequire_WorkDetail>();
-                            foreach (var item in dailyWorkDetails.Where(x => x.Id == grand.Id))
-                            {
-                                grandParentObj.Q_HisDailyRequire_WorkDetail.Add(new Q_HisDailyRequire_WorkDetail()
-                                {
-                                    Q_HisDailyRequire = grandParentObj,
-                                    WorkDetailId = item.Data
-                                });
-                            }
-                            db.Database.ExecuteSqlCommand("delete Q_DailyRequire_WorkDetail  DBCC CHECKIDENT('Q_DailyRequire_WorkDetail', RESEED, 0) ");
+                            dailyWorkDetails = db.Q_DailyRequire_WorkDetail.Where(x => !x.IsDeleted).Select(x => new ModelSelectItem() { Id = x.DailyRequireId, Data = x.WorkDetailId }).ToList();
                         }
-                        db.Q_HisDailyRequire.Add(grandParentObj);
-                    }
-                    db.Q_UserEvaluate.RemoveRange(userEvas);
-                    db.Q_DailyRequire_Detail.RemoveRange(reDetails);
-                    db.Q_DailyRequire.RemoveRange(requires);
+                        Q_HisDailyRequire grandParentObj;
+                        Q_HisDailyRequire_De ParentObj;
+                        Q_HisUserEvaluate childObj;
+                        foreach (var grand in requires)
+                        {
+                            grandParentObj = new Q_HisDailyRequire();
+                            Parse.CopyObject(grand, ref grandParentObj);
+                            grandParentObj.Id = 0;
+                            grandParentObj.Q_HisDailyRequire_De = new Collection<Q_HisDailyRequire_De>();
+                            foreach (var parent in reDetails.Where(x => x.DailyRequireId == grand.Id).ToList())
+                            {
+                                ParentObj = new Q_HisDailyRequire_De();
+                                Parse.CopyObject(parent, ref ParentObj);
+                                ParentObj.Id = 0;
+                                ParentObj.Q_HisUserEvaluate = new Collection<Q_HisUserEvaluate>();
+                                foreach (var child in userEvas.Where(x => x.DailyRequireDeId == parent.Id))
+                                {
+                                    childObj = new Q_HisUserEvaluate();
+                                    Parse.CopyObject(child, ref childObj);
+                                    childObj.Id = 0;
+                                    childObj.HisDailyRequireDeId = 0;
+                                    childObj.Q_HisDailyRequire_De = ParentObj;
+                                    ParentObj.Q_HisUserEvaluate.Add(childObj);
+                                }
+                                ParentObj.HisDailyRequireId = 0;
+                                ParentObj.Q_HisDailyRequire = grandParentObj;
+                                grandParentObj.Q_HisDailyRequire_De.Add(ParentObj);
+                            }
 
-                    db.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Q_UserEvaluate', RESEED, 0);DBCC CHECKIDENT('Q_DailyRequire_Detail', RESEED, 0);DBCC CHECKIDENT('Q_DailyRequire', RESEED, 0); ");
+                            if (isver3)
+                            {
+                                grandParentObj.Q_HisDailyRequire_WorkDetail = new List<Q_HisDailyRequire_WorkDetail>();
+                                foreach (var item in dailyWorkDetails.Where(x => x.Id == grand.Id))
+                                {
+                                    grandParentObj.Q_HisDailyRequire_WorkDetail.Add(new Q_HisDailyRequire_WorkDetail()
+                                    {
+                                        Q_HisDailyRequire = grandParentObj,
+                                        WorkDetailId = item.Data
+                                    });
+                                }
+                                db.Database.ExecuteSqlCommand("delete Q_DailyRequire_WorkDetail  DBCC CHECKIDENT('Q_DailyRequire_WorkDetail', RESEED, 0) ");
+                            }
+                            db.Q_HisDailyRequire.Add(grandParentObj);
+                        }
+                        db.Q_UserEvaluate.RemoveRange(userEvas);
+                        db.Q_DailyRequire_Detail.RemoveRange(reDetails);
+                        db.Q_DailyRequire.RemoveRange(requires);
+
+                        db.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Q_UserEvaluate', RESEED, 0);DBCC CHECKIDENT('Q_DailyRequire_Detail', RESEED, 0);DBCC CHECKIDENT('Q_DailyRequire', RESEED, 0); ");
+                        db.Database.ExecuteSqlCommand("delete Q_TVReadSound  DBCC CHECKIDENT('Q_TVReadSound', RESEED, 0) ");
+                        db.SaveChanges();
+                    }
+                }
+                else
+                {
+                    if (isver3)
+                        db.Database.ExecuteSqlCommand("delete Q_DailyRequire_WorkDetail  DBCC CHECKIDENT('Q_DailyRequire_WorkDetail', RESEED, 0) ");
+
+                    db.Database.ExecuteSqlCommand("delete Q_UserEvaluate  DBCC CHECKIDENT('Q_UserEvaluate', RESEED, 0) ");
+                    db.Database.ExecuteSqlCommand("delete Q_DailyRequire_Detail  DBCC CHECKIDENT('Q_DailyRequire_Detail', RESEED, 0) ");
+                    db.Database.ExecuteSqlCommand("delete Q_DailyRequire  DBCC CHECKIDENT('Q_DailyRequire', RESEED, 0) ");
+                    db.Database.ExecuteSqlCommand("delete Q_TVReadSound  DBCC CHECKIDENT('Q_TVReadSound', RESEED, 0) ");
                     db.SaveChanges();
                 }
+
+
             }
         }
 
@@ -2722,5 +2846,140 @@ namespace QMS_System.Data.BLL
                 return db.Q_DailyRequire.FirstOrDefault(x => x.STT_PhongKham.Trim().ToUpper() == sttPhongKham.Trim().ToUpper());
             }
         }
+
+        /// <summary>
+        /// cấp phiếu ảo tự động
+        /// </summary>
+        /// <param name="connectString"></param>
+        /// <param name="numOfTickets">sl phiếu cấp</param>
+        /// <param name="startNumber">stt bắt đầu</param>
+        /// <param name="serviceId">ma dich vu</param>
+        /// <returns></returns>
+        public bool InitFakeTicket(string connectString, int numOfTickets, int startNumber, int serviceId)
+        {
+            if (numOfTickets > 0)
+            {
+                using (var db = new QMSSystemEntities(connectString))
+                {
+                    try
+                    {
+                        Q_DailyRequire dailyRequire;
+                        Q_DailyRequire_Detail dailyRequire_Detail;
+                        DateTime now = DateTime.Now;
+                        now = new DateTime(now.Year, now.Month, now.Day, 7, 0, 0);
+                        var nv = db.Q_ServiceStep.Where(x => !x.IsDeleted && !x.Q_Service.IsDeleted && x.ServiceId == serviceId).OrderBy(x => x.Index).FirstOrDefault();
+
+                        var lastTicket = db.Q_DailyRequire.OrderByDescending(x => x.Id).FirstOrDefault();
+                        if (lastTicket != null)
+                        {
+                            startNumber = lastTicket.TicketNumber++;
+                            now = lastTicket.PrintTime.AddSeconds(5);
+                        }
+
+                        for (int i = startNumber; i < (numOfTickets + startNumber); i++)
+                        {
+                            dailyRequire = new Q_DailyRequire();
+                            dailyRequire.TicketNumber = i;
+                            dailyRequire.PrintTime = now;
+                            dailyRequire.ServiceId = serviceId;
+                            dailyRequire.Q_DailyRequire_Detail = new List<Q_DailyRequire_Detail>();
+
+                            dailyRequire_Detail = new Q_DailyRequire_Detail();
+                            dailyRequire_Detail.Q_DailyRequire = dailyRequire;
+                            dailyRequire_Detail.MajorId = (nv != null ? nv.MajorId : 1);
+                            dailyRequire_Detail.StatusId = (int)eStatus.CHOXL;
+                            dailyRequire.Q_DailyRequire_Detail.Add(dailyRequire_Detail);
+
+                            db.Q_DailyRequire.Add(dailyRequire);
+                            now = now.AddSeconds(5);
+                        }
+                        db.SaveChanges();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Lưu phiếu
+        /// </summary>
+        /// <param name="connectString"></param>
+        /// <param name="ticketNumber">số phiếu lưu</param>
+        /// <param name="nTimeOfSave">n lần lưu phiếu</param>
+        /// <returns></returns>
+        public int SaveTicket(string connectString, int userId, int equipCode, int nTimeOfSave)
+        {
+            try
+            {
+                using (var db = new QMSSystemEntities(connectString))
+                {
+                    var last = db.Q_DailyRequire_Detail.FirstOrDefault(x => x.UserId == userId && x.EquipCode == equipCode && x.StatusId == (int)eStatus.DAGXL);
+                    if (last != null)
+                    {
+                        var ticket = db.Q_DailyRequire.FirstOrDefault(x => x.Id == last.DailyRequireId);
+                        var nticket = db.Q_DailyRequire.FirstOrDefault(x => x.TicketNumber == (ticket.TicketNumber + nTimeOfSave));
+                        if (nticket == null)
+                            nticket = db.Q_DailyRequire.OrderByDescending(x => x.PrintTime).FirstOrDefault();
+
+                        if (ticket.Id != nticket.Id)
+                        {
+                            ticket.PrintTime = nticket.PrintTime.AddSeconds(-3);
+                            var detail = db.Q_DailyRequire_Detail.FirstOrDefault(x => x.DailyRequireId == ticket.Id);
+                            if (detail != null)
+                            {
+                                detail.StatusId = (int)eStatus.CHOXL;
+                                detail.UserId = null;
+                                detail.ProcessTime = null;
+                                detail.EquipCode = null;
+                            }
+
+                            var equiptObj = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipCode);
+                            if (equiptObj != null)
+                            {
+                                var counter = db.Q_Counter.FirstOrDefault(x => !x.IsDeleted && x.Id == equiptObj.CounterId);
+                                counter.LastCall = 0;
+                                counter.LastCallKetLuan = 0;
+                                counter.CurrentNumber = 0;
+                            }
+
+                            db.SaveChanges();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return -1;
+            }
+            return 0;
+        }
+
+
+        public int ChangeToEvaluateStatus(string connectString, int userId, int equipCode)
+        {
+            try
+            {
+                using (var db = new QMSSystemEntities(connectString))
+                {
+                    var processingTicket = db.Q_DailyRequire_Detail.FirstOrDefault(x => x.UserId == userId && x.EquipCode == equipCode && x.StatusId == (int)eStatus.DAGXL);
+                    if (processingTicket != null)
+                    {
+                        processingTicket.StatusId = (int)eStatus.DANHGIA;
+                        db.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return -1;
+            }
+            return 0;
+        }
+
     }
 }

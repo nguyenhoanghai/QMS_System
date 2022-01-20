@@ -14,5 +14,6 @@
         public string DiaChi { get; set; }
         public string MaDV { get; set; }
         public int DOB { get; set; }
+        public int ServiceId { get; set; }
     }
 }

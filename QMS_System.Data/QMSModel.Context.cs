@@ -86,5 +86,7 @@ namespace QMS_System.Data
         public DbSet<Q_Customer> Q_Customer { get; set; }
         public DbSet<Q_KhungGio> Q_KhungGio { get; set; }
         public DbSet<Q_Schedule_Detail> Q_Schedule_Detail { get; set; }
+        public DbSet<Q_ServicePrintTemplate> Q_ServicePrintTemplate { get; set; }
+        public DbSet<Q_Devices> Q_Devices { get; set; }
     }
 }

@@ -133,6 +133,9 @@
         <AssociationConnector Association="QMSSystemModel.FK_Q_Schedule_Detail_Q_KhungGio" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_Schedule_Detail_Q_Schedule" />
         <AssociationConnector Association="QMSSystemModel.FK_Q_Schedule_Detail_Q_Service" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_ServicePrintTemplate" Width="1.5" PointX="3" PointY="17" />
+        <AssociationConnector Association="QMSSystemModel.FK_Q_ServicePrintTemplate_Q_Service" />
+        <EntityTypeShape EntityType="QMSSystemModel.Q_Devices" Width="1.5" PointX="17.375" PointY="0.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

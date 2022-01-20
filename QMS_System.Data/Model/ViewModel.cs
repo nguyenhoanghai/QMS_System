@@ -59,7 +59,14 @@ namespace QMS_System.Data.Model
         public string GioLaySo { get; set; }
         public string Note { get; set; }
         public string NamSinh { get; set; }
-        public List<int> LastFiveTickets { get; set; }
+        public List<SubModel> LastFiveTickets { get; set; }
+
+        public int UserId { get; set; }
+
+        public ViewDetailModel()
+        {
+            LastFiveTickets = new List<SubModel>();
+        }
 
     }
 

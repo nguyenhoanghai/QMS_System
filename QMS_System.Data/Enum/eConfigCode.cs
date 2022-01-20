@@ -138,5 +138,19 @@ namespace QMS_System.Data.Enum
         /// </summary>
         public const string TypeOfPrintTicketWithoutService = "TypeOfPrintTicketWithoutService";
 
+        public const string NodeServerIP = "NodeServerIP";
+        
+        public const string UseFakeTiket = "UseFakeTiket";
+        public const string NumOfFakeTiket = "NumOfFakeTiket";
+        public const string NWaitting = "NWaitting";
+        public const string IsSaveHistory = "IsSaveHistory";
+
+        /// <summary>
+        /// cách su dung lệnh 8f
+        /// 0 bình thường
+        /// 1 gọi ưu tiên
+        /// </summary>
+        public const string _8aUseFor = "8aUseFor";
+
     }
 }

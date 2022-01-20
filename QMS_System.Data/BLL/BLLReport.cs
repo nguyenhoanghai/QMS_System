@@ -260,7 +260,7 @@ namespace QMS_System.Data.BLL
             else
             {
                 //yesterday
-                query = "select u.Name as UserName, u.Id as UserId, m.Id as MajorId,  m.Name as MajorName ,dr.TicketNumber, s.Name as ServiceName , s.Id as ServiceId, dr.Id, dr.PrintTime, dd.ProcessTime,dd.EndProcessTime, sta.Note as StatusName from Q_HisDailyRequire dr, Q_HisDailyRequire_De dd, Q_Service s, Q_Major m, Q_User u,Q_Status sta where s.IsDeleted = 0 and dd.HisDailyRequireId = dr.Id and m.Id = dd.MajorId and u.Id = dd.UserId and sta.Id = dd.StatusId and dr.PrintTime >= '" + from.ToString("yyyy-MM-dd HH:mm:ss") + "' and dr.PrintTime <= '" + to.ToString("yyyy-MM-dd HH:mm:ss") + "' order by dr.TicketNumber";
+                query = " select dd.UserId , m.Id as MajorId,  m.Name as MajorName ,dr.TicketNumber, s.Name as ServiceName , s.Id as ServiceId, dr.Id, dr.PrintTime, dd.ProcessTime,dd.EndProcessTime, sta.Note as StatusName from Q_HisDailyRequire dr, Q_HisDailyRequire_De dd, Q_Service s, Q_Major m, Q_Status sta where s.IsDeleted = 0 and dd.HisDailyRequireId = dr.Id and m.Id = dd.MajorId  and sta.Id = dd.StatusId and dr.PrintTime >= '" + from.ToString("yyyy-MM-dd HH:mm:ss") + "' and dr.PrintTime <= '" + to.ToString("yyyy-MM-dd HH:mm:ss") + "' order by dr.TicketNumber";
                 var adap = new SqlDataAdapter(query, sqlConnection);
                 var dt = new DataTable();
                 adap.Fill(dt);
@@ -285,7 +285,7 @@ namespace QMS_System.Data.BLL
                     }
                 }
                 //today
-                query = "select u.Name as UserName, u.Id as UserId, m.Id as MajorId,  m.Name as MajorName ,dr.TicketNumber, s.Name as ServiceName , s.Id as ServiceId, dr.Id, dr.PrintTime, dd.ProcessTime,dd.EndProcessTime, sta.Note as StatusName from Q_DailyRequire dr, Q_DailyRequire_Detail dd, Q_Service s, Q_Major m, Q_User u,Q_Status sta where s.IsDeleted = 0 and dd.DailyRequireId = dr.Id and m.Id = dd.MajorId and u.Id = dd.UserId and sta.Id = dd.StatusId and dr.PrintTime >= '" + from.ToString("yyyy-MM-dd HH:mm:ss") + "' and dr.PrintTime <= '" + to.ToString("yyyy-MM-dd HH:mm:ss") + "' order by dr.TicketNumber";
+                query = "select dd.UserId , dr.TicketNumber, dr.ServiceId , s.Name as ServiceName, dr.Id, dr.PrintTime, dd.ProcessTime,dd.EndProcessTime ,sta.Note as StatusName ,dd.MajorId ,ma.Name as MajorName from Q_DailyRequire dr, Q_DailyRequire_Detail dd, Q_Status sta ,Q_Major ma, Q_Service s where  dd.DailyRequireId = dr.Id  and dd.StatusId = sta.Id  and dd.MajorId = ma.Id   and s.Id = dr.ServiceId and dr.PrintTime >= '" + from.ToString("yyyy-MM-dd HH:mm:ss") + "' and dr.PrintTime <= '" + to.ToString("yyyy-MM-dd HH:mm:ss") + "' order by dr.TicketNumber";
                 adap = new SqlDataAdapter(query, sqlConnection);
                 dt.Clear();
                 adap.Fill(dt);
@@ -296,7 +296,7 @@ namespace QMS_System.Data.BLL
                         list.Add(new ReportModel()
                         {
                             UserId = getIntValue(row["UserId"]),
-                            UserName = getStringValue(row["UserName"]),
+                            // UserName = getStringValue(row["UserName"]),
                             Number = getIntValue(row["TicketNumber"]),
                             MajorId = getIntValue(row["MajorId"]),
                             MajorName = getStringValue(row["MajorName"]),
@@ -319,6 +319,23 @@ namespace QMS_System.Data.BLL
                 if (list.Count > 0)
                 {
                     list = list.OrderBy(x => x.PrintTime).ThenBy(x => x.Number).ToList();
+                    query = "select Id, Name from Q_User where IsDeleted=0 ";
+                    adap = new SqlDataAdapter(query, sqlConnection);
+                    dt.Clear();
+                    adap.Fill(dt);
+                    List<ModelSelectItem> users = new List<ModelSelectItem>();
+                    if (dt != null && dt.Rows.Count > 0)
+                    {
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            users.Add(new ModelSelectItem()
+                            {
+                                Id = getIntValue(row["Id"]),
+                                Name = getStringValue(row["Name"]),
+                            });
+                        }
+                    }
+
                     for (int i = 0; i < list.Count; i++)
                     {
                         list[i].stt = (i + 1);
@@ -326,6 +343,12 @@ namespace QMS_System.Data.BLL
                             list[i].ProcessTime = list[i].End.Value.Subtract(list[i].Start.Value).ToString("hh\\:mm");
                         if (list[i].Start.HasValue)
                             list[i].WaitingTime = list[i].Start.Value.Subtract(list[i].PrintTime).ToString("hh\\:mm");
+
+                        if (list[i].UserId.HasValue)
+                        {
+                            var found = users.FirstOrDefault(x => x.Id == list[i].UserId.Value);
+                            list[i].UserName = (found != null ? found.Name : "");
+                        }
                     }
                 }
 
@@ -1449,7 +1472,7 @@ namespace QMS_System.Data.BLL
                             double seconds = report[i].TGChoTruocSC.Value.Subtract(emptyDate).TotalSeconds;
                             seconds += report[i].TGChoSauSC.Value.Subtract(emptyDate).TotalSeconds;
                             seconds += report[i].TGXuLyTT.Subtract(emptyDate).TotalSeconds;
-                            var ss = emptyDate.AddSeconds(seconds);  
+                            var ss = emptyDate.AddSeconds(seconds);
                             report[i].TongTGCho = report[i].TongTGCho.Value.Add(ss.TimeOfDay);
 
                             report[i].dTongTGCho = Math.Round(ss.Subtract(emptyDate).TotalMinutes);
@@ -1590,7 +1613,7 @@ namespace QMS_System.Data.BLL
                             var ss = emptyDate.AddSeconds(seconds);
                             report[i].TongTGCho = report[i].TongTGCho.Value.Add(ss.TimeOfDay);
 
-                            report[i].dTongTGCho = Math.Round( ss.Subtract(emptyDate).TotalMinutes);
+                            report[i].dTongTGCho = Math.Round(ss.Subtract(emptyDate).TotalMinutes);
                             report[i].dTGChoTruocSC = Math.Round(report[i].TGChoTruocSC.Value.Subtract(emptyDate).TotalMinutes);
                             report[i].dTGChoSauSC = Math.Round(report[i].TGChoSauSC.Value.Subtract(emptyDate).TotalMinutes);
                             report[i].dTGXuLyTT = Math.Round(report[i].TGXuLyTT.Subtract(emptyDate).TotalMinutes);

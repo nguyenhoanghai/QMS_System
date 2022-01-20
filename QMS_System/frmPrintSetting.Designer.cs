@@ -1,4 +1,6 @@
-﻿namespace QMS_System
+﻿using DevExpress.XtraEditors;
+
+namespace QMS_System
 {
     partial class frmPrintSetting
     {
@@ -34,6 +36,8 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.pnright = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.cbService = new DevExpress.XtraEditors.CheckedComboBoxEdit();
+            this.label5 = new System.Windows.Forms.Label();
             this.numsolien = new System.Windows.Forms.NumericUpDown();
             this.txtname = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -86,12 +90,15 @@
             this.repbtn_deleteService = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
             this.gridColumn10 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repbtnEdit = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
+            this.gridColumn3 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.panel4 = new System.Windows.Forms.Panel();
             this.btnAdd = new DevExpress.XtraEditors.SimpleButton();
             this.btnReset = new DevExpress.XtraEditors.SimpleButton();
+            this.gridColumn4 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.panel1.SuspendLayout();
             this.pnright.SuspendLayout();
             this.panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cbService.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numsolien)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -128,6 +135,8 @@
             // 
             // panel3
             // 
+            this.panel3.Controls.Add(this.cbService);
+            this.panel3.Controls.Add(this.label5);
             this.panel3.Controls.Add(this.numsolien);
             this.panel3.Controls.Add(this.txtname);
             this.panel3.Controls.Add(this.label1);
@@ -146,9 +155,28 @@
             this.panel3.Size = new System.Drawing.Size(707, 666);
             this.panel3.TabIndex = 28;
             // 
+            // cbService
+            // 
+            this.cbService.Location = new System.Drawing.Point(127, 83);
+            this.cbService.Name = "cbService";
+            this.cbService.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.cbService.Size = new System.Drawing.Size(451, 22);
+            this.cbService.TabIndex = 32;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(18, 86);
+            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(55, 17);
+            this.label5.TabIndex = 28;
+            this.label5.Text = "Dịch vụ";
+            // 
             // numsolien
             // 
-            this.numsolien.Location = new System.Drawing.Point(296, 34);
+            this.numsolien.Location = new System.Drawing.Point(296, 45);
             this.numsolien.Margin = new System.Windows.Forms.Padding(4);
             this.numsolien.Minimum = new decimal(new int[] {
             1,
@@ -166,7 +194,7 @@
             // 
             // txtname
             // 
-            this.txtname.Location = new System.Drawing.Point(119, 7);
+            this.txtname.Location = new System.Drawing.Point(127, 7);
             this.txtname.Margin = new System.Windows.Forms.Padding(4);
             this.txtname.Name = "txtname";
             this.txtname.Size = new System.Drawing.Size(451, 22);
@@ -185,7 +213,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(18, 36);
+            this.label3.Location = new System.Drawing.Point(18, 47);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(103, 17);
@@ -206,7 +234,7 @@
             this.groupBox2.Controls.Add(this.bt33);
             this.groupBox2.Controls.Add(this.bt31);
             this.groupBox2.Controls.Add(this.bt22);
-            this.groupBox2.Location = new System.Drawing.Point(16, 64);
+            this.groupBox2.Location = new System.Drawing.Point(16, 115);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(4);
@@ -350,7 +378,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(187, 36);
+            this.label4.Location = new System.Drawing.Point(187, 47);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(101, 17);
@@ -359,16 +387,16 @@
             // 
             // txtContent
             // 
-            this.txtContent.Location = new System.Drawing.Point(16, 297);
+            this.txtContent.Location = new System.Drawing.Point(16, 348);
             this.txtContent.Margin = new System.Windows.Forms.Padding(4);
             this.txtContent.Name = "txtContent";
-            this.txtContent.Size = new System.Drawing.Size(680, 356);
+            this.txtContent.Size = new System.Drawing.Size(680, 305);
             this.txtContent.TabIndex = 22;
             this.txtContent.Text = "";
             // 
             // btThemVB
             // 
-            this.btThemVB.Location = new System.Drawing.Point(602, 261);
+            this.btThemVB.Location = new System.Drawing.Point(602, 312);
             this.btThemVB.Margin = new System.Windows.Forms.Padding(4);
             this.btThemVB.Name = "btThemVB";
             this.btThemVB.Size = new System.Drawing.Size(77, 28);
@@ -391,7 +419,7 @@
             this.groupBox3.Controls.Add(this.btDangGoi);
             this.groupBox3.Controls.Add(this.btTenQuay);
             this.groupBox3.Controls.Add(this.btSTT);
-            this.groupBox3.Location = new System.Drawing.Point(16, 158);
+            this.groupBox3.Location = new System.Drawing.Point(16, 209);
             this.groupBox3.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(4);
@@ -534,7 +562,7 @@
             // 
             // numIndex
             // 
-            this.numIndex.Location = new System.Drawing.Point(127, 34);
+            this.numIndex.Location = new System.Drawing.Point(127, 45);
             this.numIndex.Margin = new System.Windows.Forms.Padding(4);
             this.numIndex.Minimum = new decimal(new int[] {
             1,
@@ -552,7 +580,7 @@
             // 
             // txtVB
             // 
-            this.txtVB.Location = new System.Drawing.Point(119, 264);
+            this.txtVB.Location = new System.Drawing.Point(119, 315);
             this.txtVB.Margin = new System.Windows.Forms.Padding(4);
             this.txtVB.Name = "txtVB";
             this.txtVB.Size = new System.Drawing.Size(451, 22);
@@ -561,7 +589,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(18, 267);
+            this.label2.Location = new System.Drawing.Point(18, 318);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(96, 17);
@@ -674,7 +702,9 @@
             this.gridColumn8,
             this.gridColumn9,
             this.gridColumn7,
-            this.gridColumn10});
+            this.gridColumn10,
+            this.gridColumn3,
+            this.gridColumn4});
             this.gridViewPrint.GridControl = this.gridPrint;
             this.gridViewPrint.Name = "gridViewPrint";
             this.gridViewPrint.OptionsBehavior.AllowAddRows = DevExpress.Utils.DefaultBoolean.False;
@@ -790,6 +820,12 @@
             this.repbtnEdit.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.HideTextEditor;
             this.repbtnEdit.Click += new System.EventHandler(this.repbtnEdit_Click);
             // 
+            // gridColumn3
+            // 
+            this.gridColumn3.Caption = "gridColumn3";
+            this.gridColumn3.FieldName = "ServiceIds";
+            this.gridColumn3.Name = "gridColumn3";
+            // 
             // panel4
             // 
             this.panel4.Controls.Add(this.btnAdd);
@@ -826,6 +862,12 @@
             this.btnReset.Text = "  Làm mới lưới";
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
+            // gridColumn4
+            // 
+            this.gridColumn4.Caption = "gridColumn4";
+            this.gridColumn4.FieldName = "ServiceNames";
+            this.gridColumn4.Name = "gridColumn4";
+            // 
             // frmPrintSetting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -839,6 +881,7 @@
             this.pnright.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cbService.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numsolien)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
@@ -915,5 +958,9 @@
         private DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit repbtnEdit;
         private System.Windows.Forms.TextBox txtname;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label5;
+        private CheckedComboBoxEdit cbService;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn3;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn4;
     }
 }

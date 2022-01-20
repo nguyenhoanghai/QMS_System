@@ -768,5 +768,25 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="Q_ServicePrintTemplate">
+      <EntityTypeMapping TypeName="QMSSystemModel.Q_ServicePrintTemplate">
+        <MappingFragment StoreEntitySet="Q_ServicePrintTemplate">
+          <ScalarProperty Name="PrintTemplateId" ColumnName="PrintTemplateId" />
+          <ScalarProperty Name="ServiceId" ColumnName="ServiceId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Q_Devices">
+      <EntityTypeMapping TypeName="QMSSystemModel.Q_Devices">
+        <MappingFragment StoreEntitySet="Q_Devices">
+          <ScalarProperty Name="SocketId" ColumnName="SocketId" />
+          <ScalarProperty Name="CounterIds" ColumnName="CounterIds" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="DeviceCode" ColumnName="DeviceCode" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

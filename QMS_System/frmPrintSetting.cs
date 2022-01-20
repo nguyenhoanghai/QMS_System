@@ -180,6 +180,10 @@ namespace QMS_System
         private void frmPrintSetting_Load(object sender, EventArgs e)
         {
             LoadGrid();
+
+            var services = BLLService.Instance.GetLookUp(connect, false);
+            for (int i = 0; i < services.Count; i++)
+                cbService.Properties.Items.Add(services[i].Id, services[i].Name, CheckState.Unchecked, true);
         }
 
         private void LoadGrid()
@@ -194,7 +198,7 @@ namespace QMS_System
                     //frmMain.solien = (int)txtsolien.Value;
                     break;
                 case 3:
-                     frmMain_ver3.printTemplates = objs;
+                    frmMain_ver3.printTemplates = objs;
                     //frmMain_ver3.solien = (int)txtsolien.Value;
                     break;
             }
@@ -217,9 +221,14 @@ namespace QMS_System
                 MessageBox.Show("Vui lòng soạn nội dung phiếu in.", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtContent.Focus();
             }
+            else if (string.IsNullOrEmpty(cbService.EditValue.ToString()))
+            {
+                MessageBox.Show("Vui lòng chọn ít nhất một dịch vụ.", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                cbService.Focus();
+            }
             else
             {
-                var rs = BLLPrintTemplate.Instance.InsertOrUpdate(connect, new Data.Q_PrintTicket() { Id = Id, Name = txtname.Text, PrintTemplate = txtContent.Text, IsActive = true, PrintIndex = (int)numIndex.Value, PrintPages = (int)numsolien.Value });
+                var rs = BLLPrintTemplate.Instance.InsertOrUpdate(connect, new Data.Q_PrintTicket() { Id = Id, Name = txtname.Text, PrintTemplate = txtContent.Text, IsActive = true, PrintIndex = (int)numIndex.Value, PrintPages = (int)numsolien.Value }, cbService.EditValue.ToString());
                 if (rs.IsSuccess)
                 {
                     LoadGrid();
@@ -281,11 +290,13 @@ namespace QMS_System
             txtname.Text = gridViewPrint.GetRowCellValue(gridViewPrint.FocusedRowHandle, "Name").ToString();
             numIndex.Value = int.Parse(gridViewPrint.GetRowCellValue(gridViewPrint.FocusedRowHandle, "PrintIndex").ToString());
             numsolien.Value = int.Parse(gridViewPrint.GetRowCellValue(gridViewPrint.FocusedRowHandle, "PrintPages").ToString());
+            cbService.EditValue =  gridViewPrint.GetRowCellValue(gridViewPrint.FocusedRowHandle, "ServiceNames").ToString() ;
+            
             btncancel.Enabled = true;
             btprintTest.Enabled = true;
             btsave.Enabled = true;
             btnAdd.Enabled = false;
         }
-         
+
     }
 }

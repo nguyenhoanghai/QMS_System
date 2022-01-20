@@ -65,5 +65,10 @@ namespace GPRO.Core.Hai
             return con;
         }
 
+        public string ConnectStringOfSQLConnection(string configFilePath)
+        {
+            return (GetConnectionString(configFilePath));
+        }
+
     }
 }

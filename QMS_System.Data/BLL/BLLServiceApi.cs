@@ -1,7 +1,7 @@
 ﻿using QMS_System.Data.Enum;
 using QMS_System.Data.Model;
-using QMS_System.ThirdApp.Enum;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace QMS_System.Data.BLL
@@ -26,14 +26,14 @@ namespace QMS_System.Data.BLL
         private BLLServiceApi() { }
         #endregion
 
-        public ResponseBaseModel Next(string connectString, int userId, int equipCode, DateTime date, int useWithThirdPattern )
+        public ResponseBaseModel Next(string connectString, int userId, int equipCode, DateTime date, int useWithThirdPattern)
         {
-            var res = new ResponseBaseModel(); 
+            var res = new ResponseBaseModel();
             try
             {
                 using (db = new QMSSystemEntities(connectString))
                 {
-                    var oldTickets = db.Q_DailyRequire_Detail.Where(x => x.UserId == userId && x.EquipCode == equipCode && x.StatusId == (int)eStatus.DAGXL  );
+                    var oldTickets = db.Q_DailyRequire_Detail.Where(x => x.UserId == userId && x.EquipCode == equipCode && x.StatusId == (int)eStatus.DAGXL);
                     if (oldTickets != null && oldTickets.Count() > 0)
                     {
                         foreach (var item in oldTickets)
@@ -51,7 +51,7 @@ namespace QMS_System.Data.BLL
                         {
                             int a = majorIds[i];
                             int ticket = 0;
-                            var newTicket = db.Q_DailyRequire_Detail.Where(x => x.MajorId == a && (x.StatusId == (int)eStatus.CHOXL || x.StatusId == (int)eStatus.DAGXL || x.StatusId == (int)eStatus.QUALUOT)   && !x.Q_DailyRequire.Q_Service.isKetLuan).OrderBy(x => x.Q_DailyRequire.PrintTime).FirstOrDefault();
+                            var newTicket = db.Q_DailyRequire_Detail.Where(x => x.MajorId == a && (x.StatusId == (int)eStatus.CHOXL || x.StatusId == (int)eStatus.QUALUOT) && !x.Q_DailyRequire.Q_Service.isKetLuan).OrderBy(x => x.Q_DailyRequire.PrintTime).FirstOrDefault();
                             if (newTicket != null)
                             {
                                 newTicket.UserId = userId;
@@ -72,7 +72,7 @@ namespace QMS_System.Data.BLL
                                         ticket = newTicket.Q_DailyRequire.TicketNumber;
                                     }
                                 }
-                                 
+
                                 var equip = db.Q_Equipment.FirstOrDefault(x => !x.IsDeleted && x.Code == equipCode);
                                 res.IsSuccess = true;
                                 res.Data_3 = new TicketInfo()
@@ -92,12 +92,17 @@ namespace QMS_System.Data.BLL
                                     //switch (dailyRequireType)
                                     //{
                                     //    case (int)eDailyRequireType.KhamBenh:
-                                            db.Database.ExecuteSqlCommand("update Q_Counter set LastCall =" + ticket + ", CurrentNumber=" + ticket + " where Id =" + equip.CounterId);
-                                    //        break;
-                                    //    case (int)eDailyRequireType.KetLuan:
-                                    //        db.Database.ExecuteSqlCommand("update Q_Counter set LastCallKetLuan =" + ticket + "  where Id =" + equip.CounterId);
-                                    //        break;
-                                    //}
+                                    db.Database.ExecuteSqlCommand("update Q_Counter set LastCall =" + ticket + ", CurrentNumber=" + ticket + " where Id =" + equip.CounterId);
+                                try
+                                {
+                                    db.Database.ExecuteSqlCommand("update Q_CounterDayInfo set stt =" + ticket + ", stt_qms=" + ticket + " where counterId =" + equip.CounterId);
+                                }
+                                catch (Exception ex) { }
+                                //        break;
+                                //    case (int)eDailyRequireType.KetLuan:
+                                //        db.Database.ExecuteSqlCommand("update Q_Counter set LastCallKetLuan =" + ticket + "  where Id =" + equip.CounterId);
+                                //        break;
+                                //}
 
                                 db.Database.ExecuteSqlCommand(@"update  Q_RequestTicket  set isdeleted= 1 where userId=" + userId);
                                 db.SaveChanges();
@@ -112,6 +117,21 @@ namespace QMS_System.Data.BLL
             { }
             return res;
         }
-         
+
+        public List<ModelSelectItem> GetDevices(string connectString)
+        {
+            var devices = new List<ModelSelectItem>();
+            using (db = new QMSSystemEntities(connectString))
+            {
+                devices.AddRange(db.Q_Devices.Select(x => new ModelSelectItem()
+                {
+                    Id = x.DeviceCode,
+                    Name = x.Name,
+                    Code = x.SocketId,
+                    Data1 = x.CounterIds
+                }));
+            }
+            return devices;
+        }
     }
 }
